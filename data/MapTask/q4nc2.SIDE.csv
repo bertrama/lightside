@@ -1,0 +1,333 @@
+thread,neg,seg,comb,speaker,text
+1,o,n,n-o,g,okay 
+1,A2,s,s-A2,g,we're s-- we're starting in the top left-hand corner 
+1,A1,s,s-A1,f,uh-huh 
+1,o,s,s-o,f,uh-huh at the start 
+1,o,s,s-o,f,uh-huh that's right 
+2,A2,n,n-A2,g,ehm come straight down 
+2,o,s,s-o,f,straight down 
+2,o,s,s-o,g,straight down 
+2,o,s,s-o,f,straight down yeah 
+2,o,s,s-o,g,straight down 
+2,o,s,s-o,f,uh-huh 
+3,K2,n,n-K2,f,how far 
+3,o,s,s-o,f,out 
+3,o,s,s-o,f,oh well i'll move this over then okay 
+3,o,s,s-o,f,okay then 
+3,o,s,s-o,f,right uh-huh 
+4,o,n,n-o,g,is i-- 
+4,o,s,s-o,f,okay 
+4,o,s,s-o,f,right okay 
+5,o,n,n-o,g,do you have a 
+5,o,s,s-o,g,can i can you 
+5,K2,s,s-K2,g,do you do you have a field station marked on the left-hand side 
+5,K1,s,s-K1,f,uh-huh 
+6,K2,n,n-K2,f,do i go down that far 
+6,K1,s,s-K1,g,go no 
+7,A2,n,n-A2,g,go down halfway between the the 
+7,o,s,s-o,f,the diamond and the field station 
+7,o,s,s-o,g,the diamond and the field station 
+7,A1,s,s-A1,f,okay 
+8,A2,n,n-A2,g,and then turn to the right 
+8,A1,s,s-A1,f,the right okay 
+9,K2,n,n-K2,f,how far 
+10,K2,n,n-K2,g,i'm g-- ca-- is there a mountain in the top 
+11,K2,n,n-K2,f,the highest viewpoint 
+11,K1,s,s-K1,g,the highest viewpoint 
+10,K1,o,o-K1,f,uh-huh 
+12,K2,n,n-K2,g,are springboks marked on the map 
+12,K1,s,s-K1,f,ehm no 
+12,o,s,s-o,g,no 
+13,A2,n,n-A2,g,well come over to towards the the highest viewpoint come s-- come 
+14,A2,n,n-A2,g,make sure you've come halfway between the diamond and the field station 
+14,A1,s,s-A1,f,i have 
+15,A2,n,n-A2,g,and come over to the right to until you're just below the left-hand side of the mountain 
+15,A1,s,s-A1,f,okay 
+16,K2,n,n-K2,f,in a straight line 
+16,K1,s,s-K1,g,in a straight line 
+16,o,s,s-o,f,right okay 
+16,o,s,s-o,f,right okay 
+17,A2,n,n-A2,g,then go straight up to above the mountain 
+18,K2,n,n-K2,f,not going through the mountain 
+18,K1,s,s-K1,g,not going through the mountain 
+18,o,s,s-o,f,at all okay 
+17,A2,o,o-A2,g,straight up to above the mountain 
+17,A1,s,s-A1,f,straight up uh-huh 
+19,K2,n,n-K2,f,how far 
+19,K1,s,s-K1,g,to the to-- near the top of the page 
+19,o,s,s-o,f,near it 
+20,K2,n,n-K2,f,past the birds 
+20,ch,s,s-ch,g,i i haven't got birds mar-- 
+20,K1,s,s-K1,g,yeah past the birds yeah yeah sure 
+20,o,s,s-o,f,okay 
+21,o,n,n-o,g,ehm 
+21,o,s,s-o,f,right 
+21,A2,s,s-A2,g,turn right along to the e-- the ed-- to-- towards the edge of the page 
+21,A1,s,s-A1,f,uh-huh 
+21,o,s,s-o,g,okay 
+21,o,s,s-o,f,uh-huh 
+22,o,n,n-o,g,right 
+22,A2,s,s-A2,g,wait a minute hold on can you come can you come back to the to the edge of the mountain 
+22,A1,s,s-A1,f,uh-huh 
+23,K2,n,n-K2,f,where i started from yeah 
+23,o,s,s-o,g,and 
+23,K1,s,s-K1,g,no 
+24,A2,n,n-A2,g,come back to the the right-hand side of the mountains 
+24,A1,s,s-A1,f,oh right okay right uh-huh 
+25,A2,n,n-A2,g,and i want you to drop straight down until you're level with the field station 
+26,K2,n,n-K2,f,what field station 
+26,K1,s,s-K1,g,it-- there's a field station marked 
+26,o,s,s-o,f,oh right okay 
+27,K2,n,n-K2,f,on the other side 
+27,K1,s,s-K1,g,oh dear right 
+28,o,n,n-o,f,on your 
+28,ch,s,s-ch,g,wait a minute 
+28,K2,s,s-K2,f,on my left 
+28,K1,s,s-K1,g,right 
+29,K1,n,n-K1,g,hold on i've g-- i've got a different field station from you 
+30,K1,n,n-K1,g,heeee this is good how ma-- you've got one on the 
+31,K1,n,n-K1,f,i've got one on my left 
+32,K2,n,n-K2,g,have you got a field station marked on the left-hand side 
+32,K1,s,s-K1,f,uh-huh where i'm looking at it it's on my left 
+33,K2,n,n-K2,g,have you also got a field station marked in the centre 
+33,K1,s,s-K1,f,no 
+33,o,s,s-o,g,no you don't 
+33,o,s,s-o,f,no 
+34,K1,n,n-K1,g,it's on it-- it's on the far far left-hand side of the page 
+34,o,s,s-o,g,right 
+34,o,s,s-o,f,uh-huh 
+35,A2,n,n-A2,g,drop down 'til you're level with that field station 
+35,A1,s,s-A1,f,okay 
+36,K2,n,n-K2,f,is this have you got an overgrown gully 
+36,K1,s,s-K1,g,no 
+36,o,s,s-o,f,oh right oh 
+36,o,s,s-o,g,i don't 
+37,A2,n,n-A2,g,obviously you'll have to go round the overgrown --grown gully and and come back to a 
+37,o,s,s-o,f,oh 
+37,A2,s,s-A2,g,come back to a point 
+38,o,n,n-o,f,well i 
+38,o,s,s-o,f,could i just 
+38,o,s,s-o,f,right 
+38,K2,s,s-K2,f,you know how you've got the mountain 
+39,K2,n,n-K2,f,could i just drop down straight in a straight line 
+40,K2,n,n-K2,f,is there anything between the mountain and what is parallel to the field station 
+40,K1,s,s-K1,g,no there's absolutely nothing there 
+40,o,s,s-o,f,right 
+41,o,n,n-o,f,so i could just drop right down then 
+41,A2,s,s-A2,g,you can drop right down there yeah 
+41,A1,s,s-A1,f,okay 
+42,K2,n,n-K2,f,and just go on the same level then 
+43,A2,n,n-A2,g,go 'til you're down to the level with this field 
+43,o,s,s-o,g,station okay 
+43,A1,s,s-A1,f,field station okay then 
+43,o,s,s-o,g,right 
+44,A2,n,n-A2,g,now you've got to turn left and go towards the field station but only 'til you're level with 
+45,K2,n,n-K2,f,the diamond or the banana tree 
+45,ch,s,s-ch,g,no no not as far a-- not f-- not as far across as that 
+44,A2,o,o-A2,g,until you're level with the the centre of the mountain 
+44,A1,s,s-A1,f,okay then right okay 
+44,o,s,s-o,g,okay 
+46,o,n,n-o,g,right 
+46,o,s,s-o,f,uh-huh 
+46,A2,s,s-A2,g,come now come slightly further left just a wee bit 
+46,A1,s,s-A1,f,uh-huh right 
+47,A2,n,n-A2,g,and drop straight down ehm 
+48,o,n,n-o,g,now wait a minute 
+48,K2,s,s-K2,g,have you got a banana tree have you got a banana tree marked 
+49,K1,n,n-K1,f,i've went in a circle 
+48,K1,o,o-K1,f,yeah 
+48,o,s,s-o,g,you do 
+48,o,s,s-o,f,uh-huh 
+50,A2,n,n-A2,g,drop straight down 
+50,A1,s,s-A1,f,mmhmm 
+51,A2,n,n-A2,g,so-- 'til you're level with the top branches of the banana tree 
+51,A1,s,s-A1,f,right okay mmhmm 
+51,o,s,s-o,g,okay 
+51,o,s,s-o,f,mmhmm 
+52,A2,n,n-A2,g,and then i want you to come across and go round the top of the banana tree 
+53,K2,n,n-K2,f,just straight across 
+53,o,s,s-o,g,you co-- 
+53,K1,s,s-K1,g,across to the left 
+54,A2,n,n-A2,g,and round the top of the banana tree 
+54,A1,s,s-A1,f,okay right 
+55,K2,n,n-K2,g,you don't have any other obstacles in the way there do you 
+55,K1,s,s-K1,f,no 
+55,o,s,s-o,g,right okay 
+56,K2,n,n-K2,g,have you got a gold marked 
+56,K1,s,s-K1,f,ehm no 
+56,o,s,s-o,g,right 
+57,A2,n,n-A2,g,from the banana tree y-- you're dropping straight down 
+57,A1,s,s-A1,f,mmhmm 
+58,K2,n,n-K2,g,ehm a rope bridge is that marked 
+58,K1,s,s-K1,f,uh-huh 
+58,o,s,s-o,g,okay 
+59,A2,n,n-A2,g,you want to drop down lower th-- 'til you come b-- straight down from the bana-- from the left-hand side of the banana tree 
+60,o,n,n-o,f,can i 
+60,K2,s,s-K2,f,can i go down in a straight line is there anything in it 
+61,A2,n,n-A2,g,come down in a straight line 
+61,o,s,s-o,g,fro-- from the banana tree 
+62,A2,n,n-A2,g,ehm ho-- until you get to the rope bridge 
+63,A2,n,n-A2,g,and we'll we'll take it from there in a second 
+63,o,s,s-o,f,okay and 
+64,K2,n,n-K2,f,that's okay there's no obstacles 
+64,K1,s,s-K1,g,no obstacles 
+64,o,s,s-o,f,right okay 
+65,A2,n,n-A2,g,straight straight 
+65,A1,s,s-A1,f,right 
+66,K1,n,n-K1,f,it's down to the rope bridge 
+66,ch,s,s-ch,g,no you've not 
+67,K2,n,n-K2,g,did you go straight across to the rope bridge 
+67,o,s,s-o,f,no it's just it's 
+67,K2,s,s-K2,g,you you just come straight down right 
+67,K1,s,s-K1,f,yeah 
+67,K1,s,s-K1,f,it's a straight line down 
+67,o,s,s-o,g,okay so you're 
+67,o,s,s-o,g,okay 
+67,o,s,s-o,f,vertical line 
+68,o,n,n-o,g,now 
+68,A2,s,s-A2,g,now you've got to drop down about well i'd like to say well i'd like to say about an inch 
+69,K2,n,n-K2,f,why didn't you just go straight down from the start sign it would've been easier 
+69,o,s,s-o,g,yeah you're not kidding 
+70,K1,n,n-K1,f,i mean it's just straight down from there 
+71,o,n,n-o,g,ehm 
+71,o,s,s-o,g,okay 
+71,K2,s,s-K2,g,have you got a rock fall marked 
+71,K1,s,s-K1,f,uh-huh 
+72,o,n,n-o,g,okay 
+72,A2,s,s-A2,g,come down to towards come come down towards the rock fall until you're just b-- until you're just above the rock fall 
+72,A1,s,s-A1,f,mmhmm 
+72,o,s,s-o,g,okay 
+72,o,s,s-o,f,right okay in a straight line 
+73,A2,n,n-A2,g,and now head across for 
+73,o,s,s-o,f,oops 
+73,A2,s,s-A2,g,the r-- now head across to the rope bridge you can just go straight straight across from there to the rope bridge 
+73,o,s,s-o,g,yeah 
+73,A1,s,s-A1,f,right 
+74,K1,n,n-K1,f,i've got to go like on top of the rock fall 
+74,o,s,s-o,f,that kind line 
+74,o,s,s-o,g,li-- like 
+75,o,n,n-o,g,you want 
+75,o,s,s-o,f,well 
+75,A2,s,s-A2,g,you you want to go you you drop straight down to to the to the rock fall now and you want to head from the rock fall straight across to the rope bridge 
+75,A1,s,s-A1,f,uh-huh 
+75,o,s,s-o,f,mmhmm 
+76,A2,n,n-A2,g,aye well not straight across but you you're you'll be going back up towards the rope bridge 
+76,o,s,s-o,f,just 
+76,A1,s,s-A1,f,right 
+77,K1,n,n-K1,f,so i'm below the rope the rope bridge then 
+78,K2,n,n-K2,g,so so you're at the moment you're below the rope bridge 
+79,K2,n,n-K2,g,and you're you're coming across in a diagonal towards the rope bridge going going from your right and up the way going to the right and up the way 
+79,K1,s,s-K1,f,mmhmm 
+79,K1,s,s-K1,f,right 
+80,A1,n,n-A1,f,so i'm heading for the rope 
+80,o,s,s-o,g,heading for the rope bridge yeah 
+80,o,s,s-o,f,bridge okay 
+81,A2,n,n-A2,g,just go straight to the rope bridge 
+81,A1,s,s-A1,f,from there in like a uh-huh a diagonal line then from the rock fall 
+81,o,s,s-o,g,yeah that's right yeah 
+82,K2,n,n-K2,f,you don't want me to go across and up 
+82,K1,s,s-K1,g,no just straight just a diagonal line up to the rope bridge 
+82,o,s,s-o,f,okay then 
+82,o,s,s-o,f,right 
+83,A2,n,n-A2,g,and then a-- across the rope bridge to the right-hand side of the page 
+84,K2,n,n-K2,f,oh from the the top of the rope bridge or 
+84,K1,s,s-K1,g,yeah across the top of the rope bridge 
+84,o,s,s-o,f,right okay 
+85,K1,n,n-K1,f,i've went and drawn this 
+86,K2,n,n-K2,f,can i go up and across because i've went and drawn it to the bottom of the rope bridge i can just go up and across 
+86,K1,s,s-K1,g,yeah fine yeah 
+87,A2,n,n-A2,g,and across the rope bridge 
+87,A1,s,s-A1,f,uh-huh 
+88,K1,n,n-K1,f,right i've done that 
+89,K2,n,n-K2,g,have you got giraffes marked 
+89,K1,s,s-K1,f,uh-huh 
+90,K1,n,n-K1,f,i've got crocodiles as well 
+90,o,s,s-o,g,crocodiles 
+91,A2,n,n-A2,g,well you'll have to avoid the crocodiles as well but but you've got to go round the the the giraffes at the bottom right-hand corner of the page 
+92,K2,n,n-K2,f,so i just go straight down right 
+92,K1,s,s-K1,g,yeah that's right mmhmm 
+93,A1,n,n-A1,f,okay i just go straight down 
+94,K1,n,n-K1,f,and then i've reached the bottom of the gi-- of the giraffes 
+94,o,s,s-o,g,d-- okay 
+94,o,s,s-o,f,okay 
+95,K1,n,n-K1,g,now the only thing you've got to dodge is the great lake 
+96,K1,n,n-K1,f,i've got that on 
+97,K2,n,n-K2,g,you've got that marked 
+97,K1,s,s-K1,f,uh-huh 
+98,K1,n,n-K1,g,now the great the great lake on my map is in the bottom left-hand 
+98,o,s,s-o,f,yeah 
+99,K1,n,n-K1,f,i've got that as well 
+100,K1,n,n-K1,g,corner it's di-- directly below the rock fall 
+100,o,s,s-o,f,mmhmm 
+101,o,n,n-o,g,so you've got t-- 
+102,K1,n,n-K1,f,and parallel to the disused warehouse 
+102,ch,s,s-ch,g,i don't have a a disused warehouse on mine 
+102,o,s,s-o,f,oh right 
+103,K1,n,n-K1,f,well i-- it's just parallel to it like just ehm well not underneath the giraffes you know over to the left 
+103,o,s,s-o,g,yeah 
+104,A2,n,n-A2,g,well i i would come down c-- i i would head right yeah on according to my map you've got to go ehm down towards the bottom of the page and underneath the great lake 
+104,A1,s,s-A1,f,uh-huh 
+104,o,s,s-o,f,underneath it 
+104,o,s,s-o,g,yeah 
+105,A2,n,n-A2,g,you want you want to go below the below the lake 
+105,A1,s,s-A1,f,okay 
+106,K1,n,n-K1,g,the lake's in the b-- the lake in mine is b-- directly below the l-- the rock fall 
+107,A2,n,n-A2,g,and you've got to come below the the great lake from from the giraffes 
+107,A1,s,s-A1,f,uh-huh 
+108,A2,n,n-A2,g,you can you can just come straight across i would not straight across and down a bit 
+108,A1,s,s-A1,f,so oh right okay right 
+108,o,s,s-o,f,right 
+109,A2,n,n-A2,g,and below the great lake 
+109,A1,s,s-A1,f,okay oops 
+110,A2,n,n-A2,g,and turn r-- turn right once you've gone past the lake and come up 
+111,K2,n,n-K2,g,to just belo-- yeah turn have you 
+111,K1,s,s-K1,f,turn right 
+112,K1,n,n-K1,f,that's i've just drawn a a line left just now turning right would just be going back again 
+112,o,s,s-o,g,you've drawn a line you've 
+113,K2,n,n-K2,g,you've drawn a line yeah wait a minute hold on right you've drawn a line left 
+113,K1,s,s-K1,f,uh-huh 
+114,K2,n,n-K2,g,coming across towards the great lake 
+114,K1,s,s-K1,f,uh-huh 
+115,K1,n,n-K1,f,well it's over the d-- great i mean i've went under the 
+115,o,s,s-o,g,okay 
+115,o,s,s-o,f,great lake uh-huh 
+115,o,s,s-o,g,you've gone under it 
+115,o,s,s-o,g,right 
+116,A2,n,n-A2,g,go up the page 
+116,o,s,s-o,f,go up it 
+116,o,s,s-o,g,up yeah towa-- 
+117,K2,n,n-K2,f,towards the rock fall 
+117,K1,s,s-K1,g,up well not towards ehm stay on the left-hand side but go up 
+118,K2,n,n-K2,f,where from 
+118,K1,s,s-K1,g,ehm until you're just about half an inch below the rock fall and that's the finish 
+119,K2,n,n-K2,f,where from which bit of the great lake 
+119,K2,s,s-K2,f,the left or the right 
+119,K1,s,s-K1,g,the great lake right 
+120,K2,n,n-K2,g,you've come right under the great lake 
+120,K1,s,s-K1,f,uh-huh 
+121,K2,n,n-K2,g,ehm you've got to the far left-hand edge of the great lake 
+121,K1,s,s-K1,f,mmhmm 
+122,A2,n,n-A2,g,ehm head up until you're level with the giraffes 
+122,A1,s,s-A1,f,okay 
+123,K2,n,n-K2,f,so we're on the far side of the 
+123,o,s,s-o,g,the the l-- giraffes 
+124,A2,n,n-A2,g,head up until you're level with the giraffes' kneecaps 
+123,o,o,o-o,f,just to be exact 
+124,A1,n,n-A1,f,right 
+125,K2,n,n-K2,f,so we're on the the left-hand side of the great lake 
+125,K1,s,s-K1,g,yeah 
+125,o,s,s-o,f,oh right okay 
+126,K2,n,n-K2,f,so we just head up here until we're up to the kneecaps 
+126,K1,s,s-K1,g,yeah 
+127,K1,n,n-K1,g,that's us 
+127,o,s,s-o,f,okay 
+128,K1,n,n-K1,g,yeah we've done it 
+128,o,s,s-o,f,that's us 
+129,A1,n,n-A1,f,right i'll draw this line again 
+130,K2,n,n-K2,f,can you d-- redraw a line 
+130,K1,s,s-K1,g,yeah i think so yeah 
+131,K1,n,n-K1,f,right okay it's just i drew this line wrong okay 
+132,K1,n,n-K1,g,i think we've got it 
+132,o,s,s-o,f,right 
+133,K1,n,n-K1,f,i think that's it it looks 
+134,K1,n,n-K1,g,i'd like to see this 

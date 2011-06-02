@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugins>
+	<plugin>
+		<name>WEKA Classifier Plugin</name>
+		<author>Moonyoung</author>
+		<version>1.0 using WEKA 3.5.6</version>
+		<description><![CDATA[This plugin provides access to the classifiers which are part of the WEKA toolkit.]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.classifier.weka.WekaPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>SVMLight Classifier Plugin</name>
+		<author>Elijah Mayfield</author>
+		<version>0.1</version>
+		<description><![CDATA[Provides interface to a binary SVM classifier.]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.classifier.svmlight.SVMLightPlugin</classname>
+	</plugin>
+	<!--
+	<plugin>
+		<name>Empty</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description>
+			<![CDATA[Generate an empty feature set]]>
+		</description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.fce.Empty</classname>
+	</plugin>
+	<plugin>
+		<name>Dependencies</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Dependency triplets with back-off options]]></description>
+		<jarfile>dependencies.jar</jarfile>
+		<classname>plugin.fce.Dependencies</classname>
+	</plugin>
+	<plugin>
+		<name>Feature Matrix</name>
+		<author>Martin VV</author>
+		<version>1.0</version>
+		<description><![CDATA[Use SentiWordNet for fun and profit]]></description>
+		<jarfile>dsa.jar</jarfile>
+		<classname>featurematrix.SIDEFeatureMatrixExtractor</classname>
+	</plugin>
+		<plugin>
+		<name>Turn-Taking Sequences</name>
+		<author>David Adamson</author>
+		<version>1.0</version>
+		<description><![CDATA[Look at paired entries with gaps between them]]></description>
+		<jarfile>dsa.jar</jarfile>
+		<classname>dsa.sequence.DSASequenceExtractor</classname>
+	</plugin>
+		-->
+	<plugin>
+		<name>Feature Filter</name>
+		<author>DSA and PWG</author>
+		<version>1.0</version>
+		<description><![CDATA[Use SentiWordNet for fun and profit]]></description>
+		<jarfile>dsa.jar</jarfile>
+		<classname>feature.management.FeatureFilterPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Arbitrary NGram Extractor</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Extract arbitrary-length n-grams.]]></description>
+		<jarfile>arbitrary.jar</jarfile>
+		<classname>plugin.fce.ArbitraryNGramExtractor</classname>
+	</plugin>	
+	<plugin>
+		<name>TagHelper</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Use TagHelper Tools extraction for textual features]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.fce.TagHelperExtractor</classname>
+	</plugin>
+	<plugin>
+		<name>DefinedFeatures</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Allow the user to define complex features manually]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.defined.DefinedFeatureExtractor</classname>
+	</plugin>
+	<plugin>
+		<name>HTML feature table consumer</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Generate HTML for feature table]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_table_consumer.HTMLFeatureTableConsumer</classname>
+	</plugin>
+	<plugin>
+		<name>ARFF feature table consumer</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Generate .arff file for feature table]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_table_consumer.ArffFeatureTableConsumer</classname>
+	</plugin>
+	<plugin>
+		<name>CSV file reader</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Read csv file into SIDE UIMA CAS]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.document_reader.CSVFileReader</classname>
+	</plugin>
+	<plugin>
+		<name>Text file reader</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Read text file into SIDE UIMA CAS]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.document_reader.TextFileReader</classname>
+	</plugin>
+	<plugin>
+		<name>DexML file reader</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Read DexML file into SIDE UIMA CAS]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.document_reader.DexMLFileReader</classname>
+	</plugin>
+	<plugin>
+		<name>Token Counter</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Count word token]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.em.TokenCounter</classname>
+	</plugin>
+	<plugin>
+		<name>Token Counter</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[TF-IDF score evaluation metric]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.em.TFIDFPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Document Segmenter</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Document Segmenter]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.segmenter.DocumentSegmenter</classname>
+	</plugin>
+	<plugin>
+		<name>English Sentence Segmenter</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[English Sentence Segmenter]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.segmenter.EnglishSentenceSegmenter</classname>
+	</plugin>
+	<plugin>
+		<name>Word Segmenter</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Word Segmenter]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.segmenter.WordSegmenter</classname>
+	</plugin>
+	<plugin>
+		<name>Paragraph Block Based Segmenter</name>
+		<author>Nitin Agarwal</author>
+		<version>1.0</version>
+		<description><![CDATA[Paragraph Block Based Segmenter]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.segmenter.ParagraphBlockBasedSegmenter</classname>
+	</plugin>
+	<plugin>
+		<name>Paragraph Vocabulary Based Segmenter</name>
+		<author>Nitin Agarwal</author>
+		<version>1.0</version>
+		<description><![CDATA[Paragraph Vocabulary Based Segmenter]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.segmenter.ParagraphVocabularyBasedSegmenter</classname>
+	</plugin>
+	<!--
+	<plugin>
+		<name>Interactive Visualization</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Interactive Visualization]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.visualization.InteractiveVisualization</classname>
+	</plugin>
+	-->
+	<plugin>
+		<name>Pie Chart Visualization</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Pie chart Visualization]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.visualization.PieChartVisualizationPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Time Series Visualization</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Time Series Visualization]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.visualization.TimeSeriesVisualizationPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Periodic Visualization</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Periodic Visualization]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.visualization.PeriodicVisualizationPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Prediction Feature Analysis Plugin</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Prediction Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.visualization.PredictionFeatureAnalysisPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Test Error Analysis Plugin</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Test Error Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.visualization.TestErrorAnalysisPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Side by Side Error Analysis Plugin</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Basic Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_analysis.SideBySideErrorAnalysisPlugin</classname>
+	</plugin>
+	<!--
+	<plugin>
+		<name>Basic Feature Analysis Plugin</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Basic Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_analysis.BasicFeatureAnalysisPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Weka Feature Analysis</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Weka Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_analysis.WekaFeatureAnalysisPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Single Tabular Feature Analysis</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Single Tabular Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_analysis.SingleTabularFeatureAnalysisPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Double Scatter Plot Feature Analysis</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Double Scatter Plot Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_analysis.DoubleScatterPlotFeatureAnalysisPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>Bar Chart Feature Analysis</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Bar Chart Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_analysis.BarChartFeatureAnalysisPlugin</classname>
+	</plugin>
+	<plugin>
+		<name>True Prediction Compare Bar Chart</name>
+		<author>Moonyoung Kang</author>
+		<version>1.0</version>
+		<description><![CDATA[Bar Chart Feature Analysis]]></description>
+		<jarfile>default.jar</jarfile>
+		<classname>plugin.sample.feature_analysis.ComparisonBarChartFeatureAnalysisPlugin</classname>
+	</plugin>
+	-->
+</plugins>

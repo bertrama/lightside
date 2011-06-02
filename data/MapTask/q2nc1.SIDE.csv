@@ -1,0 +1,90 @@
+thread,neg,seg,comb,speaker,text
+1,o,n,n-o,g,right 
+1,A2,s,s-A2,g,start from the sandy shore 
+1,A1,s,s-A1,f,okay 
+2,A2,n,n-A2,g,moving down straight down 
+3,K2,n,n-K2,f,how far 
+3,K1,s,s-K1,g,down as far as the bottom of the well 
+3,ch,s,s-ch,f,i don't have a well 
+3,o,s,s-o,g,ah right eh 
+4,A2,n,n-A2,g,move down eh vertically down about quarter of the way down the page 
+5,o,n,n-o,g,move to the right in 
+6,K2,n,n-K2,g,do you have local residents 
+6,K1,s,s-K1,f,i do 
+6,o,s,s-o,g,right 
+5,A2,o,o-A2,g,well move up and round and above them 
+5,A1,s,s-A1,f,okay 
+7,o,n,n-o,g,right 
+7,A2,s,s-A2,g,across not as far as the wood 
+8,K2,n,n-K2,g,do you have a wood 
+9,K2,n,n-K2,f,do i cross the bridge 
+9,ch,s,s-ch,g,eh i don't have a bridge ah 
+9,K1,s,s-K1,g,i would cross a bridge 
+9,o,s,s-o,f,eh okay 
+10,o,n,n-o,g,right 
+10,K2,s,s-K2,g,do you have a stream forked stream 
+10,K1,s,s-K1,f,eh yes 
+10,o,s,s-o,g,right 
+11,A2,n,n-A2,g,follow the stream follow the path of the stream right down 
+12,K2,n,n-K2,f,how far 
+12,K1,s,s-K1,g,eh to about third of the way down the page 
+13,K2,n,n-K2,f,is there a bend in the stream 
+13,K1,s,s-K1,g,yes 
+14,A2,n,n-A2,g,round the bend 
+14,o,s,s-o,f,round the bend 
+14,o,s,s-o,g,yeah 
+15,A2,n,n-A2,g,and stop 
+16,K2,n,n-K2,g,do you have farmed land 
+16,K1,s,s-K1,f,no 
+17,K2,n,n-K2,g,right do you have a dead tree 
+17,K1,s,s-K1,f,yes 
+17,o,s,s-o,g,right eh 
+18,A2,n,n-A2,g,move eh to the right almost to the edge of the page horizontally across 
+19,K2,n,n-K2,f,where in relation to the fork in the stream is this 
+19,K1,s,s-K1,g,eh this is a-- the-- this is at the fork in the stream 
+18,o,o,o-o,f,move right to the edge of the page 
+18,o,s,s-o,g,yeah 
+18,A1,s,s-A1,f,okay 
+20,A2,n,n-A2,g,down about two inches and then back across avoiding the dead tree 
+15,K2,o,o-K2,f,across the stream 
+15,K1,s,s-K1,g,yeah cross the stream 
+21,A2,n,n-A2,g,and stop right in line with the dead tree 
+22,K2,n,n-K2,f,do i move in a v-- straight line from the edge of the page 
+22,K1,s,s-K1,g,yeah 
+22,o,s,s-o,f,right across the stream 
+21,A2,o,o-A2,g,and stop right underneath the dead tree 
+21,A1,s,s-A1,f,okay 
+23,A2,n,n-A2,g,now move down about three inches 
+23,A1,s,s-A1,f,okay 
+24,A2,n,n-A2,g,then move to the left three inches 
+25,K2,n,n-K2,g,do you have a lagoon 
+25,K1,s,s-K1,f,yes 
+26,A2,n,n-A2,g,right well go down and round to the bottom of the lagoon 
+26,A1,s,s-A1,f,okay 
+27,K2,n,n-K2,f,do you have treasure on your map above the lagoon 
+27,o,s,s-o,g,right 
+27,K1,s,s-K1,g,no i don't 
+27,o,s,s-o,f,okay 
+28,A2,n,n-A2,g,eh and move above a rock fall if you have it 
+28,ch,s,s-ch,f,don't have a rock fall 
+28,o,s,s-o,g,ah right 
+29,A2,n,n-A2,g,well in that case move diagonally across to the left-hand side from the bottom of lagoon for about three inches then 
+30,K2,n,n-K2,f,do you have a bay at the bottom here a large bay 
+30,K1,s,s-K1,g,no don't 
+31,K2,n,n-K2,f,not marked at all 
+31,K1,s,s-K1,g,no oh yeah i do sorry aye 
+31,o,s,s-o,f,aye 
+32,K2,n,n-K2,f,where in relation to the the top or the middle or the bottom of the bay 
+32,K1,s,s-K1,g,to the top 
+32,o,s,s-o,f,okay 
+33,K2,n,n-K2,g,and do you have a pirate ship 
+33,K1,s,s-K1,f,yes 
+33,o,s,s-o,g,right 
+34,A2,n,n-A2,g,and just move from the very top onto the pirate ship 
+34,A1,s,s-A1,f,right 
+34,o,s,s-o,f,through the water 
+34,o,s,s-o,g,yeah 
+34,o,s,s-o,f,okay 
+35,A2,n,n-A2,g,along and down and hit the pirate ship 
+35,A1,s,s-A1,f,right 
+36,K1,n,n-K1,g,that's it 

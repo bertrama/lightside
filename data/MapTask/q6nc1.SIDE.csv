@@ -1,0 +1,224 @@
+thread,neg,seg,comb,speaker,text
+1,K1,n,n-K1,g,you start to the left of sandy shore 
+2,A2,n,n-A2,g,eh make your way down towards the well go to the left of the well 
+2,o,s,s-o,f,the well 
+3,K1,n,n-K1,g,the well just ehm opposite sandy shore 
+3,o,s,s-o,f,opposite sandy shore 
+3,o,s,s-o,f,the well 
+4,K1,n,n-K1,g,the well at the tip of crane bay 
+4,o,s,s-o,f,the tip of crane bay 
+5,o,n,n-o,f,okay 
+5,K2,s,s-K2,f,you mean the right-hand side 
+5,K1,s,s-K1,g,no 
+6,K1,n,n-K1,g,it's at to the left of crane bay 
+6,o,s,s-o,g,oh the well is to the left of the crane bay 
+6,o,s,s-o,g,right 
+7,A2,n,n-A2,g,you have to go around the well to the left of the well 
+7,o,s,s-o,f,well 
+7,o,s,s-o,g,the well 
+8,K2,n,n-K2,g,you know where crane bay is 
+8,K1,s,s-K1,f,yeah 
+9,K1,n,n-K1,f,it's just a thingmy yeah 
+10,K1,n,n-K1,g,it's just at the tip of crane bay 
+11,K1,n,n-K1,f,just at the top left-hand 
+12,K1,n,n-K1,g,the tip the tip of crane bay the bottom of crane bay 
+12,o,s,s-o,f,oh right okay 
+13,K1,n,n-K1,g,just opposite sandy shore 
+13,o,s,s-o,g,right 
+13,o,s,s-o,f,okay 
+14,o,n,n-o,g,right now 
+14,A2,s,s-A2,g,you go down sandy shore round past the well 
+14,A1,s,s-A1,f,down sandy shore round past the well 
+14,o,s,s-o,g,uh-huh 
+15,A2,n,n-A2,g,keeping to the left 
+15,o,s,s-o,g,right 
+16,o,n,n-o,f,the well 
+16,o,s,s-o,g,the well 
+16,K2,s,s-K2,f,what is the well 
+16,K1,s,s-K1,g,the well you know a well where you throw the bucket into the water then 
+16,o,s,s-o,f,well 
+16,ch,s,s-ch,f,there's no well here 
+17,K2,n,n-K2,g,is there no well there 
+17,K1,s,s-K1,f,no 
+17,o,s,s-o,g,right okay right never mind 
+18,o,n,n-o,g,you go 
+19,K2,n,n-K2,f,you've got an iron bridge and local residents and stuff and hills 
+20,K2,n,n-K2,g,what have you got what what is uh 
+20,o,s,s-o,g,see on your map at the bottom of cra-- bay crane bay 
+20,K2,s,s-K2,g,what have you got 
+20,K1,s,s-K1,f,iron bridge 
+20,o,s,s-o,g,iron bridge 
+20,o,s,s-o,g,yeah 
+21,A2,n,n-A2,g,well go round that 
+21,o,s,s-o,g,right 
+21,A1,s,s-A1,f,go around that 
+21,o,s,s-o,g,uh-huh 
+22,K2,n,n-K2,f,the top of it or the bottom of it 
+22,K1,s,s-K1,g,the bottom of it 
+22,o,s,s-o,f,uh-huh 
+23,A2,n,n-A2,g,go around it and ehm up towards your right 
+23,o,s,s-o,g,right 
+24,o,n,n-o,g,now 
+24,K2,s,s-K2,g,you know where the local residents stay 
+24,K1,s,s-K1,f,uh-uh uh-huh 
+25,o,n,n-o,g,right now 
+25,K2,s,s-K2,g,you know how there's a groove in crane bay 
+25,o,s,s-o,f,a groove in crane bay 
+25,K1,s,s-K1,f,yeah 
+26,K1,n,n-K1,f,a slight one 
+26,o,s,s-o,g,right 
+26,o,s,s-o,f,mmhmm 
+26,o,s,s-o,g,uh-huh right 
+27,A2,n,n-A2,g,you go up to there and at that point you turn right 
+27,A1,s,s-A1,f,you go up to there and turn 
+27,o,s,s-o,g,right 
+27,o,s,s-o,f,right 
+28,o,n,n-o,g,uh-huh 
+28,K2,s,s-K2,g,you go along um now you go along do-- you know the ehm hang on hang on right wait stop there a minute 
+28,K1,s,s-K1,f,uh-huh 
+29,K2,n,n-K2,g,is there a wood to the right of crane bay 
+29,K1,s,s-K1,f,yeah 
+29,o,s,s-o,f,woodlands 
+29,o,s,s-o,g,woo-- right okay 
+29,o,s,s-o,f,woodlands trees and all that yeah 
+29,o,s,s-o,g,uh-huh yeah 
+30,o,n,n-o,g,right 
+30,A2,s,s-A2,g,don't go right to the very end go about to the middle between crane bay and the wood and stop there 
+30,o,s,s-o,g,right 
+30,A1,s,s-A1,f,crane bay and wood and stop middle 
+31,A2,n,n-A2,g,uh-huh stop in the middle 
+32,A2,n,n-A2,g,don't go right along to the woods 
+32,o,s,s-o,g,right 
+32,A1,s,s-A1,f,uh-huh 
+33,o,n,n-o,g,now 
+33,K2,s,s-K2,g,have you got a does crane bay go on into a forked stream 
+33,K1,s,s-K1,f,it's got a sort a stream gurgling brook 
+33,o,s,s-o,g,right okay 
+34,o,n,n-o,g,go ehm 
+34,A2,s,s-A2,g,beside that stream 
+34,A1,s,s-A1,f,mmhmm 
+34,o,s,s-o,g,right ehm 
+35,K1,n,n-K1,f,this this map is hopeless by the way 
+36,A2,n,n-A2,g,go beside the stream 
+36,A1,s,s-A1,f,uh-huh 
+37,o,n,n-o,g,now 
+37,K2,s,s-K2,g,have you got farmed land 
+37,o,s,s-o,f,ehm i've got na-a-a-a-a 
+37,o,s,s-o,g,right well 
+37,K1,s,s-K1,f,i've got gurl-- g-- gurgling brook right at the right at the bottom is a dead tree 
+38,o,n,n-o,g,does it 
+37,o,o,o-o,g,yeah yeah right 
+38,K2,n,n-K2,g,see before the dead tree does the stream divide 
+38,o,s,s-o,f,it sort just goes round doesn't div-- 
+38,K1,s,s-K1,f,yeah it divides 
+38,o,s,s-o,g,right 
+39,A2,n,n-A2,g,go down to the division 
+39,o,s,s-o,g,right 
+39,A1,s,s-A1,f,uh-huh 
+40,A2,n,n-A2,g,right down to the division beside the stream stop there 
+40,A1,s,s-A1,f,uh-huh 
+41,o,n,n-o,g,right 
+41,o,s,s-o,g,see to the right of the dead tree 
+41,K2,s,s-K2,g,what is it 
+41,K1,s,s-K1,f,nothing much it's just mountain stream that's 
+41,o,s,s-o,g,right 
+42,A2,n,n-A2,g,well go round that to the right of it go round it 
+42,A1,s,s-A1,f,around it 
+42,o,s,s-o,g,uh-huh 
+42,o,s,s-o,f,uh-huh 
+42,o,s,s-o,g,right 
+43,o,n,n-o,g,then 
+43,A2,s,s-A2,g,you stop just at the bottom of the dea-- not just ehm 
+43,o,s,s-o,g,you know where it says dead tree 
+43,o,s,s-o,f,mmhmm 
+43,A2,s,s-A2,g,just stop at the bottom there at the bottom of the dead tree just a few millimetres below the dead tree 
+43,o,s,s-o,g,right 
+43,A1,s,s-A1,f,okay 
+44,K1,n,n-K1,f,my map is turning out really really bad 
+45,A2,n,n-A2,f,okay go 
+45,A1,s,s-A1,g,right 
+46,K1,n,n-K1,f,dead tree murgey 
+47,A2,n,n-A2,g,go ehm right 
+47,A2,s,s-A2,g,from the dead tree go down a few centimetres 
+47,A1,s,s-A1,f,uh-huh 
+47,o,s,s-o,g,right 
+47,o,s,s-o,f,yeah 
+48,K2,n,n-K2,g,have you gone down a wee bit yeah 
+48,K1,s,s-K1,f,yeah 
+49,o,n,n-o,g,right now 
+49,o,s,s-o,g,is you know how the forked stream divided 
+49,o,s,s-o,f,mmhmm 
+49,o,s,s-o,g,see at the bottom of the left-hand of the division 
+49,K2,s,s-K2,g,is there a lagoon 
+49,K1,s,s-K1,f,mm yeah 
+50,o,n,n-o,g,right uh 
+50,o,s,s-o,g,you know where you stopped 
+50,o,s,s-o,f,mmhmm 
+50,A2,s,s-A2,g,take it along to the lagoon 
+50,A1,s,s-A1,f,right to the lagoon 
+50,o,s,s-o,g,uh-huh 
+50,o,s,s-o,f,mmhmm 
+51,o,n,n-o,g,right 
+51,A2,s,s-A2,g,stop there 
+51,o,s,s-o,g,now 
+52,A2,n,n-A2,g,go down the lagoon next to the lagoon mark it next to the lagoon 
+52,A1,s,s-A1,f,i go right down to the lagoon 
+52,o,s,s-o,g,uh-huh 
+53,A2,n,n-A2,g,and stop at the bottom of the lagoon 
+53,A1,s,s-A1,f,mmhmm 
+53,o,s,s-o,g,right 
+54,K2,n,n-K2,g,right you got it 
+54,K1,s,s-K1,f,yeah 
+55,o,n,n-o,g,right 
+55,K2,s,s-K2,g,now see further down from the lagoon is there rock fall 
+55,K2,s,s-K2,g,and green bay 
+55,o,s,s-o,f,mm 
+55,K1,s,s-K1,f,there's green bay yeah 
+55,o,s,s-o,g,right 
+56,K2,n,n-K2,g,there's a pirate ship isn't there 
+56,K1,s,s-K1,f,yeah 
+56,o,s,s-o,g,right 
+57,K2,n,n-K2,g,have you got just above green bay is there rock fall 
+57,K1,s,s-K1,f,no rock fall 
+58,K1,n,n-K1,f,there's a computer controlled sub 
+58,o,s,s-o,g,right right 
+59,A2,n,n-A2,g,from the bottom of the lagoon take your marker round that sub 
+59,A1,s,s-A1,f,around it 
+59,o,s,s-o,g,uh-huh 
+59,o,s,s-o,f,right down to it around it 
+59,o,s,s-o,g,uh-huh 
+59,o,s,s-o,g,above it you know round it 
+59,o,s,s-o,f,above it yeah 
+60,o,n,n-o,g,right okay 
+60,o,s,s-o,g,and ehm now 
+60,o,s,s-o,g,eh 
+60,o,s,s-o,g,green bay 
+60,o,s,s-o,f,angie yeah green bay 
+60,o,s,s-o,g,there's a kind ehm 
+60,o,s,s-o,g,er 
+60,A2,s,s-A2,g,right take it round round there 
+60,o,s,s-o,g,righ-- 
+61,o,n,n-o,g,there's a kind eh tip made at green bay 
+61,K2,s,s-K2,g,you know where the sub is 
+61,K1,s,s-K1,f,mmhmm 
+61,K1,s,s-K1,f,right that right down to the left 
+61,o,s,s-o,g,uh-huh yeah yeah 
+62,o,n,n-o,f,how about it 
+63,A2,n,n-A2,g,take it through there 
+63,A1,s,s-A1,f,uh-huh 
+64,o,n,n-o,g,right 
+64,A2,s,s-A2,g,stop there 
+65,o,n,n-o,g,now 
+65,o,s,s-o,g,take it to the pi-- 
+66,K2,n,n-K2,g,is there a pirate ship there 
+66,K1,s,s-K1,f,yeah 
+65,o,o,o-o,g,right well 
+65,A2,s,s-A2,g,take it down a bit 
+65,A1,s,s-A1,f,down a bit 
+65,o,s,s-o,g,from that tip 
+65,o,s,s-o,g,right 
+65,o,s,s-o,f,mmhmm 
+67,A2,n,n-A2,g,down a few centimetres and take it down to the right towards the pirate ship and that's where you finish 
+67,A1,s,s-A1,f,okay 
+67,o,s,s-o,f,fine 
+67,o,s,s-o,g,got it 

@@ -1,0 +1,290 @@
+thread,neg,seg,comb,speaker,text
+1,A2,n,n-A2,g,eh starting at the top of the caravan park 
+1,A1,s,s-A1,f,aye 
+2,A2,n,n-A2,g,turning to your left then left again 
+3,K2,n,n-K2,f,my left 
+3,K1,s,s-K1,g,yes 
+4,K1,n,n-K1,g,that's something like the top of the caravan park you're facing up to top of the map 
+4,o,s,s-o,f,uh-huh 
+5,A2,n,n-A2,g,you turn left 
+5,A1,s,s-A1,f,uh-huh 
+6,A2,n,n-A2,g,then left again so you're coming down the side of the caravan park 
+6,A1,s,s-A1,f,right 
+7,A2,n,n-A2,g,keep going down 
+7,A1,s,s-A1,f,mmhmm 
+8,A2,n,n-A2,g,then you turn left 
+9,o,n,n-o,g,go 
+8,A1,o,o-A1,f,aye 
+10,A1,n,n-A1,f,le-- i'm going back down south 
+11,A2,n,n-A2,g,you're coming you're coming back you're coming down the map so you're turning left that's into that's into the map 
+11,A1,s,s-A1,f,aye 
+11,o,s,s-o,f,dnndnn 
+11,o,s,s-o,f,aye right 
+12,K2,n,n-K2,g,okay you got that 
+12,K1,s,s-K1,f,uh-huh 
+13,A2,n,n-A2,g,you're going along and you're turning left again 
+14,A2,n,n-A2,f,right well stop now 
+14,A1,s,s-A1,g,okay 
+15,o,n,n-o,f,right 
+15,K2,s,s-K2,f,so out the caravan park 
+15,K1,s,s-K1,g,ah out the top of the caravan park 
+16,K2,n,n-K2,f,right go left then left again 
+16,K1,s,s-K1,g,then so you're coming down the side of the caravan park 
+16,o,s,s-o,f,right 
+17,K2,n,n-K2,f,now is there anything i should be watching for 
+17,K1,s,s-K1,g,not not to the 
+18,K2,n,n-K2,g,if you come do-- have you come down past the caravan park 
+18,K1,s,s-K1,f,aye 
+19,A2,n,n-A2,g,you turn left 
+20,K2,n,n-K2,f,immediately past the caravan park 
+20,K1,s,s-K1,g,no 
+19,A2,o,o-A2,g,come down and turn left 
+19,A1,s,s-A1,f,uh-huh 
+21,A2,n,n-A2,g,then you go along 
+21,A1,s,s-A1,f,right 
+22,A2,n,n-A2,g,turn left again 
+23,K2,n,n-K2,f,i don't go to the bottom of the map 
+23,K1,s,s-K1,g,no you don't go to the bottom of the map 
+23,o,s,s-o,f,right 
+22,A1,o,o-A1,f,uh-huh 
+24,A2,n,n-A2,g,turn left so that's two turns left after you come out the caravan park 
+25,K2,n,n-K2,f,left come out turn left then turn left again and get to the bottom then turn left again 
+25,K1,s,s-K1,g,yeah 
+25,o,s,s-o,f,right 
+26,A2,n,n-A2,g,and left back up into the map 
+27,o,n,n-o,f,how how h-- how 
+28,A2,n,n-A2,g,be careful for the old mill you'll see it it should be on your right-hand side 
+28,A1,s,s-A1,f,right 
+29,A2,n,n-A2,g,you go up past the the old mill keeping the old mill on your right-hand side 
+30,K2,n,n-K2,g,okay you got eh you at the old mill yet 
+30,K1,s,s-K1,f,aye i'm by the old mill 
+31,o,n,n-o,g,right 
+31,A2,s,s-A2,g,turn round the old turn to the right after the old mill 
+31,o,s,s-o,f,the right 
+31,o,s,s-o,g,yeah to the right after the old mill 
+31,o,s,s-o,f,right 
+32,A2,n,n-A2,g,that's you going across to the other side of the map 
+32,A1,s,s-A1,f,uh-huh 
+33,A2,n,n-A2,g,keep going 
+33,A1,s,s-A1,f,uh-huh 
+34,K1,n,n-K1,g,now you should come to a fenced meadow on your right 
+34,o,s,s-o,f,aye 
+35,A2,n,n-A2,g,well you turn left so you're going up the map again 
+35,o,s,s-o,f,right up the map 
+35,o,s,s-o,g,up the map 
+36,A2,n,n-A2,g,you'll then come to an abandoned cottage it should be on your left-hand side 
+36,ch,s,s-ch,f,uh i'm nowhere near it 
+36,o,s,s-o,g,well never mind 
+37,K1,n,n-K1,g,you should be on the left-hand side of it but it should be on your left-hand side 
+37,ch,s,s-ch,f,ah but there's something in the road 
+38,o,n,n-o,g,is there 
+38,o,s,s-o,f,aye 
+38,K2,s,s-K2,g,what 
+38,K1,s,s-K1,f,a forest 
+38,o,s,s-o,g,is there 
+38,o,s,s-o,f,aye 
+39,o,n,n-o,f,but but the ma-- 
+38,ch,o,o-ch,g,i think you're on the wrong one 
+39,K1,n,n-K1,f,the maps have been drawn by different explorers 
+39,o,s,s-o,g,aye aye 
+40,K1,n,n-K1,f,see i've landed in an obstacle 
+40,o,s,s-o,g,i see 
+41,A2,n,n-A2,g,you'll have to go through the forest then 
+41,A1,s,s-A1,f,i'll have to go through the forest 
+41,o,s,s-o,g,mm 
+41,o,s,s-o,f,unfortunately right 
+42,K2,n,n-K2,g,can you manage that 
+42,K1,s,s-K1,f,right i've managed to get through it 
+43,K1,n,n-K1,g,right now you should em-- hopefully emerge at the cottage yeah 
+43,o,s,s-o,f,at the abandoned cottage 
+43,o,s,s-o,f,aye 
+44,K1,n,n-K1,g,that should be on your left-hand side 
+44,o,s,s-o,f,yes 
+45,o,n,n-o,g,okay 
+45,A2,s,s-A2,g,you go up round the aband-- uh abandoned cottage 
+45,A1,s,s-A1,f,uh-huh 
+46,A2,n,n-A2,g,keeping it always on your left 
+46,A1,s,s-A1,f,right 
+46,ch,s,s-ch,g,no your left 
+46,o,s,s-o,f,uh okay 
+47,o,n,n-o,g,okay 
+47,K1,s,s-K1,g,coming round you should see a fenced meadow in front of you 
+48,K2,n,n-K2,f,another one 
+48,K1,s,s-K1,g,yes 
+47,ch,o,o-ch,f,no i've had a fenced meadow but there's only another there's nae more fenced meadows 
+49,o,n,n-o,g,there's no 
+49,ch,s,s-ch,f,no 
+50,K1,n,n-K1,f,so that's irrelevant 
+49,K2,o,o-K2,g,you no got two fenced meadows 
+49,K1,s,s-K1,f,no 
+51,K2,n,n-K2,g,well what have you got instead a fenced meadow 
+51,ch,s,s-ch,f,i can't i don't know if i'm supposed to tell you that 
+52,K1,n,n-K1,g,well you've just told me about the forest 
+52,o,s,s-o,f,aye right 
+53,K1,n,n-K1,f,so i've been through a forest 
+53,o,s,s-o,g,yes 
+54,K1,n,n-K1,f,because uh the the maps are different 
+54,o,s,s-o,g,aye 
+55,K1,n,n-K1,f,so there's nae fenced meadow right 
+55,o,s,s-o,g,no fenced meadow 
+55,o,s,s-o,f,no 
+56,K1,n,n-K1,g,you should be round a hundred and eighty degrees around to the abandoned cottage and then turn right 
+57,K1,n,n-K1,g,okay so you've what you've done is you went round 
+58,K1,n,n-K1,f,come up to the abandoned cottage skirted it 
+57,o,o,o-o,g,cottage round 
+58,o,n,n-o,g,yes 
+59,K1,n,n-K1,f,and then turn right right 
+59,o,s,s-o,g,right 
+59,o,s,s-o,f,verstanden 
+59,o,s,s-o,g,i'll keep it english 
+59,o,s,s-o,f,right 
+59,o,s,s-o,g,okay 
+59,o,s,s-o,f,uh-huh 
+60,A1,n,n-A1,f,so i turn right by the abandoned cottage 
+60,o,s,s-o,g,cottage 
+60,o,s,s-o,f,okay 
+61,A2,n,n-A2,g,now you're going along 
+61,A1,s,s-A1,f,uh-huh 
+62,A2,n,n-A2,g,and then you turn up right again and you keep going until you find a lake 
+62,ch,s,s-ch,f,wait a minute 
+63,K2,n,n-K2,f,sure i don't turn left 
+64,K2,n,n-K2,g,what you mean turn left 
+64,K1,s,s-K1,f,if i turn right by the abandoned cottage that means i'm heading that way 
+64,ch,s,s-ch,g,i cannae see your hands fae here 
+64,o,s,s-o,f,no you cannae 
+64,o,s,s-o,f,i shouldnae be doing that anyway 
+64,o,s,s-o,g,uh-huh i know 
+65,K1,n,n-K1,f,but i'm heading towards the edge of the map 
+66,K2,n,n-K2,g,which edg-- you are you heading towards your left-hand edge of the map 
+66,K1,s,s-K1,f,my right-hand edge of the map 
+67,K1,n,n-K1,g,yes your right-hand edge my left-hand edge 
+68,K1,n,n-K1,f,this edge here 
+68,o,s,s-o,g,oh 
+69,o,n,n-o,f,right aye 
+69,K1,s,s-K1,f,well it's it's the difference between le-- right and left i think 
+69,o,s,s-o,g,uh-huh 
+69,o,s,s-o,f,uh-huh 
+70,o,n,n-o,g,okay you're 
+71,K1,n,n-K1,f,right i've come up by the abandoned cottage right i was heading straight up the map towards the top of the blackboard 
+71,o,s,s-o,g,abandoned cottage 
+71,o,s,s-o,g,yes 
+71,o,s,s-o,g,yes 
+72,K1,n,n-K1,f,and then you told me to turn right 
+72,ch,s,s-ch,g,no 
+73,K1,n,n-K1,g,i told you to turn left around the old abandoned cottage you turn right once you went round the cottage 
+74,o,n,n-o,f,sorry 
+74,K1,s,s-K1,f,i've done it wrong i wasnae listening 
+75,K1,n,n-K1,g,aye get the tippex out 
+75,o,s,s-o,f,right 
+76,o,n,n-o,f,right 
+76,A1,s,s-A1,f,i think we'll go back to the right before i come to the abandoned cottage 
+77,K2,n,n-K2,g,right you've come through the forest 
+77,K1,s,s-K1,f,uh-huh 
+78,K2,n,n-K2,g,you see the abandoned cottage in front of you 
+78,K1,s,s-K1,f,right 
+79,K2,n,n-K2,g,you go up the map past the abandoned cottage turn left 
+79,o,s,s-o,f,oh by the by the abandoned cottage and turn left 
+79,o,s,s-o,g,left yes 
+79,K1,s,s-K1,f,right i've got that 
+79,o,s,s-o,f,i just mis-- misread you 
+80,K2,n,n-K2,g,so the abandoned cottage should now be below you on the map 
+80,o,s,s-o,f,s-- 
+80,K1,s,s-K1,f,it's aye 
+81,K1,n,n-K1,f,but it's still to my left 
+81,o,s,s-o,g,yes 
+81,o,s,s-o,f,right that's fine 
+82,A2,n,n-A2,g,so you do that again 
+82,A1,s,s-A1,f,uh-huh 
+83,A2,n,n-A2,g,you turn round to a abandoned cottage so always keeping it on your left-hand side 
+83,A1,s,s-A1,f,aye 
+84,K2,n,n-K2,g,okay you got that much 
+84,K1,s,s-K1,f,mmhmm 
+85,K1,n,n-K1,g,now you turn to your right sh-- should be taking you towards the edge of the paper away from the abandoned cottage 
+85,ch,s,s-ch,f,it's taking me straight buh up a up a up again 
+85,o,s,s-o,g,no it's no 
+86,K2,n,n-K2,g,how many sides of the abandoned cottage have you past 
+86,K1,s,s-K1,f,passed it twice 
+86,o,s,s-o,g,you've passed twice 
+87,A2,n,n-A2,g,should pass it again on your left 
+87,A1,s,s-A1,f,right c-- 
+88,o,n,n-o,g,so you've anyway after you've turned around the cottage 
+88,A2,s,s-A2,f,you come straight back down 
+88,A1,s,s-A1,g,aye 
+89,K1,n,n-K1,f,you said a hundred and eighty degrees should be three hundred sixty you should have said 
+89,o,s,s-o,g,oh three hundred sixty 
+90,o,n,n-o,f,right 
+90,K1,s,s-K1,f,so that's that's right 
+91,A1,n,n-A1,f,so i'm coming back d-- back down the paper again 
+91,o,s,s-o,g,ah 
+91,o,s,s-o,g,yeah back down the paper 
+92,A2,n,n-A2,g,turn right now 
+92,A1,s,s-A1,f,uh-huh aye turn right 
+93,o,n,n-o,g,okay 
+93,K2,s,s-K2,g,do you have a fenced meadow 
+93,K1,s,s-K1,f,no i don't have a fenced meadow 
+93,o,s,s-o,g,no that's right 
+94,o,n,n-o,g,okay 
+94,A2,s,s-A2,g,now we turn right again 
+94,o,s,s-o,g,okay 
+94,A2,s,s-A2,g,and you go up the map 
+94,A2,s,s-A2,g,you should come to a lake 
+94,A1,s,s-A1,f,uh-huh 
+95,K2,n,n-K2,g,okay you got the lake 
+95,o,s,s-o,f,there's two lakes 
+95,K1,s,s-K1,f,i've got a lake right 
+95,o,s,s-o,g,you've got a lake 
+96,A2,n,n-A2,g,now you skirt around the inside o-- side of the lake that's side of the lake that is nearest to the middle of the map 
+96,A1,s,s-A1,f,uh-huh 
+97,o,n,n-o,g,okay 
+97,K1,s,s-K1,g,you should see a trig point 
+98,K2,n,n-K2,g,do you see 
+98,K1,s,s-K1,f,no i don't have any trig points 
+98,o,s,s-o,g,you don't have a trig point 
+98,o,s,s-o,f,no 
+99,o,n,n-o,g,okay 
+99,K1,s,s-K1,g,er the lake should have a a bulge in it just at the top 
+99,o,s,s-o,f,aye 
+100,A2,n,n-A2,g,uh we turn right there at that bulge 
+100,A1,s,s-A1,g,okay 
+100,o,s,s-o,g,since you don't have a trig point we'll use that instead 
+100,o,s,s-o,f,uh-huh 
+101,A2,n,n-A2,g,turn right now go diagonally down towards the bot-- not a steep diagonal towards the middle 
+101,A1,s,s-A1,f,uh-huh 
+102,A2,n,n-A2,g,edge of the map 
+102,A1,s,s-A1,f,right 
+103,o,n,n-o,g,okay 
+104,K2,n,n-K2,g,now should come to a mon-- do you have a monument 
+104,K1,s,s-K1,f,i have a monument 
+103,A2,o,o-A2,g,go round the monument keeping the monument always on your left 
+105,K2,n,n-K2,f,always on my left 
+105,K1,s,s-K1,g,yes 
+103,A1,o,o-A1,f,right 
+106,A2,n,n-A2,g,go up past the monument 
+107,K2,n,n-K2,f,right round it 
+107,K1,s,s-K1,g,no 
+107,K1,s,s-K1,g,just up so that you're you're coming away from it up towards the top of the paper 
+106,A1,o,o-A1,f,aye got that 
+108,o,n,n-o,g,okay 
+108,A2,s,s-A2,g,you keep going up there 
+108,A1,s,s-A1,f,uh-huh 
+109,K2,n,n-K2,g,now do you see a nuclear test site 
+109,K1,s,s-K1,f,no i don't see a nuclear test site 
+109,o,s,s-o,g,okay 
+110,A2,n,n-A2,g,keep going 'til you find a lake 
+110,A1,s,s-A1,f,alright keep going 'til i find a lake right 
+110,o,s,s-o,g,okay 
+111,K1,n,n-K1,f,i've got to a lake 
+112,A2,n,n-A2,g,now you turn left towards the middle of the page 
+112,A1,s,s-A1,f,uh-huh 
+112,o,s,s-o,f,right 
+113,A2,n,n-A2,g,and you should finish just past the the lake 
+113,o,s,s-o,f,finish just past the lake 
+113,o,s,s-o,g,yes 
+113,A1,s,s-A1,f,uh-huh 
+114,K1,n,n-K1,g,okay and that's you 
+114,o,s,s-o,f,is it 
+114,o,s,s-o,g,aye 
+114,o,s,s-o,g,quite why you want to go there i don't know but 
+115,K1,n,n-K1,f,i know i've had i've had two detours wrong 
+116,A2,n,n-A2,g,ah we better score them out then 
+116,A1,s,s-A1,f,aye that's wrong 

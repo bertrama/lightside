@@ -71,4 +71,9 @@ public class FeatureHit
 	{
 		this.documentIndex = documentIndex;
 	}
+	
+	public String toString()
+	{
+		return feature+"@"+documentIndex+"("+value+")";
+	}
 }

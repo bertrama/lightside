@@ -47,14 +47,6 @@ public class FeatureTableTester extends FEPlugin
 		// TODO Auto-generated method stub
 		return "test";
 	}
-
-	@Override
-	public List<Map<String, Number>> extractFeatureMapsForSubclass(
-			DocumentList documents) throws Exception
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
 	
 
 	public Collection<FeatureHit> extractFeatureHits(DocumentList documents)
@@ -112,5 +104,13 @@ public class FeatureTableTester extends FEPlugin
 		return null;
 	}
 
+
+	@Override
+	public List<Map<String, Number>> extractFeatureMapsForSubclass(
+			DocumentList documents) throws Exception
+	{
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

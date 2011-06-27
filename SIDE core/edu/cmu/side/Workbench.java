@@ -81,56 +81,12 @@ public class Workbench extends JFrame {
 	
 
 	private Workbench() throws Exception {
-		yeriInit();
-	}
-	private void yeriInit() {
 		Workbench.current = this;
 		pluginManager = new PluginManager(SIDEToolkit.PLUGIN_FOLDER);
-		
 	}
 
 	
 	public static void main(String[] args) throws Exception {
-		testMain(args);
-	}
-	private static class MainButtonListener implements ActionListener{
-
-		private JComponent c;
-		private Dimension dimension;
-		private String name;
-		
-		public MainButtonListener(JComponent c, Dimension d){
-			this.c = c;
-			this.dimension = d;
-			name = "Test";
-		}
-		
-		public MainButtonListener(String n, JComponent c, Dimension d){
-			this.c = c;
-			this.dimension = d;
-			this.name = n;
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			TestDialog testDialog = new TestDialog(c, null, Dialog.ModalityType.MODELESS);
-			testDialog.setSize(dimension);
-			testDialog.setTitle(name);
-			testDialog.showDialog();			
-		}
-		
-	}
-	private static JButton buildButton(String name, Dimension dimension, JComponent c){
-		JButton button = new JButton(name);
-		button.addActionListener(new MainButtonListener(name, c, dimension));
-		return button;
-	}
-
-	protected static void testMain(String[] args) {
-		if(args.length>0 && args[0].equalsIgnoreCase("test")){
-			testMode = true;
-		}
-		
 		JPanel mainPanel = new JPanel();
 		mainPanel.setLayout(new RiverLayout());
 		
@@ -139,66 +95,15 @@ public class Workbench extends JFrame {
 		frame.setTitle("SIDE");
 		frame.setVisible(true);
 		frame.add(new MachineLearningPanel());
-		
-		JButton loadAllButton = new JButton("load all files");
-		loadAllButton.setMnemonic(KeyEvent.VK_L);
-		loadAllButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SIDEToolkit.FileType.loadAll();
-			}
-		});
-		
-		JButton cleanupButton = new JButton("clean up save files (x)");
-		cleanupButton.setMnemonic(KeyEvent.VK_X);
-		cleanupButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				int result = JOptionPane.showConfirmDialog((Component)e.getSource(),
-						"Remove all saved files?",
-						"Remove",
-						JOptionPane.YES_NO_OPTION,
-						JOptionPane.WARNING_MESSAGE);
-				if(result!=JOptionPane.OK_OPTION){
-					return;
-				}
-				
-				SIDEToolkit.cleanupSaveFiles();
-			}
-		});
-		
-		JButton testButton = new JButton("test all");
-		testButton.setMnemonic(KeyEvent.VK_T);
-		testButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				SIDEToolkit.testAll();
-			}
-		});
-		
-//		mainPanel.add("p hfill", documentReaderButton);
-//		mainPanel.add("br hfill", annotationButton);
-//		mainPanel.add("br hfill", machineLearningButton);
-////		mainPanel.add("br hfill", predictionButton);
-////		mainPanel.add("p hfill", filterButton);
-//		mainPanel.add("br hfill", summaryButton);
-		
-		if(testMode){		
-			mainPanel.add("p hfill", new JSeparator());
-			mainPanel.add("p hfill", loadAllButton);
-			mainPanel.add("br hfill", cleanupButton);
-			mainPanel.add("br hfill", testButton);
-		}
-				
-		
-		TestFrame testFrame = new TestFrame(mainPanel);
-		testFrame.setTitle(SIDEToolkit.titleLaunchPanel);
-		testFrame.pack();
-		
-//		SIDEToolkit.FileType.loadAll();
-//		testFrame.showFrame();
+		frame.repaint();
 	}
 	
+	/**
+	 * Framework for all the list managers used throughout SIDE. 
+	 * Lists of feature tables, training results, summaries, etc. all use this machinery.
+	 * 
+	 * @param <T>
+	 */
 	public static abstract class ListManager<T>{
 		private int eventID = 1;
 		private List<T> list = new ArrayList<T>();
@@ -299,7 +204,6 @@ public class Workbench extends JFrame {
 	
 	public FeatureTableListManager featureTableListManager = new FeatureTableListManager();
 	public TrainingResultListManager trainingResultListManager = new TrainingResultListManager();
-//	public SIDEFilterListManager sideFilterListManager = new SIDEFilterListManager();
 	public RecipeListManager recipeListManager = new RecipeListManager();
 	public SummaryListManager summaryListManager = new SummaryListManager();
 }

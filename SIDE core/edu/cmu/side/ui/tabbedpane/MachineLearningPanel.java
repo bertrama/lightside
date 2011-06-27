@@ -23,20 +23,6 @@ public class MachineLearningPanel extends JTabbedPane{
 		super();
 		yeriInit();
 	}
-	
-	public static void main(String[] args){
-		test01();
-	}
-	
-	private static void test01() {
-		Workbench.testMode = true;
-		SIDEToolkit.FileType.loadAll();
-		
-		TestFrame testFrame = new TestFrame(new MachineLearningPanel());
-		testFrame.setSize(new Dimension(1024,800));
-		
-		testFrame.showFrame();
-	}
 
 	private void yeriInit(){
 		documentReaderConfigPanel = new DocumentReaderConfigPanel();
@@ -57,7 +43,6 @@ public class MachineLearningPanel extends JTabbedPane{
 	private FeatureTableConfigPanel featureTableConfigPanel;
 	private MLAPluginConfigPanel mlaPluginConfigPanel;
 	private FeatureAnalyzerConfigPanel featureAnalyzerConfigPanel;
-	private TrainingResultVisualizationConfigPanel trainingResultVisualizationConfigPanel;
 	private AnnotationEditor annotationEditor;
 	private SummaryBuilder summaryPanel;
 	

@@ -75,6 +75,7 @@ public class FEPluginConfigPanel extends javax.swing.JPanel implements ActionLis
 	private JCheckBox rareCheckbox;
 	private JTextField thresholdTextArea;
 	private JLabel thresholdLabel;
+	
 	public void updateFEPluginArray(FEPlugin[] updatePluginArray){
 		
 		if(this.fePluginArray==null){ this.fePluginArray = Workbench.current.pluginManager.getFEPluginArray(); }

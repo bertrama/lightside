@@ -65,11 +65,6 @@ import edu.cmu.side.uima.type.SIDEAnnotation;
  */
 public class FeatureExtractionToolkit {
 
-	public static void main(String[] args) throws InvalidXMLException,
-	ResourceInitializationException, CollectionException, IOException,
-	CASException {
-	}
-
 	public static class FeatureTableKey implements Serializable {
 		private static final long serialVersionUID = 1L;
 
@@ -198,6 +193,7 @@ public class FeatureExtractionToolkit {
 	 *
 	 */
 	public static class FeatureTable extends DataItem implements XMLable{
+
 		private static final long serialVersionUID = 1L;
 
 		private boolean meta = false;
@@ -639,6 +635,7 @@ public class FeatureExtractionToolkit {
 		private FeatureTable() {
 			timestamp = System.currentTimeMillis();
 		}
+		
 		public static FeatureTable createFromXML(Element root) throws Exception{
 			FeatureTable featureTable = new FeatureTable();
 			featureTable.fromXML(root);

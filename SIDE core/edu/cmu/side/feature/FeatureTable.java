@@ -2,6 +2,8 @@ package edu.cmu.side.feature;
 
 import java.util.*;
 
+import edu.cmu.side.SIDEToolkit.FileType;
+import edu.cmu.side.dataitem.DataItem;
 import edu.cmu.side.plugin.FEPlugin;
 import edu.cmu.side.uima.UIMAToolkit.DocumentList;
 
@@ -10,7 +12,7 @@ import edu.cmu.side.uima.UIMAToolkit.DocumentList;
  * A many-directional mapping of Features, FeatureHits and indexes into the DocumentList.
  *
  */
-public class FeatureTable
+public class FeatureTable extends DataItem
 {
 	private Collection<FEPlugin> extractors;
 	private DocumentList documents;
@@ -95,5 +97,11 @@ public class FeatureTable
 	public void setExtractors(Collection<FEPlugin> extractors)
 	{
 		this.extractors = extractors;
+	}
+
+	@Override
+	public FileType getFileType() {
+		// TODO Auto-generated method stub
+		return FileType.featureTable;
 	}
 }

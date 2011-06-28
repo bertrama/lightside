@@ -1,36 +1,24 @@
 package edu.cmu.side.ui.managerpanel;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import org.apache.uima.collection.CollectionException;
-import org.apache.uima.jcas.JCas;
-import org.apache.uima.resource.ResourceInitializationException;
-import org.apache.uima.util.InvalidXMLException;
-
 import com.yerihyo.yeritools.io.FileToolkit;
-import com.yerihyo.yeritools.swing.SwingToolkit.TestFrame;
 
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.Workbench.ListManager;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTable;
-import edu.cmu.side.plugin.FEPlugin;
 import edu.cmu.side.plugin.FeatureTableConsumer;
 import edu.cmu.side.plugin.PluginWrapper;
-import edu.cmu.side.uima.UIMAToolkit;
-import edu.cmu.side.uima.UIMAToolkit.DocumentList;
 
 public class FeatureTableManagerPanel extends ManagerPanel<FeatureTable>{
 	private static final long serialVersionUID = 1L;

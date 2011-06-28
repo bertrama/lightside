@@ -52,7 +52,6 @@ public abstract class ManagerPanel<T extends DataItem> extends JPanel implements
 		return this.getListManager().iterator();
 	}
 	
-	
 	public T getSelectedItem(){
 		int selectedIndex = this.easyList.getSelectedIndex();
 		if(selectedIndex<0){ return null; }
@@ -94,8 +93,6 @@ public abstract class ManagerPanel<T extends DataItem> extends JPanel implements
 		listModel = new DefaultListModel();
 		easyList = new JEasyList(); 
 		easyList.setModel(listModel);
-//		easyList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-//		listModel.addElement("ehllo");
 		
 		JButton clearButton = new JButton("clear");
 		clearButton.addActionListener(new ActionListener(){
@@ -108,15 +105,6 @@ public abstract class ManagerPanel<T extends DataItem> extends JPanel implements
 		this.add("tab hfill", new JLabel(getLabelString()+":"));
 		this.add("", clearButton);
 		this.add("br hfill vfill", new JScrollPane(easyList) );
-		
-//		easyList.addActionListener(new ActionListener(){
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				for(int i=0; i<listModel.getSize(); i++){
-//					listToListManager();
-//				}
-//			}
-//		});
 		
 		easyList.addMouseListener(new MouseAdapter(){
 			public void mouseClicked(MouseEvent evt){

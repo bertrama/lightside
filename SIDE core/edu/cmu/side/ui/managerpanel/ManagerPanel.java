@@ -101,7 +101,8 @@ public abstract class ManagerPanel<T extends DataItem> extends JPanel implements
 				refreshPanel();
 			}
 		});
-		this.add("", new JLabel(this.getListManager().createImageIcon()));
+		ListManager l = this.getListManager();
+		this.add("", new JLabel(l.createImageIcon()));
 		this.add("tab hfill", new JLabel(getLabelString()+":"));
 		this.add("", clearButton);
 		this.add("br hfill vfill", new JScrollPane(easyList) );

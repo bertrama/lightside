@@ -30,6 +30,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit.TestFrame;
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.ui.managerpanel.TrainingResultManagerPanel;
 import edu.cmu.side.uima.UIMAToolkit;
 import edu.cmu.side.uima.UIMAToolkit.DocumentList;
@@ -147,7 +148,7 @@ public class PredictionConfigPanel extends JPanel{
 			
 			String selectedBaseSubtype = (String)this.baseSubtypeComboBox.getSelectedItem();
 			
-			TrainingResult trainingResult = trainingResultManagerPanel.getSelectedTrainingResult();
+			TrainingResultInterface trainingResult = trainingResultManagerPanel.getSelectedTrainingResult();
 			if(trainingResult!=null && selectedBaseSubtype!=null){
 				this.newSubtypeNameField.setText(UIMAToolkit.getRecommendedPredictionAnnotationSubtypeName(trainingResult, selectedBaseSubtype));
 			}

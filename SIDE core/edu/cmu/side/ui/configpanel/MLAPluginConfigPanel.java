@@ -51,8 +51,8 @@ import edu.cmu.side.plugin.PluginWrapper;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.SegmenterPlugin;
 import edu.cmu.side.ui.managerpanel.TrainingResultManagerPanel;
+import edu.cmu.side.uima.DocumentListInterface;
 import edu.cmu.side.uima.UIMAToolkit.Datatype;
-import edu.cmu.side.uima.UIMAToolkit.DocumentList;
 
 /**
  * 
@@ -396,7 +396,7 @@ public class MLAPluginConfigPanel extends javax.swing.JPanel implements ActionLi
 		FeatureTable featureTable = (FeatureTable)selectedItem;
 		Datatype inferredDatatype = selectedDatatype;
 		if(inferredDatatype==Datatype.AUTO){
-			DocumentList documentList = featureTable.getDocumentList();
+			DocumentListInterface documentList = featureTable.getDocumentList();
 			inferredDatatype = documentList.getInferredDatatype();
 		}
 		return inferredDatatype;

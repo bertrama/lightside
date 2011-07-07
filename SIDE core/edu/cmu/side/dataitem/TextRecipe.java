@@ -64,6 +64,7 @@ import edu.cmu.side.dataitem.DataItem.SIDEFilterOperatorSetting.SIDEFilterOperat
 import edu.cmu.side.plugin.EMPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.SegmenterPlugin;
+import edu.cmu.side.uima.DocumentListInterface;
 import edu.cmu.side.uima.UIMAToolkit;
 import edu.cmu.side.uima.UIMAToolkit.DocumentList;
 import edu.cmu.side.uima.type.SIDESegment;
@@ -189,7 +190,7 @@ public class TextRecipe extends Recipe implements XMLable{
 		return wrapContentByRecipeTag(builder).toString();
 	}
 	
-	private static boolean[] getSuitabilityArray(DefaultMutableTreeNode node, DocumentList targetDocumentList, DocumentList documentList){
+	private static boolean[] getSuitabilityArray(DefaultMutableTreeNode node, DocumentListInterface targetDocumentList, DocumentList documentList){
 		SIDEFilterOperator operator = (SIDEFilterOperator)node.getUserObject();
 		OperatorType type = operator.getOperatorType();
 		

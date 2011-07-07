@@ -7,6 +7,7 @@
 package edu.cmu.side.ui.configpanel;
 
 import java.awt.Component;
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -29,7 +30,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit.TestFrame;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.plugin.FEPlugin;
-import edu.cmu.side.uima.UIMAToolkit.DocumentList;
+import edu.cmu.side.uima.DocumentListInterface;
 
 
 /**
@@ -40,9 +41,9 @@ public class FEPluginConfigPanel extends javax.swing.JPanel implements ActionLis
 
 	private static final long serialVersionUID = 1L;
 
-	private DocumentList documents;
+	private DocumentListInterface documents;
 	
-	public void setDocumentList(DocumentList d){
+	public void setDocumentList(DocumentListInterface d){
 		documents = d;
 	}
 	

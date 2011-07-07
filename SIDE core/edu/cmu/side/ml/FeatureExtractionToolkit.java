@@ -56,6 +56,7 @@ import edu.cmu.side.dataitem.DataItem;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTableKey.FeatureTableKeyDefaultComparator;
 import edu.cmu.side.plugin.FEPlugin;
 import edu.cmu.side.plugin.PluginWrapper;
+import edu.cmu.side.uima.DocumentListInterface;
 import edu.cmu.side.uima.UIMAToolkit;
 import edu.cmu.side.uima.UIMAToolkit.DocumentList;
 import edu.cmu.side.uima.type.SIDEAnnotation;
@@ -260,7 +261,7 @@ public class FeatureExtractionToolkit {
 		}
 
 		public Number[] getValueOfFeature(FeatureTableKey k){
-			DocumentList documentList = this.getDocumentList();
+			DocumentListInterface documentList = this.getDocumentList();
 			int documentListLength = documentList.getSize();
 
 			Number[] returnValue = new Number[documentListLength];

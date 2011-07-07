@@ -69,6 +69,7 @@ import com.yerihyo.yeritools.text.StringToolkit;
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.SegmenterPlugin;
 import edu.cmu.side.plugin.VisualizationToolkit.JCasListVisualizationPlugin;
@@ -255,7 +256,7 @@ public class AnnotationEditor extends javax.swing.JPanel implements ActionListen
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JComboBox trainingResultComboBox = (JComboBox)e.getSource();
-				TrainingResult trainingResult = (TrainingResult)trainingResultComboBox.getSelectedItem();
+				TrainingResultInterface trainingResult = (TrainingResultInterface)trainingResultComboBox.getSelectedItem();
 				if(trainingResult==null){ return; }
 				
 //				DocumentList documentList = new DocumentList(AnnotationEditor.this.getSubtypeName());
@@ -614,7 +615,7 @@ public class AnnotationEditor extends javax.swing.JPanel implements ActionListen
 		this.scrollPane.setViewportView(segmentedTextViewer);
 		SwingToolkit.adjustScrollBar(scrollPane, JScrollBar.VERTICAL);
 		
-		TrainingResult trainingResult = (TrainingResult)this.trainingResultComboBox.getSelectedItem();
+		TrainingResultInterface trainingResult = (TrainingResultInterface)this.trainingResultComboBox.getSelectedItem();
 		boolean annotateSelectedOnlyCheckBoxEnabled =
 //			(trainingResult!=null) &&
 //			trainingResult.getSubtypeName().equals(this.getSubtypeName()) &&

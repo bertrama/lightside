@@ -50,6 +50,35 @@ public class SIDEToolkit {
 		return new File(rootFolder, "descriptors");
 	}
 	
+	/**
+	 * ActionListener for adding CSV files to SimpleListManagerPanel.
+	 * @author emayfiel
+	 *
+	 */
+	public static class FileAddActionListener implements ActionListener {
+		private Component parentComponent;
+		private FastListModel model;
+		
+		public FileAddActionListener(Component parentComponent, FastListModel model){
+			this.parentComponent = parentComponent;
+			this.model = model;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JFileChooser chooser = new JFileChooser();
+			chooser.setCurrentDirectory(SIDEToolkit.csvFolder);
+			chooser.setFileFilter(FileToolkit
+					.createExtensionListFileFilter(new String[] { "csv" }, true));
+			chooser.setMultiSelectionEnabled(true);
+			int result = chooser.showOpenDialog(parentComponent);
+			if (result != JFileChooser.APPROVE_OPTION) {
+				return;
+			}
+			FastListModel fileListModel = model;
+			fileListModel.addAll(chooser.getSelectedFiles());
+		}
+	}
 	
 	public static class XMIFileAddActionListener implements ActionListener {
 		private Component parentComponent;
@@ -76,7 +105,6 @@ public class SIDEToolkit {
 
 			fileListModel.addAll(chooser.getSelectedFiles());
 		}
-
 	}
 
 	public static final String TMP_TIMESTAMP_COLUMN = "SIDE_Timestamp";

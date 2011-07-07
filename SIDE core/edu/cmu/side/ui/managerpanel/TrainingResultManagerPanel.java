@@ -27,6 +27,7 @@ import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.Workbench.ListManager;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 
 public class TrainingResultManagerPanel extends ManagerPanel<TrainingResult>{
 	private static final long serialVersionUID = 1L;
@@ -44,7 +45,7 @@ public class TrainingResultManagerPanel extends ManagerPanel<TrainingResult>{
 		@Override
 		protected TrainingResult loadItem(File file) {
 			try {
-				return TrainingResult.create(file);
+				return (TrainingResult)TrainingResult.create(file);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
@@ -119,7 +120,7 @@ public class TrainingResultManagerPanel extends ManagerPanel<TrainingResult>{
 		YeriDebug.ASSERT(xmiFile.exists());
 		XMLDocument doc = XMLBoss.XMLFromFile(xmiFile);
 		Element root = doc.getDocumentElement();
-		TrainingResult trainingResult = TrainingResult.create(root);
+		TrainingResultInterface trainingResult = TrainingResult.create(root);
 		
 		ftmp.listModel.addElement(trainingResult);
 		

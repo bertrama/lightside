@@ -28,6 +28,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit.TestFrame;
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.plugin.PluginWrapper;
 import edu.cmu.side.plugin.VisualizationToolkit;
 import edu.cmu.side.plugin.VisualizationToolkit.TrainingResultVisualizationPlugin;
@@ -76,7 +77,7 @@ public class TrainingResultVisualizationConfigPanel extends JPanel{
 	private class AnalyzeTask extends OnPanelSwingTask{
 //		private TrainingResult trainingResult;
 		
-		public AnalyzeTask(JProgressBar progressBar, TrainingResult trainingResult){
+		public AnalyzeTask(JProgressBar progressBar, TrainingResultInterface trainingResult){
 			this.addProgressBar(progressBar);
 //			this.trainingResult = trainingResult;
 		}
@@ -134,7 +135,7 @@ public class TrainingResultVisualizationConfigPanel extends JPanel{
 	}
 	
 	private void analyze(){
-		AnalyzeTask task = new AnalyzeTask(progressBar, (TrainingResult)trainingResultComboBox.getSelectedItem());
+		AnalyzeTask task = new AnalyzeTask(progressBar, (TrainingResultInterface)trainingResultComboBox.getSelectedItem());
 		task.addPropertyChangeListener(task);
 		task.execute();
 	}

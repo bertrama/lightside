@@ -36,8 +36,6 @@ public class PluginManager {
 		return pluginTypeMap.keySet();
 	}
 
-	
-	
 	public PluginWrapper getPluginWrapperByPluginClassName(String pluginClassName) {
 		PluginWrapper result = null;
 
@@ -129,7 +127,6 @@ public class PluginManager {
 
 	protected static ListValueMap<String,PluginWrapper> createPluginTypeMap(File rootFolder, StringBuilder errorComment) {
 		YeriDebug.ASSERT(rootFolder.isDirectory());
-//		System.out.println(rootFolder.getPath());
 		
 		ListValueMap<String,PluginWrapper> pluginTypeMap = new ListValueMap<String,PluginWrapper>();
 

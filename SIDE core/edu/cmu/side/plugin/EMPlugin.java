@@ -2,7 +2,7 @@ package edu.cmu.side.plugin;
 
 import java.io.File;
 
-import edu.cmu.side.uima.UIMAToolkit.DocumentList;
+import edu.cmu.side.uima.DocumentListInterface;
 
 public abstract class EMPlugin extends SIDEPlugin {
 	public EMPlugin () {super();}
@@ -23,10 +23,10 @@ public abstract class EMPlugin extends SIDEPlugin {
 //		return this.toXML().equals( ((EMPlugin)o).toXML() );
 //	}
 	
-	public int[] getOrderIndex(DocumentList documentList) throws Exception{
+	public int[] getOrderIndex(DocumentListInterface documentList) throws Exception{
 		this.uiToMemory();
 		return this.getOrderIndexForSubclass(documentList);
 	}
 	
-	protected abstract int[] getOrderIndexForSubclass(DocumentList documentList);
+	protected abstract int[] getOrderIndexForSubclass(DocumentListInterface documentList);
 }

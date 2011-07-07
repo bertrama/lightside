@@ -19,7 +19,7 @@ import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTable;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTableKey;
-import edu.cmu.side.uima.UIMAToolkit.DocumentList;
+import edu.cmu.side.uima.DocumentListInterface;
 
 public class FeatureTableViewer extends JPanel{
 	private static final long serialVersionUID = 1L;
@@ -53,7 +53,7 @@ public class FeatureTableViewer extends JPanel{
 	}
 	
 	protected void refreshPanel(){
-		DocumentList documentList = featureTable.getDocumentList();
+		DocumentListInterface documentList = featureTable.getDocumentList();
 		List<FeatureTableKey> keyList = featureTable.getAllFeatureTableKeyList();
 		int keyListSize = 10;
 		

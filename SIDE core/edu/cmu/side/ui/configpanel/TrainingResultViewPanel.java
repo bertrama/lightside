@@ -31,6 +31,7 @@ import com.yerihyo.yeritools.text.StringToolkit;
 
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 
 /**
  * 
@@ -43,7 +44,7 @@ public class TrainingResultViewPanel extends javax.swing.JPanel {
 	private TrainingResult trainingResult;
 
 
-	public TrainingResult getTrainingResult() {
+	public TrainingResultInterface getTrainingResult() {
 		return trainingResult;
 	}
 

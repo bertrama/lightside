@@ -7,6 +7,7 @@
 package edu.cmu.side;
 
 import java.awt.Component;
+
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -61,6 +62,9 @@ public class Workbench extends JFrame {
 		Workbench.create();
 	}
 	
+	/**
+	 * All plugins are loaded at the time this method is called.
+	 */
 	public static Workbench create(){
 		try {
 			Workbench.current = new Workbench();
@@ -87,15 +91,13 @@ public class Workbench extends JFrame {
 
 	
 	public static void main(String[] args) throws Exception {
-		JPanel mainPanel = new JPanel();
-		mainPanel.setLayout(new RiverLayout());
 		
 		JFrame frame = new JFrame();
 		frame.setSize(new Dimension(1100,800));
 		frame.setTitle("SIDE");
-		frame.setVisible(true);
 		frame.add(new MachineLearningPanel());
-		frame.repaint();
+		frame.setVisible(true);
+		
 	}
 	
 	/**

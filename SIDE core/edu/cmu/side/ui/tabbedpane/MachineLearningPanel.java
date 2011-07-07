@@ -9,6 +9,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit.TestFrame;
 
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
+import edu.cmu.side.simple.newui.features.FeatureExtractionPanel;
 import edu.cmu.side.ui.configpanel.DocumentReaderConfigPanel;
 import edu.cmu.side.ui.configpanel.FeatureAnalyzerConfigPanel;
 import edu.cmu.side.ui.configpanel.FeatureTableConfigPanel;

@@ -12,11 +12,12 @@ import org.w3c.dom.Element;
 import com.yerihyo.yeritools.collections.CountMap;
 
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTable;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTableKey;
 import edu.cmu.side.ml.PredictionToolkit.PredictionResult;
 import edu.cmu.side.ui.configpanel.FeatureAnalyzerConfigPanel;
-import edu.cmu.side.uima.UIMAToolkit.DocumentList;
+import edu.cmu.side.uima.DocumentListInterface;
 import edu.cmu.side.uima.type.SIDEAnnotation;
 
 public class FeatureAnalysisToolkit {
@@ -69,9 +70,9 @@ public class FeatureAnalysisToolkit {
 		@Override
 		public void actionPerformed(ActionEvent evt){ variableChangePerformed(); }
 		
-		public static Map<Comparable,CountMap<Double>> createMap(TrainingResult trainingResult, FeatureTableKey featureTableKey, String selectedLabel){
+		public static Map<Comparable,CountMap<Double>> createMap(TrainingResultInterface trainingResult, FeatureTableKey featureTableKey, String selectedLabel){
 			
-			DocumentList documentList = trainingResult.getDocumentList();
+			DocumentListInterface documentList = trainingResult.getDocumentList();
 			String[] labelArray = trainingResult.getDocumentList().getLabelArray();
 			
 			Map<Comparable,CountMap<Double>> map = new TreeMap<Comparable,CountMap<Double>>();
@@ -87,7 +88,7 @@ public class FeatureAnalysisToolkit {
 				}
 			}
 			
-			PredictionResult predictionResult = trainingResult.getSelfPredictionResult();
+			PredictionResult predictionResult = ((TrainingResult)trainingResult).getSelfPredictionResult();
 			FeatureTable predictionFeatureTable = predictionResult.getFeatureTable();
 			
 			int docIndex = 0;

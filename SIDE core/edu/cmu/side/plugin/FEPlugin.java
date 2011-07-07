@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import edu.cmu.side.feature.*;
-import edu.cmu.side.uima.UIMAToolkit.DocumentList;
+import edu.cmu.side.simple.feature.*;
+import edu.cmu.side.uima.DocumentListInterface;
 
 /**
  * In order to implement a new feature extractor, you must extend this class as well as 
@@ -44,18 +44,18 @@ public abstract class FEPlugin extends SIDEPlugin {
 		return type;
 	}
 	
-	public void setContext(DocumentList d){}
+	public void setContext(DocumentListInterface d){}
 	
-	public List<Map<String, Number>> extractFeatureMap(DocumentList documents) throws Exception{
+	public List<Map<String, Number>> extractFeatureMap(DocumentListInterface documents) throws Exception{
 		this.uiToMemory();
 		return extractFeatureMapsForSubclass(documents); 
 	}
 	
 	public abstract String getOutputName();
 	
-	public abstract List<Map<String, Number>> extractFeatureMapsForSubclass(DocumentList documents) throws Exception;
+	public abstract List<Map<String, Number>> extractFeatureMapsForSubclass(DocumentListInterface documents) throws Exception;
 
-	public Collection<FeatureHit> extractFeatureHits(DocumentList documents)
+	public Collection<FeatureHit> extractFeatureHits(DocumentListInterface documents)
 	{
 		// TODO make me abstract.
 		// DUCT TAPE: convert featureMaps to FeatureHits

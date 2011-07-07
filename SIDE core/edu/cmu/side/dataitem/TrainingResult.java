@@ -35,11 +35,12 @@ import edu.cmu.side.ml.PredictionToolkit.PredictionResult;
 import edu.cmu.side.plugin.MLAPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.SegmenterPlugin;
+import edu.cmu.side.uima.DocumentListInterface;
 import edu.cmu.side.uima.UIMAToolkit;
 import edu.cmu.side.uima.UIMAToolkit.DocumentList;
 import edu.cmu.side.uima.type.SIDEAnnotation;
 
-public class TrainingResult extends DataItem implements XMLable
+public class TrainingResult extends DataItem implements XMLable, TrainingResultInterface
 {
 	private static final long serialVersionUID = 1L;
 	
@@ -86,6 +87,9 @@ public class TrainingResult extends DataItem implements XMLable
 		timestamp = System.currentTimeMillis();
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.dataitem.TrainingResultInterace#getSubtypeName()
+	 */
 	public String getSubtypeName(){
 		DocumentList documentList = this.featureTable.getDocumentList();
 		if(documentList==null){ return null; }
@@ -123,7 +127,7 @@ public class TrainingResult extends DataItem implements XMLable
 		return this.getTrainSettingDescription().get(labelArrayKey).trim().split(labelDeliminator);
 	}
 	
-	public static TrainingResult create(File xmlFile){
+	public static TrainingResultInterface create(File xmlFile){
 		XMLDocument doc;
 		try {
 			doc = XMLBoss.XMLFromFile(xmlFile);
@@ -143,6 +147,9 @@ public class TrainingResult extends DataItem implements XMLable
 		}
 		return trainingResult;
 	}
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.dataitem.TrainingResultInterace#fromXML(org.w3c.dom.Element)
+	 */
 	@Override
 	public void fromXML(Element root) throws Exception {
 		for(Element element : XMLToolkit.getChildElements(root)){
@@ -170,6 +177,9 @@ public class TrainingResult extends DataItem implements XMLable
 	
 	public static final String xmlTagName = "trainingresult";
 	public static final String foldTagName = "fold";
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.dataitem.TrainingResultInterace#toXML()
+	 */
 	@Override
 	public String toXML() {
 		StringBuilder builder = new StringBuilder();
@@ -190,6 +200,9 @@ public class TrainingResult extends DataItem implements XMLable
 		FileToolkit.writeTo(selectedFile, this.toXML());
 	}
 	
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.dataitem.TrainingResultInterace#predict(edu.cmu.side.uima.UIMAToolkit.DocumentList)
+	 */
 	public PredictionResult predict(DocumentList documentList) throws Exception{
 		MLAPlugin mlaPlugin = this.getMLAPlugin();
 		return mlaPlugin.predict(this, documentList);
@@ -199,6 +212,9 @@ public class TrainingResult extends DataItem implements XMLable
 		return mlaPlugin;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.dataitem.TrainingResultInterace#getDocumentList()
+	 */
 	public DocumentList getDocumentList() {
 		return featureTable.getDocumentList();
 	}
@@ -208,11 +224,17 @@ public class TrainingResult extends DataItem implements XMLable
 		return FileType.trainingResult;
 	}
 
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.dataitem.TrainingResultInterace#getFeatureTable()
+	 */
 	public FeatureTable getFeatureTable() {
 		return featureTable;
 	}
 
 //	private transient PredictionResult selfPredictionResult = null;
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.dataitem.TrainingResultInterace#getSelfPredictionResult()
+	 */
 	public PredictionResult getSelfPredictionResult(){
 		return this.mlaPlugin.getSelfPredictionResult(this);
 		
@@ -241,14 +263,14 @@ public class TrainingResult extends DataItem implements XMLable
 	}
 	
 	public int[] getSelfAnnotationLabelIndexArray() {
-		DocumentList documentList = this.getDocumentList();
+		DocumentListInterface documentList = this.getDocumentList();
 		PredictionResult predictionResult = getSelfPredictionResult();
 		String[] predictionAnnotationArray = predictionResult.getMostLikelyLabelStrings();
 		return documentList.getAnnotationIndexArray(predictionAnnotationArray);
 	}
 	
 	public boolean[] getSelfAnnotationCorrectnessArray() {
-		String[] trueAnnotationArray = this.getDocumentList().getAnnotationArray();
+		String[] trueAnnotationArray = this.getDocumentList().getAnnotationArray().toArray(new String[0]);
 		PredictionResult predictionResult = getSelfPredictionResult();
 		String[] predictionAnnotationArray = predictionResult.getMostLikelyLabelStrings();
 		return CollectionsToolkit.equalsEach(trueAnnotationArray, predictionAnnotationArray);

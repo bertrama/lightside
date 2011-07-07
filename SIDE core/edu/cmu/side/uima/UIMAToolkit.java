@@ -84,6 +84,7 @@ import com.yerihyo.yeritools.xml.XMLable;
 
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTableKey;
 import edu.cmu.side.ml.PredictionToolkit.NominalPredictionResult;
 import edu.cmu.side.ml.PredictionToolkit.PredictionResult;
@@ -210,21 +211,21 @@ public class UIMAToolkit {
 //		return subtypeNameSet.contains(subtypeName);
 //	}
 	
-	public static PredictionResult addSelfPredictionAnnotation(TrainingResult trainingResult, String desiredSubtypeName){
-		DocumentList documentList = trainingResult.getDocumentList();
+	public static PredictionResult addSelfPredictionAnnotation(TrainingResultInterface trainingResult, String desiredSubtypeName){
+		DocumentList documentList = ((TrainingResult)trainingResult).getDocumentList();
 //		String desiredSubtypeName =
 //			UIMAToolkit.getRecommendedPredictionAnnotationSubtypeName(trainingResult, documentList.getBaseSubtypeName());
-		PredictionResult selfPredictionResult = trainingResult.getSelfPredictionResult();
+		PredictionResult selfPredictionResult = ((TrainingResult)trainingResult).getSelfPredictionResult();
 		
 		addPredictionAnnotation(documentList, desiredSubtypeName, selfPredictionResult, true);
 		return selfPredictionResult;
 	}
 
-	public static void addPredictionAnnotation(TrainingResult trainingResult, DocumentList documentList, String desiredSubtypeName, boolean override){
+	public static void addPredictionAnnotation(TrainingResultInterface trainingResult, DocumentList documentList, String desiredSubtypeName, boolean override){
 		
 		PredictionResult predictionResult;
 		try {
-			predictionResult = trainingResult.predict(documentList);
+			predictionResult = ((TrainingResult)trainingResult).predict(documentList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
@@ -593,19 +594,19 @@ public class UIMAToolkit {
 		return false;
 	}
 	
-	public static class DocumentList implements XMLable{
+	public static class DocumentList implements XMLable, DocumentListInterface{
 		private List<JCas> jCasList = new ArrayList<JCas>();
 		private String subtypeName;
 		private int type = SIDESegment.type;
 		public static final String tagName = "documentList";
-		public Map<String, String[]> cachedAnnotations = new TreeMap<String, String[]>();
+		public Map<String, ArrayList<String>> cachedAnnotations = new TreeMap<String, ArrayList<String>>();
 		private DocumentList(){}
 		
 		public DocumentList(String subtypeName){
 			this.subtypeName = subtypeName;
 		}
 		
-		public static DocumentList create(Collection<? extends JCas> jCasCollection, String subtypeName){
+		public static DocumentListInterface create(Collection<? extends JCas> jCasCollection, String subtypeName){
 			DocumentList documentList = new DocumentList(subtypeName);
 			documentList.getJCasList().addAll(jCasCollection);
 			return documentList;
@@ -735,6 +736,9 @@ public class UIMAToolkit {
 			return jCasList;
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getSize()
+		 */
 		public int getSize(){
 			
 			int size=0;
@@ -744,8 +748,11 @@ public class UIMAToolkit {
 			return size;
 		}
 		
-		public HashMap<String, String[]> allAnnotations(){
-			HashMap<String, String[]> annotations = new HashMap<String, String[]>();
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#allAnnotations()
+		 */
+		public HashMap<String, ArrayList<String>> allAnnotations(){
+			HashMap<String, ArrayList<String>> annotations = new HashMap<String, ArrayList<String>>();
 			Set<String> cols = new HashSet<String>();
 			for(JCas cas : jCasList){
 				Set<String> names = getSubtypeNameSet(cas, SIDEAnnotation.type);
@@ -756,9 +763,12 @@ public class UIMAToolkit {
 			}
 			return annotations;
 		}
-		public String[] getAnnotationArray(String name) {
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getAnnotationArray(java.lang.String)
+		 */
+		public ArrayList<String> getAnnotationArray(String name) {
 			if(cachedAnnotations.containsKey(name)) return cachedAnnotations.get(name);
-			List<String> annotationList = new ArrayList<String>();
+			ArrayList<String> annotationList = new ArrayList<String>();
 			for(Iterator<Object> documentIterator = this.iterator(name); documentIterator.hasNext();){
 				Object object = documentIterator.next();
 				if(object instanceof SIDEAnnotation){
@@ -767,11 +777,13 @@ public class UIMAToolkit {
 				annotationList.add(sideAnnotation.getLabelString());
 				}
 			}
-			String[] annots = annotationList.toArray(new String[0]);
-			cachedAnnotations.put(name, annots);
-			return annots;
+			cachedAnnotations.put(name, annotationList);
+			return annotationList;
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#fullIterator()
+		 */
 		public Iterator<Object> fullIterator(){
 			Iterator<?>[] iteratorArray = new Iterator<?>[jCasList.size()];
 			for(int i=0; i<jCasList.size(); i++){
@@ -780,6 +792,9 @@ public class UIMAToolkit {
 			return CompoundIterator.create(iteratorArray);
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#iterators()
+		 */
 		public HashMap<String, Iterator<?>> iterators(){
 			HashMap<String, Iterator<?>> its = new HashMap<String, Iterator<?>>();
 			for(int i=0; i < jCasList.size(); i++){
@@ -789,12 +804,18 @@ public class UIMAToolkit {
 		}
 		
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#iterator(java.lang.String)
+		 */
 		public Iterator<Object> iterator(String subtype){
 			Iterator<Object> compoundIterator = fullIterator();
 			Iterator<Object> filteredIterator = FilteredIterator.create(compoundIterator, SIDESegmentSubtypeNameFilter.create(subtype));
 			return filteredIterator;
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#iterator()
+		 */
 		public Iterator<Object> iterator(){
 			return iterator(subtypeName);
 		}
@@ -864,7 +885,7 @@ public class UIMAToolkit {
 				this.sideSegment = sideSegment;
 			}
 			
-			public DocumentList getDocumentList(){ return DocumentList.this; }
+			public DocumentListInterface getDocumentList(){ return DocumentList.this; }
 
 			public int getIndex() {
 				return index;
@@ -899,12 +920,15 @@ public class UIMAToolkit {
 			}
 			return sideSegment.getSubtypeName();
 		}
-		public DocumentList createDocumentListWithNewSubtype(String subtypeName) {
+		public DocumentListInterface createDocumentListWithNewSubtype(String subtypeName) {
 			DocumentList documentList = new DocumentList(subtypeName);
 			documentList.getJCasList().addAll(this.getJCasList());
 			return documentList;
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getLabelArray()
+		 */
 		public String[] getLabelArray(){
 			return getLabelPaintMap().keySet().toArray(new String[0]);
 		}
@@ -951,17 +975,26 @@ public class UIMAToolkit {
 			return labelPaintMap;
 		}
 
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getAnnotationIndexArray(java.lang.String[])
+		 */
 		public int[] getAnnotationIndexArray(String[] targetAnnotationListArray){
-			String[] annotationArray = this.getAnnotationArray();
-			YeriDebug.ASSERT_compareInteger(targetAnnotationListArray.length, annotationArray.length);
+			ArrayList<String> annotationArray = this.getAnnotationArray();
+			YeriDebug.ASSERT_compareInteger(targetAnnotationListArray.length, annotationArray.size());
 			return CollectionsToolkit.getIndexArrayOfValueArray(this.getLabelArray(), targetAnnotationListArray);
 		}
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getAnnotationIndexArray()
+		 */
 		public int[] getAnnotationIndexArray(){
 			String[] labelArray = this.getLabelArray();
-			String[] annotationArray = this.getAnnotationArray();
+			String[] annotationArray = this.getAnnotationArray().toArray(new String[0]);
 			return CollectionsToolkit.getIndexArrayOfValueArray(labelArray, annotationArray);
 		}
-		public String[] getAnnotationArray() {
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getAnnotationArray()
+		 */
+		public ArrayList<String> getAnnotationArray() {
 			return getAnnotationArray(subtypeName);
 		}
 		public void setSubtypeName(String subtypeName) {
@@ -999,6 +1032,9 @@ public class UIMAToolkit {
 			return settingArray;
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getCoveredTextList()
+		 */
 		public List<String> getCoveredTextList() {
 			List<String> coveredTextList = new ArrayList<String>();
 			
@@ -1022,6 +1058,9 @@ public class UIMAToolkit {
 			return -1;
 		}
 		
+		/* (non-Javadoc)
+		 * @see edu.cmu.side.uima.DocumentListInterface#getInferredDatatype()
+		 */
 		public Datatype getInferredDatatype() {
 			SIDEAnnotationSetting[] settingArray = this.getSIDEAnnotationSettingArray();
 			Datatype totalDatatype = UIMAToolkit.Datatype.AUTO;
@@ -1039,6 +1078,18 @@ public class UIMAToolkit {
 				}
 			}
 			return Datatype.NUMERIC;
+		}
+
+		@Override
+		public String getCurrentAnnotation() {
+			return subtypeName;
+		}
+
+		@Override
+		public void setCurrentAnnotation(String annot) {
+			if(allAnnotations().containsKey(annot)){
+				subtypeName = annot;
+			}
 		}
 	}
 	
@@ -1811,7 +1862,7 @@ public class UIMAToolkit {
 //		return trainingResult.getSubtypeName();
 	}
 
-	public static String getRecommendedPredictionAnnotationSubtypeName(TrainingResult trainingResult, String targetBaseSubtypeName) {
+	public static String getRecommendedPredictionAnnotationSubtypeName(TrainingResultInterface trainingResult, String targetBaseSubtypeName) {
 //		return "predict_"+trainingResult.getSubtypeName()+"_with_base_"+targetBaseSubtypeName+"_at_"+trainingResult.getTimestamp();
 		return trainingResult.getSubtypeName();
 	}
@@ -1891,7 +1942,7 @@ public class UIMAToolkit {
 	}
 
 	public static List<SIDESegment> getSummaryAnnotationList(
-			DocumentList documentList, boolean[] suitabilityArray) {
+			DocumentListInterface documentList, boolean[] suitabilityArray) {
 		Iterator<Object> documentIterator = documentList.iterator();
 		List<SIDESegment> sideSegmentList = new ArrayList<SIDESegment>();
 		
@@ -2004,7 +2055,7 @@ public class UIMAToolkit {
 		return dlArray;
 	}
 	
-	private static Iterator[] getIteratorArray(DocumentList[] dlArray){
+	private static Iterator[] getIteratorArray(DocumentListInterface[] dlArray){
 		Iterator[] iteratorArray = new Iterator[dlArray.length];
 		for(int i=0; i<dlArray.length; i++){
 			iteratorArray[i] = dlArray[i].iterator(); 

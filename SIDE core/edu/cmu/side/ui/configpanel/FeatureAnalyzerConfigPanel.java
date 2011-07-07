@@ -28,6 +28,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit.TestFrame;
 import edu.cmu.side.SIDEToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTableKey;
 import edu.cmu.side.ml.PredictionToolkit.PredictionResult;
 import edu.cmu.side.plugin.FeatureAnalysisToolkit.FeatureAnalysisPlugin;
@@ -226,7 +227,7 @@ public class FeatureAnalyzerConfigPanel extends JPanel{
 		TestFrame testFrame = new TestFrame(featureAnalyzerConfigPanel);
 		testFrame.setSize(new Dimension(1200, 900));
 
-		TrainingResult trainingResult = Workbench.current.trainingResultListManager.iterator().next();
+		TrainingResultInterface trainingResult = Workbench.current.trainingResultListManager.iterator().next();
 		File predictionFile = new File(SIDEToolkit.predictionResultFolder, "test.xml");
 		PredictionResult predictionResult;
 		if(predictionFile.exists()){
@@ -236,7 +237,7 @@ public class FeatureAnalyzerConfigPanel extends JPanel{
 		}else{
 			predictionFile.createNewFile();
 
-			predictionResult = trainingResult.getSelfPredictionResult();
+			predictionResult = ((TrainingResult)trainingResult).getSelfPredictionResult();
 			FileToolkit.writeTo(predictionFile, predictionResult.toXML());
 		}
 		

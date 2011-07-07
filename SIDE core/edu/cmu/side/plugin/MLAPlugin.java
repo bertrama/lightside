@@ -13,6 +13,7 @@ import com.yerihyo.yeritools.CalendarToolkit;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.dataitem.TrainingResult;
+import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTable;
 import edu.cmu.side.ml.FeatureExtractionToolkit.FeatureTableKey;
 import edu.cmu.side.ml.PredictionToolkit.PredictionResult;
@@ -48,7 +49,7 @@ public abstract class MLAPlugin extends SIDEPlugin {
 
 	//	public TrainingResult train(FeatureTable featureTable){ return train(featureTable, null, null); }
 	//	public TrainingResult train(FeatureTable featureTable, String desiredName){ return train(featureTable, desiredName, null); }
-	public TrainingResult train(FeatureTable featureTable, String desiredName, SegmenterPlugin segmenterPlugin, String fold){
+	public TrainingResultInterface train(FeatureTable featureTable, String desiredName, SegmenterPlugin segmenterPlugin, String fold){
 		long start = System.currentTimeMillis();
 
 		this.uiToMemory();

@@ -1,0 +1,451 @@
+package edu.cmu.side.simple.feature;
+
+import java.io.File;
+
+import java.util.*;
+
+import weka.core.Attribute;
+import weka.core.FastVector;
+import weka.core.Instance;
+import weka.core.Instances;
+import edu.cmu.side.simple.FeaturePlugin;
+import edu.cmu.side.simple.feature.Feature.Type;
+import edu.cmu.side.uima.DocumentListInterface;
+
+/**
+ * 
+ * A many-directional mapping of Features, FeatureHits and indexes into the DocumentList.
+ *
+ */
+public class FeatureTable
+{
+	private Collection<FeaturePlugin> extractors;
+	private DocumentListInterface documents;
+	private Map<Feature, Collection<FeatureHit>> hitsPerFeature;
+	private List<Collection<FeatureHit>> hitsPerDocument;
+	private String tableName;
+	/** Stores the type of the class value */
+	private Feature.Type type = null;
+	/** These show up as columns in the FeatureTablePanel */
+	private Map<String, Map<Feature, Comparable>> evaluations;
+
+	/** These variables are for weka. Filled when needed only. Stored 
+	 * in the feature table so that it's cleaner to populate. */
+	private FastVector fastVector = null;
+	private double[] empty = null;	
+	private Instances instances = null;
+	private Map<String, Integer> attributeMap = new HashMap<String, Integer>();
+	
+	private void init(Collection<FeaturePlugin> extractors, DocumentListInterface documents){
+		this.extractors = extractors;
+		this.documents = documents;
+		this.evaluations = new TreeMap<String, Map<Feature, Comparable>>();
+		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>();
+		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
+		extractAll();
+	}
+
+	public FeatureTable(FeaturePlugin extractor, DocumentListInterface documents)
+	{
+		Set<FeaturePlugin> extractors = new TreeSet<FeaturePlugin>();
+		extractors.add(extractor);
+		init(extractors, documents);
+	}
+
+	public FeatureTable(Collection<FeaturePlugin> extractors, DocumentListInterface documents)
+	{
+		init(extractors, documents);
+	}
+
+	/**
+	 * Builds a set of features for Weka's internal data structures.
+	 * Doesn't convert the instances yet (use getInstances() for that).
+	 */
+	public void generateFastVector(){
+		if(fastVector == null){
+			FastVector attributes = new FastVector();
+			int index = 0;
+			Collection<Feature> featureSet = getFeatureSet();
+			empty = new double[featureSet.size()+1];
+			for(Feature f : featureSet){
+				Attribute att = null;
+				FastVector fv = new FastVector();
+				switch(f.getFeatureType()){
+				case BOOLEAN:
+					fv.addElement(Boolean.FALSE.toString());
+					fv.addElement(Boolean.TRUE.toString());
+					att = new Attribute(f.getFeatureName(), fv);
+					break;
+				case NOMINAL:
+					for(String s : f.getNominalValues()) fv.addElement(s);
+					att = new Attribute(f.getFeatureName(), fv);
+					break;
+				case NUMERIC:
+					att = new Attribute(f.getFeatureName());
+					break;
+				case STRING:
+					att = new Attribute(f.getFeatureName(), (FastVector)null);
+					break;
+				}
+				if(att != null){
+					attributes.addElement(att);		
+					String id = f.getExtractorPrefix()+":"+f.getFeatureName();
+					attributeMap.put(id, index++);
+				}
+			}
+			switch(getClassValueType()){
+			case NOMINAL:
+				FastVector fv = new FastVector();
+				for(String s : getDocumentList().getLabelArray()){ 
+					fv.addElement(s);
+				}
+				attributes.addElement(new Attribute("CLASS", fv));
+				break;
+			case NUMERIC:
+				attributes.addElement(new Attribute("CLASS"));
+				break;
+			}
+			fastVector = attributes;
+		}
+	}
+
+	/**
+	 * Generates the set of instances used for the final model (not for cross-validation)
+	 * @return
+	 */
+	public Instances getInstances(){
+		Instances format = new Instances(getTableName(), fastVector, 0);
+		for(int i = 0; i < documents.getSize(); i++){
+			Instance inst = new Instance(format.numAttributes());
+			format.add(inst);					
+			fillInstance(format, i);
+		}
+		format.setClass(format.attribute("CLASS"));
+		instances = format;
+		return format;
+	}
+
+	/**
+	 * Generates subsets of data from this feature table, used for cross validation. Makes a shallow copy of features
+	 * from the overall Instances object.
+	 * 
+	 * @param foldMap Set of documents to use in this subset.
+	 * @param fold Number of the fold to use for CV-by-fold radio button.
+	 * @param train Whether this is the training or test set.
+	 * @return
+	 */
+	public Instances getInstances(Map<Integer, Integer> foldMap, int fold, boolean train){
+		if(instances == null){
+			getInstances();
+		}
+		Instances format = new Instances(getTableName(), fastVector, 0);
+		for(int i = 0; i < instances.numInstances(); i++){
+			if((train && foldMap.get(i) != fold) || (!train && foldMap.get(i) == fold)){
+				format.add((Instance)instances.instance(i).copy());
+			}
+			format.setClass(format.attribute("CLASS"));
+		}
+		return format;
+	}
+	
+	/**
+	 * Since we're doing cross-validation in a more intelligent way than SIDE originally did it (taking every nth instance
+	 * for n folds, instead of taking the first 100/n% of the data for each fold), we need to keep a map of which keys in the 
+	 * subset from getInstances() correspond to which instances in the whole data set. In this case, keys are the subset's 
+	 * document index and values are the original document index.
+	 * @param foldMap
+	 * @param fold
+	 * @return
+	 */
+	public Map<Integer, Integer> foldIndexToIndex(Map<Integer, Integer> foldMap, int fold){
+		Map<Integer, Integer> foldIndexToIndex = new TreeMap<Integer, Integer>();
+		int index = 0;
+		for(int i = 0; i < instances.numInstances(); i++){
+			if(foldMap.get(i)==fold){
+				foldIndexToIndex.put(index++, i);
+			}
+		}
+		return foldIndexToIndex;
+	}
+
+	/**
+	 * Generates Instance objects (weka format) for a document in the corpus. Actually,
+	 * these objects already exist, we're just filling the value.
+	 * 
+	 * @param format The Instances object to put this generated Instance in.
+	 * @param i The document to fill. 
+	 */
+	private void fillInstance(Instances format, int i) {
+		int j = 0;
+		Collection<FeatureHit> hits = getHitsForDocument(i);
+		for(FeatureHit hit : hits){
+			Feature f = hit.getFeature();
+			String id = f.getExtractorPrefix()+":"+f.getFeatureName();
+			Integer att = attributeMap.get(id);
+			try{
+				switch(f.getFeatureType()){
+				case NUMERIC:
+					format.instance(i).setValue(att, (Double)hit.getValue());
+					break;
+				case STRING:
+				case NOMINAL:
+				case BOOLEAN:
+					format.instance(i).setValue(att, hit.getValue().toString());
+					break;
+				}				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		Attribute classAtt = format.attribute("CLASS");
+		switch(getClassValueType()){
+		case NUMERIC:
+			format.instance(i).setValue(classAtt, Double.parseDouble(documents.getAnnotationArray().get(i)));
+			break;
+		case BOOLEAN:
+		case STRING:
+		case NOMINAL:
+			format.instance(i).setValue(classAtt, documents.getAnnotationArray().get(i));
+			break;
+		}
+		format.instance(i).replaceMissingValues(empty);
+	}
+
+	/**
+	 * run the extractors on the documents and populate the feature hit tables.
+	 */
+	public void extractAll()
+	{
+		hitsPerDocument.clear();
+		for(int i = 0; i < documents.getSize(); i++)
+		{
+			hitsPerDocument.add(new ArrayList<FeatureHit>());
+		}
+
+		for(FeaturePlugin extractor : extractors)
+		{
+			Collection<FeatureHit> hits = extractor.extractFeatureHits(documents);
+
+			for(FeatureHit hit : hits)
+			{
+				hitsPerDocument.get(hit.documentIndex).add(hit);
+
+				if(! hitsPerFeature.containsKey(hit.feature))
+				{
+					hitsPerFeature.put(hit.feature, new ArrayList<FeatureHit>());
+				}
+				hitsPerFeature.get(hit.feature).add(hit);
+			}
+		}
+	}
+
+	/**
+	 * Remove all features that don't occur at least n times
+	 * @param n
+	 */
+	public void applyThreshold(int n){
+		Map<Feature, Collection<FeatureHit>> thresholdedFeatures = new HashMap<Feature, Collection<FeatureHit>>();
+		for(Feature f : hitsPerFeature.keySet()){
+			if(hitsPerFeature.get(f).size() >= n){
+				thresholdedFeatures.put(f, hitsPerFeature.get(f));
+			}
+		}
+		List<Collection<FeatureHit>> thresholdedByDocument = new ArrayList<Collection<FeatureHit>>();
+		for(int i = 0; i < hitsPerDocument.size(); i++){
+			Collection<FeatureHit> doc = new ArrayList<FeatureHit>();
+			for(FeatureHit fh : hitsPerDocument.get(i)){
+				if(thresholdedFeatures.containsKey(fh.getFeature())){
+					doc.add(fh);
+				}
+			}
+			thresholdedByDocument.add(doc);
+		}		
+		hitsPerFeature = thresholdedFeatures;
+		hitsPerDocument = thresholdedByDocument;
+	}
+
+	/**
+	 * Evaluates feature table for precision, recall, f-score, and kappa at creation time.
+	 */
+	public void defaultEvaluation(){
+		double time1 = System.currentTimeMillis();
+		Map<Feature, Comparable> precisionMap = new HashMap<Feature, Comparable>();
+		Map<Feature, Comparable> recallMap = new HashMap<Feature, Comparable>();
+		Map<Feature, Comparable> fScoreMap = new HashMap<Feature, Comparable>();
+		Map<Feature, Comparable> accuracyMap = new HashMap<Feature, Comparable>();
+		Map<Feature, Comparable> kappaMap = new HashMap<Feature, Comparable>();
+		Map<Feature, Comparable> bestMap = new HashMap<Feature, Comparable>();
+		Map<Feature, Comparable> hitsMap = new HashMap<Feature, Comparable>();
+		ArrayList<String> trueAnnot = documents.getAnnotationArray();
+		for(Feature f : getFeatureSet()){
+			Collection<FeatureHit> hits = hitsPerFeature.get(f);
+			double maxPrec = Double.NEGATIVE_INFINITY;
+			double maxRec = Double.NEGATIVE_INFINITY;
+			double maxF = Double.NEGATIVE_INFINITY;
+			double maxKappa = Double.NEGATIVE_INFINITY;
+			double maxAcc = Double.NEGATIVE_INFINITY;
+			String bestLabel = "[useless]";
+			for(String label : documents.getLabelArray()){
+				double[][] kappaMatrix = new double[2][2];
+				for(int i = 0; i < 2; i++){for(int j = 0; j < 2; j++){ kappaMatrix[i][j]=0;}}
+				for(int i = 0; i < documents.getSize(); i++){
+					boolean hit = false;
+					for(FeatureHit fh : hits){
+						if(fh.getDocumentIndex() == i){
+							hit = checkHitMatch(f, fh);
+						}
+					}
+					kappaMatrix[trueAnnot.get(i).equals(label)?0:1][hit?0:1]++;
+				}
+				double rightHits = kappaMatrix[0][0];
+				double wrongHits = kappaMatrix[1][0];
+				double all = documents.getSize();
+				double featHits = kappaMatrix[0][0] + kappaMatrix[1][0];
+				double actHits = kappaMatrix[0][0] + kappaMatrix[0][1];
+				double accuracy = (kappaMatrix[0][0] + kappaMatrix[1][1])/all;
+				double pChance = ((featHits/all)*(actHits/all))+(((all-featHits)/all)*((all-actHits)/all));
+
+				double prec = rightHits/(rightHits+wrongHits);
+				double rec = rightHits/actHits;
+				double fmeasure = (2*prec*rec)/(prec+rec);
+				double kappa = (accuracy - pChance)/(1 - pChance);
+
+				if(Double.NaN == rec) rec = 0.0;
+				if(Double.NaN == fmeasure) fmeasure = 0.0;
+				if(kappa > maxKappa){
+					maxPrec = prec;
+					maxRec = rec;
+					maxF = fmeasure;
+					maxAcc = accuracy;
+					maxKappa = kappa;
+					bestLabel = label;
+				}
+			}
+			precisionMap.put(f, maxPrec);
+			recallMap.put(f, maxRec);
+			fScoreMap.put(f, maxF);
+			accuracyMap.put(f, maxAcc);
+			kappaMap.put(f, maxKappa);
+			bestMap.put(f, bestLabel);
+			hitsMap.put(f, hits.size());
+		}
+		addEvaluation("predictor of", bestMap);
+		addEvaluation("kappa", kappaMap);
+		addEvaluation("precision", precisionMap);
+		addEvaluation("recall", recallMap);
+		addEvaluation("f-score", fScoreMap);
+		addEvaluation("accuracy", accuracyMap);
+		addEvaluation("hits", hitsMap);
+		double time2 = System.currentTimeMillis();
+		System.out.println("Evaluation done in " + (time2-time1) + " milliseconds.");
+	}
+
+	/**
+	 * Checks whether this feature "hit" a document, for the purpose of converting all these different
+	 * feature types into a boolean check for basic evaluations.
+	 */
+	public boolean checkHitMatch(Feature f, FeatureHit fh){
+		switch(f.getFeatureType()){
+		case BOOLEAN:
+			return Boolean.TRUE.equals(fh.getValue());
+		case NOMINAL:
+			return false;
+		case NUMERIC:
+			return ((Number)fh.getValue()).doubleValue()>0;
+		case STRING:
+			return fh.getValue().toString().length()>0;
+		}
+		return false;
+	}
+
+	/**
+	 * 
+	 * @return the set of features extracted from the documents.
+	 */
+	public Set<Feature> getFeatureSet()
+	{
+		Set<Feature> set = hitsPerFeature.keySet();
+		return set;
+	}
+
+	/**
+	 * 
+	 * @param feature
+	 * @return all hits for the given feature.
+	 */
+	public Collection<FeatureHit> getHitsForFeature(Feature feature)
+	{
+		return hitsPerFeature.get(feature);
+	}
+
+	/**
+	 * 
+	 * @param index
+	 * @return all hits on the given document index.
+	 */
+	public Collection<FeatureHit> getHitsForDocument(int index)
+	{
+		return hitsPerDocument.get(index);
+	}
+
+	public DocumentListInterface getDocumentList()
+	{
+		return documents;
+	}
+
+	public Collection<FeaturePlugin> getExtractors()
+	{
+		return extractors;
+	}
+
+	public void setExtractors(Collection<FeaturePlugin> extractors)
+	{
+		this.extractors = extractors;
+	}
+
+	public String getTableName(){
+		return tableName;
+	}
+
+	public void setTableName(String name){
+		tableName = name;
+	}
+
+	public Map<String, Map<Feature, Comparable>> getEvaluations(){
+		return evaluations;
+	}
+
+	public void addEvaluation(String evaluationName, Map<Feature, Comparable> eval){
+		evaluations.put(evaluationName, eval);
+	}
+
+	/**
+	 * TODO: Implement file import/export of feature tables.
+	 */
+	public static FeatureTable createFromXML(File f){
+		return null;
+	}
+
+	public String toString(){
+		return getTableName();
+	}
+
+	/**
+	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
+	 * @return
+	 */
+	public Feature.Type getClassValueType(){
+		if(type == null){
+			for(String s : documents.getLabelArray()){
+				try{
+					Double num = Double.parseDouble(s);
+				}catch(Exception e){
+					type = Feature.Type.NOMINAL;
+					return type;
+				}
+			}
+			type = Feature.Type.NUMERIC;
+		}
+		return type;
+	}
+}

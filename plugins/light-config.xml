@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugins>
+	<plugin>
+		<name>TagHelperTools</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Provides basic TagHelper feature extraction]]></description>
+		<jarfile>light.jar</jarfile>
+		<classname>plugin.simple.features.TagHelperTools</classname>
+	</plugin>
+	<plugin>
+		<name>WEKA Learning Plugin</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[This plugin provides access to the classifiers which are part of the WEKA toolkit.]]></description>
+		<jarfile>light.jar</jarfile>
+		<classname>plugin.simple.learning.WekaLearning</classname>
+	</plugin>
+	<plugin>
+		<name>SVM Light Learning Plugin</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[This plugin provides access to SVM light binaries.]]></description>
+		<jarfile>light.jar</jarfile>
+		<classname>plugin.simple.learning.SVMLightLearning</classname>
+	</plugin>
+	<plugin>
+		<name>Horizontal Comparison Plugin</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Compares features between two cells in a confusion matrix.]]></description>
+		<jarfile>light.jar</jarfile>
+		<classname>plugin.simple.evaluation.HorizontalComparison</classname>
+	</plugin>
+</plugins>

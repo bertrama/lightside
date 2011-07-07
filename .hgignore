@@ -1,0 +1,5 @@
+bin/
+.xmi
+.arff
+.svn
+.DS_Store

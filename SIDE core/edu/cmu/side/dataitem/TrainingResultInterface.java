@@ -1,9 +1,6 @@
 package edu.cmu.side.dataitem;
 
 import org.w3c.dom.Element;
-
-
-import edu.cmu.side.ml.PredictionToolkit.PredictionResult;
 import edu.cmu.side.uima.DocumentListInterface;
 
 public interface TrainingResultInterface {

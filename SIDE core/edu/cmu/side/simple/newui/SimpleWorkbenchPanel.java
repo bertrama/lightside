@@ -22,11 +22,9 @@ public class SimpleWorkbenchPanel extends JTabbedPane implements ActionListener{
 	private void init(){
 		featureTableConfigPanel = new FeatureExtractionPanel();
 		machineLearningConfigPanel = new LearningPanel();
-		featureAnalyzerConfigPanel = new FeatureAnalysisPanel();
 		
 		this.addTab("Extract Features", featureTableConfigPanel);
 		this.addTab("Build Model", machineLearningConfigPanel);
-		this.addTab("Analyze Features", featureAnalyzerConfigPanel);
 	}
 	
 	public SimpleWorkbenchPanel(){

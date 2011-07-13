@@ -21,8 +21,9 @@ import javax.swing.table.TableCellRenderer;
  * @author emayfiel
  *
  */
-class MultilineTableCell implements TableCellRenderer {
+public class MultilineTableCell implements TableCellRenderer {
 	
+	public static int rowHeight = 0;
 	class CellArea extends DefaultTableCellRenderer {
 		private static final long serialVersionUID = 4283995246050963234L;
 		private String text;
@@ -69,9 +70,13 @@ class MultilineTableCell implements TableCellRenderer {
 					layout.draw(g, drawPosX, drawPosY);
 					drawPosY += layout.getDescent() + layout.getLeading();
 				}
-				table.setRowHeight(rowIndex, (int) drawPosY);
+				rowHeight = (int) drawPosY;
 			}
 		}
+	}
+	
+	public static int getRowHeight(){
+		return rowHeight;
 	}
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
 		return new CellArea(value.toString(), table, row, column, isSelected);

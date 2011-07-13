@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 
 /**
  * This holds all of the panels for analyzing a trained model.
@@ -17,6 +18,7 @@ public class LearningRightPanel extends JPanel {
 	private ConfusionMatrixPanel matrixPanel = new ConfusionMatrixPanel();
 	private MiniErrorAnalysisPanel errorPanel = new MiniErrorAnalysisPanel();
 	private LearningOutputPanel outputPanel = new LearningOutputPanel();
+	private DocumentDisplayPanel documentPanel = new DocumentDisplayPanel();
 
 	/**
 	 * Everything is in SplitPanes so the user can adjust their relative sizes.
@@ -34,10 +36,12 @@ public class LearningRightPanel extends JPanel {
 		JScrollPane top = new JScrollPane(splitTop);
 		top.setPreferredSize(new Dimension(750, 400));
 		
-		JScrollPane bottom = new JScrollPane(outputPanel);
-		bottom.setPreferredSize(new Dimension(750, 300));
+		JTabbedPane bottomPane = new JTabbedPane();
+		bottomPane.addTab("Learning Output", outputPanel);
+		bottomPane.addTab("Selected Documents Display", documentPanel);
+		bottomPane.setPreferredSize(new Dimension(750, 300));
 		split.setTopComponent(top);
-		split.setBottomComponent(bottom);
+		split.setBottomComponent(bottomPane);
 		
 		add(split);
 	}
@@ -45,6 +49,7 @@ public class LearningRightPanel extends JPanel {
 		matrixPanel.refreshPanel();
 		errorPanel.refreshPanel();
 		outputPanel.refreshPanel();
+		documentPanel.refreshPanel();
 		repaint();
 	}
 }

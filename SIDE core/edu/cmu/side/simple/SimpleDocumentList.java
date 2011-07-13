@@ -22,7 +22,7 @@ public class SimpleDocumentList implements DocumentListInterface{
 	ArrayList<String> text = new ArrayList<String>();
 	HashMap<String, ArrayList<String>> allAnnotations = new HashMap<String, ArrayList<String>>();
 	String currentAnnotation;
-	ArrayList<String> filename = new ArrayList<String>();
+	ArrayList<String> filenameList = new ArrayList<String>();
 	
 	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textColumn){
 		double time1 = System.currentTimeMillis();
@@ -48,7 +48,7 @@ public class SimpleDocumentList implements DocumentListInterface{
 					}
 				}
 				for(String annotation : headers){
-					if(!annotation.equals(textColumn)){
+					if(!annotation.equals(textColumn) && !allAnnotations.containsKey(annotation)){
 						allAnnotations.put(annotation, new ArrayList<String>());
 					}
 				}
@@ -67,7 +67,7 @@ public class SimpleDocumentList implements DocumentListInterface{
 							}
 						}
 					}
-					filenames.add(filename);
+					filenameList.add(filename);
 				}
 				csvReader.close();
 			}catch(Exception e){
@@ -165,5 +165,14 @@ public class SimpleDocumentList implements DocumentListInterface{
 	
 	public String getCurrentAnnotation(){
 		return currentAnnotation;
+	}
+	
+	/**
+	 * Used for cross-validating by file.
+	 * @param docIndex
+	 * @return
+	 */
+	public String getFilename(int docIndex){
+		return filenameList.get(docIndex);
 	}
 }

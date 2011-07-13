@@ -22,6 +22,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 	private FeatureTable table;
 	private FeatureTable testSet;
 	private List<Comparable> predictions = new ArrayList<Comparable>();
+	private Map<String, String> evaluation = null;
 
 	/** first label is predicted label, second label is actual label. */
 	private Map<String, Map<String, ArrayList<Integer>>> confusionMatrix = new TreeMap<String, Map<String, ArrayList<Integer>>>();
@@ -62,12 +63,16 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 	public FeatureTable getFeatureTable(){
 		return table;
 	}
+	
+	public Map<String, String> getEvaluation(){
+		return evaluation;
+	}
 
-	public void addEvaluation(Map<String, String> evaluation){
+	public void addEvaluation(Map<String, String> ev){
 		try{
-			for(String eval : evaluation.keySet()){
+			for(String eval : ev.keySet()){
 				if(eval.equals("cv-fold-predictions")){
-					String[] labels = evaluation.get(eval).split("\n");
+					String[] labels = ev.get(eval).split("\n");
 					switch(table.getClassValueType()){
 					case NUMERIC:
 						for(int i = 0; i < labels.length; i++){
@@ -85,6 +90,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 					}
 				}
 			}
+			evaluation = ev;
 		}catch(Exception e){
 			e.printStackTrace();
 
@@ -153,5 +159,9 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		}
 		Double value = accumulator/docIndices.size();
 		return value;
+	}
+	
+	public List<Comparable> getPredictions(){
+		return predictions;
 	}
 }

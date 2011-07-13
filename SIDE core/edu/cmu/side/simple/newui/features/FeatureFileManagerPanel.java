@@ -21,6 +21,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit;
 import com.yerihyo.yeritools.swing.SwingToolkit.DefaultFileListCellRenderer;
 
 import edu.cmu.side.SIDEToolkit;
+import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 import edu.cmu.side.uima.DocumentListInterface;
@@ -32,14 +33,15 @@ import edu.cmu.side.uima.DocumentListInterface;
  * @author emayfiel
  *
  */
-public class FeatureFileManagerPanel extends AbstractListPanel implements ActionListener{
+public class FeatureFileManagerPanel extends AbstractListPanel{
 
 	private static final long serialVersionUID = 8927680502421484611L;
 
 	private static JComboBox textColumnComboBox;
 	private static JComboBox annotationComboBox;
 
-	private static DocumentListInterface documents;
+	private static Set<String> filenames = new TreeSet<String>();
+	private static SimpleDocumentList documents;
 
 
 	/**
@@ -80,7 +82,14 @@ public class FeatureFileManagerPanel extends AbstractListPanel implements Action
 				}
 			}
 		});
-		textColumnComboBox.addActionListener(FeatureFileManagerPanel.this);
+		textColumnComboBox.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				if(filenames.size() > 0){
+					documents = new SimpleDocumentList(filenames, annotationComboBox.getSelectedItem().toString(), textColumnComboBox.getSelectedItem().toString());
+					fireActionEvent();					
+				}
+			}
+		});
 
 		this.add("br", new JLabel("annotation:"));
 		this.add("br hfill", annotationComboBox);
@@ -130,7 +139,7 @@ public class FeatureFileManagerPanel extends AbstractListPanel implements Action
 						if(listModel.getSize()==0){
 							AlertDialog.show("Error!","No CSV files have been selected.", null);
 						}else{
-							Set<String> filenames = new TreeSet<String>();
+							filenames.clear();
 							for(int i = 0; i < listModel.getSize(); i++){
 								filenames.add(((File)listModel.get(i)).getAbsolutePath());
 							}
@@ -160,7 +169,7 @@ public class FeatureFileManagerPanel extends AbstractListPanel implements Action
 	 * 
 	 * @return The currently active DocumentList, according to the file chooser UI.
 	 */
-	public static DocumentListInterface getDocumentList(){
+	public static SimpleDocumentList getDocumentList(){
 		return documents;
 	}
 

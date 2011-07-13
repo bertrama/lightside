@@ -59,6 +59,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 		evalSetting.add(testSet);
 		cvFold.setSelected(true);
 		cvNumFolds.setText("10");
+		testSet.setEnabled(false);
 
 		build.addActionListener(new ActionListener() {
 
@@ -77,7 +78,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser chooser = new JFileChooser();
-				
+
 				File loadFolder = Workbench.current.getLoadFolder();
 				chooser.setCurrentDirectory(loadFolder==null?SIDEToolkit.csvFolder:loadFolder);
 				chooser.setFileFilter(FileToolkit.createExtensionListFileFilter(new String[]{"csv"}, true));
@@ -100,7 +101,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 		add("br left", testSet);
 		add("left", loadFileButton);
 		add("br center", testFileName);
-		
+
 		add("br left", new JLabel("name:"));
 		modelName.setText("model");
 		add("hfill", modelName);
@@ -119,16 +120,27 @@ public class LearningConfigPanel extends AbstractListPanel{
 		FeatureTable table;
 		LearningPlugin learn;
 		Map<String, String> config = new TreeMap<String, String>();
+		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 
 		public TrainModelTask(JProgressBar progressBar, FeatureTable t, LearningPlugin l){
 			this.addProgressBar(progressBar);
 			table = t;
 			learn = l;
-			String cv = "";
 			if(cvFold.isSelected()){
-				config.put("cv-fold", cvNumFolds.getText());
+				Integer folds = Integer.parseInt(cvNumFolds.getText());
+				for(int i = 0; i < table.getDocumentList().getSize(); i++){
+					foldsMap.put(i, i%folds);
+				}
 			}else if(cvFile.isSelected()){
-				config.put("cv-file", "true");
+				int foldNum = 0;
+				Map<String, Integer> folds = new TreeMap<String, Integer>();
+				for(int i = 0; i < table.getDocumentList().getSize(); i++){
+					String filename = table.getDocumentList().getFilename(i);
+					if(!folds.containsKey(filename)){
+						folds.put(filename, foldNum++);
+					}
+					foldsMap.put(i, folds.get(filename));
+				}
 			}else if(testSet.isSelected()){
 				config.put("test-set", selectedTestFile.getAbsolutePath());
 			}
@@ -137,7 +149,8 @@ public class LearningConfigPanel extends AbstractListPanel{
 		@Override
 		protected Void doInBackground(){
 			try{
-				TrainingResultInterface result = learn.train(table, modelName.getText(), config);
+				TrainingResultInterface result = learn.train(table, modelName.getText(), config, foldsMap);
+				System.out.println(result);
 				SimpleWorkbench.addTrainingResult(result);				
 			}catch(Exception e){
 				e.printStackTrace();
@@ -146,7 +159,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void refreshPanel(){
 		List<FeatureTable> tables = SimpleWorkbench.getFeatureTables();

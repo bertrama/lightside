@@ -53,6 +53,9 @@ public class FeatureTableListPanel extends AbstractListPanel{
 			}
 		}
 		super.refreshPanel();
-		clickedFeatureTable = (FeatureTable)list.getSelectedValue();
+		if(list.getModel().getSize()>0 && list.getSelectedIndex()==-1){
+			list.setSelectedIndex(list.getModel().getSize()-1);	
+		}
+		clickedFeatureTable = (FeatureTable)list.getSelectedValue();		
 	}
 }

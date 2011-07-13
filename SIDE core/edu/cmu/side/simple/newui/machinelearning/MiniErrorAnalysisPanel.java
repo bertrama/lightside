@@ -1,5 +1,6 @@
 package edu.cmu.side.simple.newui.machinelearning;
 
+import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import edu.cmu.side.simple.ModelEvaluationPlugin;
 import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.Feature;
 import edu.cmu.side.simple.newui.AbstractListPanel;
+import edu.cmu.side.simple.newui.EvalTableModel;
 import edu.cmu.side.simple.newui.SIDETable;
 
 /**
@@ -45,16 +47,6 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 	private ModelEvaluationPlugin selectedPlugin = null;
 	private static Feature selectedFeature = null;
 
-	/** This allows us to sort numerically, not just by toString() */
-	private class EvalTableModel extends DefaultTableModel{
-		private static final long serialVersionUID = -6623645069818166916L;
-
-		@Override
-		public Class<?> getColumnClass(int col){
-			return (col==1?Double.class:Object.class);
-		}
-	}
-	
 	public MiniErrorAnalysisPanel(){
 		tableModel.addColumn("Feature name");
 		featureTable.setModel(tableModel);
@@ -67,6 +59,7 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 			}
 		});
 		scroll = new JScrollPane(featureTable);
+		scroll.setPreferredSize(new Dimension(300,300));
 		add("left", new JLabel("Evaluate with: "));
 		add("left", metricsList);
 		add("br left", selectedLabel);

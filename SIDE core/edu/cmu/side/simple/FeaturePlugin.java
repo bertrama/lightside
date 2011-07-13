@@ -3,6 +3,7 @@ package edu.cmu.side.simple;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureHit;
@@ -52,7 +53,7 @@ public abstract class FeaturePlugin extends SIDEPlugin{
 	 * @param documents in a corpus
 	 * @return All features that this plugin should extract from each document in this corpus.
 	 */
-	public Collection<FeatureHit> extractFeatureHits(DocumentListInterface documents)
+	public List<FeatureHit> extractFeatureHits(DocumentListInterface documents)
 	{
 		this.uiToMemory();
 		// TODO make me abstract.

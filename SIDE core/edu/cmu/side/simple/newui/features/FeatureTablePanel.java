@@ -2,7 +2,19 @@ package edu.cmu.side.simple.newui.features;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -11,6 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -35,22 +49,52 @@ public class FeatureTablePanel extends JPanel{
 	private JTextField filterField = new JTextField();
 	private JButton filterButton = new JButton("filter");
 	private SIDETable featureTable = new SIDETable();
-	private DefaultTableModel tableModel = new DefaultTableModel();
+	private FeatureTableModel tableModel = new FeatureTableModel();
 	private FeatureTable currentFeatureTable = null;
-	
+	private String currentFilter = "";
 	private JButton activateButton = new JButton("deactivate selected");
 	private JButton labButton = new JButton("move to lab");
 	private JButton freezeButton = new JButton("freeze");
 	private JButton exportButton = new JButton("export");
-	
+
+	private class FeatureTableModel extends DefaultTableModel{
+		private static final long serialVersionUID = -6623645069818166916L;
+
+		@Override
+		public Class<?> getColumnClass(int col){
+			return (col > 3?Double.class:Object.class);
+		}
+	}
+
 	public FeatureTablePanel(){
 		setLayout(new RiverLayout());
+		activateButton.setEnabled(false);
+		labButton.setEnabled(false);
+		freezeButton.setEnabled(false);
+		exportButton.setEnabled(false);
 		add("left", new JLabel("Feature Table: "));
 		add("left", selectedTableName);
 		add("left", selectedTableSize);
 		filterField.setBorder(BorderFactory.createLineBorder(Color.gray));
 		add("br hfill", filterField);
+		filterField.addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {}
+			public void keyPressed(KeyEvent e) {}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(e.getKeyCode()==KeyEvent.VK_ENTER){
+					refreshPanel();
+				}
+			}
+		});
 		add("right", filterButton);
+		filterButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				refreshPanel();
+			}
+		});
 		featureTable.setModel(tableModel);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
 		featureTable.setShowHorizontalLines(true);
@@ -65,26 +109,95 @@ public class FeatureTablePanel extends JPanel{
 		featureTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 
+	public Set<Feature> filterFeatureSet(FeatureTable table){
+		Set<Feature> features = new HashSet<Feature>();
+		System.out.println(table.getFeatureSet().size() + " features being evaluated.");
+		String[] filter = filterField.getText().split("\\s+");
+		Map<String, Double> numericFilters = new TreeMap<String, Double>();
+		Map<String, String> nominalFilters = new TreeMap<String, String>();
+		for(String filt : filter){
+			Pattern pattern = Pattern.compile(">|<|=");
+			Matcher match = pattern.matcher(filt);
+			if(!filt.startsWith("<") && !filt.endsWith(">") && match.find()){
+				numericFilters.put(filt.substring(0, match.start()+1), Double.parseDouble(filt.substring(match.start()+1)));	
+			}else if(filt.contains(":")){
+				nominalFilters.put(filt.substring(0, filt.indexOf(':')), filt.substring(filt.indexOf(':')+1));
+			}else if(filt.trim().length()>0){
+				nominalFilters.put("feature name", filt);
+			}
+
+		}
+		for(Feature f : table.getFeatureSet()){
+			boolean add = true;
+			for(String numFilt : numericFilters.keySet()){
+				if(add){
+					String filt = numFilt.substring(0, numFilt.length()-1);
+					String sign = numFilt.substring(numFilt.length()-1);
+					Double featVal = (Double)table.getEvaluations().get(filt).get(f);
+					if(sign.equals("<") && featVal > numericFilters.get(numFilt) ||
+							sign.equals(">") && featVal < numericFilters.get(numFilt) ||
+							sign.equals("=") && featVal != numericFilters.get(numFilt)){
+						add = false;
+					}					
+				}
+			}
+			for(String nomFilt : nominalFilters.keySet()){
+				if(add){
+					if(nomFilt.equals("feature name")){
+						if(!f.getFeatureName().contains(nominalFilters.get(nomFilt))){
+							add = false;
+						}
+					}else{
+						if(table.getEvaluations().get(nomFilt).equals(nominalFilters.get(nomFilt))){
+							add = false;
+						}
+					}
+				}
+			}
+			if(add){
+				features.add(f);
+			}
+		}
+		return features;
+	}
+
 	public void refreshPanel(){
 		FeatureTable table = FeatureTableListPanel.getSelectedFeatureTable();
-		if(table != null && table != currentFeatureTable){
+		if(table != null && (table != currentFeatureTable || !currentFilter.equals(filterField.getText().trim()) || table.getEvaluations().keySet().size() != tableModel.getColumnCount()-3)){
+			currentFilter = filterField.getText();
 			Map<String, Map<Feature, Comparable>> evals = table.getEvaluations();
 			selectedTableName.setText(table.getTableName());
 			selectedTableSize.setText("("+table.getFeatureSet().size() + " features)");
-			tableModel = new DefaultTableModel();
+			tableModel = new FeatureTableModel();
 			tableModel.addColumn("from");
 			tableModel.addColumn("feature name");
 			tableModel.addColumn("type");
-			for(String eval : evals.keySet()){
+
+			for(String eval : FeatureTable.getConstantEvaluations()){
 				tableModel.addColumn(eval);
 			}
-			for(Feature f : table.getFeatureSet()){
-				Object[] row = new Object[3+evals.keySet().size()];
+			List<String> otherEvals = new ArrayList<String>();
+			for(String eval : table.getEvaluations().keySet()){
+				boolean found = false;
+				for(String s : FeatureTable.getConstantEvaluations()){
+					if(eval.equals(s)){ found = true; break; }
+				}
+				if(!found){
+					otherEvals.add(eval); 
+					System.out.println("Adding column " + eval);
+					tableModel.addColumn(eval);
+				}
+			}
+			for(Feature f : filterFeatureSet(table)){
+				Object[] row = new Object[tableModel.getColumnCount()];
 				row[0] = f.getExtractorPrefix();
 				row[1] = f.getFeatureName();
 				row[2] = f.getFeatureType();
 				int i = 3;
-				for(String eval : evals.keySet()){
+				for(String eval : FeatureTable.getConstantEvaluations()){
+					row[i++] = evals.get(eval).get(f);
+				}
+				for(String eval : otherEvals){
 					row[i++] = evals.get(eval).get(f);
 				}
 				tableModel.addRow(row);
@@ -96,6 +209,14 @@ public class FeatureTablePanel extends JPanel{
 			columnModel.getColumn(0).setPreferredWidth(30);
 			columnModel.getColumn(1).setPreferredWidth(120);
 			featureTable.setColumnModel(columnModel);
+			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
+			featureTable.setRowSorter(sorter);
+			if(tableModel.getColumnCount()>1){
+				ArrayList<RowSorter.SortKey> sortKey = new ArrayList<RowSorter.SortKey>();
+				sortKey.add(new RowSorter.SortKey(4, SortOrder.DESCENDING));
+				sorter.setSortKeys(sortKey);
+				sorter.sort();				
+			}
 		}
 		repaint();
 	}

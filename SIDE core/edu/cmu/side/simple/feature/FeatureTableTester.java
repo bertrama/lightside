@@ -12,6 +12,7 @@ import org.w3c.dom.Element;
 
 import edu.cmu.side.plugin.FEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
+import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.uima.DocumentListInterface;
 import edu.cmu.side.uima.UIMAToolkit.DocumentList;
 
@@ -26,10 +27,10 @@ public class FeatureTableTester extends FeaturePlugin
 	{
 		ArrayList<FeaturePlugin> extractors = new ArrayList<FeaturePlugin>();
 		extractors.add(new FeatureTableTester());
-		DocumentListInterface documents = new DocumentList("test"){public int getSize(){return 5;}};
-		FeatureTable foo = new FeatureTable(extractors, documents);
+		SimpleDocumentList documents = new SimpleDocumentList(null,null,null){public int getSize(){return 5;}};
+		FeatureTable foo = new FeatureTable(extractors, documents,0);
 		
-		foo.extractAll();
+		foo.extractAll(0);
 		
 		Set<Feature> feats = foo.getFeatureSet();
 		for(Feature f : feats)
@@ -51,7 +52,7 @@ public class FeatureTableTester extends FeaturePlugin
 	}
 	
 
-	public Collection<FeatureHit> extractFeatureHits(DocumentListInterface documents)
+	public List<FeatureHit> extractFeatureHits(DocumentListInterface documents)
 	{
 		ArrayList<FeatureHit> hits = new ArrayList<FeatureHit>();
 		List<String> nominals = Arrays.asList("foo", "bar", "baz");

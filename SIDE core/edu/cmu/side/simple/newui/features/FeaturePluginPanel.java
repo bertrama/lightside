@@ -17,6 +17,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
+import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 import edu.cmu.side.uima.DocumentListInterface;
@@ -62,13 +63,14 @@ public class FeaturePluginPanel extends AbstractListPanel{
 		newButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DocumentListInterface corpus = FeatureFileManagerPanel.getDocumentList();
+				SimpleDocumentList corpus = FeatureFileManagerPanel.getDocumentList();
 				if(clickedPlugin != null && corpus != null){
 					BuildFeatureTableTask task = new BuildFeatureTableTask(progressBar, corpus);
 					task.execute();
 				}
 			}
 		});
+		addButton.setEnabled(false);
 		add("center", addButton);
 		add("br hfill", progressBar);
 	}
@@ -80,32 +82,32 @@ public class FeaturePluginPanel extends AbstractListPanel{
 	 * @param corpus
 	 */
 	private class BuildFeatureTableTask extends OnPanelSwingTask{
-		DocumentListInterface corpus;
+		SimpleDocumentList corpus;
 
-		public BuildFeatureTableTask(JProgressBar progressBar, DocumentListInterface c){
+		public BuildFeatureTableTask(JProgressBar progressBar, SimpleDocumentList c){
 			this.addProgressBar(progressBar);
 			corpus = c;
 		}
 
 		@Override
 		protected Void doInBackground(){
-			FeatureTable table = new FeatureTable(clickedPlugin, corpus);
-			int thresh = 0;
 			try{
-				thresh = Integer.parseInt(threshold.getText());
-			}catch(Exception ex){
-				AlertDialog.show("Error!", "Threshold is not an integer value.", null);
-				ex.printStackTrace();
+				int thresh = 0;
+				try{
+					thresh = Integer.parseInt(threshold.getText());
+				}catch(Exception ex){
+					AlertDialog.show("Error!", "Threshold is not an integer value.", null);
+					ex.printStackTrace();
+				}
+				FeatureTable table = new FeatureTable(clickedPlugin, corpus,thresh);
+				table.defaultEvaluation();
+				table.setTableName(tableName.getText());
+				SimpleWorkbench.addFeatureTable(table);
+				fireActionEvent();
+			}catch(Exception e){
+				e.printStackTrace();
 			}
-			if(thresh > 0){
-				table.applyThreshold(thresh);
-			}
-			table.defaultEvaluation();
-			table.setTableName(tableName.getText());
-			SimpleWorkbench.addFeatureTable(table);
-			fireActionEvent();
-
-			return null;
+			return null;				
 		}
 	}
 

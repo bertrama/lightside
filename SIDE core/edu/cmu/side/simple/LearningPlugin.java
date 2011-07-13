@@ -49,7 +49,7 @@ public abstract class LearningPlugin extends SIDEPlugin {
 	 */
 	public abstract String getOutputName();
 	
-	public abstract TrainingResultInterface train(FeatureTable featureTable, String desiredName, Map<String, String> evaluationSettings);
+	public abstract TrainingResultInterface train(FeatureTable featureTable, String desiredName, Map<String, String> evaluationSettings, Map<Integer, Integer> foldsMap);
 
 
 }

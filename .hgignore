@@ -3,3 +3,7 @@ bin/
 .arff
 .svn
 .DS_Store
+.train
+.test
+.model
+.pred

@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-<styleMap>
-<rule>
-<pattern>edu.cmu.side.uima.SIDESegmentation</pattern>
-<label>SIDESegmentation</label>
-<style>color:black; background:lightblue;</style>
-</rule>
-</styleMap>
-

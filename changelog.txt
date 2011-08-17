@@ -1,0 +1,2 @@
+LightSIDE, Version 2.0.0, August 15, 2011:
+All new version of SIDE. No reported bugs yet. That'll change soon.

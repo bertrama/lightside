@@ -119,7 +119,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 		FeatureTable table;
 		LearningPlugin learn;
 		Map<String, String> config = new TreeMap<String, String>();
-		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
+		Map<Integer, Integer> foldsMap = null;
 
 		public TrainModelTask(JProgressBar progressBar, FeatureTable t, LearningPlugin l){
 			this.addProgressBar(progressBar);
@@ -127,19 +127,9 @@ public class LearningConfigPanel extends AbstractListPanel{
 			learn = l;
 			if(cvFold.isSelected()){
 				Integer folds = Integer.parseInt(cvNumFolds.getText());
-				for(int i = 0; i < table.getDocumentList().getSize(); i++){
-					foldsMap.put(i, i%folds);
-				}
+				foldsMap = table.getDocumentList().getFoldsMapByNum(folds);
 			}else if(cvFile.isSelected()){
-				int foldNum = 0;
-				Map<String, Integer> folds = new TreeMap<String, Integer>();
-				for(int i = 0; i < table.getDocumentList().getSize(); i++){
-					String filename = table.getDocumentList().getFilename(i);
-					if(!folds.containsKey(filename)){
-						folds.put(filename, foldNum++);
-					}
-					foldsMap.put(i, folds.get(filename));
-				}
+				foldsMap = table.getDocumentList().getFoldsMapByFile();
 			}else if(testSet.isSelected()){
 				config.put("test-set", selectedTestFile.getAbsolutePath());
 			}
@@ -149,7 +139,6 @@ public class LearningConfigPanel extends AbstractListPanel{
 		protected Void doInBackground(){
 			try{
 				TrainingResultInterface result = learn.train(table, modelName.getText(), config, foldsMap, progressLabel);
-				System.out.println(result);
 				SimpleWorkbench.addTrainingResult(result);				
 			}catch(Exception e){
 				e.printStackTrace();
@@ -162,12 +151,13 @@ public class LearningConfigPanel extends AbstractListPanel{
 	@Override
 	public void refreshPanel(){
 		List<FeatureTable> tables = SimpleWorkbench.getFeatureTables();
+		int prevIndex = tablesList.getSelectedIndex();
 		listModel.removeAllElements();
 		for(FeatureTable table : tables){
 			listModel.addElement(table);
 		}
-		if(listModel.getSize() > 0 && tablesList.getSelectedIndex() == -1){
-			tablesList.setSelectedIndex(0);
+		if(listModel.getSize() > 0){
+			tablesList.setSelectedIndex(Math.max(0, prevIndex));
 		}
 		loadFileButton.setEnabled(testSet.isSelected());
 		if(selectedTestFile != null){

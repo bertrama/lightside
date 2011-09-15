@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.dataitem.TrainingResultInterface;
@@ -22,6 +23,9 @@ public class ModelListPanel extends AbstractListPanel{
 
 	static SimpleTrainingResult clickedModel;
 
+	private JButton saveButton = new JButton("save");
+	private JButton loadButton = new JButton("load");
+	
 	public ModelListPanel(){
 		/** List model initialized and defined in the abstract class */
 		super();
@@ -38,6 +42,10 @@ public class ModelListPanel extends AbstractListPanel{
 				fireActionEvent();
 			}
 		});
+		saveButton.addActionListener(new SimpleWorkbench.TrainingResultSaveListener());
+		add("br left", saveButton);
+		loadButton.addActionListener(new SimpleWorkbench.TrainingResultLoadListener());
+		add("left", loadButton);
 	}
 	
 	/** This is where the rest of the Learning panels get their information about what model to analyze. */

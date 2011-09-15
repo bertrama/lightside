@@ -178,11 +178,9 @@ public class FeatureLabPanel extends AbstractListPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Collection<Feature> features = getHighlightedFeatures();
-				System.out.print(labTable.getFeatureSet().size() + " to ");
 				for(Feature f : features){
 					labTable.deleteFeature(f);
 				}
-				System.out.println(labTable.getFeatureSet().size());
 				refreshPanel();
 			}
 		});
@@ -192,11 +190,9 @@ public class FeatureLabPanel extends AbstractListPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Collection<Feature> features = getHighlightedFeatures();
-				System.out.print(FeatureTableListPanel.getSelectedFeatureTable().getFeatureSet().size() + " to ");
 				for(Feature f : features){
 					FeatureTableListPanel.getSelectedFeatureTable().addAllHits(labTable.getHitsForFeature(f));
 				}
-				System.out.println(FeatureTableListPanel.getSelectedFeatureTable().getFeatureSet().size());
 				FeatureTablePanel.activationsChanged();
 				fireActionEvent();
 			}
@@ -248,7 +244,6 @@ public class FeatureLabPanel extends AbstractListPanel{
 				}
 			}
 		}
-		System.out.println(seqHits.size() + " hits found.");
 		labTable.addAllHits(seqHits);
 	}
 	

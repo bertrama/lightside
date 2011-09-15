@@ -110,8 +110,17 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 						displayModel.addRow(row);
 					}					
 				}else if(cellDisplay.isSelected() && localCell[0] >= 0 && localCell[1] >= 0){
-					String act = model.getDocumentList().getLabelArray()[localCell[0]];
-					String pred = model.getDocumentList().getLabelArray()[localCell[1]];
+					String act = ""; String pred = "";
+					switch(model.getFeatureTable().getClassValueType()){
+					case NOMINAL:
+					case BOOLEAN:
+						act = model.getDocumentList().getLabelArray()[localCell[0]];
+						pred = model.getDocumentList().getLabelArray()[localCell[1]];
+						break;
+					case NUMERIC:
+						act = "Q"+(localCell[0]+1);
+						pred = "Q"+(localCell[1]+1);
+					}
 					List<Integer> cell = model.getConfusionMatrixCell(pred, act);
 					for(int i : cell){
 						Object[] row = new Object[3];

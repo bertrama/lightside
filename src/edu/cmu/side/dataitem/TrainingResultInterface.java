@@ -7,10 +7,7 @@ public interface TrainingResultInterface {
 
 	public abstract String getSubtypeName();
 
-	public abstract void fromXML(Element root) throws Exception;
-
-	public abstract String toXML();
-
 	public abstract DocumentListInterface getDocumentList();
 
+	public String getSummary();
 }

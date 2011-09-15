@@ -1,6 +1,7 @@
 package edu.cmu.side.simple;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,7 +10,8 @@ import edu.cmu.side.dataitem.DocumentListInterface;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureHit;
 
-public abstract class FeaturePlugin extends SIDEPlugin{
+public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
+	private static final long serialVersionUID = -2856017007104452008L;
 
 	/**
 	 * Kept for legacy reasons, implemented in this class so the developer doesn't have to.
@@ -64,6 +66,11 @@ public abstract class FeaturePlugin extends SIDEPlugin{
 		return hits;
 	}
 		
+	/**
+	 * For command-line invocation, a plugin should be able to configure itself based on the contents of a file.
+	 */
+	public abstract void configureFromFile(String filename);
+	
 	/**
 	 * Implemented by the plugin to do feature extraction.
 	 * @param documents

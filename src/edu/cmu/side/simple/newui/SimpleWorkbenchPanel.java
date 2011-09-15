@@ -10,6 +10,7 @@ import javax.swing.JTabbedPane;
 import edu.cmu.side.simple.newui.analysis.FeatureAnalysisPanel;
 import edu.cmu.side.simple.newui.features.FeatureExtractionPanel;
 import edu.cmu.side.simple.newui.machinelearning.LearningPanel;
+import edu.cmu.side.simple.newui.prediction.PredictionPanel;
 
 /**
  * Holds the three main components of LightSIDE.
@@ -22,9 +23,11 @@ public class SimpleWorkbenchPanel extends JTabbedPane implements ActionListener{
 	private void init(){
 		featureTableConfigPanel = new FeatureExtractionPanel();
 		machineLearningConfigPanel = new LearningPanel();
+		predictionConfigPanel = new PredictionPanel();
 		
 		this.addTab("Extract Features", featureTableConfigPanel);
 		this.addTab("Build Model", machineLearningConfigPanel);
+		this.addTab("Predict Labels", predictionConfigPanel);
 	}
 	
 	public SimpleWorkbenchPanel(){
@@ -33,12 +36,12 @@ public class SimpleWorkbenchPanel extends JTabbedPane implements ActionListener{
 	
 	private FeatureExtractionPanel featureTableConfigPanel;
 	private LearningPanel machineLearningConfigPanel;
-	private FeatureAnalysisPanel featureAnalyzerConfigPanel;
-	
+	private PredictionPanel predictionConfigPanel;
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		featureTableConfigPanel.refreshPanel();
 		machineLearningConfigPanel.refreshPanel();
+		predictionConfigPanel.refreshPanel();
 	}	
 	
 }

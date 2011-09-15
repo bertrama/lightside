@@ -126,7 +126,9 @@ public class FeaturePluginPanel extends AbstractListPanel{
 					ex.printStackTrace();
 				}
 				FeatureTable table = new FeatureTable(clickedPlugin, corpus,thresh);
+				System.out.println("(FeaturePluginPanel) Added hits to a feature table, now evaluating");
 				table.defaultEvaluation();
+				System.out.println("(FeaturePluginPanel) Evaluated.");
 				table.setTableName(tableName.getText());
 				SimpleWorkbench.addFeatureTable(table);
 				fireActionEvent();

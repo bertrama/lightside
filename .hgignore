@@ -1,9 +1,8 @@
-bin/
-.xmi
-.arff
-.svn
-.DS_Store
-.train
-.test
-.model
-.pred
+syntax:glob
+.*
+*.class
+*.ser
+*.train
+*.test
+*.model
+*.pred

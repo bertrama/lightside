@@ -3,12 +3,16 @@ package edu.cmu.side.simple;
 import java.io.BufferedReader;
 
 import java.io.FileReader;
+import java.io.Serializable;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.yerihyo.yeritools.csv.CSVReader;
@@ -16,17 +20,20 @@ import com.yerihyo.yeritools.swing.AlertDialog;
 
 import edu.cmu.side.dataitem.DocumentListInterface;
 
-public class SimpleDocumentList implements DocumentListInterface{
+public class SimpleDocumentList implements DocumentListInterface, Serializable{
+	private static final long serialVersionUID = -5433699826930815886L;
 
 	ArrayList<String> text = new ArrayList<String>();
 	HashMap<String, ArrayList<String>> allAnnotations = new HashMap<String, ArrayList<String>>();
-	String currentAnnotation;
+	String currentAnnotation; String textColumn;
 	ArrayList<String> filenameList = new ArrayList<String>();
+	String[] labelArray;
 	
-	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textColumn){
+	public SimpleDocumentList(Set<String> filenames, String textCol){
 		double time1 = System.currentTimeMillis();
 		BufferedReader in;
-		
+		textColumn = textCol;
+		currentAnnotation = null;
 		for(String filename : filenames){
 			try{
 				in = new BufferedReader(new FileReader(filename));
@@ -61,7 +68,6 @@ public class SimpleDocumentList implements DocumentListInterface{
 							try{
 								allAnnotations.get(headers[i]).add(value);															
 							}catch(Exception e){
-								System.out.println(headers[i]);
 								e.printStackTrace();
 							}
 						}
@@ -74,9 +80,11 @@ public class SimpleDocumentList implements DocumentListInterface{
 				e.printStackTrace();
 			}
 		}
-		currentAnnotation = currentAnnot;
 		double time2 = System.currentTimeMillis();
-		System.out.println("DocumentList created in " + (time2-time1) + " milliseconds.");
+	}
+	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textCol){
+		this(filenames, textCol);
+		currentAnnotation = currentAnnot;
 	}
 	
 	@Override
@@ -119,17 +127,28 @@ public class SimpleDocumentList implements DocumentListInterface{
 
 	@Override
 	public String[] getLabelArray() {
-		ArrayList<String> labels = getAnnotationArray();
-		Set<String> labelArray = new TreeSet<String>();
-		for(String s : labels){
-			labelArray.add(s);
+		if(labelArray == null){
+			ArrayList<String> labels = getAnnotationArray();
+			Set<String> labelSet = new TreeSet<String>();
+			for(String s : labels){
+				labelSet.add(s);
+			}
+			labelArray = labelSet.toArray(new String[0]);			
 		}
-		return labelArray.toArray(new String[0]);
+		return labelArray;
+	}
+	
+	/**
+	 * Used for predicting labels on unannotated data.
+	 * @param labels
+	 */
+	public void setExternalLabelArray(String[] labels){
+		labelArray = labels;
 	}
 
 	@Override
 	public int getSize() {
-		return getAnnotationArray().size();
+		return text.size();
 	}
 
 	@Override
@@ -160,6 +179,9 @@ public class SimpleDocumentList implements DocumentListInterface{
 		return currentAnnotation;
 	}
 	
+	public String getTextColumn(){
+		return textColumn;
+	}
 	/**
 	 * Used for cross-validating by file.
 	 * @param docIndex
@@ -167,5 +189,61 @@ public class SimpleDocumentList implements DocumentListInterface{
 	 */
 	public String getFilename(int docIndex){
 		return filenameList.get(docIndex);
+	}
+	
+	public Set<String> getFilenames(){
+		Set<String> names = new HashSet<String>();
+		for(String s : filenameList) names.add(s);
+		return names;
+	}
+	
+	public Map<Integer, Integer> getFoldsMapByNum(int num){
+		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
+		for(int i = 0; i < getSize(); i++){
+			foldsMap.put(i, i%num);
+		}
+		return foldsMap;
+	}
+	
+	public Map<Integer, Integer> getFoldsMapByFile(){
+		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
+		int foldNum = 0;
+		Map<String, Integer> folds = new TreeMap<String, Integer>();
+		for(int i = 0; i < getSize(); i++){
+			String filename = getFilename(i);
+			if(!folds.containsKey(filename)){
+				folds.put(filename, foldNum++);
+			}
+			foldsMap.put(i, folds.get(filename));
+		}
+		return foldsMap;
+	}
+	
+	/**
+	 * Adds a new annotation. Primarily used by the prediction interface.
+	 */
+	public void addAnnotation(String name, ArrayList<String> annots){
+		allAnnotations.put(name, annots);
+	}
+	
+	public String toCSVString(){
+		StringBuilder header = new StringBuilder();
+		for(String s : allAnnotations.keySet()){
+			header.append(s+",");
+		}
+		if(!textColumn.equals("[No Text]")){
+			header.append("text");
+		}
+		StringBuilder body = new StringBuilder();
+		for(int i = 0 ; i < text.size(); i++){
+			for(String s : allAnnotations.keySet()){
+				body.append(allAnnotations.get(s).get(i)+",");
+			}
+			if(!textColumn.equals("[No Text]")){
+				body.append(text.get(i));
+			}
+			body.append("\n");
+		}
+		return header.toString()+"\n"+body.toString();
 	}
 }

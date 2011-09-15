@@ -1,6 +1,9 @@
 package edu.cmu.side.simple.newui.machinelearning;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -12,8 +15,7 @@ import edu.cmu.side.simple.LearningPlugin;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 
 /**
- * Pick a plugin for machine learning. Currently only weka, though this will probably
- * soon include SVM light.
+ * Pick a plugin for machine learning. Currently only weka and svmlight.
  * @author emayfiel
  *
  */
@@ -31,6 +33,19 @@ public class LearningPluginPanel extends AbstractListPanel{
 		add("br left hfill", pluginList);
 		add("br left hfill", configPanel);
 		refreshPanel();
+		if(pluginList.getSelectedItem() != null){
+			configPanel.add(((LearningPlugin)pluginList.getSelectedItem()).getConfigurationUI());
+		}
+		pluginList.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				clickedPlugin = (LearningPlugin)pluginList.getSelectedItem();
+				if(clickedPlugin != null){
+					configPanel.removeAll();
+					Component c = clickedPlugin.getConfigurationUI();
+					configPanel.add(c);
+				}
+			}
+		});
 		pluginList.addActionListener(this);
 	}
 	
@@ -46,11 +61,7 @@ public class LearningPluginPanel extends AbstractListPanel{
 			listModel.setSelectedItem(listModel.getElementAt(0));
 		}
 		clickedPlugin = (LearningPlugin)pluginList.getSelectedItem();
-		if(clickedPlugin != null){
-			configPanel.removeAll();
-			Component c = clickedPlugin.getConfigurationUI();
-			configPanel.add(c);
-		}
+		
 		repaint();
 	}
 	

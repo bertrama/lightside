@@ -1,11 +1,22 @@
 package edu.cmu.side.simple.newui.features;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.List;
 
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import com.yerihyo.yeritools.swing.SimpleOKDialog;
+import com.yerihyo.yeritools.swing.SwingToolkit.ResultOption;
+
 import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.AbstractListPanel;
@@ -15,6 +26,9 @@ public class FeatureTableListPanel extends AbstractListPanel{
 
 	static FeatureTable clickedFeatureTable;
 
+	private JButton saveButton = new JButton("save");
+	private JButton loadButton = new JButton("load");
+	private JButton exportButton = new JButton("export");
 	public FeatureTableListPanel(){
 		/** List model initialized and defined in the abstract class */
 		super();
@@ -31,6 +45,12 @@ public class FeatureTableListPanel extends AbstractListPanel{
 				fireActionEvent();
 			}
 		});
+		loadButton.addActionListener(new SimpleWorkbench.FeatureTableLoadListener());
+		add("br left", loadButton);
+		saveButton.addActionListener(new SimpleWorkbench.FeatureTableSaveListener());
+		add("left", saveButton);
+		exportButton.addActionListener(new SimpleWorkbench.FeatureTableExportListener());
+		add("left", exportButton);
 	}
 	
 	/**

@@ -1,8 +1,7 @@
 package edu.cmu.side.simple;
 
-import java.awt.Component;
-
 import java.io.File;
+import java.io.Serializable;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -11,7 +10,8 @@ import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureTable;
 
-public abstract class LearningPlugin extends SIDEPlugin {
+public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
+	private static final long serialVersionUID = -7928450759075851993L;
 
 	/**
 	 * Kept for legacy reasons, implemented in this class so the developer doesn't have to.
@@ -51,7 +51,12 @@ public abstract class LearningPlugin extends SIDEPlugin {
 	 */
 	public abstract String getOutputName();
 	
+	public abstract void predict(String name, FeatureTable documents);
+	
 	public abstract TrainingResultInterface train(FeatureTable featureTable, String desiredName, Map<String, String> evaluationSettings, Map<Integer, Integer> foldsMap, JLabel progressIndicator);
 
+	public abstract void toFile(double uniqueID);
+	
+	public abstract void fromFile(double uniqueID);
 
 }

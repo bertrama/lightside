@@ -1,13 +1,17 @@
 package edu.cmu.side.simple.feature;
 
+import java.io.Serializable;
+
 /**
  * 
  * Represents a "hit" of a feature on a document instance. 
  * Subclasses specify the hit's location within and around this document, for visualization and analysis purposes.
  * 
  */
-public class FeatureHit implements Comparable<FeatureHit>
+public class FeatureHit implements Comparable<FeatureHit>, Serializable
 {
+	private static final long serialVersionUID = 1423521357321268667L;
+
 	/**
 	 * which feature hit here?
 	 */

@@ -53,7 +53,6 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 		featureTable.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e){
 				selectedFeature = (Feature)featureTable.getValueAt(featureTable.getSelectedRow(), 0);
-				System.out.println("Selected " + selectedFeature.getFeatureName());
 				fireActionEvent();
 			}
 		});
@@ -88,12 +87,29 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 			tableModel.addColumn("Feature name");
 			if(selectedPlugin != null && trainingResult != null && localCell[0] >= 0 && localCell[1] >= 0){
 				tableModel.addColumn(selectedPlugin.getOutputName());
-				String act = trainingResult.getDocumentList().getLabelArray()[localCell[0]];
-				String pred = trainingResult.getDocumentList().getLabelArray()[localCell[1]];
+				String act = ""; String pred = "";
+				switch(clicked.getFeatureTable().getClassValueType()){
+				case NOMINAL:
+				case BOOLEAN:
+					act = trainingResult.getDocumentList().getLabelArray()[localCell[0]];
+					pred = trainingResult.getDocumentList().getLabelArray()[localCell[1]];
+					break;
+				case NUMERIC:
+					act = "Q"+(localCell[0]+1);
+					pred = "Q"+(localCell[1]+1);
+					break;
+				}
 				Map<String, String> settings = new TreeMap<String, String>();
 				settings.put("pred", pred);
 				settings.put("act", act);
-				selectedLabel.setText("Predicted: " + pred + ", Actual: " + act);
+				switch(trainingResult.getFeatureTable().getClassValueType()){
+				case NOMINAL:
+				case BOOLEAN:
+					selectedLabel.setText("Predicted: " + pred + ", Actual: " + act);
+					break;
+				case NUMERIC:
+					selectedLabel.setText("Predicted: Q" + (localCell[1]+1) + ", Actual: Q" + (localCell[0]+1));
+				}
 				Map<Feature, Double> featureEval = selectedPlugin.evaluateModelFeatures(trainingResult, settings);
 				for(Feature f : trainingResult.getFeatureTable().getFeatureSet()){
 					Object[] row = new Object[]{f, featureEval.get(f)};

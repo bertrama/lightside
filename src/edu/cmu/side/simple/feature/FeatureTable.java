@@ -1,6 +1,13 @@
 package edu.cmu.side.simple.feature;
 
+import java.io.BufferedWriter;
+
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 
 import java.util.*;
@@ -18,8 +25,10 @@ import edu.cmu.side.simple.feature.Feature.Type;
  * A many-directional mapping of Features, FeatureHits and indexes into the DocumentList.
  *
  */
-public class FeatureTable
+public class FeatureTable implements Serializable
 {
+	private static final long serialVersionUID = 1048801132974685418L;
+
 	public static String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
 	private Collection<FeaturePlugin> extractors;
 	private SimpleDocumentList documents;
@@ -32,12 +41,55 @@ public class FeatureTable
 	/** These show up as columns in the FeatureTablePanel */
 	private Map<String, Map<Feature, Comparable>> evaluations;
 
+	private String annot;
+	private Integer threshold;
 	/** These variables are for weka. Filled when needed only. Stored 
 	 * in the feature table so that it's cleaner to populate. */
 	private FastVector fastVector = null;
 	private double[] empty = null;	
 	private Instances instances = null;
 	private Map<String, Integer> attributeMap = new HashMap<String, Integer>();
+
+	public void serialize(File f){
+		try{
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f));				
+			writeSerializedTable(out);
+			out.close();			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+
+	public void writeSerializedTable(ObjectOutputStream out) throws Exception{
+		out.writeObject(documents.getFilenames());
+		out.writeObject(documents.getCurrentAnnotation());
+		out.writeObject(documents.getTextColumn());
+		out.writeObject(extractors);
+		out.writeObject(hitsPerFeature);
+		out.writeObject(activatedFeatures);
+		out.writeObject(tableName);
+		out.writeObject(type);
+		out.writeObject(threshold);
+		out.writeObject(annot);
+	}
+
+	public FeatureTable(ObjectInputStream in){
+		try{
+			documents = new SimpleDocumentList((Set<String>)in.readObject(), (String)in.readObject(), (String)in.readObject());
+			extractors = (Collection<FeaturePlugin>)in.readObject();
+			hitsPerFeature = (Map<Feature, Collection<FeatureHit>>)in.readObject();
+			activatedFeatures = (Map<Feature, Boolean>)in.readObject();
+			tableName = (String)in.readObject();
+			type = (Feature.Type)in.readObject();
+			threshold = (Integer)in.readObject();
+			annot = (String)in.readObject();
+			fillHitsPerDocument(this);
+			this.evaluations = new TreeMap<String, Map<Feature, Comparable>>();
+			defaultEvaluation();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
 
 	private void init(Collection<FeaturePlugin> extractors, SimpleDocumentList documents, int threshold){
 		this.extractors = extractors;
@@ -46,7 +98,9 @@ public class FeatureTable
 		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
 		this.activatedFeatures = new HashMap<Feature, Boolean>(30000);
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
-		extractAll(threshold);
+		this.threshold = threshold;
+		this.annot = documents.getCurrentAnnotation();
+		extractAll();
 	}
 
 	public FeatureTable(FeaturePlugin extractor, SimpleDocumentList documents, int threshold)
@@ -55,12 +109,12 @@ public class FeatureTable
 		extractors.add(extractor);
 		init(extractors, documents, threshold);
 	}
-	
+
 	public FeatureTable(SimpleDocumentList documents){
 		Set<FeaturePlugin> extractors = new TreeSet<FeaturePlugin>();
 		init(extractors, documents, 0);
 	}
-	
+
 	private FeatureTable(){}
 
 	public FeatureTable(Collection<FeaturePlugin> extractors, SimpleDocumentList documents, int threshold)
@@ -73,6 +127,7 @@ public class FeatureTable
 	 * Doesn't convert the instances yet (use getInstances() for that).
 	 */
 	public void generateFastVector(){
+		documents.setCurrentAnnotation(annot);
 		double time1 = System.currentTimeMillis();
 		if(fastVector == null){
 			FastVector attributes = new FastVector();
@@ -116,11 +171,10 @@ public class FeatureTable
 			case NUMERIC:
 				attributes.addElement(new Attribute("CLASS"));
 				break;
-			}
+			}				
 			fastVector = attributes;
 		}
 		double time2 = System.currentTimeMillis();
-		System.out.println((time2-time1) + " milliseconds to generate fast vector.");
 	}
 
 	/**
@@ -136,7 +190,6 @@ public class FeatureTable
 				format.add(fillInstance(format, i));
 				double time2 = System.currentTimeMillis();
 				runningTotal += (time2-time1);
-				//				System.out.println(i + " documents, " + runningTotal + " ms, " + getHitsTime + ", " + setValueTime + " (" + aTime + ", " + bTime + ", " + cTime + ", " + dTime + ", " + eTime + "), " + classValueTime + ", " + cleanupTime);
 			}
 			format.setClass(format.attribute("CLASS"));
 			instances = format;			
@@ -159,6 +212,7 @@ public class FeatureTable
 	 * @return
 	 */
 	public Instances getInstances(Map<Integer, Integer> foldMap, int fold, boolean train){
+		documents.setCurrentAnnotation(annot);
 		if(instances == null){
 			getInstances();
 		}
@@ -182,6 +236,7 @@ public class FeatureTable
 	 * @return
 	 */
 	public Map<Integer, Integer> foldIndexToIndex(Map<Integer, Integer> foldMap, int fold){
+		documents.setCurrentAnnotation(annot);
 		Map<Integer, Integer> foldIndexToIndex = new TreeMap<Integer, Integer>();
 		int index = 0;
 		for(int i = 0; i < getDocumentList().getSize(); i++){
@@ -207,6 +262,7 @@ public class FeatureTable
 	private Instance fillInstance(Instances format, int i) {
 		Collection<FeatureHit> hits = getHitsForDocument(i);
 		double[] values = new double[format.numAttributes()];
+		for(int j = 0; j < values.length; j++) values[j] = 0.0;
 		try{
 			for(FeatureHit hit : hits){
 				Feature f = hit.getFeature();
@@ -230,16 +286,27 @@ public class FeatureTable
 				case BOOLEAN:
 					values[att] = 1;
 					break;
-				}					
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-		String[] possibleLabels = getDocumentList().getLabelArray();
-		for(int j = 0; j < possibleLabels.length; j++){
-			if(possibleLabels[j].equals(getDocumentList().getAnnotationArray().get(i))){
-				values[values.length-1] = j;
-			}
+		if(getDocumentList().getAnnotationArray() != null){
+			String[] possibleLabels = getDocumentList().getLabelArray();
+			switch(getClassValueType()){
+			case NOMINAL:
+			case BOOLEAN:			
+				for(int j = 0; j < possibleLabels.length; j++){
+					if(possibleLabels[j].equals(getDocumentList().getAnnotationArray().get(i))){
+						values[values.length-1] = j;
+
+					}
+				}
+				break;
+			case NUMERIC:
+				values[values.length-1] = Double.parseDouble(getDocumentList().getAnnotationArray().get(i));
+				break;
+			}			
 		}
 		Instance inst = new Instance(1,values);
 		return inst;
@@ -248,8 +315,9 @@ public class FeatureTable
 	/**
 	 * run the extractors on the documents and populate the feature hit tables.
 	 */
-	public void extractAll(int threshold)
+	public void extractAll()
 	{
+		documents.setCurrentAnnotation(annot);
 		hitsPerDocument.clear();
 		for(int i = 0; i < documents.getSize(); i++)
 		{
@@ -261,8 +329,6 @@ public class FeatureTable
 		{
 			if(extractor == null) continue;
 			Collection<FeatureHit> hits = extractor.extractFeatureHits(documents);
-
-			System.out.println(hits.size() + " feature hits from this extractor.");
 			for(FeatureHit hit : hits)
 			{
 				if(! localMap.containsKey(hit.feature))
@@ -298,6 +364,7 @@ public class FeatureTable
 	 */
 	public void defaultEvaluation(){
 		double time1 = System.currentTimeMillis();
+		documents.setCurrentAnnotation(annot);
 
 		Map<Feature, Comparable> precisionMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> recallMap = new HashMap<Feature, Comparable>();
@@ -387,7 +454,6 @@ public class FeatureTable
 		addEvaluation("accuracy", accuracyMap);
 		addEvaluation("hits", hitsMap);
 		double time2 = System.currentTimeMillis();
-		System.out.println("Evaluation done in " + (time2-time1) + " milliseconds.");
 	}
 
 	/**
@@ -418,6 +484,10 @@ public class FeatureTable
 		return set;
 	}
 
+	public void addEmptyFeature(Feature f){
+		hitsPerFeature.put(f, new HashSet<FeatureHit>());
+	}
+
 	/**
 	 * Called by external classes (notably the FeaturePluginPanel and FeatureLabPanel) to edit 
 	 * an existing feature table by adding new features. Generally followed by calling activationsChanged()
@@ -426,6 +496,7 @@ public class FeatureTable
 	 * @param hits
 	 */
 	public void addAllHits(Collection<FeatureHit> hits){
+		documents.setCurrentAnnotation(annot);
 		for(FeatureHit fh : hits){
 			hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
 			if(!hitsPerFeature.containsKey(fh.getFeature())){
@@ -436,7 +507,7 @@ public class FeatureTable
 		}
 		defaultEvaluation();
 	}
-	
+
 	/**
 	 * 
 	 * @param feature
@@ -459,6 +530,7 @@ public class FeatureTable
 
 	public SimpleDocumentList getDocumentList()
 	{
+		documents.setCurrentAnnotation(annot);
 		return documents;
 	}
 
@@ -488,13 +560,6 @@ public class FeatureTable
 		evaluations.put(evaluationName, eval);
 	}
 
-	/**
-	 * TODO: Implement file import/export of feature tables.
-	 */
-	public static FeatureTable createFromXML(File f){
-		return null;
-	}
-
 	public String toString(){
 		return getTableName();
 	}
@@ -504,6 +569,7 @@ public class FeatureTable
 	 * @return
 	 */
 	public Feature.Type getClassValueType(){
+		documents.setCurrentAnnotation(annot);
 		if(type == null){
 			for(String s : documents.getLabelArray()){
 				try{
@@ -518,19 +584,31 @@ public class FeatureTable
 		return type;
 	}
 
+	/**
+	 * Used for unannotated data when predicting new labels.
+	 */
+	public void setExternalClassValueType(Feature.Type type){
+		this.type = type;
+	}
+
 	public static String[] getConstantEvaluations(){
 		return constantEvaluations;
 	}
-		
+
 	public void setActivated(Feature f, boolean active){
 		activatedFeatures.put(f, active);
 	}
-	
+
 	public boolean getActivated(Feature f){
 		return activatedFeatures.get(f);
 	}
-	
+
+	public Integer getThreshold(){
+		return threshold;
+	}
+
 	public FeatureTable subsetClone(){
+		documents.setCurrentAnnotation(annot);
 		FeatureTable ft = new FeatureTable();
 		ft.setTableName(getTableName()+" (subset)");
 		ft.extractors = extractors;
@@ -540,8 +618,14 @@ public class FeatureTable
 			ft.evaluations.put(eval, evaluations.get(eval));
 		}
 		ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
-		ft.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 		ft.activatedFeatures = new HashMap<Feature, Boolean>();
+		fillHitsPerDocument(ft);
+		return ft;
+	}
+
+	private void fillHitsPerDocument(FeatureTable ft) {
+		documents.setCurrentAnnotation(annot);
+		ft.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 		for(int i = 0; i < ft.documents.getSize(); i++)
 		{
 			ft.hitsPerDocument.add(new ArrayList<FeatureHit>());
@@ -555,9 +639,8 @@ public class FeatureTable
 				}
 			}
 		}
-		return ft;
 	}
-	
+
 	public void deleteFeature(Feature f){
 		for(int i = 0; i < hitsPerDocument.size(); i++){
 			FeatureHit[] docHits = hitsPerDocument.get(i).toArray(new FeatureHit[0]);
@@ -569,5 +652,74 @@ public class FeatureTable
 		}
 		hitsPerFeature.remove(f);
 		activatedFeatures.remove(f);
+	}
+
+	public void export(File out, String format){
+		try{
+			documents.setCurrentAnnotation(annot);
+			BufferedWriter write = new BufferedWriter(new FileWriter(out));
+			if(format.equalsIgnoreCase("ARFF")){
+				StringBuilder sb = new StringBuilder("@relation " + getTableName() + "\n\n");
+				for(Feature f : hitsPerFeature.keySet()){
+					if(activatedFeatures.get(f)){
+						sb.append("@attribute " + f.getFeatureName() + " ");
+						switch(f.getFeatureType()){
+						case NUMERIC:
+							sb.append("numeric");
+							break;
+						case BOOLEAN:
+							sb.append("{false, true}");
+							break;
+						case NOMINAL:
+							sb.append("{");
+							for(String s : f.getNominalValues()){
+								sb.append(s.toLowerCase() + ", ");
+							}
+							sb.replace(sb.length()-2, sb.length(),"}");
+							break;
+						}
+						sb.append("\n");
+					}
+				}
+				sb.append("@attribute CLASS ");
+				switch(getClassValueType()){
+				case NUMERIC:
+					sb.append("numeric");
+					break;
+				case BOOLEAN:
+					sb.append("{false, true}");
+					break;
+				case NOMINAL:
+					sb.append("{");
+					for(String s : documents.getLabelArray()){
+						sb.append(s.toLowerCase() + ", ");
+					}
+					sb.replace(sb.length()-2, sb.length(),"}");
+					break;
+				}
+				sb.append("\n\n@data\n");
+				write.write(sb.toString());
+				StringBuilder[] documentStrings = new StringBuilder[documents.getSize()];
+				for(int i = 0; i < documentStrings.length; i++){
+					documentStrings[i] = new StringBuilder();
+				}
+				int featInd = 0;
+				for(Feature f : hitsPerFeature.keySet()){
+					for(FeatureHit hit : hitsPerFeature.get(f)){
+						documentStrings[hit.documentIndex].append(featInd + " " + hit.getValue().toString().toLowerCase() + ", ");
+					}
+					featInd++;
+				}
+				for(int i = 0; i < documentStrings.length; i++){
+					documentStrings[i].append(featInd + " " + documents.getAnnotationArray().get(i).toLowerCase());
+				}
+				for(StringBuilder string : documentStrings){
+					write.write("{"+string.toString() + "}\n");
+				}
+			}
+			write.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }

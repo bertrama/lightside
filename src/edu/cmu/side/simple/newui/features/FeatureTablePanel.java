@@ -138,7 +138,6 @@ public class FeatureTablePanel extends AbstractListPanel{
 
 	public Set<Feature> filterFeatureSet(FeatureTable table){
 		Set<Feature> features = new HashSet<Feature>();
-		System.out.println(table.getFeatureSet().size() + " features being evaluated.");
 		String[] filter = filterField.getText().split("\\s+");
 		Map<String, Double> numericFilters = new TreeMap<String, Double>();
 		Map<String, String> nominalFilters = new TreeMap<String, String>();

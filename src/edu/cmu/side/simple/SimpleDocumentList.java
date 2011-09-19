@@ -29,6 +29,22 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	ArrayList<String> filenameList = new ArrayList<String>();
 	String[] labelArray;
 	
+	/**
+	 * wrap a list of unannotated plain-text instances as a DocumentList
+	 */
+	public SimpleDocumentList(List<String> instances)
+	{
+		text.addAll(instances);
+	}
+
+	/**
+	 * wrap a single unannotated plain-text instance as a DocumentList
+	 */
+	public SimpleDocumentList(String instance)
+	{
+		text.add(instance);
+	}
+	
 	public SimpleDocumentList(Set<String> filenames, String textCol){
 		double time1 = System.currentTimeMillis();
 		BufferedReader in;

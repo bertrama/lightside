@@ -241,14 +241,37 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 	
 	public FeatureTable predictLabels(String newName, String oldName, FeatureTable newFeatureTable)
 	{
+		//the old document list knows all...
 		table.getDocumentList().setCurrentAnnotation(oldName);
 		newFeatureTable.setExternalClassValueType(table.getClassValueType());
 		newFeatureTable.getDocumentList().setExternalLabelArray(table.getDocumentList().getLabelArray());
+		reconcileFeatures(newFeatureTable);
+
+		Set<Feature> oldTableFeatures = table.getFeatureSet();;
+		Set<Feature> newTableFeatures= newFeatureTable.getFeatureSet();
+
+		//plugin.fromFile(uniqueID); //WHY?
+		
+		if(oldTableFeatures.size() == newTableFeatures.size())
+		{
+			plugin.predict(newName, newFeatureTable);
+		}
+		else
+			System.err.println("features do not match:\nold: "+oldTableFeatures.size()+"\nnew: "+newTableFeatures.size());
+		
+		return newFeatureTable;
+	}
+
+	private void reconcileFeatures(FeatureTable newFeatureTable)
+	{
 		Set<Feature> oldTableFeatures = table.getFeatureSet();
 		Set<Feature> newTableFeatures = newFeatureTable.getFeatureSet();
+		
+		//weka does lots of things by index, instead of key... which is why the feature tables have to match exactly.
 		int count = 0;
 		System.out.println("old features: "+oldTableFeatures.size());
 		System.out.println("new features: "+newTableFeatures.size());
+		
 		if(oldTableFeatures.size() != newTableFeatures.size())
 		{
 			Set<Feature> remove = new HashSet<Feature>();
@@ -274,7 +297,6 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 			{
 				newFeatureTable.deleteFeature(f);
 			}
-			System.out.println("deleted "+count);
 
 			oldTableFeatures = table.getFeatureSet();
 			newTableFeatures = newFeatureTable.getFeatureSet();
@@ -300,19 +322,5 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 				
 			}
 		}
-		System.out.println("added "+count);
-		//plugin.fromFile(uniqueID);
-
-		oldTableFeatures = table.getFeatureSet();
-		newTableFeatures = newFeatureTable.getFeatureSet();
-		
-		if(oldTableFeatures.size() == newTableFeatures.size())
-		{
-			plugin.predict(newName, newFeatureTable);
-		}
-		else
-			System.err.println("features do not match:\n(old)"+oldTableFeatures.size()+"\n(new)"+newTableFeatures.size());
-		
-		return newFeatureTable;
 	}
 }

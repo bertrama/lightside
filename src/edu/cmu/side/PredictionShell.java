@@ -17,6 +17,20 @@ import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.FeatureTable;
 
+
+/**
+ * 
+ * @author dadamson
+ * for example, 
+ * CLASSPATH=bin:lib/jfreechart-1.0.11.jar:lib/lingpipe-2.3.0.jar:lib/riverlayout.jar:lib/stanford-postagger-2010-05-26.jar:lib/trove.jar:lib/weka.jar:lib/XMLBoss.jar:lib/xmlparserv2.jar:lib/yeritools.jar edu.cmu.side.SimpleWorkbench
+ * 
+ * java -classpath $CLASSPATH edu.cmu.side.PredictionShell -fe th -mb weka -mf myModel.ser < cat myPlainText.txt
+ * 
+ * or
+ * 
+ * java -classpath $CLASSPATH edu.cmu.side.PredictionShell -fe th -mb weka -mf myModel.ser -dl myCSV.csv
+ * 
+ */
 public class PredictionShell 
 {
 
@@ -125,6 +139,9 @@ public class PredictionShell
 			}
 		}
 		
+		//---end command-line configuration
+		
+		//--build a document list
 		
 		if(corpusFilenames.size() != 0)
 			corpus = new SimpleDocumentList(corpusFilenames, corpusCurrentAnnot, corpusText);
@@ -148,8 +165,11 @@ public class PredictionShell
 			//corpus = new SimpleDocumentList("foo bar bad");
 		}
 		
+		//-----configure extractors and build feature table
+		
 		if(corpus != null)
 		{
+			//not every extractor exposes a save-config-file interface.
 			if(extractorConfigFiles.size() == extractors.size())
 			{
 				for(int i = 0; i < extractors.size(); i++)
@@ -157,12 +177,13 @@ public class PredictionShell
 					extractors.get(i).configureFromFile(extractorConfigFiles.get(i));
 				}
 			}
-			else
-				System.out.println("warning - not enough config files for extractors! Give a list after -fc");
+//			else
+//				System.out.println("warning - not enough config files for extractors! Give a list after -fc");
 			
 			table = new FeatureTable(extractors, corpus, threshold);
 		}
 		
+		//------load the model and predict
 		if(!modelFile.exists())
 		{
 			System.err.println("No model file at "+modelFile.getPath());
@@ -178,6 +199,8 @@ public class PredictionShell
 				ArrayList<String> annotationList = table.getDocumentList().getAnnotationArray(predictionAnnotation);
 				List<String> textList = corpus.getCoveredTextList();
 				System.out.println(predictionAnnotation+"\ttext\n---------------------\n");
+				
+				//annotationList.get(i) is the predicted label for document #i
 				for(int i = 0; i < corpus.getSize(); i++)
 				{
 					String text = textList.get(i);

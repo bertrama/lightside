@@ -22,11 +22,11 @@ import edu.cmu.side.simple.feature.FeatureTable;
  * for example, 
  * CLASSPATH=bin:lib/jfreechart-1.0.11.jar:lib/lingpipe-2.3.0.jar:lib/riverlayout.jar:lib/stanford-postagger-2010-05-26.jar:lib/trove.jar:lib/weka.jar:lib/XMLBoss.jar:lib/xmlparserv2.jar:lib/yeritools.jar edu.cmu.side.SimpleWorkbench
  * 
- * java -classpath $CLASSPATH edu.cmu.side.PredictionShell -fe th -mb weka -mf myModel.ser < cat myPlainText.txt
+ * java -classpath $CLASSPATH edu.cmu.side.PredictionShell -mf myModel.ser < cat myPlainText.txt
  * 
  * or
  * 
- * java -classpath $CLASSPATH edu.cmu.side.PredictionShell -fe th -mb weka -mf myModel.ser -dl myCSV.csv
+ * java -classpath $CLASSPATH edu.cmu.side.PredictionShell -mf myModel.ser -dl myCSV.csv
  * 
  */
 public class PredictionShell 

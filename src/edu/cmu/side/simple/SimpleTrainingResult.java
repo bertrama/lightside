@@ -231,39 +231,88 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		return evaluation.get("summary");
 	}
 	
-	public FeatureTable predictLabels(String name, SimpleDocumentList newData){
-		table.getDocumentList().setCurrentAnnotation(annot);
+	public FeatureTable predictLabels(String newName, SimpleDocumentList newData)
+	{
 		Collection<FeaturePlugin> featureExtractors = table.getExtractors();
 		FeatureTable newFeatureTable = new FeatureTable(featureExtractors, newData, table.getThreshold());
+		return predictLabels(newName, annot, newFeatureTable);
+		
+	}
+	
+	public FeatureTable predictLabels(String newName, String oldName, FeatureTable newFeatureTable)
+	{
+		table.getDocumentList().setCurrentAnnotation(oldName);
 		newFeatureTable.setExternalClassValueType(table.getClassValueType());
 		newFeatureTable.getDocumentList().setExternalLabelArray(table.getDocumentList().getLabelArray());
 		Set<Feature> oldTableFeatures = table.getFeatureSet();
 		Set<Feature> newTableFeatures = newFeatureTable.getFeatureSet();
 		int count = 0;
-		if(oldTableFeatures.size() != newTableFeatures.size()){
+		System.out.println("old features: "+oldTableFeatures.size());
+		System.out.println("new features: "+newTableFeatures.size());
+		if(oldTableFeatures.size() != newTableFeatures.size())
+		{
 			Set<Feature> remove = new HashSet<Feature>();
-			for(Feature f: newTableFeatures){
-				if(!oldTableFeatures.contains(f)){
+			for(Feature f: newTableFeatures)
+			{
+				//if(!oldTableFeatures.contains(f))
+				boolean found = false;
+				for(Feature oldFeat : oldTableFeatures)
+				{
+					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
+					{
+						found = true;
+						break;
+					}
+				}
+				if(!found)
+				{
 					remove.add(f);
 					count++;
 				}
 			}
-			for(Feature f : remove){
+			for(Feature f : remove)
+			{
 				newFeatureTable.deleteFeature(f);
 			}
-		}
-		count = 0;
-		for(Feature f : oldTableFeatures){
-			if(!newTableFeatures.contains(f)){
-				count++;
-				newFeatureTable.addEmptyFeature(f);
+			System.out.println("deleted "+count);
+
+			oldTableFeatures = table.getFeatureSet();
+			newTableFeatures = newFeatureTable.getFeatureSet();
+			
+			count = 0;
+			for(Feature f : oldTableFeatures)
+			{
+				//if(!newTableFeatures.contains(f))
+				boolean found = false;
+				for(Feature newFeat : newTableFeatures)
+				{
+					if(newFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) &&newFeat.getFeatureName().equals(f.getFeatureName()))
+					{
+						found = true;
+						break;
+					}
+				}
+				if(!found)
+				{
+					count++;
+					newFeatureTable.addEmptyFeature(f);
+				}	
 				
 			}
 		}
-		plugin.fromFile(uniqueID);
-		if(oldTableFeatures.size() == newTableFeatures.size()){
-			plugin.predict(name, newFeatureTable);			
+		System.out.println("added "+count);
+		//plugin.fromFile(uniqueID);
+
+		oldTableFeatures = table.getFeatureSet();
+		newTableFeatures = newFeatureTable.getFeatureSet();
+		
+		if(oldTableFeatures.size() == newTableFeatures.size())
+		{
+			plugin.predict(newName, newFeatureTable);
 		}
+		else
+			System.err.println("features do not match:\n(old)"+oldTableFeatures.size()+"\n(new)"+newTableFeatures.size());
+		
 		return newFeatureTable;
 	}
 }

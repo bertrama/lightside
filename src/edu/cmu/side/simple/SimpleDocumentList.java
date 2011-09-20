@@ -146,8 +146,12 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		if(labelArray == null){
 			ArrayList<String> labels = getAnnotationArray();
 			Set<String> labelSet = new TreeSet<String>();
-			for(String s : labels){
-				labelSet.add(s);
+			if(labels != null)
+			{
+				for(String s : labels)
+				{
+					labelSet.add(s);
+				}
 			}
 			labelArray = labelSet.toArray(new String[0]);			
 		}

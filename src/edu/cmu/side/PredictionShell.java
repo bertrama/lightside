@@ -4,15 +4,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import edu.cmu.side.dataitem.TrainingResultInterface;
+
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
-import edu.cmu.side.simple.LearningPlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.FeatureTable;
@@ -41,16 +39,9 @@ public class PredictionShell
 		String corpusText = "text";
 		String predictionAnnotation = "predicted";
 		SimpleDocumentList corpus = null;
-		ArrayList<FeaturePlugin> extractors = new ArrayList<FeaturePlugin>();
-		ArrayList<String> extractorConfigFiles = new ArrayList<String>();
+		Collection<FeaturePlugin> extractors = new ArrayList<FeaturePlugin>();
 		Integer threshold = 0;
 		FeatureTable table = null;
-		LearningPlugin learner = null;
-		Map<String, String> config = new HashMap<String, String>();
-		Map<Integer, Integer> foldsMap = null;
-		String modelName = "model";
-		String cvSetting = null;
-		TrainingResultInterface result = null;
 		File modelFile = new File("saved/model_23.0.ser");
 		
 		SIDEPlugin[] fex = SimpleWorkbench.getPluginsByType("feature_hit_extractor");
@@ -82,59 +73,10 @@ public class PredictionShell
 				{
 					corpusText = args[++i];
 				}
-				else if(args[i].contains("-fe"))
-				{
-					int j = i+1;
-					ArrayList<String> pluginNames = new ArrayList<String>();
-					while(j < args.length && !args[j].startsWith("-") )
-					{
-						pluginNames.add(args[j]);
-						j++;
-					}
-					i = j-1;
-					SIDEPlugin[] featureExtractors = SimpleWorkbench.getPluginsByType("feature_hit_extractor");
-					for(int k = 0; k < featureExtractors.length; k++)
-					{
-						FeaturePlugin plug = (FeaturePlugin)featureExtractors[k];
-						if(pluginNames.contains(plug.getOutputName()))
-						{
-							extractors.add(plug);
-						}
-					}
-				}
-				else if(args[i].contains("-fc"))
-				{
-					for(int j = 0; j < extractors.size(); j++)
-					{
-						extractorConfigFiles.add(args[j+i+1]);
-					}
-					i += extractors.size();
-				}
-				else if(args[i].contains("-ff"))
-				{
-					threshold = Integer.parseInt(args[++i]);
-				}
 				else if (args[i].contains("-mf"))
 				{
 					modelFile = new File(args[i+1]);
 					i++;
-				}
-				else if(args[i].contains("-mb"))
-				{
-					String learnerName = args[++i];
-					SIDEPlugin[] learners = SimpleWorkbench.getPluginsByType("model_builder");
-					for(int j = 0; j < learners.length; j++){
-						LearningPlugin plug = (LearningPlugin)learners[j];
-						System.out.println(plug.getOutputName());
-						if(plug.getOutputName().equals(learnerName))
-						{
-							learner = plug;
-						}
-					}
-				}
-				else if(args[i].contains("-cv"))
-				{
-					cvSetting = args[++i];
 				}
 			}
 		}
@@ -165,36 +107,40 @@ public class PredictionShell
 			//corpus = new SimpleDocumentList("foo bar bad");
 		}
 		
-		//-----configure extractors and build feature table
-		
-		if(corpus != null)
-		{
-			//not every extractor exposes a save-config-file interface.
-			if(extractorConfigFiles.size() == extractors.size())
-			{
-				for(int i = 0; i < extractors.size(); i++)
-				{
-					extractors.get(i).configureFromFile(extractorConfigFiles.get(i));
-				}
-			}
-//			else
-//				System.out.println("warning - not enough config files for extractors! Give a list after -fc");
-			
-			table = new FeatureTable(extractors, corpus, threshold);
-		}
-		
+//		//-----configure extractors and build feature table
+//		
+//		if(corpus != null && !extractors.isEmpty())
+//		{
+//			//not every extractor exposes a save-config-file interface.
+//			if(extractorConfigFiles.size() == extractors.size())
+//			{
+//				for(int i = 0; i < extractors.size(); i++)
+//				{
+//					extractors.get(i).configureFromFile(extractorConfigFiles.get(i));
+//				}
+//			}
+////			else
+////				System.out.println("warning - not enough config files for extractors! Give a list after -fc");
+//			
+//			table = new FeatureTable(extractors, corpus, threshold);
+//		}
+//		
 		//------load the model and predict
 		if(!modelFile.exists())
 		{
 			System.err.println("No model file at "+modelFile.getPath());
 		}
-		else if(table != null)
+		else
 		{
+			System.out.println("Using model file "+modelFile.getPath());
 			try
 			{
 				SimpleTrainingResult trained = new SimpleTrainingResult(modelFile);
-				table = trained.predictLabels(predictionAnnotation, "class", table);
+				extractors = trained.getFeatureTable().getExtractors();
+				table = new FeatureTable(extractors, corpus, threshold);
+				table = trained.predictLabels(predictionAnnotation, corpusCurrentAnnot, table);
 
+				
 				table.getDocumentList().setCurrentAnnotation(predictionAnnotation);
 				ArrayList<String> annotationList = table.getDocumentList().getAnnotationArray(predictionAnnotation);
 				List<String> textList = corpus.getCoveredTextList();

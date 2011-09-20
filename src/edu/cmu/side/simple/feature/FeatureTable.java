@@ -69,7 +69,7 @@ public class FeatureTable implements Serializable
 		out.writeObject(activatedFeatures);
 		out.writeObject(tableName);
 		out.writeObject(type);
-		out.writeObject(threshold);
+		out.writeObject((Integer)threshold);
 		out.writeObject(annot);
 	}
 

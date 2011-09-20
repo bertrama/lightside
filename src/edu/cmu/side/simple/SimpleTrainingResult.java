@@ -234,7 +234,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 	public FeatureTable predictLabels(String newName, SimpleDocumentList newData)
 	{
 		Collection<FeaturePlugin> featureExtractors = table.getExtractors();
-		FeatureTable newFeatureTable = new FeatureTable(featureExtractors, newData, table.getThreshold());
+		FeatureTable newFeatureTable = new FeatureTable(featureExtractors, newData, 0);
 		return predictLabels(newName, annot, newFeatureTable);
 		
 	}
@@ -245,12 +245,15 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		table.getDocumentList().setCurrentAnnotation(oldName);
 		newFeatureTable.setExternalClassValueType(table.getClassValueType());
 		newFeatureTable.getDocumentList().setExternalLabelArray(table.getDocumentList().getLabelArray());
+		
 		reconcileFeatures(newFeatureTable);
 
 		Set<Feature> oldTableFeatures = table.getFeatureSet();
 		Set<Feature> newTableFeatures= newFeatureTable.getFeatureSet();
 
 		//plugin.fromFile(uniqueID); //WHY?
+		
+		System.out.println("plugin: "+plugin);
 		
 		if(oldTableFeatures.size() == newTableFeatures.size())
 		{

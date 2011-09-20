@@ -132,7 +132,7 @@ public class FeatureTable implements Serializable
 		if(fastVector == null){
 			FastVector attributes = new FastVector();
 			int index = 0;
-			Collection<Feature> featureSet = getFeatureSet();
+			Collection<Feature> featureSet = getSortedFeatures();
 			empty = new double[featureSet.size()+1];
 			for(Feature f : featureSet){
 				Attribute att = null;
@@ -483,6 +483,15 @@ public class FeatureTable implements Serializable
 		Set<Feature> set = hitsPerFeature.keySet();
 		return set;
 	}
+	/**
+	 * 
+	 * @return the set of features extracted from the documents.
+	 */
+	public Collection<Feature> getSortedFeatures()
+	{
+		return new TreeSet(hitsPerFeature.keySet());
+	}
+
 
 	public void addEmptyFeature(Feature f){
 		hitsPerFeature.put(f, new HashSet<FeatureHit>());

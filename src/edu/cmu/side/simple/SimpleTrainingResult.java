@@ -247,7 +247,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		newFeatureTable.getDocumentList().setExternalLabelArray(table.getDocumentList().getLabelArray());
 		reconcileFeatures(newFeatureTable);
 
-		Set<Feature> oldTableFeatures = table.getFeatureSet();;
+		Set<Feature> oldTableFeatures = table.getFeatureSet();
 		Set<Feature> newTableFeatures= newFeatureTable.getFeatureSet();
 
 		//plugin.fromFile(uniqueID); //WHY?
@@ -258,6 +258,14 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		}
 		else
 			System.err.println("features do not match:\nold: "+oldTableFeatures.size()+"\nnew: "+newTableFeatures.size());
+
+		System.out.println("old");
+		System.out.println(oldTableFeatures);
+		System.out.println(table.getSortedFeatures());
+		
+		System.out.println("new");
+		System.out.println(newTableFeatures);
+		System.out.println(newFeatureTable.getSortedFeatures());
 		
 		return newFeatureTable;
 	}

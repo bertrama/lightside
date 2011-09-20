@@ -280,16 +280,16 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 			Set<Feature> remove = new HashSet<Feature>();
 			for(Feature f: newTableFeatures)
 			{
-				//if(!oldTableFeatures.contains(f))
-				boolean found = false;
-				for(Feature oldFeat : oldTableFeatures)
-				{
-					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
-					{
-						found = true;
-						break;
-					}
-				}
+				boolean found = oldTableFeatures.contains(f);
+//				boolean found = false;
+//				for(Feature oldFeat : oldTableFeatures)
+//				{
+//					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
+//					{
+//						found = true;
+//						break;
+//					}
+//				}
 				if(!found)
 				{
 					remove.add(f);
@@ -300,6 +300,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 			{
 				newFeatureTable.deleteFeature(f);
 			}
+			System.out.println(count+" novel features removed");
 
 			oldTableFeatures = table.getFeatureSet();
 			newTableFeatures = newFeatureTable.getFeatureSet();
@@ -307,16 +308,16 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 			count = 0;
 			for(Feature f : oldTableFeatures)
 			{
-				//if(!newTableFeatures.contains(f))
-				boolean found = false;
-				for(Feature newFeat : newTableFeatures)
-				{
-					if(newFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) &&newFeat.getFeatureName().equals(f.getFeatureName()))
-					{
-						found = true;
-						break;
-					}
-				}
+				boolean found = newTableFeatures.contains(f);
+				//boolean found = false;
+//				for(Feature newFeat : newTableFeatures)
+//				{
+//					if(newFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) &&newFeat.getFeatureName().equals(f.getFeatureName()))
+//					{
+//						found = true;
+//						break;
+//					}
+//				}
 				if(!found)
 				{
 					count++;
@@ -324,6 +325,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 				}	
 				
 			}
+			System.out.println(count+" empty features added");
 		}
 	}
 }

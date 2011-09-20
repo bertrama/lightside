@@ -140,6 +140,12 @@ public class Feature implements Serializable, Comparable<Feature>
 	}
 	
 	@Override
+	public int hashCode()
+	{
+		return (this.extractorPrefix+this.featureName).hashCode();
+	}
+	
+	@Override
 	public boolean equals(Object o){
 		return (o instanceof Feature)&&(this.compareTo((Feature)o)==0)&&this.featureType.equals(((Feature)o).featureType);
 	}

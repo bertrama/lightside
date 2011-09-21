@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,12 +22,17 @@ public abstract class AbstractListPanel extends JPanel implements ActionListener
 	protected JList list;
 	protected JScrollPane scroll;
 
+	protected JButton delete;
+	protected JButton clear;
+	
 	private void init(){
 		this.setLayout(new RiverLayout());
 		listModel = new FastListModel();
 		list = new JList();
 		list.setModel(listModel);	
 		scroll = new JScrollPane(list);
+		delete = new JButton("Delete");
+		clear = new JButton("Clear");
 	}
 	
 	public AbstractListPanel(){

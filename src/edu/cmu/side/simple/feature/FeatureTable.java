@@ -19,6 +19,7 @@ import weka.core.Instances;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.feature.Feature.Type;
+import edu.cmu.side.simple.newui.features.FeaturePluginPanel;
 
 /**
  * 
@@ -105,7 +106,7 @@ public class FeatureTable implements Serializable
 
 	public FeatureTable(FeaturePlugin extractor, SimpleDocumentList documents, int threshold)
 	{
-		Set<FeaturePlugin> extractors = new TreeSet<FeaturePlugin>();
+		Set<FeaturePlugin> extractors = new HashSet<FeaturePlugin>();
 		extractors.add(extractor);
 		init(extractors, documents, threshold);
 	}
@@ -328,7 +329,8 @@ public class FeatureTable implements Serializable
 		for(FeaturePlugin extractor : extractors)
 		{
 			if(extractor == null) continue;
-			Collection<FeatureHit> hits = extractor.extractFeatureHits(documents);
+			//Not really comfortable with FeatureTables knowing about FeaturePluginPanels. I should talk to David about this.
+			Collection<FeatureHit> hits = extractor.extractFeatureHits(documents, FeaturePluginPanel.getProgressLabel());
 			for(FeatureHit hit : hits)
 			{
 				if(! localMap.containsKey(hit.feature))

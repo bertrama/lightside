@@ -66,7 +66,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 		display.setShowHorizontalLines(true);
 		display.setShowVerticalLines(true);
 		display.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e){
+			public void mouseReleased(MouseEvent e){
 				necessary = true;
 				refreshPanel();
 			}

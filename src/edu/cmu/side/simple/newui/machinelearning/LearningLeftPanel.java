@@ -22,7 +22,7 @@ public class LearningLeftPanel extends JPanel {
 		setPreferredSize(new Dimension(300,500));
 		pluginPanel.setPreferredSize(new Dimension(280, 100));
 		add("left", pluginPanel);
-		configPanel.setPreferredSize(new Dimension(280, 250));
+		configPanel.setPreferredSize(new Dimension(280, 300));
 		add("br left", configPanel);
 		add("br left", listPanel);
 	}

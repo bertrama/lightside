@@ -10,10 +10,12 @@ import java.util.TreeMap;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
@@ -26,6 +28,7 @@ import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.simple.LearningPlugin;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.AbstractListPanel;
+import edu.cmu.side.simple.newui.features.FeatureFileManagerPanel;
 
 /**
  * This panel allows the user to set up the cross-validation and model building parameters.
@@ -37,18 +40,20 @@ public class LearningConfigPanel extends AbstractListPanel{
 	JComboBox tablesList = new JComboBox();
 	DefaultComboBoxModel listModel = new DefaultComboBoxModel();
 
+	JButton halt = new JButton(new ImageIcon("delete.png"));
+	boolean halted = false;
 	JRadioButton cvFold = new JRadioButton("CV by Fold");
 	JTextField cvNumFolds = new JTextField(3);
 	JRadioButton cvFile = new JRadioButton("CV by file");
 	JRadioButton testSet = new JRadioButton("Supplied Test Set");
 	File selectedTestFile;
-	JButton loadFileButton = new JButton("select");
+	JButton loadFileButton = new JButton("Select");
 	JLabel testFileName = new JLabel();
 	ButtonGroup evalSetting = new ButtonGroup();
 	JTextField modelName = new JTextField(5);
 	JProgressBar progressBar = new JProgressBar();
 	JLabel progressLabel = new JLabel();
-	JButton build = new JButton("build model");
+	JButton build = new JButton("Build Model");
 
 
 	public LearningConfigPanel(){
@@ -72,6 +77,14 @@ public class LearningConfigPanel extends AbstractListPanel{
 				}
 			}
 		});
+		halt.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e){
+				halted = true;
+				LearningPluginPanel.getSelectedPlugin().stopWhenPossible();
+			}
+		});
+		halt.setEnabled(false);
 		loadFileButton.setEnabled(false);
 		loadFileButton.addActionListener(new ActionListener(){
 			@Override
@@ -92,7 +105,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 		cvFile.addActionListener(this);
 		testSet.addActionListener(this);
 		add("left", new JLabel("Feature Table:"));
-		add("left", tablesList);
+		add("br hfill", tablesList);
 		add("br left", cvFold);
 		add("left", cvNumFolds);
 		add("br left", cvFile);
@@ -100,12 +113,13 @@ public class LearningConfigPanel extends AbstractListPanel{
 		add("left", loadFileButton);
 		add("br center", testFileName);
 
-		add("br left", new JLabel("name:"));
-		modelName.setText("model");
+		add("br left", new JLabel("Name:"));
+		modelName.setText("Model");
 		add("hfill", modelName);
 
-		add("br center", build);
+		add("br hfill", build);
 		add("br hfill", progressBar);
+		add("", halt);
 		add("br left", progressLabel);
 	}
 
@@ -138,9 +152,16 @@ public class LearningConfigPanel extends AbstractListPanel{
 		@Override
 		protected Void doInBackground(){
 			try{
+				halt.setEnabled(true);
 				TrainingResultInterface result = learn.train(table, modelName.getText(), config, foldsMap, progressLabel);
-				SimpleWorkbench.addTrainingResult(result);				
+				if(halted){
+					halted = false;
+				}else{
+					SimpleWorkbench.addTrainingResult(result);					
+				}
+				halt.setEnabled(false);
 			}catch(Exception e){
+				JOptionPane.showMessageDialog(LearningConfigPanel.this, "Model building failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 			fireActionEvent();

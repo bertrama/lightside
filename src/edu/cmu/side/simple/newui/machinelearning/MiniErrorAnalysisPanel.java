@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
@@ -33,25 +34,28 @@ import edu.cmu.side.simple.newui.SIDETable;
 public class MiniErrorAnalysisPanel extends AbstractListPanel{
 	private static final long serialVersionUID = -7752641565734779041L;
 
+	private JButton saveButton = new JButton("Save");
+	private JButton loadButton = new JButton("Load");
 	private JComboBox metricsList = new JComboBox();
 	/** Retrieved from ConfusionMatrixPanel */
 	private Integer[] localCell = {-1, -1};
 	/** Retrieved from ModelListPanel */
 	private SimpleTrainingResult trainingResult = null;
 
+	String explanation = "Select a cell to evaluate confusion. ";
 	private SIDETable featureTable = new SIDETable();
 	private EvalTableModel tableModel = new EvalTableModel();
 	private TableRowSorter<TableModel> sorter;
-	private JLabel selectedLabel = new JLabel("Select a cell to evaluate confusion. ");
+	private JLabel selectedLabel = new JLabel(explanation);
 	private ModelEvaluationPlugin selectedPlugin = null;
 	private static Feature selectedFeature = null;
 
 	public MiniErrorAnalysisPanel(){
-		tableModel.addColumn("Feature name");
+		tableModel.addColumn("Feature Name");
 		featureTable.setModel(tableModel);
 		/** Update the confusion matrix panel when a feature is clicked. */
 		featureTable.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e){
+			public void mouseReleased(MouseEvent e){
 				selectedFeature = (Feature)featureTable.getValueAt(featureTable.getSelectedRow(), 0);
 				fireActionEvent();
 			}
@@ -62,6 +66,11 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 		add("left", metricsList);
 		add("br left", selectedLabel);
 		add("br hfill", scroll);
+		saveButton.addActionListener(new SimpleWorkbench.TrainingResultSaveListener());
+		add("br right", saveButton);
+		loadButton.addActionListener(new SimpleWorkbench.TrainingResultLoadListener());
+		add("right", loadButton);
+
 	}
 
 	/**
@@ -84,7 +93,7 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 			localCell = clickedCell;
 			selectedPlugin = clickedPlugin;
 			tableModel = new EvalTableModel();
-			tableModel.addColumn("Feature name");
+			tableModel.addColumn("Feature Name");
 			if(selectedPlugin != null && trainingResult != null && localCell[0] >= 0 && localCell[1] >= 0){
 				tableModel.addColumn(selectedPlugin.getOutputName());
 				String act = ""; String pred = "";
@@ -116,7 +125,7 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 					tableModel.addRow(row);
 				}					
 			}else{
-				selectedLabel.setText("Select a cell to evaluate confusion. ");
+				selectedLabel.setText(explanation);
 				if(trainingResult != null){
 					for(Feature f : trainingResult.getFeatureTable().getFeatureSet()){
 						Object[] row = new Object[]{f};

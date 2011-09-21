@@ -15,6 +15,7 @@ import java.util.TreeSet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -53,9 +54,9 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 
 		list.setCellRenderer(new DefaultFileListCellRenderer(list));
 		documents = null;
-		JButton fileAddButton = new JButton("add");
-		JButton fileRemoveButton = new JButton("clear");
-		this.add("hfill", new JLabel("csv file:"));
+		JButton fileAddButton = new JButton("Add");
+		JButton fileRemoveButton = new JButton("Clear");
+		this.add("hfill", new JLabel("CSV File:"));
 		this.add("", fileAddButton);
 		this.add("", fileRemoveButton);
 
@@ -86,16 +87,21 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 		textColumnComboBox.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				if(filenames.size() > 0 && annotationComboBox.getSelectedIndex()>=0 && textColumnComboBox.getSelectedIndex()>=0){
-					documents = new SimpleDocumentList(filenames, annotationComboBox.getSelectedItem().toString(), textColumnComboBox.getSelectedItem().toString());
+					try{
+						documents = new SimpleDocumentList(filenames, annotationComboBox.getSelectedItem().toString(), textColumnComboBox.getSelectedItem().toString());						
+					}catch(Exception e){
+						JOptionPane.showMessageDialog(FeatureFileManagerPanel.this, "Document loading failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+					}
 					fireActionEvent();					
 				}
 			}
 		});
 
-		this.add("br", new JLabel("annotation:"));
+		this.add("br", new JLabel("Annotation:"));
 		this.add("br hfill", annotationComboBox);
 
-		this.add("br", new JLabel("text field:"));
+		this.add("br", new JLabel("Text Field:"));
 		this.add("br hfill", textColumnComboBox);
 
 		listModel.addListDataListener(new ListDataListener() {

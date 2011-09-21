@@ -50,22 +50,23 @@ public class FeatureTablePanel extends AbstractListPanel{
 	private JLabel selectedTableName = new JLabel();
 	private JLabel selectedTableSize = new JLabel();
 	private JTextField filterField = new JTextField();
-	private JButton filterButton = new JButton("filter");
+	private JButton filterButton = new JButton("Filter");
 	private SIDETable featureTable = new SIDETable();
 	private static FeatureTableModel tableModel;
 	private FeatureTable currentFeatureTable = null;
 	private String currentFilter = "";
-	private JButton activateButton = new JButton("Activate");
-	private JButton deactivateButton = new JButton("Deactivate");
+	private JButton activateButton = new JButton("(De)activate");
 	private JButton labButton = new JButton("Move to Lab");
 	private JButton freezeButton = new JButton("Freeze");
-	private JButton exportButton = new JButton("export");
 	private static boolean activationsChanged = false;
 
+
+	private JButton saveButton = new JButton("Save");
+	private JButton loadButton = new JButton("Load");
+	private JButton exportButton = new JButton("Export");
 	public FeatureTablePanel(){
 		setLayout(new RiverLayout());
 		tableModel = new FeatureTableModel();
-		exportButton.setEnabled(false);
 		add("left", new JLabel("Feature Table: "));
 		add("left", selectedTableName);
 		add("left", selectedTableSize);
@@ -82,19 +83,15 @@ public class FeatureTablePanel extends AbstractListPanel{
 				}
 			}
 		});
+		loadButton.addActionListener(new SimpleWorkbench.FeatureTableLoadListener());
+		saveButton.addActionListener(new SimpleWorkbench.FeatureTableSaveListener());
+		exportButton.addActionListener(new SimpleWorkbench.FeatureTableExportListener());
+
 		activateButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				featureTable.activateSelected();
-				activationsChanged = true;
-				refreshPanel();
-			}
-		});
-		deactivateButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				featureTable.deactivateSelected();
 				activationsChanged = true;
 				refreshPanel();
 			}
@@ -130,9 +127,11 @@ public class FeatureTablePanel extends AbstractListPanel{
 		tableScroll.setPreferredSize(new Dimension(500, 200));
 		add("br hfill", tableScroll);
 		add("br left", activateButton);
-		add("left", deactivateButton);
 		add("left", labButton);
 		add("left", freezeButton);
+		add("left", saveButton);
+		add("left", exportButton);
+		add("left", loadButton);
 		featureTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 

@@ -39,12 +39,12 @@ public class Feature implements Serializable, Comparable<Feature>
 		if(!featureCache.containsKey(prefix)){
 			featureCache.put(prefix, new TreeMap<String, Feature>());
 		}
-		if(!featureCache.get(prefix).containsKey(name)){
+		if(!featureCache.get(prefix).containsKey(name+"_"+type.toString())){
 			Feature newFeat = new Feature(prefix, name, type);
-			featureCache.get(prefix).put(name, newFeat);
+			featureCache.get(prefix).put(name+"_"+type.toString(), newFeat);
 			return newFeat;			
 		}else{
-			return featureCache.get(prefix).get(name);
+			return featureCache.get(prefix).get(name+"_"+type.toString());
 		}
 	}
 	

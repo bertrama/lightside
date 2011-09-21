@@ -13,7 +13,7 @@ import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.feature.FeatureTable;
 
 public class Shell {
-	public static void main(String[] args){
+	public static void main(String[] args) throws Exception{
 		Set<String> corpusFilenames = new HashSet<String>();
 		String corpusCurrentAnnot = "class";
 		String corpusText = "text";

@@ -110,7 +110,26 @@ public class SimpleWorkbench {
 		return predictionResults;
 	}
 	
-
+	public static void clearTrainingResults(){
+		trainingResults = new ArrayList<TrainingResultInterface>();
+		panel.actionPerformed(null);
+	}
+	
+	public static void clearFeatureTables(){
+		featureTables = new ArrayList<FeatureTable>();
+		panel.actionPerformed(null);
+	}
+	
+	public static void removeTrainingResult(int i){
+		trainingResults.remove(i);
+		panel.actionPerformed(null);
+	}
+	
+	public static void removeFeatureTable(int i){
+		featureTables.remove(i);
+		panel.actionPerformed(null);
+	}
+	
 	/**
 	 * ActionListener for adding CSV files to SimpleListManagerPanel.
 	 * @author emayfiel

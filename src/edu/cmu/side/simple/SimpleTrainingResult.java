@@ -103,6 +103,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 	}
 
 	public void addEvaluation(Map<String, String> ev){
+		if(ev == null) return;
 		table.getDocumentList().setCurrentAnnotation(annot);
 		try{
 			for(String eval : ev.keySet()){

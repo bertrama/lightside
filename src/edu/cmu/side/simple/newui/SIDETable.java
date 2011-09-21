@@ -4,6 +4,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 
 import edu.cmu.side.simple.feature.Feature;
+import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.features.FeatureTableListPanel;
 
 /**
@@ -24,24 +25,29 @@ public class SIDETable extends JTable{
 	public Object getSortedValue(int row, int col){
 		return getModel().getValueAt(getRowSorter().convertRowIndexToModel(row), col);
 	}
-
-	public void deactivateSelected(){
-		for(int row : getSelectedRows()){
-			Object cell = getSortedValue(row,1);
-			if(cell instanceof Feature){
-				FeatureTableListPanel.getSelectedFeatureTable().setActivated((Feature)cell, false);
-			}
-		}
-	}
-
 	public void activateSelected(){
-		for(int row : getSelectedRows()){
-			for(int i = 0; i < getColumnCount(); i++){
+		boolean allActivated = true;
+		int[] selRows = getSelectedRows();
+		int colCnt = getColumnCount();
+		FeatureTable table = FeatureTableListPanel.getSelectedFeatureTable();
+		for(int row : selRows){
+			for(int i = 0; i < colCnt; i++){
 				Object cell = getSortedValue(row,i);
 				if(cell instanceof Feature){
-					FeatureTableListPanel.getSelectedFeatureTable().setActivated((Feature)cell, true);
+					if(!table.getActivated((Feature)cell)){
+						allActivated = false;
+					}
 				}
 			}
 		}
+		for(int row : selRows){
+			for(int i = 0; i < colCnt; i++){
+				Object cell = getSortedValue(row,i);
+				if(cell instanceof Feature){
+					FeatureTableListPanel.getSelectedFeatureTable().setActivated((Feature)cell, !allActivated);
+				}
+			}
+		}
+
 	}
 }

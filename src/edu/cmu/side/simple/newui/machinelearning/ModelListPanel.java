@@ -1,12 +1,12 @@
 package edu.cmu.side.simple.newui.machinelearning;
 
 import java.awt.Dimension;
-
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.dataitem.TrainingResultInterface;
@@ -22,30 +22,38 @@ public class ModelListPanel extends AbstractListPanel{
 	private static final long serialVersionUID = -2125231290325317847L;
 
 	static SimpleTrainingResult clickedModel;
-
-	private JButton saveButton = new JButton("save");
-	private JButton loadButton = new JButton("load");
 	
 	public ModelListPanel(){
 		/** List model initialized and defined in the abstract class */
 		super();
 		
-		add("hfill", new JLabel("trained models:"));
+		add("hfill", new JLabel("Trained Models:"));
+		clear.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				SimpleWorkbench.clearTrainingResults();
+			}
+		});
+		delete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				SimpleWorkbench.removeTrainingResult(list.getSelectedIndex());
+			}
+		});
 		scroll.setPreferredSize(new Dimension(250,150));
 		add("br hfill", scroll);
 		
 		list.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent evt){
+			public void mouseReleased(MouseEvent evt){
 				int index = list.locationToIndex(evt.getPoint());
 				if(index == -1){ return; }
 				clickedModel = ((SimpleTrainingResult)listModel.get(index));
 				fireActionEvent();
 			}
 		});
-		saveButton.addActionListener(new SimpleWorkbench.TrainingResultSaveListener());
-		add("br left", saveButton);
-		loadButton.addActionListener(new SimpleWorkbench.TrainingResultLoadListener());
-		add("left", loadButton);
+
+		add("br left", delete);
+		add("", clear);
 	}
 	
 	/** This is where the rest of the Learning panels get their information about what model to analyze. */

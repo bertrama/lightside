@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.swing.JLabel;
+
 import edu.cmu.side.dataitem.DocumentListInterface;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureHit;
@@ -13,6 +15,7 @@ import edu.cmu.side.simple.feature.FeatureHit;
 public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
 	private static final long serialVersionUID = -2856017007104452008L;
 
+	protected static boolean halt = false;
 	/**
 	 * Kept for legacy reasons, implemented in this class so the developer doesn't have to.
 	 */
@@ -55,27 +58,32 @@ public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
 	 * @param documents in a corpus
 	 * @return All features that this plugin should extract from each document in this corpus.
 	 */
-	public List<FeatureHit> extractFeatureHits(DocumentListInterface documents)
+	public List<FeatureHit> extractFeatureHits(DocumentListInterface documents, JLabel update)
 	{
 		this.uiToMemory();
 		// TODO make me abstract.
 		// DUCT TAPE: convert featureMaps to FeatureHits
 		
-		ArrayList<FeatureHit> hits = new ArrayList<FeatureHit>();
-		hits.addAll(extractFeatureHitsForSubclass(documents));
-		return hits;
+		ArrayList<FeatureHit> hitsList = new ArrayList<FeatureHit>();
+		Collection<FeatureHit> hits = extractFeatureHitsForSubclass(documents, update);
+		if(hits != null){
+			hitsList.addAll(hits);
+		}
+		return hitsList;
 	}
-		
-	/**
-	 * For command-line invocation, a plugin should be able to configure itself based on the contents of a file.
-	 */
-	public abstract void configureFromFile(String filename);
 	
 	/**
 	 * Implemented by the plugin to do feature extraction.
 	 * @param documents
 	 * @return Features for all documents.
 	 */
-	public abstract Collection<FeatureHit> extractFeatureHitsForSubclass(DocumentListInterface documents);
-	
+	public abstract Collection<FeatureHit> extractFeatureHitsForSubclass(DocumentListInterface documents, JLabel update);
+
+	public void configureFromFile(String filename){
+		
+	}
+
+	public void stopWhenPossible(){
+		halt = true;
+	}
 }

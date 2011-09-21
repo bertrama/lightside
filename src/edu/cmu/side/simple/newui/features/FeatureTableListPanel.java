@@ -25,32 +25,37 @@ public class FeatureTableListPanel extends AbstractListPanel{
 	private static final long serialVersionUID = -2125231290325317847L;
 
 	static FeatureTable clickedFeatureTable;
-
-	private JButton saveButton = new JButton("save");
-	private JButton loadButton = new JButton("load");
-	private JButton exportButton = new JButton("export");
 	public FeatureTableListPanel(){
 		/** List model initialized and defined in the abstract class */
 		super();
 		
-		add("hfill", new JLabel("feature tables:"));
+		add("hfill", new JLabel("Feature Tables:"));
+		clear.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e){
+				SimpleWorkbench.clearFeatureTables();
+			}
+		});
+		delete.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e){
+				SimpleWorkbench.removeFeatureTable(list.getSelectedIndex());
+			}
+		});
 		scroll.setPreferredSize(new Dimension(250,80));
 		add("br hfill", scroll);
 		
 		list.addMouseListener(new MouseAdapter(){
-			public void mouseClicked(MouseEvent evt){
+			public void mouseReleased(MouseEvent evt){
 				int index = list.locationToIndex(evt.getPoint());
 				if(index == -1){ return; }
 				clickedFeatureTable = ((FeatureTable)listModel.get(index));
 				fireActionEvent();
 			}
 		});
-		loadButton.addActionListener(new SimpleWorkbench.FeatureTableLoadListener());
-		add("br left", loadButton);
-		saveButton.addActionListener(new SimpleWorkbench.FeatureTableSaveListener());
-		add("left", saveButton);
-		exportButton.addActionListener(new SimpleWorkbench.FeatureTableExportListener());
-		add("left", exportButton);
+		add("br left", delete);
+		add("left", clear);
+
 	}
 	
 	/**

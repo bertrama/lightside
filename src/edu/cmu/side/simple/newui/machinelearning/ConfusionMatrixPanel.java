@@ -42,13 +42,13 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 	private JLabel selectedFeatureName = new JLabel("Select a feature to fill matrix.");
 
 	public ConfusionMatrixPanel(){
-		add("left", new JLabel("Model confusion matrix:"));
+		add("left", new JLabel("Model Confusion Matrix:"));
 		matrixDisplay.setModel(matrixModel);
 		matrixDisplay.setBorder(BorderFactory.createLineBorder(Color.gray));
 		matrixDisplay.setShowHorizontalLines(true);
 		matrixDisplay.setShowVerticalLines(true);
 		matrixDisplay.addMouseListener(new MouseAdapter() {
-			public void mouseClicked(MouseEvent e){
+			public void mouseReleased(MouseEvent e){
 				int row = matrixDisplay.getSelectedRow();
 				int col = matrixDisplay.getSelectedColumn();
 				if(trainingResult==null||row<0||col<=0) return;
@@ -60,7 +60,7 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 		scroll.setPreferredSize(new Dimension(300,100));
 		add("br hfill", scroll);
 
-		add("br br left", new JLabel("Highlighted feature distribution:"));
+		add("br br left", new JLabel("Highlighted Feature Distribution:"));
 		zoomMatrixDisplay.setModel(zoomMatrixModel);
 		zoomMatrixDisplay.setShowHorizontalLines(true);
 		zoomMatrixDisplay.setShowVerticalLines(true);
@@ -144,6 +144,25 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 			}
 			int topRow = matrixDisplay.getSelectedRow();
 			int topCol = matrixDisplay.getSelectedColumn();
+			if(selectedFeature != null && topRow >= 0 && topCol >= 1){
+				System.out.print(selectedFeature.getFeatureName() + ", ");
+				Object[] modelDistr = new Object[matrixModel.getColumnCount()];
+				modelDistr[0] = "Distr:";
+				for(int i = 1; i < modelDistr.length; i++){
+					double totalCounts = 0.0;
+					double nonNormalized = 0.0;
+					for(int j = 0; j < matrixModel.getRowCount(); j++){
+						double c = Double.parseDouble(matrixModel.getValueAt(j, i).toString());
+						double p = Double.parseDouble(zoomMatrixModel.getValueAt(j, i).toString());
+						totalCounts += c;
+						nonNormalized += (c*p);
+					}
+					modelDistr[i] = nonNormalized/totalCounts;
+					System.out.print(modelDistr[i] + ", ");
+				}
+				zoomMatrixModel.addRow(modelDistr);				
+				System.out.println();
+			}
 			matrixDisplay.setModel(matrixModel);
 			matrixDisplay.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
 				public Component getTableCellRendererComponent(JTable table, Object value,

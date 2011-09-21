@@ -13,6 +13,8 @@ import edu.cmu.side.simple.feature.FeatureTable;
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	private static final long serialVersionUID = -7928450759075851993L;
 
+	protected static boolean halt = false;
+
 	/**
 	 * Kept for legacy reasons, implemented in this class so the developer doesn't have to.
 	 */
@@ -53,10 +55,13 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	
 	public abstract void predict(String name, FeatureTable documents);
 	
-	public abstract TrainingResultInterface train(FeatureTable featureTable, String desiredName, Map<String, String> evaluationSettings, Map<Integer, Integer> foldsMap, JLabel progressIndicator);
+	public abstract TrainingResultInterface train(FeatureTable featureTable, String desiredName, Map<String, String> evaluationSettings, Map<Integer, Integer> foldsMap, JLabel progressIndicator) throws Exception;
 
 	public abstract void toFile(double uniqueID);
 	
 	public abstract void fromFile(double uniqueID);
-
+	
+	public void stopWhenPossible(){
+		halt = true;
+	}
 }

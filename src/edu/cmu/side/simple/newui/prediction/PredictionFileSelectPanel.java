@@ -12,6 +12,7 @@ import java.util.TreeSet;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
@@ -22,6 +23,7 @@ import com.yerihyo.yeritools.swing.SwingToolkit.DefaultFileListCellRenderer;
 import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.newui.AbstractListPanel;
+import edu.cmu.side.simple.newui.features.FeatureFileManagerPanel;
 
 public class PredictionFileSelectPanel extends AbstractListPanel{
 
@@ -33,15 +35,15 @@ public class PredictionFileSelectPanel extends AbstractListPanel{
 
 		list.setCellRenderer(new DefaultFileListCellRenderer(list));
 		documents = null;
-		JButton fileAddButton = new JButton("add");
-		JButton fileRemoveButton = new JButton("clear");
-		this.add("hfill", new JLabel("csv file:"));
+		JButton fileAddButton = new JButton("Add");
+		JButton fileRemoveButton = new JButton("Clear");
+		this.add("hfill", new JLabel("CSV File:"));
 		this.add("", fileAddButton);
 		this.add("", fileRemoveButton);
 
 		scroll.setPreferredSize(new Dimension(250, 80));
 		this.add("br hfill ", scroll);		
-		this.add("br left", new JLabel("text field:"));
+		this.add("br left", new JLabel("Text Field:"));
 		textColumnComboBox = new JComboBox();
 		this.add("br hfill", textColumnComboBox);
 		fileAddButton.addActionListener(new SimpleWorkbench.FileAddActionListener(this, listModel));
@@ -56,7 +58,12 @@ public class PredictionFileSelectPanel extends AbstractListPanel{
 		textColumnComboBox.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				if(filenames.size() > 0 && textColumnComboBox.getSelectedIndex()>=0){
-					documents = new SimpleDocumentList(filenames, textColumnComboBox.getSelectedItem().toString());
+					try{
+						documents = new SimpleDocumentList(filenames, textColumnComboBox.getSelectedItem().toString());						
+					}catch(Exception e){
+						JOptionPane.showMessageDialog(PredictionFileSelectPanel.this, "Document loading failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+					}
 					fireActionEvent();					
 				}
 			}

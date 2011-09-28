@@ -137,6 +137,7 @@ public class PredictionShell
 			{
 				SimpleTrainingResult trained = new SimpleTrainingResult(modelFile);
 				extractors = trained.getFeatureTable().getExtractors();
+				
 				table = new FeatureTable(extractors, corpus, threshold);
 				table = trained.predictLabels(predictionAnnotation, corpusCurrentAnnot, table);
 

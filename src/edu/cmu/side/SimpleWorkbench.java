@@ -21,6 +21,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileFilter;
+
 import com.yerihyo.yeritools.io.FileToolkit;
 import com.yerihyo.yeritools.swing.SimpleOKDialog;
 import com.yerihyo.yeritools.swing.SwingToolkit.ResultOption;
@@ -38,8 +40,10 @@ import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.SimpleWorkbenchPanel;
 import edu.cmu.side.simple.newui.features.FeatureTableListPanel;
+import edu.cmu.side.simple.newui.features.FeatureTablePanel;
 import edu.cmu.side.simple.newui.machinelearning.ModelListPanel;
 import edu.cmu.side.simple.newui.prediction.PredictionFileSelectPanel;
+import edu.cmu.side.util.CSVExporter;
 
 public class SimpleWorkbench {
 
@@ -205,20 +209,44 @@ public class SimpleWorkbench {
 		public void actionPerformed(ActionEvent ae){
 			JComboBox combo = new JComboBox();
 			combo.addItem("ARFF");
+			combo.addItem("CSV");
 			JPanel pane = new JPanel();
 			pane.add(combo);
 			ResultOption option = SimpleOKDialog.show(null, "export to...", pane);
-			if(option == ResultOption.APPROVE_OPTION){
+			if(option == ResultOption.APPROVE_OPTION)
+			{
+				final String exportFormat = combo.getSelectedItem().toString();
 				JFileChooser chooser = new JFileChooser();
+				chooser.setFileFilter(new FileFilter()
+		        {
+
+					@Override
+					public boolean accept(File file)
+					{
+						return file.getPath().endsWith("."+exportFormat.toLowerCase());
+					}
+
+					@Override
+					public String getDescription()
+					{
+						// TODO Auto-generated method stub
+						return exportFormat+" Files";
+					}
+		        	
+		        });
+				
 				FeatureTable ft = FeatureTableListPanel.getSelectedFeatureTable();
 				chooser.setCurrentDirectory(SimpleWorkbench.dataFolder);
 				chooser.setMultiSelectionEnabled(false);
 				chooser.setSelectedFile(new File(ft.getTableName() + "." + combo.getSelectedItem().toString().toLowerCase()));
-				int result = chooser.showSaveDialog(null);
+				int result = chooser.showDialog(null, "Export to "+exportFormat);
 				if (result != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
-				FeatureTableListPanel.getSelectedFeatureTable().export(chooser.getSelectedFile(), combo.getSelectedItem().toString());
+				if(exportFormat.equals("CSV"))
+					CSVExporter.exportToCSV(FeatureTablePanel.getTableModel(), chooser.getSelectedFile());
+				else
+					FeatureTableListPanel.getSelectedFeatureTable().export(chooser.getSelectedFile(), combo.getSelectedItem().toString());
 			}
 		}
 	}

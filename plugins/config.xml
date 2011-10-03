@@ -24,6 +24,7 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.features.RegexSearch</classname>
 	</plugin>
+	<!--
 	<plugin>
 		<name>Stretch Patterns</name>
 		<author>Elijah Mayfield</author>
@@ -32,6 +33,7 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.features.StretchPatterns</classname>
 	</plugin>
+	-->
 	<plugin>
 		<name>WEKA Learning Plugin</name>
 		<author>Elijah Mayfield</author>
@@ -40,6 +42,7 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.learning.WekaLearning</classname>
 	</plugin>
+	<!--
 	<plugin>
 		<name>SVM Light Learning Plugin</name>
 		<author>Elijah Mayfield</author>
@@ -48,6 +51,7 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.svml.SVMLightPlugin</classname>
 	</plugin>
+	-->
 	<plugin>
 		<name>Horizontal Comparison Plugin</name>
 		<author>Elijah Mayfield</author>
@@ -63,5 +67,13 @@
 		<description><![CDATA[Compares features between two cells in a confusion matrix, taking the absolute difference.]]></description>
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.evaluation.AbsHorizontalComparison</classname>
+	</plugin>
+	<plugin>
+		<name>Vertical Comparison Plugin</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Compares features between two cells in a confusion matrix, taking the raw increase in frequency.]]></description>
+		<jarfile>light.jar</jarfile>
+		<classname>plugin.simple.evaluation.VerticalComparison</classname>
 	</plugin>
 </plugins>

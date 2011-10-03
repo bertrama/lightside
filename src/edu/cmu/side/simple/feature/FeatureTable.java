@@ -611,7 +611,11 @@ public class FeatureTable implements Serializable
 	}
 
 	public boolean getActivated(Feature f){
-		return activatedFeatures.get(f);
+		if(activatedFeatures == null){
+			return true;
+		}else{
+			return activatedFeatures.get(f);			
+		}
 	}
 
 	public Integer getThreshold(){

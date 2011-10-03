@@ -63,7 +63,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 		evalSetting.add(testSet);
 		cvFold.setSelected(true);
 		cvNumFolds.setText("10");
-		testSet.setEnabled(false);
+		testSet.setEnabled(true);
 
 		build.addActionListener(new ActionListener() {
 
@@ -114,7 +114,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 		add("br center", testFileName);
 
 		add("br left", new JLabel("Name:"));
-		modelName.setText("Model");
+		modelName.setText("model");
 		add("hfill", modelName);
 
 		add("br hfill", build);
@@ -158,6 +158,24 @@ public class LearningConfigPanel extends AbstractListPanel{
 					halted = false;
 				}else{
 					SimpleWorkbench.addTrainingResult(result);					
+					List<TrainingResultInterface> trs = SimpleWorkbench.getTrainingResults();
+					String name = "model";
+					boolean available = true;
+					for(TrainingResultInterface tr : trs){
+						if(name.equals(tr.toString())) available = false;
+					}
+					if(!available){
+						int count = 0;
+						while(!available){
+							count++;
+							name = "model" + count;
+							available = true;
+							for(TrainingResultInterface tr : trs){
+								if(name.equals(tr.toString())) available = false;
+							}
+						}
+					}
+					modelName.setText(name);
 				}
 				halt.setEnabled(false);
 			}catch(Exception e){

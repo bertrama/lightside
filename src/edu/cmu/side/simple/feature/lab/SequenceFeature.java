@@ -15,7 +15,6 @@ public class SequenceFeature extends Feature{
 		turns = SequencingCriterionPanel.turn;
 		direction = SequencingCriterionPanel.direction;
 		this.featureName =  "<\"" + a.getFeatureName() + "\" within " + turns + " turns " + direction + " \"" + b.getFeatureName() + "\">";
-		System.out.println(featureName);
 		this.extractorPrefix = "lab";
 		this.featureType = Type.BOOLEAN;
 	}

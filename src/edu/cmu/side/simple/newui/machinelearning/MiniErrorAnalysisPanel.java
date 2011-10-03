@@ -34,8 +34,6 @@ import edu.cmu.side.simple.newui.SIDETable;
 public class MiniErrorAnalysisPanel extends AbstractListPanel{
 	private static final long serialVersionUID = -7752641565734779041L;
 
-	private JButton saveButton = new JButton("Save");
-	private JButton loadButton = new JButton("Load");
 	private JComboBox metricsList = new JComboBox();
 	/** Retrieved from ConfusionMatrixPanel */
 	private Integer[] localCell = {-1, -1};
@@ -61,15 +59,9 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 			}
 		});
 		scroll = new JScrollPane(featureTable);
-		scroll.setPreferredSize(new Dimension(300,200));
-		add("left", new JLabel("Evaluate with: "));
-		add("left", metricsList);
+		scroll.setPreferredSize(new Dimension(250,250));
 		add("br left", selectedLabel);
 		add("br hfill", scroll);
-		saveButton.addActionListener(new SimpleWorkbench.TrainingResultSaveListener());
-		add("br right", saveButton);
-		loadButton.addActionListener(new SimpleWorkbench.TrainingResultLoadListener());
-		add("right", loadButton);
 
 	}
 
@@ -79,25 +71,19 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 	 */
 	public void refreshPanel(){
 		SIDEPlugin[] evaluators = SimpleWorkbench.getPluginsByType("model_evaluation");
-		if(evaluators.length != metricsList.getItemCount()){
-			metricsList.removeAllItems();
-			for(SIDEPlugin eval : evaluators){
-				metricsList.addItem(eval);
-			}
-		}
 		SimpleTrainingResult clicked = ModelListPanel.getSelectedTrainingResult();
-		Integer[] clickedCell = ConfusionMatrixPanel.getSelectedCell();
-		ModelEvaluationPlugin clickedPlugin = (ModelEvaluationPlugin)metricsList.getSelectedItem();			
-		if(clickedPlugin != selectedPlugin || clicked != trainingResult || clickedCell[0] != localCell[0] || clickedCell[1] != localCell[1]){
+		Integer[] clickedCell = ConfusionMatrixPanel.getSelectedCell();	
+		if(clicked != trainingResult || clickedCell[0] != localCell[0] || clickedCell[1] != localCell[1]){
 			trainingResult = clicked;
 			localCell = clickedCell;
-			selectedPlugin = clickedPlugin;
 			tableModel = new EvalTableModel();
-			tableModel.addColumn("Feature Name");
-			if(selectedPlugin != null && trainingResult != null && localCell[0] >= 0 && localCell[1] >= 0){
-				tableModel.addColumn(selectedPlugin.getOutputName());
+			if(trainingResult != null && localCell[0] >= 0 && localCell[1] >= 0){
+				tableModel.addColumn("Feature Name");
+				for(SIDEPlugin eval : evaluators){
+					tableModel.addColumn(((ModelEvaluationPlugin)eval).getOutputName());
+				}
 				String act = ""; String pred = "";
-				switch(clicked.getFeatureTable().getClassValueType()){
+				switch(clicked.getEvaluationTable().getClassValueType()){
 				case NOMINAL:
 				case BOOLEAN:
 					act = trainingResult.getDocumentList().getLabelArray()[localCell[0]];
@@ -111,7 +97,7 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 				Map<String, String> settings = new TreeMap<String, String>();
 				settings.put("pred", pred);
 				settings.put("act", act);
-				switch(trainingResult.getFeatureTable().getClassValueType()){
+				switch(trainingResult.getEvaluationTable().getClassValueType()){
 				case NOMINAL:
 				case BOOLEAN:
 					selectedLabel.setText("Predicted: " + pred + ", Actual: " + act);
@@ -119,15 +105,22 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 				case NUMERIC:
 					selectedLabel.setText("Predicted: Q" + (localCell[1]+1) + ", Actual: Q" + (localCell[0]+1));
 				}
-				Map<Feature, Double> featureEval = selectedPlugin.evaluateModelFeatures(trainingResult, settings);
-				for(Feature f : trainingResult.getFeatureTable().getFeatureSet()){
-					Object[] row = new Object[]{f, featureEval.get(f)};
+				Map[] evals = new Map[evaluators.length];
+				for(int i = 0; i < evals.length; i++){
+					evals[i] = ((ModelEvaluationPlugin)evaluators[i]).evaluateModelFeatures(trainingResult, settings);
+				}
+				for(Feature f : trainingResult.getEvaluationTable().getFeatureSet()){
+					Object[] row = new Object[1+evaluators.length];
+					row[0] = f;
+					for(int i = 0; i < evals.length; i++){
+						row[i+1] = evals[i].get(f);
+					}
 					tableModel.addRow(row);
 				}					
 			}else{
 				selectedLabel.setText(explanation);
 				if(trainingResult != null){
-					for(Feature f : trainingResult.getFeatureTable().getFeatureSet()){
+					for(Feature f : trainingResult.getEvaluationTable().getFeatureSet()){
 						Object[] row = new Object[]{f};
 						tableModel.addRow(row);
 					}					

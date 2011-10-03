@@ -8,6 +8,6 @@ public class EvalTableModel extends DefaultTableModel{
 
 	@Override
 	public Class<?> getColumnClass(int col){
-		return (col==1?Double.class:Object.class);
+		return (col==0?Object.class:Double.class);
 	}
 }

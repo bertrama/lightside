@@ -28,6 +28,7 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 
 	private String name;
 	private FeatureTable table;
+	private FeatureTable test;
 	private List<Comparable> predictions = new ArrayList<Comparable>();
 	private Map<String, String> evaluation = null;
 	private String annot;
@@ -45,8 +46,15 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		p.toFile(uniqueID);
 	}
 	
-	public SimpleTrainingResult(File f){
-		try{
+	public FeatureTable getEvaluationTable(){
+		return (test == null) ? table : test;
+	}
+	
+	public void setEvaluationTable(FeatureTable f){
+		test = f;
+	}
+	
+	public SimpleTrainingResult(File f) throws Exception{
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
 			name = (String)in.readObject();
 			table = new FeatureTable(in);
@@ -56,9 +64,6 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 			plugin = (LearningPlugin)in.readObject();
 			annot = (String)in.readObject();
 			in.close();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 	
 	public void serialize(File f){
@@ -125,7 +130,13 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 						}
 						break;
 					}
-					generateConfusionMatrix(table.getDocumentList().getAnnotationArray(), predictions);
+					table.getDocumentList().setCurrentAnnotation(annot);
+					if(test != null){
+						test.getDocumentList().setCurrentAnnotation(annot);
+						generateConfusionMatrix(test.getClassValueType(), test.getDocumentList().getAnnotationArray(), predictions);						
+					}else{
+						generateConfusionMatrix(table.getClassValueType(), table.getDocumentList().getAnnotationArray(), predictions);
+					}
 				}
 			}
 			evaluation = ev;
@@ -135,9 +146,8 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		}
 	}
 
-	public void generateConfusionMatrix(List<String> actual, List<Comparable> predicted){
-		table.getDocumentList().setCurrentAnnotation(annot);
-		switch(table.getClassValueType()){
+	public void generateConfusionMatrix(Feature.Type type, List<String> actual, List<Comparable> predicted){
+		switch(type){
 		case NOMINAL:
 		case BOOLEAN:
 			for(int i = 0; i < actual.size(); i++){
@@ -247,14 +257,12 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		newFeatureTable.setExternalClassValueType(table.getClassValueType());
 		newFeatureTable.getDocumentList().setExternalLabelArray(table.getDocumentList().getLabelArray());
 		
-		reconcileFeatures(newFeatureTable);
+		FeatureTable.reconcileFeatures(table, newFeatureTable);
 
 		Set<Feature> oldTableFeatures = table.getFeatureSet();
 		Set<Feature> newTableFeatures= newFeatureTable.getFeatureSet();
 
 		//plugin.fromFile(uniqueID); //WHY?
-		
-		System.out.println("plugin: "+plugin);
 		
 		if(oldTableFeatures.size() == newTableFeatures.size())
 		{
@@ -266,67 +274,5 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 		return newFeatureTable;
 	}
 
-	private void reconcileFeatures(FeatureTable newFeatureTable)
-	{
-		Set<Feature> oldTableFeatures = table.getFeatureSet();
-		Set<Feature> newTableFeatures = newFeatureTable.getFeatureSet();
-		
-		//weka does lots of things by index, instead of key... which is why the feature tables have to match exactly.
-		int count = 0;
-		System.out.println("old features: "+oldTableFeatures.size());
-		System.out.println("new features: "+newTableFeatures.size());
-		
-		if(oldTableFeatures.size() != newTableFeatures.size())
-		{
-			Set<Feature> remove = new HashSet<Feature>();
-			for(Feature f: newTableFeatures)
-			{
-				boolean found = oldTableFeatures.contains(f);
-//				boolean found = false;
-//				for(Feature oldFeat : oldTableFeatures)
-//				{
-//					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
-//					{
-//						found = true;
-//						break;
-//					}
-//				}
-				if(!found)
-				{
-					remove.add(f);
-					count++;
-				}
-			}
-			for(Feature f : remove)
-			{
-				newFeatureTable.deleteFeature(f);
-			}
-			System.out.println(count+" novel features removed");
-
-			oldTableFeatures = table.getFeatureSet();
-			newTableFeatures = newFeatureTable.getFeatureSet();
-			
-			count = 0;
-			for(Feature f : oldTableFeatures)
-			{
-				boolean found = newTableFeatures.contains(f);
-				//boolean found = false;
-//				for(Feature newFeat : newTableFeatures)
-//				{
-//					if(newFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) &&newFeat.getFeatureName().equals(f.getFeatureName()))
-//					{
-//						found = true;
-//						break;
-//					}
-//				}
-				if(!found)
-				{
-					count++;
-					newFeatureTable.addEmptyFeature(f);
-				}	
-				
-			}
-			System.out.println(count+" empty features added");
-		}
-	}
+	
 }

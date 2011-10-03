@@ -2,6 +2,7 @@ package edu.cmu.side.simple;
 
 import java.io.BufferedReader;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.Serializable;
 import java.io.StringReader;
@@ -18,6 +19,7 @@ import java.util.TreeSet;
 import com.yerihyo.yeritools.csv.CSVReader;
 import com.yerihyo.yeritools.swing.AlertDialog;
 
+import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.dataitem.DocumentListInterface;
 
 public class SimpleDocumentList implements DocumentListInterface, Serializable{
@@ -52,7 +54,11 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		currentAnnotation = null;
 		for(String filename : filenames){
 			try{
-				in = new BufferedReader(new FileReader(filename));
+				File f = new File(filename);
+				if(!f.exists()){
+					f = new File(SimpleWorkbench.dataFolder.getAbsolutePath(), filename.substring(Math.max(filename.lastIndexOf("/"), filename.lastIndexOf("\\"))+1));
+				}
+				in = new BufferedReader(new FileReader(f));
 				StringBuilder sb = new StringBuilder();
 				String line;
 				while((line = in.readLine()) != null){
@@ -75,6 +81,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 					}
 				}
 				String[] instance;
+				int count = 0;
 				while((instance = csvReader.readNextMeaningful()) != null){
 					for(int i = 0; i < instance.length; i++){
 						String value = instance[i].replaceAll("\"", "").trim();
@@ -101,6 +108,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textCol){
 		this(filenames, textCol);
 		currentAnnotation = currentAnnot;
+
 	}
 	
 	@Override
@@ -168,7 +176,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 
 	@Override
 	public int getSize() {
-		return text.size();
+		return getAnnotationArray().size();
 	}
 
 	@Override

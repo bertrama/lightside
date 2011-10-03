@@ -50,8 +50,9 @@ public class SimpleWorkbench {
 	static SimpleWorkbenchPanel panel;
 	public SimpleWorkbench(){
 		JFrame frame = new JFrame();
-		frame.setSize(new Dimension(1024,768));
+		frame.setSize(new Dimension(1050,768));
 		frame.setTitle("LightSIDE");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLayout(new RiverLayout());
 		panel = new SimpleWorkbenchPanel();
 		frame.add("hfill vfill", new JScrollPane(panel));

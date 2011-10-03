@@ -71,14 +71,16 @@ public class FeatureTableListPanel extends AbstractListPanel{
 	 */
 	public void refreshPanel(){
 		List<FeatureTable> featureTables = SimpleWorkbench.getFeatureTables();
+		boolean set = false;
 		if(featureTables.size() != listModel.getSize()){
+			set = true;
 			listModel.removeAllElements();
 			for(FeatureTable table : featureTables){
 				listModel.addElement(table);
 			}
 		}
 		super.refreshPanel();
-		if(list.getModel().getSize()>0 && list.getSelectedIndex()==-1){
+		if(set){
 			list.setSelectedIndex(list.getModel().getSize()-1);	
 		}
 		clickedFeatureTable = (FeatureTable)list.getSelectedValue();		

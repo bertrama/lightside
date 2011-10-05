@@ -27,10 +27,10 @@ public class LearningRightPanel extends JPanel {
 		setBorder(null);
 		setPreferredSize(new Dimension(625,625));
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-		JSplitPane splitTop = new JSplitPane();
-		matrixPanel.setPreferredSize(new Dimension(250, 300));
+		JSplitPane splitTop = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+		matrixPanel.setPreferredSize(new Dimension(300, 325));
 		matrixPanel.setBorder(null);
-		errorPanel.setPreferredSize(new Dimension(225, 300));
+		errorPanel.setPreferredSize(new Dimension(275, 325));
 		errorPanel.setBorder(null);
 		splitTop.setLeftComponent(matrixPanel);
 		splitTop.setRightComponent(errorPanel);

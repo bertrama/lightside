@@ -2,6 +2,7 @@ package edu.cmu.side.simple.newui.machinelearning;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridLayout;
 
 import java.awt.Dimension;
 import java.awt.event.MouseAdapter;
@@ -11,10 +12,13 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+
+import se.datadosen.component.RiverLayout;
 
 import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.Feature;
@@ -42,7 +46,9 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 	private JLabel selectedFeatureName = new JLabel("Select a feature to fill matrix.");
 
 	public ConfusionMatrixPanel(){
-		add("left", new JLabel("Model Confusion Matrix:"));
+		setLayout(new GridLayout(2,1));
+		JPanel modelPanel = new JPanel(new RiverLayout());
+		modelPanel.add("left", new JLabel("Model Confusion Matrix:"));
 		matrixDisplay.setModel(matrixModel);
 		matrixDisplay.setBorder(BorderFactory.createLineBorder(Color.gray));
 		matrixDisplay.setShowHorizontalLines(true);
@@ -58,16 +64,19 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 		});
 		scroll = new JScrollPane(matrixDisplay);
 		scroll.setPreferredSize(new Dimension(300,100));
-		add("br hfill", scroll);
+		modelPanel.add("br hfill", scroll);
 
-		add("br br left", new JLabel("Highlighted Feature Distribution:"));
+		JPanel zoomPanel = new JPanel(new RiverLayout());
+		zoomPanel.add("left", new JLabel("Highlighted Feature Distribution:"));
 		zoomMatrixDisplay.setModel(zoomMatrixModel);
 		zoomMatrixDisplay.setShowHorizontalLines(true);
 		zoomMatrixDisplay.setShowVerticalLines(true);
 		JScrollPane zoomScroll = new JScrollPane(zoomMatrixDisplay);
 		zoomScroll.setPreferredSize(new Dimension(300,100));
-		add("br hfill", zoomScroll);
-		add("br", selectedFeatureName);
+		zoomPanel.add("br hfill", zoomScroll);
+		zoomPanel.add("br", selectedFeatureName);
+		add(modelPanel);
+		add(zoomPanel);
 	}
 
 	/**
@@ -78,23 +87,20 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 	public void refreshPanel(){
 		SimpleTrainingResult clicked = ModelListPanel.getSelectedTrainingResult();
 		Feature highlighted = MiniErrorAnalysisPanel.getSelectedFeature();
+		matrixModel = new DefaultTableModel();
+		zoomMatrixModel = new DefaultTableModel();
+		matrixModel.addColumn("Act \\ Pred");
+		zoomMatrixModel.addColumn("Act \\ Pred");
+		if(highlighted == null){
+			selectedFeatureName.setText("Choose a feature to highlight.");
+		}else{
+			selectedFeatureName.setText("Distribution of feature " + highlighted.getFeatureName());
+		}
 		if(clicked != null){
 			trainingResult = clicked;
 			selectedFeature = highlighted;
-			if(selectedFeature == null){
-				selectedFeatureName.setText("Choose a feature to highlight.");
-			}else{
-				selectedFeatureName.setText("Distribution of feature " + selectedFeature.getFeatureName());
-			}
-
-			matrixModel = new DefaultTableModel();
-			zoomMatrixModel = new DefaultTableModel();
-			matrixModel.addColumn("Act \\ Pred");
-			zoomMatrixModel.addColumn("Act \\ Pred");
-			
 			DecimalFormat print = new DecimalFormat("#.###");
-
-			switch(trainingResult.getFeatureTable().getClassValueType()){
+			switch(trainingResult.getEvaluationTable().getClassValueType()){
 			case NOMINAL:
 			case BOOLEAN:
 				String[] labels = trainingResult.getDocumentList().getLabelArray();
@@ -142,49 +148,52 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 				}
 				break;
 			}
-			int topRow = matrixDisplay.getSelectedRow();
-			int topCol = matrixDisplay.getSelectedColumn();
-			if(selectedFeature != null && topRow >= 0 && topCol >= 1){
-				System.out.print(selectedFeature.getFeatureName() + ", ");
-				Object[] modelDistr = new Object[matrixModel.getColumnCount()];
-				modelDistr[0] = "Distr:";
-				for(int i = 1; i < modelDistr.length; i++){
-					double totalCounts = 0.0;
-					double nonNormalized = 0.0;
-					for(int j = 0; j < matrixModel.getRowCount(); j++){
-						double c = Double.parseDouble(matrixModel.getValueAt(j, i).toString());
-						double p = Double.parseDouble(zoomMatrixModel.getValueAt(j, i).toString());
-						totalCounts += c;
-						nonNormalized += (c*p);
-					}
-					modelDistr[i] = nonNormalized/totalCounts;
-					System.out.print(modelDistr[i] + ", ");
-				}
-				zoomMatrixModel.addRow(modelDistr);				
-				System.out.println();
-			}
-			matrixDisplay.setModel(matrixModel);
+			final int topRow = matrixDisplay.getSelectedRow();
+			final int topCol = matrixDisplay.getSelectedColumn();
+			final int botRow = zoomMatrixDisplay.getSelectedRow();
+			final int botCol = zoomMatrixDisplay.getSelectedColumn();
+//			generateDistributionsRow(topRow, topCol);
 			matrixDisplay.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
 				public Component getTableCellRendererComponent(JTable table, Object value,
 			            boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
 					DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-					if(vColIndex > 0){
+					if(vColIndex > 0 && rowIndex == topRow && vColIndex == topCol){
+						rend.setBackground(new Color(0,0,102));
+						rend.setForeground(Color.white);
+					}else if(vColIndex > 0 && ModelListPanel.getSelectedTrainingResult() != null && ModelListPanel.getSelectedTrainingResult().getDocumentList() != null){
 						double total = 0.0+ModelListPanel.getSelectedTrainingResult().getDocumentList().getSize();
 						Integer intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/total))).intValue();
 						rend.setBackground(new Color(255-intensity, 255-intensity,255));
+						rend.setForeground(Color.black);
 					}
-					rend.setForeground(Color.black);
 					rend.setText(table.getValueAt(rowIndex, vColIndex).toString());
 					return rend;
 				}
 			});
-			matrixDisplay.changeSelection(topRow,topCol,false,false);
-			int botRow = zoomMatrixDisplay.getSelectedRow();
-			int botCol = zoomMatrixDisplay.getSelectedColumn();
-			zoomMatrixDisplay.setModel(zoomMatrixModel);
-			zoomMatrixDisplay.changeSelection(botRow,botCol,false,false);
 		}
+		matrixDisplay.setModel(matrixModel);
+		zoomMatrixDisplay.setModel(zoomMatrixModel);
 		repaint();
+	}
+
+	private void generateDistributionsRow(int topRow, int topCol) {
+		if(selectedFeature != null && topRow >= 0 && topCol >= 1){
+			Object[] modelDistr = new Object[matrixModel.getColumnCount()];
+			modelDistr[0] = "Distr:";
+			for(int i = 1; i < modelDistr.length; i++){
+				double totalCounts = 0.0;
+				double nonNormalized = 0.0;
+				for(int j = 0; j < matrixModel.getRowCount(); j++){
+					double c = Double.parseDouble(matrixModel.getValueAt(j, i).toString());
+					double p = Double.parseDouble(zoomMatrixModel.getValueAt(j, i).toString());
+					totalCounts += c;
+					nonNormalized += (c*p);
+				}
+				modelDistr[i] = nonNormalized/totalCounts;
+				System.out.print(modelDistr[i] + ", ");
+			}
+			zoomMatrixModel.addRow(modelDistr);	
+		}
 	}
 
 	/** This is called by the MiniErrorAnalysisPanel */

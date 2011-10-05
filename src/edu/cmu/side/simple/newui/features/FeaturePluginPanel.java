@@ -20,14 +20,12 @@ import javax.swing.JTextField;
 import com.yerihyo.yeritools.swing.AlertDialog;
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 import edu.cmu.side.SimpleWorkbench;
-import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.feature.FeatureHit;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.AbstractListPanel;
-import edu.cmu.side.simple.newui.machinelearning.LearningPluginPanel;
 
 public class FeaturePluginPanel extends AbstractListPanel{
 	private static final long serialVersionUID = -1934157714129843426L;
@@ -112,6 +110,13 @@ public class FeaturePluginPanel extends AbstractListPanel{
 		@Override
 		protected Void doInBackground(){
 			halt.setEnabled(true);
+			int thresh = 0;
+			try{
+				thresh = Integer.parseInt(threshold.getText());
+			}catch(Exception ex){
+				AlertDialog.show("Error!", "Threshold is not an integer value.", null);
+				ex.printStackTrace();
+			}
 			FeatureTable ft = FeatureTableListPanel.getSelectedFeatureTable();
 			Collection<FeatureHit> hits = clickedPlugin.extractFeatureHits(ft.getDocumentList(), getProgressLabel());
 			ft.addAllHits(hits);
@@ -154,9 +159,7 @@ public class FeaturePluginPanel extends AbstractListPanel{
 				}
 				FeatureTable table = new FeatureTable(clickedPlugin, corpus,thresh);
 				if(table.getFeatureSet().size() > 0){
-					System.out.println("(FeaturePluginPanel) Added hits to a feature table, now evaluating");
 					table.defaultEvaluation();
-					System.out.println("(FeaturePluginPanel) Evaluated.");
 					table.setTableName(tableName.getText());
 					
 						SimpleWorkbench.addFeatureTable(table);					

@@ -188,6 +188,13 @@ public class FeatureTablePanel extends AbstractListPanel{
 
 	public void refreshPanel(){
 		FeatureTable table = FeatureTableListPanel.getSelectedFeatureTable();
+		if(table == null){
+			tableModel = new FeatureTableModel();
+			selectedTableName.setText("");
+			selectedTableSize.setText("");
+			featureTable.setModel(tableModel);
+			currentFeatureTable = table;
+		}
 		if(table != null && (table != currentFeatureTable || activationsChanged || !currentFilter.equals(filterField.getText().trim()) || table.getEvaluations().keySet().size() != tableModel.getColumnCount()-3)){
 			currentFilter = filterField.getText();
 			selectedTableName.setText(table.getTableName());

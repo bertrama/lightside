@@ -4,11 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 
@@ -21,6 +23,9 @@ public class LearningOutputPanel extends AbstractListPanel{
 	
 	/** Retrieved from ModelListPanel */
 	private SimpleTrainingResult trainingResult = null;
+
+	private JButton saveButton = new JButton("Save");
+	private JButton loadButton = new JButton("Load");
 	
 	public LearningOutputPanel(){
 		add("left", new JLabel("View output: "));
@@ -33,15 +38,20 @@ public class LearningOutputPanel extends AbstractListPanel{
 		});
 		scroll = new JScrollPane(text);
 		add("br hfill vfill", scroll);
+		saveButton.addActionListener(new SimpleWorkbench.TrainingResultSaveListener());
+		add("br right", saveButton);
+		loadButton.addActionListener(new SimpleWorkbench.TrainingResultLoadListener());
+		add("right", loadButton);
+
 	}
 
 	public void refreshPanel(){
 		SimpleTrainingResult clickedModel = ModelListPanel.getSelectedTrainingResult();
 		if(clickedModel != trainingResult){
 			trainingResult = clickedModel;
-			Map<String, String> evaluation = trainingResult.getEvaluation();
-			if(evaluation != null){
-				outputs.removeAllItems();
+			outputs.removeAllItems();
+			if(trainingResult != null && trainingResult.getEvaluation() != null){
+				Map<String, String> evaluation = trainingResult.getEvaluation();
 				for(String key : evaluation.keySet()){
 					outputs.addItem(key);
 				}

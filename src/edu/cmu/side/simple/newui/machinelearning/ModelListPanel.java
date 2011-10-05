@@ -63,15 +63,16 @@ public class ModelListPanel extends AbstractListPanel{
 	
 	public void refreshPanel(){
 		List<TrainingResultInterface> models = SimpleWorkbench.getTrainingResults();
+		boolean set = false;
 		if(models.size() != listModel.getSize()){
-			list.setSelectedIndex(-1);
+			set = true;
 			listModel.removeAllElements();
 			for(TrainingResultInterface model : models){
 				listModel.addElement(model);
 			}
 		}
 		super.refreshPanel();
-		if(list.getModel().getSize()>0 && list.getSelectedIndex()==-1){
+		if(set){
 			list.setSelectedIndex(list.getModel().getSize()-1);
 		}
 		clickedModel = (SimpleTrainingResult)list.getSelectedValue();

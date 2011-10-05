@@ -102,16 +102,16 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			displayModel.addColumn("actual");
 			if(model != null){
 				if(allDisplay.isSelected()){
-					for(int i = 0; i < model.getDocumentList().getSize(); i++){
+					for(int i = 0; i < model.getEvaluationTable().getDocumentList().getSize(); i++){
 						Object[] row = new Object[3];
-						row[0] = model.getDocumentList().getCoveredTextList().size()==0?"":model.getDocumentList().getCoveredTextList().get(i);
+						row[0] = model.getEvaluationTable().getDocumentList().getCoveredTextList().size()==0?"":model.getDocumentList().getCoveredTextList().get(i);
 						row[1] = model.getPredictions().get(i);
-						row[2] = model.getDocumentList().getAnnotationArray().get(i);
+						row[2] = model.getEvaluationTable().getDocumentList().getAnnotationArray().get(i);
 						displayModel.addRow(row);
 					}					
 				}else if(cellDisplay.isSelected() && localCell[0] >= 0 && localCell[1] >= 0){
 					String act = ""; String pred = "";
-					switch(model.getFeatureTable().getClassValueType()){
+					switch(model.getEvaluationTable().getClassValueType()){
 					case NOMINAL:
 					case BOOLEAN:
 						act = model.getDocumentList().getLabelArray()[localCell[0]];
@@ -130,7 +130,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 						displayModel.addRow(row);
 					}			
 				}else if(featDisplay.isSelected() && localFeat != null){
-					Collection<FeatureHit> hits = model.getFeatureTable().getHitsForFeature(localFeat);
+					Collection<FeatureHit> hits = model.getEvaluationTable().getHitsForFeature(localFeat);
 					Set<Integer> cell = new TreeSet<Integer>();
 					if(hits != null){
 						for(FeatureHit hit : hits){ cell.add(hit.getDocumentIndex()); }

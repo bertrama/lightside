@@ -340,6 +340,7 @@ public class FeatureTable implements Serializable
 				localMap.get(hit.feature).add(hit);
 			}
 		}
+		
 		Feature[] features = localMap.keySet().toArray(new Feature[0]);
 		for(Feature f : features){
 			if(localMap.get(f).size() < threshold){
@@ -353,7 +354,7 @@ public class FeatureTable implements Serializable
 			if(!activatedFeatures.containsKey(f)){
 				activatedFeatures.put(f, Boolean.TRUE);
 			}
-			for(FeatureHit hit : localMap.get(f)){
+			for(FeatureHit hit : localMap.get(f	)){
 				hitsPerDocument.get(hit.documentIndex).add(hit);
 				hitsPerFeature.get(f).add(hit);
 			}
@@ -507,15 +508,26 @@ public class FeatureTable implements Serializable
 	 * @param hits
 	 */
 	public void addAllHits(Collection<FeatureHit> hits){
-		documents.setCurrentAnnotation(annot);
+		Map<Feature, Collection<FeatureHit>> localMap = new HashMap<Feature, Collection<FeatureHit>>(100000);
 		for(FeatureHit fh : hits){
-			hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
-			if(!hitsPerFeature.containsKey(fh.getFeature())){
-				hitsPerFeature.put(fh.getFeature(), new HashSet<FeatureHit>());
-				activatedFeatures.put(fh.getFeature(), true);
+			if(!localMap.containsKey(fh.getFeature())){
+				localMap.put(fh.getFeature(), new ArrayList<FeatureHit>());
 			}
-			hitsPerFeature.get(fh.getFeature()).add(fh);
+			localMap.get(fh.getFeature()).add(fh);
 		}
+		for(Feature f : localMap.keySet()){
+			if(localMap.get(f).size() > threshold){
+				for(FeatureHit fh : localMap.get(f)){
+					hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
+					if(!hitsPerFeature.containsKey(fh.getFeature())){
+						hitsPerFeature.put(fh.getFeature(), new HashSet<FeatureHit>());
+						activatedFeatures.put(fh.getFeature(), true);
+					}
+					hitsPerFeature.get(fh.getFeature()).add(fh);
+				}
+			}
+		}
+		documents.setCurrentAnnotation(annot);
 		defaultEvaluation();
 	}
 
@@ -611,13 +623,20 @@ public class FeatureTable implements Serializable
 	}
 
 	public boolean getActivated(Feature f){
-		return activatedFeatures.get(f);
+		if(activatedFeatures == null){
+			return true;
+		}else{
+			return activatedFeatures.get(f);			
+		}
 	}
 
 	public Integer getThreshold(){
 		return threshold;
 	}
 
+	/**
+	 * Functionality for the "Freeze" button in the GUI. Removes deactivated features.
+	 */
 	public FeatureTable subsetClone(){
 		documents.setCurrentAnnotation(annot);
 		FeatureTable ft = new FeatureTable();
@@ -634,6 +653,10 @@ public class FeatureTable implements Serializable
 		return ft;
 	}
 
+	/**
+	 * When creating feature hits, they're done on a per-feature basis. This fills the data structure
+	 * that maps those hits per document instead.
+	 */
 	private void fillHitsPerDocument(FeatureTable ft) {
 		documents.setCurrentAnnotation(annot);
 		ft.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
@@ -651,7 +674,11 @@ public class FeatureTable implements Serializable
 			}
 		}
 	}
-
+	
+	/**
+	 * Removes a feature and all of its hits from a feature table.
+	 * @param f
+	 */
 	public void deleteFeature(Feature f){
 		for(int i = 0; i < hitsPerDocument.size(); i++){
 			FeatureHit[] docHits = hitsPerDocument.get(i).toArray(new FeatureHit[0]);
@@ -664,16 +691,87 @@ public class FeatureTable implements Serializable
 		hitsPerFeature.remove(f);
 		activatedFeatures.remove(f);
 	}
+	
+	/**
+	 * Given two feature tables, alter the feature space of the second table to match the feature
+	 * space in the first table. Returns that second table post-alteration.
+	 */
+	public static FeatureTable reconcileFeatures(FeatureTable oldFeatureTable, FeatureTable newFeatureTable)
+	{
+		
+		Set<Feature> oldTableFeatures = oldFeatureTable.getFeatureSet();
+		Set<Feature> newTableFeatures = newFeatureTable.getFeatureSet();
+		
+		//weka does lots of things by index, instead of key... which is why the feature tables have to match exactly.
+		int count = 0;
+		if(oldTableFeatures.size() != newTableFeatures.size())
+		{
+			Set<Feature> remove = new HashSet<Feature>();
+			for(Feature f: newTableFeatures)
+			{
+				boolean found = oldTableFeatures.contains(f);
+//				boolean found = false;
+//				for(Feature oldFeat : oldTableFeatures)
+//				{
+//					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
+//					{
+//						found = true;
+//						break;
+//					}
+//				}
+				if(!found)
+				{
+					remove.add(f);
+					count++;
+				}
+			}
+			for(Feature f : remove)
+			{
+				newFeatureTable.deleteFeature(f);
+			}
 
+			oldTableFeatures = oldFeatureTable.getFeatureSet();
+			newTableFeatures = newFeatureTable.getFeatureSet();
+			
+			count = 0;
+			for(Feature f : oldTableFeatures)
+			{
+				boolean found = newTableFeatures.contains(f);
+				//boolean found = false;
+//				for(Feature newFeat : newTableFeatures)
+//				{
+//					if(newFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) &&newFeat.getFeatureName().equals(f.getFeatureName()))
+//					{
+//						found = true;
+//						break;
+//					}
+//				}
+				if(!found)
+				{
+					count++;
+					newFeatureTable.addEmptyFeature(f);
+				}	
+				
+			}
+		}
+		return newFeatureTable;
+	}
+
+	/**
+	 * Outputs a feature table to a file that can be read by some other software package,
+	 * based on some format selected elsewhere in the GUI (as of 10/3/11, only does ARFF format).
+	 */
 	public void export(File out, String format){
 		try{
 			documents.setCurrentAnnotation(annot);
 			BufferedWriter write = new BufferedWriter(new FileWriter(out));
 			if(format.equalsIgnoreCase("ARFF")){
 				StringBuilder sb = new StringBuilder("@relation " + getTableName() + "\n\n");
+				Set<String> existingFeatures = new TreeSet<String>();
 				for(Feature f : hitsPerFeature.keySet()){
 					if(activatedFeatures.get(f)){
-						sb.append("@attribute " + f.getFeatureName() + " ");
+						String fName = f.getFeatureName().replaceAll("\\p{Punct}","_");
+						sb.append("@attribute " + fName + " ");
 						switch(f.getFeatureType()){
 						case NUMERIC:
 							sb.append("numeric");

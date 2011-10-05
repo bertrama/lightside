@@ -30,4 +30,12 @@ public class LocalFeatureHit extends FeatureHit
 	{
 		return hits;
 	}
+	
+	public String toString()
+	{
+		String x = getDocumentIndex()+"";
+		for(int[] h : hits)
+			x+="("+h[0]+","+h[1]+") ";
+		return x;
+	}
 }

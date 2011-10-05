@@ -12,7 +12,7 @@ import javax.swing.table.TableModel;
 
 public class CSVExporter
 {
-	private static JFileChooser chooser = new JFileChooser();
+//	private static JFileChooser chooser = new JFileChooser();
 	public static void exportToCSV(TableModel model, File file){
 //        if(!file2.endsWith(".csv"))
 //        	file2 += ".csv";

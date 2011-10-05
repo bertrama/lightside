@@ -176,7 +176,11 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 
 	@Override
 	public int getSize() {
-		return getAnnotationArray().size();
+		if(getAnnotationArray() != null){
+			return getAnnotationArray().size();			
+		}else if(text != null){
+			return text.size();
+		}else return 0;
 	}
 
 	@Override

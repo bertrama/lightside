@@ -110,6 +110,13 @@ public class FeaturePluginPanel extends AbstractListPanel{
 		@Override
 		protected Void doInBackground(){
 			halt.setEnabled(true);
+			int thresh = 0;
+			try{
+				thresh = Integer.parseInt(threshold.getText());
+			}catch(Exception ex){
+				AlertDialog.show("Error!", "Threshold is not an integer value.", null);
+				ex.printStackTrace();
+			}
 			FeatureTable ft = FeatureTableListPanel.getSelectedFeatureTable();
 			Collection<FeatureHit> hits = clickedPlugin.extractFeatureHits(ft.getDocumentList(), getProgressLabel());
 			ft.addAllHits(hits);

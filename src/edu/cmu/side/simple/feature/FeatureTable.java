@@ -340,6 +340,7 @@ public class FeatureTable implements Serializable
 				localMap.get(hit.feature).add(hit);
 			}
 		}
+		
 		Feature[] features = localMap.keySet().toArray(new Feature[0]);
 		for(Feature f : features){
 			if(localMap.get(f).size() < threshold){
@@ -507,15 +508,26 @@ public class FeatureTable implements Serializable
 	 * @param hits
 	 */
 	public void addAllHits(Collection<FeatureHit> hits){
-		documents.setCurrentAnnotation(annot);
+		Map<Feature, Collection<FeatureHit>> localMap = new HashMap<Feature, Collection<FeatureHit>>(100000);
 		for(FeatureHit fh : hits){
-			hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
-			if(!hitsPerFeature.containsKey(fh.getFeature())){
-				hitsPerFeature.put(fh.getFeature(), new HashSet<FeatureHit>());
-				activatedFeatures.put(fh.getFeature(), true);
+			if(!localMap.containsKey(fh.getFeature())){
+				localMap.put(fh.getFeature(), new ArrayList<FeatureHit>());
 			}
-			hitsPerFeature.get(fh.getFeature()).add(fh);
+			localMap.get(fh.getFeature()).add(fh);
 		}
+		for(Feature f : localMap.keySet()){
+			if(localMap.get(f).size() > threshold){
+				for(FeatureHit fh : localMap.get(f)){
+					hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
+					if(!hitsPerFeature.containsKey(fh.getFeature())){
+						hitsPerFeature.put(fh.getFeature(), new HashSet<FeatureHit>());
+						activatedFeatures.put(fh.getFeature(), true);
+					}
+					hitsPerFeature.get(fh.getFeature()).add(fh);
+				}
+			}
+		}
+		documents.setCurrentAnnotation(annot);
 		defaultEvaluation();
 	}
 
@@ -755,9 +767,11 @@ public class FeatureTable implements Serializable
 			BufferedWriter write = new BufferedWriter(new FileWriter(out));
 			if(format.equalsIgnoreCase("ARFF")){
 				StringBuilder sb = new StringBuilder("@relation " + getTableName() + "\n\n");
+				Set<String> existingFeatures = new TreeSet<String>();
 				for(Feature f : hitsPerFeature.keySet()){
 					if(activatedFeatures.get(f)){
-						sb.append("@attribute " + f.getFeatureName() + " ");
+						String fName = f.getFeatureName().replaceAll("\\p{Punct}","_");
+						sb.append("@attribute " + fName + " ");
 						switch(f.getFeatureType()){
 						case NUMERIC:
 							sb.append("numeric");

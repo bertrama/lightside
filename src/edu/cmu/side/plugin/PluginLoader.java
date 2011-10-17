@@ -45,7 +45,8 @@ public class PluginLoader {
 		this.className = className;
 
 
-		try {
+		try 
+		{
 			Class<?> clazz = RTTIToolkit.getClass(this.jarFile, className);
 			Constructor<?> constructor = clazz.getConstructor();
 			this.plugin = (SIDEPlugin) constructor.newInstance();

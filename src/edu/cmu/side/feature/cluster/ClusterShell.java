@@ -35,6 +35,11 @@ public class ClusterShell {
 		String cvSetting = null;
 		TrainingResultInterface result = null;
 		
+		double similarityWindow = 0.05;
+		double clusterSimilarity = 0.05;
+		int chunks = 10;
+		boolean localClusters = false;
+		
 		for(int i = 0; i < args.length; i++){
 			if(args[i].startsWith("-")){
 				if(args[i].contains("-dl")){
@@ -59,6 +64,8 @@ public class ClusterShell {
 					SIDEPlugin[] featureExtractors = SimpleWorkbench.getPluginsByType("feature_hit_extractor");
 					for(int k = 0; k < featureExtractors.length; k++)
 					{
+						System.out.println(featureExtractors[k]);
+						
 						FeaturePlugin plug = (FeaturePlugin)featureExtractors[k];
 						if(pluginNames.contains(plug.getOutputName()))
 						{
@@ -72,7 +79,7 @@ public class ClusterShell {
 					i += extractors.size();
 				}else if(args[i].contains("-ff")){
 					threshold = Integer.parseInt(args[++i]);
-				}else if(args[i].contains("-mb")){
+				}/*else if(args[i].contains("-mb")){
 					String learnerName = args[++i];
 					SIDEPlugin[] learners = SimpleWorkbench.getPluginsByType("model_builder");
 					for(int j = 0; j < learners.length; j++){
@@ -81,8 +88,20 @@ public class ClusterShell {
 							learner = plug;
 						}
 					}
-				}else if(args[i].contains("-cv")){
+				}*/else if(args[i].contains("-cv")){
 					cvSetting = args[++i];
+				}
+				else if(args[i].contains("--minsimilarity")){
+					clusterSimilarity = Double.parseDouble(args[++i]);
+				}
+				else if(args[i].contains("--similaritywindow")){
+					similarityWindow = Double.parseDouble(args[++i]);
+				}
+				else if(args[i].contains("--chunks")){
+					chunks = Integer.parseInt(args[++i]);
+				}
+				else if(args[i].contains("--localclusters")){
+					localClusters = true;
 				}
 			}
 		}
@@ -92,9 +111,13 @@ public class ClusterShell {
 //			for(int i = 0; i < extractors.size(); i++){
 //				extractors.get(i).configureFromFile(extractorConfigFiles.get(i));
 //			}
-			Collection hits = extractors.get(0).extractFeatureHits(corpus, new JLabel());
+			System.out.println("ff:"+threshold+", clusterSim:"+clusterSimilarity+", simWindow:"+similarityWindow+", chunks"+chunks+" localClusters:"+localClusters);
 			
-			List<Cluster> clusters = new ArrayList<Cluster>(Cluster.makeClusters((List<LocalFeatureHit>) hits, threshold, 0.25));
+			Collection hits = extractors.get(0).extractFeatureHits(corpus, new JLabel(){public void setText(String s){System.out.println(s);}});
+			
+			corpus = null;
+			
+			List<Cluster> clusters = new ArrayList<Cluster>(Cluster.makeClusters((List<FeatureHit>) hits, threshold, clusterSimilarity, similarityWindow, chunks, localClusters));
 			
 			for(int i = 0; i < clusters.size(); i++)
 			{

@@ -1,2 +1,17 @@
+LightSIDE, Version 2.1.3, October 5, 2011:
+- Added CSV Export for feature tables (thanks David!)
+- Sped up the Metafeatures extractor by not storing zeroes.
+- Sped up changing the text field and drastically reduced the memory footprint of that option.
+
+LightSIDE, Version 2.1.2, October 5, 2011:
+- Exporting to ARFF now works with features with single quotes in the feature name.
+- Appending new features to a table now follows that table's rare feature threshold.
+
+LightSIDE, Version 2.1.1, October 4, 2011:
+- Fixed an error with predicting labels when no prior annotation exists.
+
+LightSIDE, Version 2.1.0, October 3, 2011:
+LightSIDE is now feature complete. This version is what will likely be distributed to Carolyn's Applied Machine Learning class, at which point we'll discover bugs we didn't even know existed yet. Sorry, guys.
+
 LightSIDE, Version 2.0.0, August 15, 2011:
 All new version of SIDE. No reported bugs yet. That'll change soon.

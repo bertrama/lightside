@@ -31,6 +31,7 @@ import javax.swing.table.TableRowSorter;
 import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.simple.feature.Feature;
 import edu.cmu.side.simple.feature.FeatureTable;
+import edu.cmu.side.simple.feature.Feature.Type;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 import edu.cmu.side.simple.newui.FeatureActivationCell;
 import edu.cmu.side.simple.newui.FeatureTableModel;
@@ -219,6 +220,7 @@ public class FeatureTablePanel extends AbstractListPanel{
 				}
 			}
 			for(Feature f : filterFeatureSet(table)){
+				System.out.println("UI " + f.getFeatureName());
 				Object[] row = getFeatureDisplayRow(FeatureTableListPanel.getSelectedFeatureTable(), otherEvals, f);
 				tableModel.addRow(row);
 			}
@@ -257,8 +259,11 @@ public class FeatureTablePanel extends AbstractListPanel{
 		row[2] = f.getFeatureType();
 		int i = 3;
 		for(String eval : FeatureTable.getConstantEvaluations()){
-			row[i++] = evals.get(eval).get(f);
-		}
+			if(evals.containsKey(eval) && evals.get(eval).containsKey(f)){
+				System.out.println(eval);
+				row[i++] = evals.get(eval).get(f);				
+			}
+		}			
 		if(otherEvals != null){
 			for(String eval : otherEvals){
 				row[i++] = evals.get(eval).get(f);

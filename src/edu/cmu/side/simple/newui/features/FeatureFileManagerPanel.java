@@ -71,6 +71,8 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 				filenames.clear();
 				annotationComboBox.setSelectedIndex(-1);
 				textColumnComboBox.setSelectedIndex(-1);
+				Runtime.getRuntime().gc();
+				Thread.yield();
 			}
 		});
 
@@ -88,8 +90,7 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 			public void actionPerformed(ActionEvent ae){
 				if(filenames.size() > 0 && annotationComboBox.getSelectedIndex()>=0 && textColumnComboBox.getSelectedIndex()>=0){
 					try{
-						documents = new SimpleDocumentList(filenames, annotationComboBox.getSelectedItem().toString(), textColumnComboBox.getSelectedItem().toString());						
-					}catch(Exception e){
+						documents.setTextColumn(textColumnComboBox.getSelectedItem().toString());					}catch(Exception e){
 						JOptionPane.showMessageDialog(FeatureFileManagerPanel.this, "Document loading failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}

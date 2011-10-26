@@ -340,7 +340,7 @@ public class FeatureTable implements Serializable
 				localMap.get(hit.feature).add(hit);
 			}
 		}
-		
+
 		Feature[] features = localMap.keySet().toArray(new Feature[0]);
 		for(Feature f : features){
 			if(localMap.get(f).size() < threshold){
@@ -366,9 +366,6 @@ public class FeatureTable implements Serializable
 	 * Evaluates feature table for precision, recall, f-score, and kappa at creation time.
 	 */
 	public void defaultEvaluation(){
-		double time1 = System.currentTimeMillis();
-		documents.setCurrentAnnotation(annot);
-
 		Map<Feature, Comparable> precisionMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> recallMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> fScoreMap = new HashMap<Feature, Comparable>();
@@ -377,77 +374,87 @@ public class FeatureTable implements Serializable
 		Map<Feature, Comparable> bestMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> hitsMap = new HashMap<Feature, Comparable>();
 
-		ArrayList<String> trueAnnot = documents.getAnnotationArray();
-		double timeA = 0.0;
-		double timeA2 = 0.0;
-		double timeB = 0.0;
-		double timeC = 0.0;
-		double timeD = 0.0;
-		double lostTime = System.currentTimeMillis();
-		for(Feature f : hitsPerFeature.keySet()){
-			if(f.getFeatureType() == Type.NUMERIC) continue;
-			double f1 = System.currentTimeMillis();
-			Collection<FeatureHit> hits = hitsPerFeature.get(f);
-			double maxPrec = Double.NEGATIVE_INFINITY;
-			double maxRec = Double.NEGATIVE_INFINITY;
-			double maxF = Double.NEGATIVE_INFINITY;
-			double maxKappa = Double.NEGATIVE_INFINITY;
-			double maxAcc = Double.NEGATIVE_INFINITY;
-			String bestLabel = "[useless]";
-			String[] labels = documents.getLabelArray();
-			double f2 = System.currentTimeMillis();
-			for(String label : labels){
-				double f3 = System.currentTimeMillis();
-				double[][] kappaMatrix = new double[2][2];
-				for(int i = 0; i < 2; i++){for(int j = 0; j < 2; j++){ kappaMatrix[i][j]=0;}}
-				boolean[] hit = new boolean[documents.getSize()];
-				for(FeatureHit fh : hits){
-					if(checkHitMatch(f, fh.getValue())) hit[fh.getDocumentIndex()] = true;
-				}
-				double f3a = System.currentTimeMillis();
-				for(int i = 0; i < documents.getSize(); i++){
-					kappaMatrix[trueAnnot.get(i).equals(label)?0:1][hit[i]?0:1]++;
-				}
-				double f4 = System.currentTimeMillis();
-				double rightHits = kappaMatrix[0][0];
-				double wrongHits = kappaMatrix[1][0];
-				double all = documents.getSize();
-				double featHits = kappaMatrix[0][0] + kappaMatrix[1][0];
-				double actHits = kappaMatrix[0][0] + kappaMatrix[0][1];
-				double accuracy = (kappaMatrix[0][0] + kappaMatrix[1][1])/all;
-				double pChance = ((featHits/all)*(actHits/all))+(((all-featHits)/all)*((all-actHits)/all));
+		if(getClassValueType()!=Type.NUMERIC){
 
-				double prec = rightHits/(rightHits+wrongHits);
-				double rec = rightHits/actHits;
-				double fmeasure = (2*prec*rec)/(prec+rec);
-				double kappa = (accuracy - pChance)/(1 - pChance);
+			double time1 = System.currentTimeMillis();
+			documents.setCurrentAnnotation(annot);
 
-				if(Double.NaN == rec) rec = 0.0;
-				if(Double.NaN == fmeasure) fmeasure = 0.0;
-				if(kappa > maxKappa){
-					maxPrec = prec;
-					maxRec = rec;
-					maxF = fmeasure;
-					maxAcc = accuracy;
-					maxKappa = kappa;
-					bestLabel = label;
+
+			ArrayList<String> trueAnnot = documents.getAnnotationArray();
+			double timeA = 0.0;
+			double timeA2 = 0.0;
+			double timeB = 0.0;
+			double timeC = 0.0;
+			double timeD = 0.0;
+			double lostTime = System.currentTimeMillis();
+			for(Feature f : hitsPerFeature.keySet()){
+				if(f.getFeatureType() == Type.NUMERIC) continue;
+				double f1 = System.currentTimeMillis();
+				Collection<FeatureHit> hits = hitsPerFeature.get(f);
+				double maxPrec = Double.NEGATIVE_INFINITY;
+				double maxRec = Double.NEGATIVE_INFINITY;
+				double maxF = Double.NEGATIVE_INFINITY;
+				double maxKappa = Double.NEGATIVE_INFINITY;
+				double maxAcc = Double.NEGATIVE_INFINITY;
+				String bestLabel = "[useless]";
+				Set<String> l = new TreeSet<String>();
+				for(String s : trueAnnot) l.add(s);
+				String[] labels = l.toArray(new String[0]);
+				//			String[] labels = documents.getLabelArray();
+				double f2 = System.currentTimeMillis();
+				for(String label : labels){
+					double f3 = System.currentTimeMillis();
+					double[][] kappaMatrix = new double[2][2];
+					for(int i = 0; i < 2; i++){for(int j = 0; j < 2; j++){ kappaMatrix[i][j]=0;}}
+					boolean[] hit = new boolean[documents.getSize()];
+					for(FeatureHit fh : hits){
+						if(checkHitMatch(f, fh.getValue())) hit[fh.getDocumentIndex()] = true;
+					}
+					double f3a = System.currentTimeMillis();
+					for(int i = 0; i < documents.getSize(); i++){
+						kappaMatrix[trueAnnot.get(i).equals(label)?0:1][hit[i]?0:1]++;
+					}
+					double f4 = System.currentTimeMillis();
+					double rightHits = kappaMatrix[0][0];
+					double wrongHits = kappaMatrix[1][0];
+					double all = documents.getSize();
+					double featHits = kappaMatrix[0][0] + kappaMatrix[1][0];
+					double actHits = kappaMatrix[0][0] + kappaMatrix[0][1];
+					double accuracy = (kappaMatrix[0][0] + kappaMatrix[1][1])/all;
+					double pChance = ((featHits/all)*(actHits/all))+(((all-featHits)/all)*((all-actHits)/all));
+
+					double prec = rightHits/(rightHits+wrongHits);
+					double rec = rightHits/actHits;
+					double fmeasure = (2*prec*rec)/(prec+rec);
+					double kappa = (accuracy - pChance)/(1 - pChance);
+
+					if(Double.NaN == rec) rec = 0.0;
+					if(Double.NaN == fmeasure) fmeasure = 0.0;
+					if(kappa > maxKappa){
+						maxPrec = prec;
+						maxRec = rec;
+						maxF = fmeasure;
+						maxAcc = accuracy;
+						maxKappa = kappa;
+						bestLabel = label;
+					}
+					double f5 = System.currentTimeMillis();
+					timeA2 += (f3a-f3);
+					timeB += (f4-f3a);
+					timeC += (f5-f4);
 				}
-				double f5 = System.currentTimeMillis();
-				timeA2 += (f3a-f3);
-				timeB += (f4-f3a);
-				timeC += (f5-f4);
+				double f6 = System.currentTimeMillis();
+				precisionMap.put(f, maxPrec);
+				recallMap.put(f, maxRec);
+				fScoreMap.put(f, maxF);
+				accuracyMap.put(f, maxAcc);
+				kappaMap.put(f, maxKappa);
+				bestMap.put(f, bestLabel);
+				hitsMap.put(f, hits.size());
+				double f7 = System.currentTimeMillis();
+				timeA += (f2-f1);
+				timeD += (f7-f6);
 			}
-			double f6 = System.currentTimeMillis();
-			precisionMap.put(f, maxPrec);
-			recallMap.put(f, maxRec);
-			fScoreMap.put(f, maxF);
-			accuracyMap.put(f, maxAcc);
-			kappaMap.put(f, maxKappa);
-			bestMap.put(f, bestLabel);
-			hitsMap.put(f, hits.size());
-			double f7 = System.currentTimeMillis();
-			timeA += (f2-f1);
-			timeD += (f7-f6);
 		}
 		addEvaluation("predictor of", bestMap);
 		addEvaluation("kappa", kappaMap);
@@ -484,6 +491,9 @@ public class FeatureTable implements Serializable
 	public Set<Feature> getFeatureSet()
 	{
 		Set<Feature> set = hitsPerFeature.keySet();
+		for(Feature f : set){
+			System.out.println("   " + tableName + "   " + f.featureName);
+		}
 		return set;
 	}
 	/**
@@ -625,9 +635,9 @@ public class FeatureTable implements Serializable
 	public boolean getActivated(Feature f){
 		if(activatedFeatures == null){
 			return true;
-		}else{
+		}else if(activatedFeatures.containsKey(f)){
 			return activatedFeatures.get(f);			
-		}
+		}else return false;
 	}
 
 	public Integer getThreshold(){
@@ -645,6 +655,7 @@ public class FeatureTable implements Serializable
 		ft.documents = documents;
 		ft.evaluations = new TreeMap<String, Map<Feature, Comparable>>();
 		for(String eval : constantEvaluations){
+			System.out.println(eval + " subsetting to " + evaluations.get(eval));
 			ft.evaluations.put(eval, evaluations.get(eval));
 		}
 		ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
@@ -666,6 +677,7 @@ public class FeatureTable implements Serializable
 		}
 		for(Feature f : hitsPerFeature.keySet()){
 			if(activatedFeatures.get(f)){
+				System.out.println(f.featureName + " being added to the new table.");
 				ft.hitsPerFeature.put(f, hitsPerFeature.get(f));
 				ft.activatedFeatures.put(f, Boolean.TRUE);
 				for(FeatureHit fh : ft.hitsPerFeature.get(f)){
@@ -674,7 +686,7 @@ public class FeatureTable implements Serializable
 			}
 		}
 	}
-	
+
 	/**
 	 * Removes a feature and all of its hits from a feature table.
 	 * @param f
@@ -691,17 +703,17 @@ public class FeatureTable implements Serializable
 		hitsPerFeature.remove(f);
 		activatedFeatures.remove(f);
 	}
-	
+
 	/**
 	 * Given two feature tables, alter the feature space of the second table to match the feature
 	 * space in the first table. Returns that second table post-alteration.
 	 */
 	public static FeatureTable reconcileFeatures(FeatureTable oldFeatureTable, FeatureTable newFeatureTable)
 	{
-		
+
 		Set<Feature> oldTableFeatures = oldFeatureTable.getFeatureSet();
 		Set<Feature> newTableFeatures = newFeatureTable.getFeatureSet();
-		
+
 		//weka does lots of things by index, instead of key... which is why the feature tables have to match exactly.
 		int count = 0;
 		if(oldTableFeatures.size() != newTableFeatures.size())
@@ -710,15 +722,15 @@ public class FeatureTable implements Serializable
 			for(Feature f: newTableFeatures)
 			{
 				boolean found = oldTableFeatures.contains(f);
-//				boolean found = false;
-//				for(Feature oldFeat : oldTableFeatures)
-//				{
-//					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
-//					{
-//						found = true;
-//						break;
-//					}
-//				}
+				//				boolean found = false;
+				//				for(Feature oldFeat : oldTableFeatures)
+				//				{
+				//					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
+				//					{
+				//						found = true;
+				//						break;
+				//					}
+				//				}
 				if(!found)
 				{
 					remove.add(f);
@@ -732,26 +744,26 @@ public class FeatureTable implements Serializable
 
 			oldTableFeatures = oldFeatureTable.getFeatureSet();
 			newTableFeatures = newFeatureTable.getFeatureSet();
-			
+
 			count = 0;
 			for(Feature f : oldTableFeatures)
 			{
 				boolean found = newTableFeatures.contains(f);
 				//boolean found = false;
-//				for(Feature newFeat : newTableFeatures)
-//				{
-//					if(newFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) &&newFeat.getFeatureName().equals(f.getFeatureName()))
-//					{
-//						found = true;
-//						break;
-//					}
-//				}
+				//				for(Feature newFeat : newTableFeatures)
+				//				{
+				//					if(newFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) &&newFeat.getFeatureName().equals(f.getFeatureName()))
+				//					{
+				//						found = true;
+				//						break;
+				//					}
+				//				}
 				if(!found)
 				{
 					count++;
 					newFeatureTable.addEmptyFeature(f);
 				}	
-				
+
 			}
 		}
 		return newFeatureTable;
@@ -766,11 +778,11 @@ public class FeatureTable implements Serializable
 			documents.setCurrentAnnotation(annot);
 			BufferedWriter write = new BufferedWriter(new FileWriter(out));
 			if(format.equalsIgnoreCase("ARFF")){
-				StringBuilder sb = new StringBuilder("@relation " + getTableName() + "\n\n");
+				StringBuilder sb = new StringBuilder("@relation " + getTableName().replaceAll("[\\s\\p{Punct}]","_") + "\n\n");
 				Set<String> existingFeatures = new TreeSet<String>();
 				for(Feature f : hitsPerFeature.keySet()){
 					if(activatedFeatures.get(f)){
-						String fName = f.getFeatureName().replaceAll("\\p{Punct}","_");
+						String fName = f.getFeatureName().replaceAll("[\\s\\p{Punct}]","_");
 						sb.append("@attribute " + fName + " ");
 						switch(f.getFeatureType()){
 						case NUMERIC:

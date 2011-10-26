@@ -214,6 +214,16 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	public String getTextColumn(){
 		return textColumn;
 	}
+	
+	public void setTextColumn(String name){
+		allAnnotations.put(textColumn, text);
+		if(name.equals("[No Text]")){
+			text = null;
+		}else{
+			text = allAnnotations.get(name);
+		}
+	}
+	
 	/**
 	 * Used for cross-validating by file.
 	 * @param docIndex

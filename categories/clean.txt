@@ -1,0 +1,3 @@
+clean
+spotless
+clear

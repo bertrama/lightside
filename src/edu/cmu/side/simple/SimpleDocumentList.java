@@ -202,7 +202,8 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	}
 
 	public void setCurrentAnnotation(String annot){
-		if(allAnnotations.containsKey(annot)){
+		if(annot != currentAnnotation && allAnnotations.containsKey(annot)){
+			labelArray = null;
 			currentAnnotation = annot;
 		}
 	}

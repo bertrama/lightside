@@ -1,0 +1,13 @@
+ADJ
+CC
+END
+MD
+emotional
+female_curse
+first-pron
+male_curse
+run
+second-pron
+test
+third-pron
+time

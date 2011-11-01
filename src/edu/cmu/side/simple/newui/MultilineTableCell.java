@@ -47,7 +47,7 @@ public class MultilineTableCell implements TableCellRenderer {
 			columnIndex = column;
 			font = table.getFont();
 			if(isSelected){
-				setForeground(table.getSelectionForeground());
+				setForeground(Color.white);
 				setBackground(table.getSelectionBackground());
 			}
 		}

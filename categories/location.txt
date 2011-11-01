@@ -1,0 +1,11 @@
+above
+into
+amid
+beside
+onto
+top
+bottom
+left
+right
+up
+down

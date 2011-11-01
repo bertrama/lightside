@@ -28,6 +28,7 @@ public class LearningOutputPanel extends AbstractListPanel{
 	private JButton loadButton = new JButton("Load");
 	
 	public LearningOutputPanel(){
+		text.setEditable(false);
 		add("left", new JLabel("View output: "));
 		add("hfill", outputs);
 		outputs.addActionListener(new ActionListener() {

@@ -18,4 +18,5 @@ public class SequenceFeature extends Feature{
 		this.extractorPrefix = "lab";
 		this.featureType = Type.BOOLEAN;
 	}
+
 }

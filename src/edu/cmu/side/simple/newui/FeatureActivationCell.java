@@ -16,7 +16,8 @@ public class FeatureActivationCell extends DefaultTableCellRenderer{
 		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 		if(table instanceof SIDETable && table.getColumnCount() > -1 && FeatureTableListPanel.getSelectedFeatureTable() != null){
 			Feature f = (Feature)((SIDETable)table).getSortedValue(row, 1);
-			c.setForeground(FeatureTableListPanel.getSelectedFeatureTable().getActivated(f)?Color.black:Color.red);
+			c.setForeground(FeatureTableListPanel.getSelectedFeatureTable().getActivated(f)?
+					(isSelected?table.getSelectionForeground():table.getForeground()):Color.red);
 		}
 		return c;
 	}

@@ -1,6 +1,7 @@
 package edu.cmu.side.simple.feature;
 
 import java.io.BufferedWriter;
+	
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,6 +17,7 @@ import weka.core.Attribute;
 import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
+import weka.core.SparseInstance;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.feature.Feature.Type;
@@ -43,7 +45,7 @@ public class FeatureTable implements Serializable
 	private Map<String, Map<Feature, Comparable>> evaluations;
 
 	private String annot;
-	private Integer threshold;
+	private Integer threshold = 1;
 	/** These variables are for weka. Filled when needed only. Stored 
 	 * in the feature table so that it's cleaner to populate. */
 	private FastVector fastVector = null;
@@ -128,7 +130,7 @@ public class FeatureTable implements Serializable
 	 * Doesn't convert the instances yet (use getInstances() for that).
 	 */
 	public void generateFastVector(){
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		double time1 = System.currentTimeMillis();
 		if(fastVector == null){
 			FastVector attributes = new FastVector();
@@ -186,9 +188,10 @@ public class FeatureTable implements Serializable
 		if(instances == null){
 			Instances format = new Instances(getTableName(), fastVector, 0);
 			double runningTotal = 0.0;
+			Feature.Type t = getClassValueType();
 			for(int i = 0; i < documents.getSize(); i++){
 				double time1 = System.currentTimeMillis();
-				format.add(fillInstance(format, i));
+				format.add(fillInstance(format, t, i));
 				double time2 = System.currentTimeMillis();
 				runningTotal += (time2-time1);
 			}
@@ -213,7 +216,7 @@ public class FeatureTable implements Serializable
 	 * @return
 	 */
 	public Instances getInstances(Map<Integer, Integer> foldMap, int fold, boolean train){
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		if(instances == null){
 			getInstances();
 		}
@@ -237,7 +240,7 @@ public class FeatureTable implements Serializable
 	 * @return
 	 */
 	public Map<Integer, Integer> foldIndexToIndex(Map<Integer, Integer> foldMap, int fold){
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		Map<Integer, Integer> foldIndexToIndex = new TreeMap<Integer, Integer>();
 		int index = 0;
 		for(int i = 0; i < getDocumentList().getSize(); i++){
@@ -260,7 +263,7 @@ public class FeatureTable implements Serializable
 	 * @param format The Instances object to put this generated Instance in.
 	 * @param i The document to fill. 
 	 */
-	private Instance fillInstance(Instances format, int i) {
+	private Instance fillInstance(Instances format, Feature.Type t, int i) {
 		Collection<FeatureHit> hits = getHitsForDocument(i);
 		double[] values = new double[format.numAttributes()];
 		for(int j = 0; j < values.length; j++) values[j] = 0.0;
@@ -294,7 +297,7 @@ public class FeatureTable implements Serializable
 		}
 		if(getDocumentList().getAnnotationArray() != null){
 			String[] possibleLabels = getDocumentList().getLabelArray();
-			switch(getClassValueType()){
+			switch(t){
 			case NOMINAL:
 			case BOOLEAN:			
 				for(int j = 0; j < possibleLabels.length; j++){
@@ -309,7 +312,7 @@ public class FeatureTable implements Serializable
 				break;
 			}			
 		}
-		Instance inst = new Instance(1,values);
+		Instance inst = new SparseInstance(1,values);
 		return inst;
 	}
 
@@ -318,7 +321,7 @@ public class FeatureTable implements Serializable
 	 */
 	public void extractAll()
 	{
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		hitsPerDocument.clear();
 		for(int i = 0; i < documents.getSize(); i++)
 		{
@@ -377,7 +380,7 @@ public class FeatureTable implements Serializable
 		if(getClassValueType()!=Type.NUMERIC){
 
 			double time1 = System.currentTimeMillis();
-			documents.setCurrentAnnotation(annot);
+			resetCurrentAnnotation();
 
 
 			ArrayList<String> trueAnnot = documents.getAnnotationArray();
@@ -491,9 +494,6 @@ public class FeatureTable implements Serializable
 	public Set<Feature> getFeatureSet()
 	{
 		Set<Feature> set = hitsPerFeature.keySet();
-		for(Feature f : set){
-			System.out.println("   " + tableName + "   " + f.featureName);
-		}
 		return set;
 	}
 	/**
@@ -537,9 +537,11 @@ public class FeatureTable implements Serializable
 				}
 			}
 		}
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		defaultEvaluation();
 	}
+	
+	
 
 	/**
 	 * 
@@ -563,7 +565,7 @@ public class FeatureTable implements Serializable
 
 	public SimpleDocumentList getDocumentList()
 	{
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		return documents;
 	}
 
@@ -602,7 +604,7 @@ public class FeatureTable implements Serializable
 	 * @return
 	 */
 	public Feature.Type getClassValueType(){
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		if(type == null){
 			for(String s : documents.getLabelArray()){
 				try{
@@ -616,6 +618,11 @@ public class FeatureTable implements Serializable
 		}
 		return type;
 	}
+
+	public void resetCurrentAnnotation() {
+		documents.setCurrentAnnotation(annot);
+	}
+	
 
 	/**
 	 * Used for unannotated data when predicting new labels.
@@ -648,14 +655,13 @@ public class FeatureTable implements Serializable
 	 * Functionality for the "Freeze" button in the GUI. Removes deactivated features.
 	 */
 	public FeatureTable subsetClone(){
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		FeatureTable ft = new FeatureTable();
 		ft.setTableName(getTableName()+" (subset)");
 		ft.extractors = extractors;
 		ft.documents = documents;
 		ft.evaluations = new TreeMap<String, Map<Feature, Comparable>>();
 		for(String eval : constantEvaluations){
-			System.out.println(eval + " subsetting to " + evaluations.get(eval));
 			ft.evaluations.put(eval, evaluations.get(eval));
 		}
 		ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
@@ -669,7 +675,7 @@ public class FeatureTable implements Serializable
 	 * that maps those hits per document instead.
 	 */
 	private void fillHitsPerDocument(FeatureTable ft) {
-		documents.setCurrentAnnotation(annot);
+		resetCurrentAnnotation();
 		ft.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 		for(int i = 0; i < ft.documents.getSize(); i++)
 		{
@@ -677,7 +683,6 @@ public class FeatureTable implements Serializable
 		}
 		for(Feature f : hitsPerFeature.keySet()){
 			if(activatedFeatures.get(f)){
-				System.out.println(f.featureName + " being added to the new table.");
 				ft.hitsPerFeature.put(f, hitsPerFeature.get(f));
 				ft.activatedFeatures.put(f, Boolean.TRUE);
 				for(FeatureHit fh : ft.hitsPerFeature.get(f)){
@@ -767,80 +772,5 @@ public class FeatureTable implements Serializable
 			}
 		}
 		return newFeatureTable;
-	}
-
-	/**
-	 * Outputs a feature table to a file that can be read by some other software package,
-	 * based on some format selected elsewhere in the GUI (as of 10/3/11, only does ARFF format).
-	 */
-	public void export(File out, String format){
-		try{
-			documents.setCurrentAnnotation(annot);
-			BufferedWriter write = new BufferedWriter(new FileWriter(out));
-			if(format.equalsIgnoreCase("ARFF")){
-				StringBuilder sb = new StringBuilder("@relation " + getTableName().replaceAll("[\\s\\p{Punct}]","_") + "\n\n");
-				Set<String> existingFeatures = new TreeSet<String>();
-				for(Feature f : hitsPerFeature.keySet()){
-					if(activatedFeatures.get(f)){
-						String fName = f.getFeatureName().replaceAll("[\\s\\p{Punct}]","_");
-						sb.append("@attribute " + fName + " ");
-						switch(f.getFeatureType()){
-						case NUMERIC:
-							sb.append("numeric");
-							break;
-						case BOOLEAN:
-							sb.append("{false, true}");
-							break;
-						case NOMINAL:
-							sb.append("{");
-							for(String s : f.getNominalValues()){
-								sb.append(s.toLowerCase() + ", ");
-							}
-							sb.replace(sb.length()-2, sb.length(),"}");
-							break;
-						}
-						sb.append("\n");
-					}
-				}
-				sb.append("@attribute CLASS ");
-				switch(getClassValueType()){
-				case NUMERIC:
-					sb.append("numeric");
-					break;
-				case BOOLEAN:
-					sb.append("{false, true}");
-					break;
-				case NOMINAL:
-					sb.append("{");
-					for(String s : documents.getLabelArray()){
-						sb.append(s.toLowerCase() + ", ");
-					}
-					sb.replace(sb.length()-2, sb.length(),"}");
-					break;
-				}
-				sb.append("\n\n@data\n");
-				write.write(sb.toString());
-				StringBuilder[] documentStrings = new StringBuilder[documents.getSize()];
-				for(int i = 0; i < documentStrings.length; i++){
-					documentStrings[i] = new StringBuilder();
-				}
-				int featInd = 0;
-				for(Feature f : hitsPerFeature.keySet()){
-					for(FeatureHit hit : hitsPerFeature.get(f)){
-						documentStrings[hit.documentIndex].append(featInd + " " + hit.getValue().toString().toLowerCase() + ", ");
-					}
-					featInd++;
-				}
-				for(int i = 0; i < documentStrings.length; i++){
-					documentStrings[i].append(featInd + " " + documents.getAnnotationArray().get(i).toLowerCase());
-				}
-				for(StringBuilder string : documentStrings){
-					write.write("{"+string.toString() + "}\n");
-				}
-			}
-			write.close();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 }

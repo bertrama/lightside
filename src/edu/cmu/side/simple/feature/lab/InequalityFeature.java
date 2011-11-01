@@ -1,8 +1,13 @@
 package edu.cmu.side.simple.feature.lab;
 
-import edu.cmu.side.simple.feature.Feature;
+import java.util.Collection;
+import java.util.TreeSet;
 
-public class InequalityFeature extends Feature{
+import edu.cmu.side.simple.feature.Feature;
+import edu.cmu.side.simple.feature.FeatureHit;
+import edu.cmu.side.simple.feature.FeatureTable;
+
+public class InequalityFeature extends LabFeature{
 	
 	Feature base;
 	String ineq;
@@ -17,4 +22,13 @@ public class InequalityFeature extends Feature{
 		this.featureType = Type.BOOLEAN;
 	}
 
+	@Override
+	public void exportLabFeature(FeatureTable newTable){
+		newTable.addAllHits(buildHits(newTable));
+	}
+	
+	@Override
+	public Collection<FeatureHit> buildHits(FeatureTable newTable){
+		return new TreeSet<FeatureHit>();
+	}
 }

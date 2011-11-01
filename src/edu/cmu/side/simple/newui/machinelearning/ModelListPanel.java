@@ -3,6 +3,8 @@ package edu.cmu.side.simple.newui.machinelearning;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -49,6 +51,22 @@ public class ModelListPanel extends AbstractListPanel{
 				if(index == -1){ return; }
 				clickedModel = ((SimpleTrainingResult)listModel.get(index));
 				fireActionEvent();
+			}
+		});
+		list.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				clickedModel = ((SimpleTrainingResult)listModel.get(list.getSelectedIndex()));
+				fireActionEvent();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
 			}
 		});
 

@@ -15,7 +15,7 @@ import com.yerihyo.yeritools.xml.XMLable;
 import edu.cmu.side.SimpleWorkbench;
 
 
-public abstract class SIDEPlugin implements XMLable, Cloneable{
+public abstract class SIDEPlugin implements Cloneable{
 	private transient File rootFolder;
 
 	private Map<String,String> aboutMap = new HashMap<String,String>();
@@ -25,19 +25,7 @@ public abstract class SIDEPlugin implements XMLable, Cloneable{
 	
 	
 	public static String classnameXMLKey = "classname";
-	public static SIDEPlugin createFromXML(Element root){
-		String className = root.getAttribute(classnameXMLKey);
-		try{
-			PluginWrapper wrapper = SimpleWorkbench.pluginManager.getPluginWrapperByPluginClassName(className);
-			SIDEPlugin sidePlugin = wrapper.getSIDEPlugin();
-			sidePlugin.fromXML(root);			
-			return sidePlugin;
-		}catch(Exception e){
-			e.printStackTrace();
-			return null;
-		}
-	}
-	
+
 	protected StringBuilder wrapSIDEPluginOption(CharSequence cs){
 		StringBuilder builder = new StringBuilder();
 		builder.append("<").append(this.getType()).append(" "+classnameXMLKey+"=\"").append(this.getClass().getName()).append("\">");

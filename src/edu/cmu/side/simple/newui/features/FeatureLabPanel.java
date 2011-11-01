@@ -34,6 +34,7 @@ import edu.cmu.side.simple.feature.Feature.Type;
 import edu.cmu.side.simple.feature.lab.BooleanFeature;
 import edu.cmu.side.simple.feature.lab.InequalityCriterionPanel;
 import edu.cmu.side.simple.feature.lab.InequalityFeature;
+import edu.cmu.side.simple.feature.lab.LabFeature;
 import edu.cmu.side.simple.feature.lab.SequenceFeature;
 import edu.cmu.side.simple.feature.lab.SequencingCriterionPanel;
 import edu.cmu.side.simple.newui.AbstractListPanel;
@@ -54,6 +55,7 @@ public class FeatureLabPanel extends AbstractListPanel{
 
 	private static FeatureTable labTable;
 
+	private FeatureTable local;
 	/**
 	 * Builds a combination tree feature based on the boolean buttons in the Feature lab, 
 	 * then collects the feature hits for that new feature.
@@ -72,23 +74,7 @@ public class FeatureLabPanel extends AbstractListPanel{
 				relevantHits.get(fh.getDocumentIndex()).add(child);
 			}
 		}
-		Collection<FeatureHit> hits = new HashSet<FeatureHit>();
-		if("NOT".equals(source)){
-			for(int i = 0; i < labTable.getDocumentList().getSize(); i++){
-				if(!relevantHits.containsKey(i)){
-					hits.add(new FeatureHit(bool, true, i));
-				}
-			}
-		}else{
-			for(Integer doc : relevantHits.keySet()){	
-				if(("OR".equals(source) && relevantHits.get(doc).size() > 0) ||
-						("AND".equals(source) && relevantHits.get(doc).size() == highlighted.size()) ||
-						("XOR".equals(source) && relevantHits.get(doc).size() == 1)){
-					hits.add(new FeatureHit(bool, true, doc));
-				}
-			}			
-		}
-		return hits;
+		return bool.buildHits(FeatureTableListPanel.getSelectedFeatureTable());
 	}
 
 	/**
@@ -179,7 +165,9 @@ public class FeatureLabPanel extends AbstractListPanel{
 			public void actionPerformed(ActionEvent e) {
 				Collection<Feature> features = getHighlightedFeatures();
 				for(Feature f : features){
-					labTable.deleteFeature(f);
+					if(labTable != null){
+						labTable.deleteFeature(f);						
+					}
 				}
 				refreshPanel();
 			}
@@ -191,7 +179,9 @@ public class FeatureLabPanel extends AbstractListPanel{
 			public void actionPerformed(ActionEvent e) {
 				Collection<Feature> features = getHighlightedFeatures();
 				for(Feature f : features){
-					FeatureTableListPanel.getSelectedFeatureTable().addAllHits(labTable.getHitsForFeature(f));
+					if(f instanceof LabFeature){
+						FeatureTableListPanel.getSelectedFeatureTable().addAllHits(((LabFeature)f).buildHits(FeatureTableListPanel.getSelectedFeatureTable()));						
+					}
 				}
 				FeatureTablePanel.activationsChanged();
 				fireActionEvent();
@@ -274,8 +264,26 @@ public class FeatureLabPanel extends AbstractListPanel{
 	}
 
 	public void refreshPanel(){
-		if(labTable == null && FeatureFileManagerPanel.getDocumentList() != null){
-			labTable = new FeatureTable(FeatureFileManagerPanel.getDocumentList());
+		Set<Feature> oldFeatures = null;
+		if(labTable != null){
+			oldFeatures = labTable.getFeatureSet();
+		}
+		if(local != FeatureTableListPanel.getSelectedFeatureTable()){
+			labTable = null;
+			local = FeatureTableListPanel.getSelectedFeatureTable();
+		}
+		if(labTable == null && local != null){
+			labTable = new FeatureTable(local.getDocumentList());
+			if(oldFeatures != null){
+				for(Feature f : oldFeatures){
+					if(f instanceof LabFeature){
+						labTable.addAllHits(((LabFeature)f).buildHits(local));
+					}else if(local.getFeatureSet().contains(f)){
+						labTable.addAllHits(local.getHitsForFeature(f));						
+					}
+				}
+				labTable.defaultEvaluation();
+			}
 		}
 		if(labTable != null){
 			tableModel = new FeatureTableModel();

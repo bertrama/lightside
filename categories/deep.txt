@@ -1,0 +1,4 @@
+deep
+wide
+deeply
+widely

@@ -220,7 +220,6 @@ public class FeatureTablePanel extends AbstractListPanel{
 				}
 			}
 			for(Feature f : filterFeatureSet(table)){
-				System.out.println("UI " + f.getFeatureName());
 				Object[] row = getFeatureDisplayRow(FeatureTableListPanel.getSelectedFeatureTable(), otherEvals, f);
 				tableModel.addRow(row);
 			}
@@ -260,7 +259,6 @@ public class FeatureTablePanel extends AbstractListPanel{
 		int i = 3;
 		for(String eval : FeatureTable.getConstantEvaluations()){
 			if(evals.containsKey(eval) && evals.get(eval).containsKey(f)){
-				System.out.println(eval);
 				row[i++] = evals.get(eval).get(f);				
 			}
 		}			

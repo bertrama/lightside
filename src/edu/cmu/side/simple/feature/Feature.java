@@ -149,4 +149,5 @@ public class Feature implements Serializable, Comparable<Feature>
 	public boolean equals(Object o){
 		return (o instanceof Feature)&&(this.compareTo((Feature)o)==0)&&this.featureType.equals(((Feature)o).featureType);
 	}
+	
 }

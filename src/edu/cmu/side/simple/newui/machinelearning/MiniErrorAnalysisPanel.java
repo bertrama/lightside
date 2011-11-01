@@ -2,6 +2,8 @@ package edu.cmu.side.simple.newui.machinelearning;
 
 import java.awt.Dimension;
 
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -56,6 +58,22 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 			public void mouseReleased(MouseEvent e){
 				selectedFeature = (Feature)featureTable.getValueAt(featureTable.getSelectedRow(), 0);
 				fireActionEvent();
+			}
+		});
+		featureTable.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				selectedFeature = (Feature)featureTable.getValueAt(featureTable.getSelectedRow(), 0);
+				fireActionEvent();	
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
 			}
 		});
 		scroll = new JScrollPane(featureTable);

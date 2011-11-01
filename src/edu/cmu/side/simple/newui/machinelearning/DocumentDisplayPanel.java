@@ -3,6 +3,8 @@ package edu.cmu.side.simple.newui.machinelearning;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Collection;
@@ -28,6 +30,7 @@ import se.datadosen.component.RiverLayout;
 import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.Feature;
 import edu.cmu.side.simple.feature.FeatureHit;
+import edu.cmu.side.simple.feature.Feature.Type;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 import edu.cmu.side.simple.newui.SIDETable;
 
@@ -48,6 +51,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 	private Integer[] localCell = {-1, -1};
 	private Feature localFeat = null;
 	public DocumentDisplayPanel(){
+		highlight.setEditable(false);
 		scroll = new JScrollPane(display);
 		button.add(allDisplay);
 		button.add(cellDisplay);
@@ -69,6 +73,22 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			public void mouseReleased(MouseEvent e){
 				necessary = true;
 				refreshPanel();
+			}
+		});
+		display.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				necessary = true;
+				refreshPanel();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
 			}
 		});
 		setLayout(new RiverLayout());
@@ -101,12 +121,9 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			displayModel.addColumn("predicted");
 			displayModel.addColumn("actual");
 			if(model != null){
-				if(allDisplay.isSelected()){
+				if(allDisplay.isSelected() || (featDisplay.isSelected() && localFeat.getFeatureType().equals(Type.NUMERIC))){
 					for(int i = 0; i < model.getEvaluationTable().getDocumentList().getSize(); i++){
-						Object[] row = new Object[3];
-						row[0] = model.getEvaluationTable().getDocumentList().getCoveredTextList().size()==0?"":model.getDocumentList().getCoveredTextList().get(i);
-						row[1] = model.getPredictions().get(i);
-						row[2] = model.getEvaluationTable().getDocumentList().getAnnotationArray().get(i);
+						Object[] row = populateRow(i);
 						displayModel.addRow(row);
 					}					
 				}else if(cellDisplay.isSelected() && localCell[0] >= 0 && localCell[1] >= 0){
@@ -114,8 +131,8 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 					switch(model.getEvaluationTable().getClassValueType()){
 					case NOMINAL:
 					case BOOLEAN:
-						act = model.getDocumentList().getLabelArray()[localCell[0]];
-						pred = model.getDocumentList().getLabelArray()[localCell[1]];
+						act = model.getEvaluationTable().getDocumentList().getLabelArray()[localCell[0]];
+						pred = model.getEvaluationTable().getDocumentList().getLabelArray()[localCell[1]];
 						break;
 					case NUMERIC:
 						act = "Q"+(localCell[0]+1);
@@ -123,10 +140,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 					}
 					List<Integer> cell = model.getConfusionMatrixCell(pred, act);
 					for(int i : cell){
-						Object[] row = new Object[3];
-						row[0] = model.getDocumentList().getCoveredTextList().size()==0?"":model.getDocumentList().getCoveredTextList().get(i);
-						row[1] = model.getPredictions().get(i);
-						row[2] = model.getDocumentList().getAnnotationArray().get(i);
+						Object[] row = populateRow(i);
 						displayModel.addRow(row);
 					}			
 				}else if(featDisplay.isSelected() && localFeat != null){
@@ -135,10 +149,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 					if(hits != null){
 						for(FeatureHit hit : hits){ cell.add(hit.getDocumentIndex()); }
 						for(int i : cell){
-							Object[] row = new Object[3];
-							row[0] = model.getDocumentList().getCoveredTextList().size()==0?"":model.getDocumentList().getCoveredTextList().get(i);
-							row[1] = model.getPredictions().get(i);
-							row[2] = model.getDocumentList().getAnnotationArray().get(i);
+							Object[] row = populateRow(i);
 							displayModel.addRow(row);
 						}			
 					}
@@ -164,5 +175,13 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			repaint();
 			necessary = false;
 		}
+	}
+
+	private Object[] populateRow(int i) {
+		Object[] row = new Object[3];
+		row[0] = model.getEvaluationTable().getDocumentList().getCoveredTextList().size()==0?"":model.getDocumentList().getCoveredTextList().get(i);
+		row[1] = model.getPredictions().get(i);
+		row[2] = model.getEvaluationTable().getDocumentList().getAnnotationArray().get(i);
+		return row;
 	}
 }

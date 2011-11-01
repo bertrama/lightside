@@ -3,6 +3,8 @@ package edu.cmu.side.simple.newui.features;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -18,6 +20,7 @@ import com.yerihyo.yeritools.swing.SimpleOKDialog;
 import com.yerihyo.yeritools.swing.SwingToolkit.ResultOption;
 
 import edu.cmu.side.SimpleWorkbench;
+import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 
@@ -51,6 +54,22 @@ public class FeatureTableListPanel extends AbstractListPanel{
 				if(index == -1){ return; }
 				clickedFeatureTable = ((FeatureTable)listModel.get(index));
 				fireActionEvent();
+			}
+		});
+		list.addKeyListener(new KeyListener() {
+			
+			@Override
+			public void keyTyped(KeyEvent e) {
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				clickedFeatureTable = ((FeatureTable)listModel.get(list.getSelectedIndex()));
+				fireActionEvent();
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
 			}
 		});
 		add("br left", delete);

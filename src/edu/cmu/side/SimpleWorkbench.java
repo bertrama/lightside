@@ -32,6 +32,8 @@ import se.datadosen.component.RiverLayout;
 
 import edu.cmu.side.simple.newui.FastListModel;
 import edu.cmu.side.dataitem.TrainingResultInterface;
+import edu.cmu.side.export.ARFFExporter;
+import edu.cmu.side.export.CSVExporter;
 import edu.cmu.side.plugin.PluginManager;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
@@ -43,7 +45,6 @@ import edu.cmu.side.simple.newui.features.FeatureTableListPanel;
 import edu.cmu.side.simple.newui.features.FeatureTablePanel;
 import edu.cmu.side.simple.newui.machinelearning.ModelListPanel;
 import edu.cmu.side.simple.newui.prediction.PredictionFileSelectPanel;
-import edu.cmu.side.util.CSVExporter;
 
 public class SimpleWorkbench {
 
@@ -244,10 +245,12 @@ public class SimpleWorkbench {
 				if (result != JFileChooser.APPROVE_OPTION) {
 					return;
 				}
-				if(exportFormat.equals("CSV"))
+				if(exportFormat.equals("CSV")){
 					CSVExporter.exportToCSV(FeatureTablePanel.getTableModel(), chooser.getSelectedFile());
-				else
-					FeatureTableListPanel.getSelectedFeatureTable().export(chooser.getSelectedFile(), combo.getSelectedItem().toString());
+				}
+				else if(exportFormat.equals("ARFF")){
+					ARFFExporter.export(ft, chooser.getSelectedFile());
+				}
 			}
 		}
 	}

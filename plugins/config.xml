@@ -24,12 +24,11 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.features.RegexSearch</classname>
 	</plugin>
-	
-	<plugin>
-		<name>Stretch Patterns</name>
-		<author>Elijah Mayfield</author>
-		<version>1.0</version>
-		<description><![CDATA[Gets stretchy n-grams from your corpus]]></description>
+    <plugin>
+    	<name>Stretch</name>
+    	<author>E</author>
+    	<version>1.0</version>
+		<description><![CDATA[Class to search for regular expressions in text.]]></description>
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.features.StretchPatterns</classname>
 	</plugin>

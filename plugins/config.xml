@@ -24,15 +24,24 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.features.RegexSearch</classname>
 	</plugin>
-    <plugin>
-    	<name>Stretch</name>
-    	<author>E</author>
-    	<version>1.0</version>
+	<!--
+        <plugin>
+		<name>Stretchy Philip</name>
+		<author>Philllllip</author>
+		<version>0.75</version>
+		<description><![CDATA[Provides basic TagHelper feature extraction]]></description>
+		<jarfile>stretchy.jar</jarfile>
+		<classname>pwg.stretchy.StretchyPatternPlugin</classname>
+	</plugin>
+	-->
+		<plugin>
+		<name>Stretch Patterns</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
 		<description><![CDATA[Class to search for regular expressions in text.]]></description>
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.features.StretchPatterns</classname>
 	</plugin>
-	
 	<plugin>
 		<name>WEKA Learning Plugin</name>
 		<author>Elijah Mayfield</author>

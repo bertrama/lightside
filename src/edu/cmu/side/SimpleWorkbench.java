@@ -1,6 +1,7 @@
 package edu.cmu.side;
 
 import java.awt.Component;
+import org.w3c.dom.*;
 
 import java.awt.Dimension;
 

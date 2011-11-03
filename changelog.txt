@@ -1,3 +1,7 @@
+LightSIDE, Version 2.1.6, November 2, 2011:
+- Fixed a bug where feature tables would not notice when the annotation column was changed.
+- Integrated Weka 3.7.5, updated from Weka 3.6.1
+
 LightSIDE, Version 2.1.5, October 26, 2011:
 - ARFF feature export has been rewritten to be more consistent.
 - Vertical comparison evaluation is now all absolute values, to make sorting easier.

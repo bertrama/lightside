@@ -1,6 +1,14 @@
+LightSIDE, Version 2.1.8, November 28, 2011:
+- Fixed the run.bat file for Windows computers.
+- Fixed an error with the new hit counts columns with numeric features.
+- Improved handling of some things that have historically been problematic with the Line Length feature.
+
+LightSIDE, Version 2.1.7, November 16, 2011:
+- Integrated Weka 3.7.5, updated from Weka 3.6.1, also getting rid of pesky and meaningless JDBC error messages along the way.
+- Improved error popups for failed feature table and model building.
+
 LightSIDE, Version 2.1.6, November 2, 2011:
 - Fixed a bug where feature tables would not notice when the annotation column was changed.
-- Integrated Weka 3.7.5, updated from Weka 3.6.1
 
 LightSIDE, Version 2.1.5, October 26, 2011:
 - ARFF feature export has been rewritten to be more consistent.

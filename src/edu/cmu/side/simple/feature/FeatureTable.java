@@ -2,7 +2,7 @@ package edu.cmu.side.simple.feature;
 
 import java.io.BufferedWriter;
 
-	
+
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,7 +33,8 @@ public class FeatureTable implements Serializable
 {
 	private static final long serialVersionUID = 1048801132974685418L;
 
-	public static String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
+	public final int NUM_BASELINE_EVALUATIONS = 7;
+	public String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
 	private Collection<FeaturePlugin> extractors;
 	private SimpleDocumentList documents;
 	private Map<Feature, Collection<FeatureHit>> hitsPerFeature;
@@ -377,7 +378,7 @@ public class FeatureTable implements Serializable
 		Map<Feature, Comparable> kappaMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> bestMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> hitsMap = new HashMap<Feature, Comparable>();
-
+		Map<String, Map<Feature, Comparable>> hitsByLabelMap = new TreeMap<String, Map<Feature, Comparable>>();
 		if(getClassValueType()!=Type.NUMERIC){
 
 			double time1 = System.currentTimeMillis();
@@ -391,6 +392,10 @@ public class FeatureTable implements Serializable
 			double timeC = 0.0;
 			double timeD = 0.0;
 			double lostTime = System.currentTimeMillis();
+			Set<String> l = new TreeSet<String>();
+			for(String s : trueAnnot) l.add(s);
+			String[] labels = l.toArray(new String[0]);
+
 			for(Feature f : hitsPerFeature.keySet()){
 				if(f.getFeatureType() == Type.NUMERIC) continue;
 				double f1 = System.currentTimeMillis();
@@ -401,19 +406,26 @@ public class FeatureTable implements Serializable
 				double maxKappa = Double.NEGATIVE_INFINITY;
 				double maxAcc = Double.NEGATIVE_INFINITY;
 				String bestLabel = "[useless]";
-				Set<String> l = new TreeSet<String>();
-				for(String s : trueAnnot) l.add(s);
-				String[] labels = l.toArray(new String[0]);
 				//			String[] labels = documents.getLabelArray();
 				double f2 = System.currentTimeMillis();
 				for(String label : labels){
+					if(!hitsByLabelMap.containsKey(label)){
+						hitsByLabelMap.put(label, new HashMap<Feature, Comparable>());						
+					}
 					double f3 = System.currentTimeMillis();
 					double[][] kappaMatrix = new double[2][2];
 					for(int i = 0; i < 2; i++){for(int j = 0; j < 2; j++){ kappaMatrix[i][j]=0;}}
 					boolean[] hit = new boolean[documents.getSize()];
+					int count = 0;
 					for(FeatureHit fh : hits){
-						if(checkHitMatch(f, fh.getValue())) hit[fh.getDocumentIndex()] = true;
+						if(checkHitMatch(f, fh.getValue())){
+							hit[fh.getDocumentIndex()] = true;
+							if(trueAnnot.get(fh.getDocumentIndex()).equals(label)){
+								count++;
+							}
+						}
 					}
+					hitsByLabelMap.get(label).put(f, count);
 					double f3a = System.currentTimeMillis();
 					for(int i = 0; i < documents.getSize(); i++){
 						kappaMatrix[trueAnnot.get(i).equals(label)?0:1][hit[i]?0:1]++;
@@ -459,14 +471,28 @@ public class FeatureTable implements Serializable
 				timeA += (f2-f1);
 				timeD += (f7-f6);
 			}
+			addEvaluation("predictor of", bestMap);
+			addEvaluation("kappa", kappaMap);
+			addEvaluation("precision", precisionMap);
+			addEvaluation("recall", recallMap);
+			addEvaluation("f-score", fScoreMap);
+			addEvaluation("accuracy", accuracyMap);
+			addEvaluation("hits", hitsMap);
+			if(constantEvaluations.length == 7 && labels != null){
+				String[] hitLabels = new String[labels.length];
+				for(int i = 0; i < hitLabels.length; i++){
+					hitLabels[i] = "hits_" + labels[i];
+					if(!hitsByLabelMap.containsKey(labels[i])){
+						hitsByLabelMap.put(labels[i], new HashMap<Feature, Comparable>());
+					}
+					addEvaluation(hitLabels[i], hitsByLabelMap.get(labels[i]));						
+				}
+				String[] newConstants = new String[constantEvaluations.length+hitLabels.length];
+				System.arraycopy(constantEvaluations, 0, newConstants, 0, constantEvaluations.length);
+				System.arraycopy(hitLabels, 0, newConstants, constantEvaluations.length, hitLabels.length);
+				constantEvaluations = newConstants;				
+			}
 		}
-		addEvaluation("predictor of", bestMap);
-		addEvaluation("kappa", kappaMap);
-		addEvaluation("precision", precisionMap);
-		addEvaluation("recall", recallMap);
-		addEvaluation("f-score", fScoreMap);
-		addEvaluation("accuracy", accuracyMap);
-		addEvaluation("hits", hitsMap);
 		double time2 = System.currentTimeMillis();
 	}
 
@@ -541,8 +567,8 @@ public class FeatureTable implements Serializable
 		resetCurrentAnnotation();
 		defaultEvaluation();
 	}
-	
-	
+
+
 
 	/**
 	 * 
@@ -623,7 +649,7 @@ public class FeatureTable implements Serializable
 	public void resetCurrentAnnotation() {
 		documents.setCurrentAnnotation(annot);
 	}
-	
+
 
 	/**
 	 * Used for unannotated data when predicting new labels.
@@ -632,7 +658,7 @@ public class FeatureTable implements Serializable
 		this.type = type;
 	}
 
-	public static String[] getConstantEvaluations(){
+	public String[] getConstantEvaluations(){
 		return constantEvaluations;
 	}
 

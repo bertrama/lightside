@@ -243,7 +243,10 @@ public class FeatureLabPanel extends AbstractListPanel{
 	public Collection<Feature> getHighlightedFeatures(){
 		Set<Feature> features = new HashSet<Feature>();
 		for(int i : displayTable.getSelectedRows()){
-			features.add((Feature)displayTable.getSortedValue(i, 1));
+			Object feat = displayTable.getSortedValue(i, 1);
+			if(feat instanceof Feature){
+				features.add((Feature)feat);				
+			}
 		}	
 		return features;
 	}

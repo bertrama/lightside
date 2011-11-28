@@ -23,7 +23,11 @@ public class SIDETable extends JTable{
 	 * Corrects the getValueAt method for when the rows in the table have been sorted.
 	 */
 	public Object getSortedValue(int row, int col){
-		return getModel().getValueAt(getRowSorter().convertRowIndexToModel(row), col);
+		try{
+			return getModel().getValueAt(getRowSorter().convertRowIndexToModel(row), col);						
+		}catch(Exception e){
+			return null;
+		}
 	}
 	public void activateSelected(){
 		boolean allActivated = true;

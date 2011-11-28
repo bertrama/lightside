@@ -17,6 +17,8 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.yerihyo.yeritools.swing.AlertDialog;
@@ -207,7 +209,9 @@ public class FeaturePluginPanel extends AbstractListPanel{
 				fireActionEvent();
 				halt.setEnabled(false);
 			}catch(Exception e){
-				JOptionPane.showMessageDialog(FeaturePluginPanel.this, "Feature table creation failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
+				JTextArea text = new JTextArea();
+				text.setText(e.toString());
+				JOptionPane.showMessageDialog(FeaturePluginPanel.this, new JScrollPane(text), "Feature Extraction Failed", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 			return null;				

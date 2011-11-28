@@ -101,7 +101,10 @@ public class FeatureTablePanel extends AbstractListPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				for(int i : featureTable.getSelectedRows()){
-					FeatureLabPanel.addFeatureToLab((Feature)featureTable.getSortedValue(i, 1));					
+					Object feat = featureTable.getSortedValue(i, 1);
+					if(feat instanceof Feature){
+						FeatureLabPanel.addFeatureToLab((Feature)feat);							
+					}
 				}
 				fireActionEvent();
 			}
@@ -205,13 +208,13 @@ public class FeatureTablePanel extends AbstractListPanel{
 			tableModel.addColumn("feature name");
 			tableModel.addColumn("type");
 
-			for(String eval : FeatureTable.getConstantEvaluations()){
+			for(String eval : table.getConstantEvaluations()){
 				tableModel.addColumn(eval);
 			}
 			List<String> otherEvals = new ArrayList<String>();
 			for(String eval : table.getEvaluations().keySet()){
 				boolean found = false;
-				for(String s : FeatureTable.getConstantEvaluations()){
+				for(String s : table.getConstantEvaluations()){
 					if(eval.equals(s)){ found = true; break; }
 				}
 				if(!found){
@@ -257,11 +260,11 @@ public class FeatureTablePanel extends AbstractListPanel{
 		row[1] = f;
 		row[2] = f.getFeatureType();
 		int i = 3;
-		for(String eval : FeatureTable.getConstantEvaluations()){
+		for(String eval : table.getConstantEvaluations()){
 			if(evals.containsKey(eval) && evals.get(eval).containsKey(f)){
 				row[i++] = evals.get(eval).get(f);				
 			}
-		}			
+		}	
 		if(otherEvals != null){
 			for(String eval : otherEvals){
 				row[i++] = evals.get(eval).get(f);

@@ -166,9 +166,12 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			display.setRowSorter(sorter);
 			display.changeSelection(rowAtBottom, 0, false,false);
 			if(display.getSelectedRow() >= 0){
-				highlight.setText(display.getSortedValue(display.getSelectedRow(), 0).toString());		
-				highlight.setLineWrap(true);
-				highlight.setWrapStyleWord(true);
+				Object feat = display.getSortedValue(display.getSelectedRow(),0);
+				if(feat instanceof Feature){
+					highlight.setText(((Feature)feat).toString());		
+					highlight.setLineWrap(true);
+					highlight.setWrapStyleWord(true);					
+				}
 			}else{
 				highlight.setText("");
 			}

@@ -18,6 +18,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import com.yerihyo.yeritools.io.FileToolkit;
@@ -179,7 +181,9 @@ public class LearningConfigPanel extends AbstractListPanel{
 				}
 				halt.setEnabled(false);
 			}catch(Exception e){
-				JOptionPane.showMessageDialog(LearningConfigPanel.this, "Model building failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
+				JTextArea text = new JTextArea();
+				text.setText(e.toString());
+				JOptionPane.showMessageDialog(LearningConfigPanel.this, new JScrollPane(text), "Model Building Failed", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 			fireActionEvent();

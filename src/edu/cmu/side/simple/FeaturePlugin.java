@@ -11,6 +11,7 @@ import javax.swing.JLabel;
 import edu.cmu.side.dataitem.DocumentListInterface;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureHit;
+import edu.cmu.side.simple.feature.FeatureTable;
 
 public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
 	private static final long serialVersionUID = -2856017007104452008L;
@@ -72,16 +73,20 @@ public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
 		return hitsList;
 	}
 	
+	public boolean overridesFeatureTable(){
+		return false;
+	}
+	
+	public FeatureTable getCustomFeatureTable(DocumentListInterface documents){
+		return null;
+	}
+	
 	/**
 	 * Implemented by the plugin to do feature extraction.
 	 * @param documents
 	 * @return Features for all documents.
 	 */
 	public abstract Collection<FeatureHit> extractFeatureHitsForSubclass(DocumentListInterface documents, JLabel update);
-
-	public void configureFromFile(String filename){
-		
-	}
 
 	public void stopWhenPossible(){
 		halt = true;

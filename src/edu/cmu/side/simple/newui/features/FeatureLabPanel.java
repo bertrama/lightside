@@ -295,7 +295,7 @@ public class FeatureLabPanel extends AbstractListPanel{
 				tableModel.addColumn(FeatureTablePanel.getTableModel().getColumnName(i));
 			}
 			for(Feature f : labTable.getFeatureSet()){
-				tableModel.addRow(FeatureTablePanel.getFeatureDisplayRow(labTable, null, f));
+				tableModel.addRow(FeatureTablePanel.getFeatureDisplayRow(labTable, null, tableModel, f));
 			}
 			displayTable.setModel(tableModel);
 			displayTable.setRowSorter(new TableRowSorter<FeatureTableModel>(tableModel));

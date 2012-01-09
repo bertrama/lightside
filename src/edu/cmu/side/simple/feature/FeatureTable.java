@@ -277,7 +277,11 @@ public class FeatureTable implements Serializable
 				Feature.Type type = f.getFeatureType();
 				switch(type){
 				case NUMERIC:
-					values[att] = (Double)hit.getValue();
+					if(hit.getValue() instanceof Integer){
+						values[att] = 0.0+(Integer)hit.getValue();
+					}else{
+						values[att] = (Double)hit.getValue();						
+					}
 					break;
 				case STRING:
 				case NOMINAL:
@@ -564,6 +568,8 @@ public class FeatureTable implements Serializable
 				}
 			}
 		}
+		fastVector = null;
+		instances = null;
 		resetCurrentAnnotation();
 		defaultEvaluation();
 	}
@@ -750,6 +756,7 @@ public class FeatureTable implements Serializable
 		int count = 0;
 		if(oldTableFeatures.size() != newTableFeatures.size())
 		{
+			double time1 = System.currentTimeMillis();
 			Set<Feature> remove = new HashSet<Feature>();
 			for(Feature f: newTableFeatures)
 			{
@@ -769,10 +776,12 @@ public class FeatureTable implements Serializable
 					count++;
 				}
 			}
+			double time1a = System.currentTimeMillis();
 			for(Feature f : remove)
 			{
 				newFeatureTable.deleteFeature(f);
 			}
+			double time2 = System.currentTimeMillis();
 
 			oldTableFeatures = oldFeatureTable.getFeatureSet();
 			newTableFeatures = newFeatureTable.getFeatureSet();
@@ -797,6 +806,7 @@ public class FeatureTable implements Serializable
 				}	
 
 			}
+			double time3 = System.currentTimeMillis();
 		}
 		return newFeatureTable;
 	}

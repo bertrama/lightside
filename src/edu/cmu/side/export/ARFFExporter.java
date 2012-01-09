@@ -73,7 +73,7 @@ public class ARFFExporter {
 				Set<Integer> indicesHit = new TreeSet<Integer>();
 				for(FeatureHit hit : ft.getHitsForFeature(f)){
 					if(!indicesHit.contains(hit.getDocumentIndex())){
-						if(f.getFeatureType()!=Type.NUMERIC || !((Double)hit.getValue()).isNaN()){
+						if(f.getFeatureType()!=Type.NUMERIC || hit.getValue() instanceof Integer  || !((Double)hit.getValue()).isNaN()){
 							indicesHit.add(hit.getDocumentIndex());
 							documentStrings[hit.getDocumentIndex()].append(featInd + " " + hit.getValue().toString().toLowerCase() + ", ");						
 						}

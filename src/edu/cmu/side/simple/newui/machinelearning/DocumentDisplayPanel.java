@@ -76,17 +76,17 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			}
 		});
 		display.addKeyListener(new KeyListener() {
-			
+
 			@Override
 			public void keyTyped(KeyEvent e) {
 			}
-			
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 				necessary = true;
 				refreshPanel();
 			}
-			
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 			}
@@ -167,11 +167,12 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			display.changeSelection(rowAtBottom, 0, false,false);
 			if(display.getSelectedRow() >= 0){
 				Object feat = display.getSortedValue(display.getSelectedRow(),0);
-				if(feat instanceof Feature){
-					highlight.setText(((Feature)feat).toString());		
-					highlight.setLineWrap(true);
-					highlight.setWrapStyleWord(true);					
+				if(feat != null){
+					highlight.setText(feat.toString());							
 				}
+				highlight.setLineWrap(true);
+				highlight.setWrapStyleWord(true);					
+
 			}else{
 				highlight.setText("");
 			}

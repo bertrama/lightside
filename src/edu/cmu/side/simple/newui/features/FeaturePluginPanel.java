@@ -177,7 +177,12 @@ public class FeaturePluginPanel extends AbstractListPanel{
 					AlertDialog.show("Error!", "Threshold is not an integer value.", null);
 					ex.printStackTrace();
 				}
-				FeatureTable table = new FeatureTable(clickedPlugin, corpus,thresh);
+				FeatureTable table;
+				if(clickedPlugin.overridesFeatureTable()){
+					table = clickedPlugin.getCustomFeatureTable(corpus);
+				}else{
+					table = new FeatureTable(clickedPlugin, corpus,thresh);
+				}
 				if(table.getFeatureSet().size() > 0){
 					table.defaultEvaluation();
 					table.setTableName(tableName.getText());

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public interface DocumentListInterface {
 
@@ -36,4 +37,8 @@ public interface DocumentListInterface {
 	public abstract void setCurrentAnnotation(String annot);
 
 	public abstract String getCurrentAnnotation();
+	
+	public abstract Set<String> getFilenames();
+	
+	public abstract String getTextColumn();
 }

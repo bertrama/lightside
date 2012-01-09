@@ -1,3 +1,12 @@
+LightSIDE, Version 2.1.10, December 12, 2011:
+-Vertical comparison added back into comparison, along with new Cell Value comparison.
+- Fixed a bug with the Selected Documents Display not displaying documents.
+- Lab features and features added to the same table are now immediately available to model building, not only after freezing.
+
+LightSIDE, Version 2.1.9, December 7, 2011:
+- Trigrams added to the TagHelperTools menu
+- ExportShell added, which allows fast creation of saved feature tables (with weights) by command line
+
 LightSIDE, Version 2.1.8, November 28, 2011:
 - Fixed the run.bat file for Windows computers.
 - Fixed an error with the new hit counts columns with numeric features.

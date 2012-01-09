@@ -38,6 +38,26 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	{
 		text.addAll(instances);
 	}
+	
+	public SimpleDocumentList createFilteredDocumentList(SimpleDocumentList start, String annotation, String filterKeyword){
+		SimpleDocumentList sdl = new SimpleDocumentList(new ArrayList<String>());
+		sdl.filenameList = start.filenameList;
+		sdl.labelArray = start.labelArray;
+		sdl.currentAnnotation = start.currentAnnotation;
+		sdl.textColumn = start.textColumn;
+		for(String ann : start.allAnnotations.keySet()){
+			sdl.allAnnotations.put(ann, new ArrayList<String>());
+		}
+		for(int i = 0; i < start.text.size(); i++){
+			if(start.allAnnotations.get(annotation).get(i).equals(filterKeyword)){
+				sdl.text.add(start.text.get(i));
+				for(String ann : start.allAnnotations.keySet()){
+					sdl.allAnnotations.get(ann).add(start.allAnnotations.get(ann).get(i));
+				}
+			}
+		}
+		return sdl;
+	}
 
 	/**
 	 * wrap a single unannotated plain-text instance as a DocumentList
@@ -82,8 +102,9 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 				}
 				String[] instance;
 				int count = 0;
+				int lineID = 0;
 				while((instance = csvReader.readNextMeaningful()) != null){
-					for(int i = 0; i < instance.length; i++){
+					for(int i = 0; i < instance.length && i < headers.length; i++){
 						String value = instance[i].replaceAll("\"", "").trim();
 						if(i==textColumnIndex){
 							text.add(value);
@@ -91,11 +112,13 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 							try{
 								allAnnotations.get(headers[i]).add(value);															
 							}catch(Exception e){
+								System.out.println(i + ", " + lineID);
 								e.printStackTrace();
 							}
 						}
 					}
 					filenameList.add(filename);
+					lineID++;
 				}
 				csvReader.close();
 			}catch(Exception e){
@@ -105,6 +128,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		}
 		double time2 = System.currentTimeMillis();
 	}
+	
 	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textCol){
 		this(filenames, textCol);
 		currentAnnotation = currentAnnot;

@@ -22,7 +22,11 @@ public abstract class SIDEPlugin implements Cloneable{
 	public Map<String, String> getAboutMap() {
 		return aboutMap;
 	}
-	
+
+	public void configureFromFile(String filename){
+		
+	}
+
 	
 	public static String classnameXMLKey = "classname";
 

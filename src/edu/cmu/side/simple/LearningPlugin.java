@@ -23,6 +23,10 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return true;
 	}
 
+	public void addEvaluationColumns(FeatureTable ft){
+		
+	}
+	
 	@Override
 	public void memoryToUI() {}
 

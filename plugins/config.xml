@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
 	<plugin>
+		<name>Thread Analysis</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Analyze CSC conversations for quantitative patterns]]></description>
+		<jarfile>csc.jar</jarfile>
+		<classname>features.ThreadAnalysis</classname>
+	</plugin>
+	<plugin>
 		<name>TagHelperTools</name>
 		<author>Elijah Mayfield</author>
 		<version>1.0</version>
@@ -74,7 +82,6 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.evaluation.AbsHorizontalComparison</classname>
 	</plugin>
-	<!--
 	<plugin>
 		<name>Vertical Comparison Plugin</name>
 		<author>Elijah Mayfield</author>
@@ -83,7 +90,6 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.evaluation.VerticalComparison</classname>
 	</plugin>
-	-->
 	<plugin>
 		<name>Cell Value</name>
 		<author>Elijah Mayfield</author>

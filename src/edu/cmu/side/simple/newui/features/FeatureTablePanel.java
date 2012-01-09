@@ -223,7 +223,7 @@ public class FeatureTablePanel extends AbstractListPanel{
 				}
 			}
 			for(Feature f : filterFeatureSet(table)){
-				Object[] row = getFeatureDisplayRow(FeatureTableListPanel.getSelectedFeatureTable(), otherEvals, f);
+				Object[] row = getFeatureDisplayRow(FeatureTableListPanel.getSelectedFeatureTable(), otherEvals, tableModel, f);
 				tableModel.addRow(row);
 			}
 			currentFeatureTable = table;
@@ -253,15 +253,15 @@ public class FeatureTablePanel extends AbstractListPanel{
 		return tableModel;
 	}
 
-	public static Object[] getFeatureDisplayRow(FeatureTable table, List<String> otherEvals, Feature f) {
+	public static Object[] getFeatureDisplayRow(FeatureTable table, List<String> otherEvals, TableModel model, Feature f) {
 		Map<String, Map<Feature, Comparable>> evals = table.getEvaluations();
-		Object[] row = new Object[tableModel.getColumnCount()];
+		Object[] row = new Object[model.getColumnCount()];
 		row[0] = f.getExtractorPrefix();
 		row[1] = f;
 		row[2] = f.getFeatureType();
 		int i = 3;
 		for(String eval : table.getConstantEvaluations()){
-			if(evals.containsKey(eval) && evals.get(eval).containsKey(f)){
+			if(evals.containsKey(eval) && evals.get(eval).containsKey(f) && i < row.length){
 				row[i++] = evals.get(eval).get(f);				
 			}
 		}	

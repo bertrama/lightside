@@ -2,6 +2,7 @@ syntax:glob
 .*
 *.class
 *.ser
+*csc*
 *.train
 *.test
 *.model

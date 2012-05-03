@@ -153,45 +153,6 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 	}
 
 	public void generateConfusionMatrix(Feature.Type type, List<String> actual, List<Comparable> predicted){
-		boolean quad = false;
-		if(type==Feature.Type.NUMERIC){
-			quad = true;
-		}
-		List<Integer> realActuals = new ArrayList<Integer>();
-		List<Integer> realPredicted = new ArrayList<Integer>();
-		if(type==Feature.Type.NOMINAL){
-			boolean reallyNumeric = true;
-			try{
-				for(String s : actual){
-					Integer i = Integer.parseInt(s.substring(1));
-					realActuals.add(i);
-				}
-				for(Comparable s : predicted){
-					Integer i = Integer.parseInt(s.toString().substring(1));
-					realPredicted.add(i);
-				}
-			}catch(Exception e){
-				reallyNumeric = false;
-			}
-			if(reallyNumeric){
-				quad = true;
-			}
-		}
-		quad = quad&&table.getDocumentList().allAnnotations().containsKey("score1")&&table.getDocumentList().allAnnotations().containsKey("score2");
-		if(quad){
-			String weightedEvaluation = getWeightedKappa(realActuals, realPredicted);
-			List<Integer> scorer1 = new ArrayList<Integer>();
-			List<Integer> scorer2 = new ArrayList<Integer>();
-			for(int i = 0; i < table.getDocumentList().getSize(); i++){
-				scorer1.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score1").get(i).substring(1)));
-				scorer2.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score2").get(i).substring(1)));
-			}
-			weightedEvaluation += "Gold Standard:\n" + getWeightedKappa(scorer1, scorer2);
-			if(evaluation == null){
-				evaluation = new TreeMap<String, String>();
-			}
-			evaluation.put("Weighted Kappa", weightedEvaluation);
-		}
 		switch(type){
 		case NOMINAL:
 		case BOOLEAN:
@@ -238,6 +199,59 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 				confusionMatrix.get(pred).get(act).add(i);
 			}
 			break;
+		}
+	}
+
+	private void calculateQuadraticKappa(Feature.Type type,
+			List<String> actual, List<Comparable> predicted) {
+		boolean quad = false;
+		if(type==Feature.Type.NUMERIC){
+			quad = true;
+		}
+		List<Integer> realActuals = new ArrayList<Integer>();
+		List<Integer> realPredicted = new ArrayList<Integer>();
+		if(type==Feature.Type.NOMINAL){
+			boolean reallyNumeric = true;
+			try{
+				for(String s : actual){
+					Integer i = Integer.parseInt(s.substring(1));
+					realActuals.add(i);
+				}
+				for(Comparable s : predicted){
+					Integer i = Integer.parseInt(s.toString().substring(1));
+					realPredicted.add(i);
+				}
+			}catch(Exception e){
+				reallyNumeric = false;
+			}
+			if(reallyNumeric){
+				quad = true;
+			}
+		}else if(type == Feature.Type.NUMERIC){
+			for(String s : actual){
+				realActuals.add(Integer.parseInt(s));
+			}
+			for(Comparable s : predicted){
+				realPredicted.add((new Double(Math.ceil(Double.parseDouble(s.toString())))).intValue());
+			}
+		}
+		quad = quad&&table.getDocumentList().allAnnotations().containsKey("score1")&&table.getDocumentList().allAnnotations().containsKey("score2");
+		if(quad){
+			System.out.println("quad");
+			String weightedEvaluation = getWeightedKappa(realActuals, realPredicted);
+			List<Integer> scorer1 = new ArrayList<Integer>();
+			List<Integer> scorer2 = new ArrayList<Integer>();
+			for(int i = 0; i < table.getDocumentList().getSize(); i++){
+//				scorer1.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score1").get(i)));
+//				scorer2.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score2").get(i)));
+				scorer1.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score1").get(i).substring(1)));
+				scorer2.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score2").get(i).substring(1)));
+			}
+			weightedEvaluation += "Gold Standard:\n" + getWeightedKappa(scorer1, scorer2);
+			if(evaluation == null){
+				evaluation = new TreeMap<String, String>();
+			}
+			evaluation.put("Weighted Kappa", weightedEvaluation);
 		}
 	}
 	
@@ -306,6 +320,76 @@ public class SimpleTrainingResult implements TrainingResultInterface{
 			}
 		}
 		return new ArrayList<Integer>();
+	}
+	
+	public double getKappa(){
+		Map<String, Double> predProb = new TreeMap<String, Double>();
+		Map<String, Double> actProb = new TreeMap<String, Double>();
+		double correctCount = 0.0;
+		SimpleDocumentList evaluationList = getEvaluationTable().getDocumentList();
+		for(String pred : evaluationList.getLabelArray()){
+			for(String act : evaluationList.getLabelArray()){
+				List<Integer> cell = getConfusionMatrixCell(pred, act);
+				if(!predProb.containsKey(pred)){
+					predProb.put(pred, 0.0);
+				}
+				predProb.put(pred, predProb.get(pred)+cell.size());
+				if(!actProb.containsKey(act)){
+					actProb.put(act, 0.0);
+				}
+				actProb.put(act, actProb.get(act)+cell.size());
+				if(act.equals(pred)){
+					correctCount += cell.size();
+				}
+			}
+		}
+		double chance = 0.0;
+		for(String lab : evaluationList.getLabelArray()){
+			predProb.put(lab, predProb.get(lab)/(0.0+evaluationList.getSize()));
+			actProb.put(lab, actProb.get(lab)/(0.0+evaluationList.getSize()));
+			chance += (predProb.get(lab)*actProb.get(lab));
+		}
+		correctCount /= (0.0+evaluationList.getSize());
+		double kappa = (correctCount-chance)/(1-chance);
+		return kappa;
+	}
+	
+	public String getTextConfusionMatrix(){
+		return getTextConfusionMatrix(table.getDocumentList().getLabelArray(), confusionMatrix);
+	}
+	
+	public static String getTextConfusionMatrix(String[] labelArray, Map<String, Map<String, ArrayList<Integer>>> confusion){
+		StringBuilder sb = new StringBuilder();
+		int max = 4;
+		for(String p : labelArray){
+			for(String a : labelArray){
+				max = Math.max(max, Math.max(p.length(), a.length()));
+				int numDigits = 1;
+				int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
+				while(numHits>=10){
+					numHits /= 10;
+					numDigits++;
+				}
+				max =  Math.max(max, numDigits);
+			}
+		}
+		for(int i = 0; i < max; i++){
+			sb.append(" ");
+		}
+		String format = "%"+max+"s";
+		for(String p : labelArray){
+			sb.append(String.format(format,p));
+		}
+		sb.append("\n");
+		for(String a : labelArray){
+			sb.append(String.format(format,a));
+			for(String p : labelArray){
+				int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
+				sb.append(String.format(format,(""+numHits)));			
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
 	}
 
 	public Double getAverageValue(List<Integer> docIndices, Feature f){

@@ -39,6 +39,13 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		text.addAll(instances);
 	}
 	
+	public SimpleDocumentList(List<String> text, Map<String, ArrayList<String>> annotations){
+		this(text);
+		for(String ann : annotations.keySet()){
+			addAnnotation(ann, annotations.get(ann));
+		}
+	}
+	
 	public SimpleDocumentList createFilteredDocumentList(SimpleDocumentList start, String annotation, String filterKeyword){
 		SimpleDocumentList sdl = new SimpleDocumentList(new ArrayList<String>());
 		sdl.filenameList = start.filenameList;
@@ -131,8 +138,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	
 	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textCol){
 		this(filenames, textCol);
-		currentAnnotation = currentAnnot;
-
+		setCurrentAnnotation(currentAnnot);		
 	}
 	
 	@Override
@@ -153,6 +159,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 
 	@Override
 	public ArrayList<String> getAnnotationArray() {
+//		System.out.println(currentAnnotation + ", " + allAnnotations.containsKey(currentAnnotation) + " SDL156");
 		return allAnnotations.get(currentAnnotation);
 	}
 
@@ -243,8 +250,10 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	public void setTextColumn(String name){
 		allAnnotations.put(textColumn, text);
 		if(name.equals("[No Text]")){
+			textColumn = null;
 			text = null;
 		}else{
+			textColumn = name;
 			text = allAnnotations.get(name);
 		}
 	}
@@ -270,6 +279,10 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 			foldsMap.put(i, i%num);
 		}
 		return foldsMap;
+	}
+	
+	public void setFilenames(ArrayList<String> f){
+		filenameList = f;
 	}
 	
 	public Map<Integer, Integer> getFoldsMapByFile(){

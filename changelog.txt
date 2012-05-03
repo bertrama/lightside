@@ -1,3 +1,18 @@
+LightSIDE, Version 2.2.2, March 12, 2012:
+- Fixed another issue with the Selected Documents Display (feel free to sort now)
+- Added a clickable icon for Mac OS X users.
+
+LightSIDE, Version 2.2.1, February 9, 2012:
+- Fixed the Inequality features in the Feature Lab
+- Simplified the ability to copy text from the Selected Documents Display table.
+- Line length now counts number of words rather than number of characters.
+- Features are now localized to give indices. This is a new development and as such may cause bugs. Hopefully not, though.
+- The Selected Documents display now highlights n-gram features as a result of this change. This is also new and may not work exactly as intended yet.
+- Extracting features to the same table was buggy before and a couple different bugs have been fixed in that vein.
+- Fixed issues with loading non-text datasets and then switching to [No Text] in the GUI.
+- Fixed an issue with the Supplied Test Set option which caused a confusion matrix full of zeros (thanks, Ryan)
+- Prevented Selected Documents Display from failing to load any information when loading non-text datasets.
+
 LightSIDE, Version 2.1.10, December 12, 2011:
 -Vertical comparison added back into comparison, along with new Cell Value comparison.
 - Fixed a bug with the Selected Documents Display not displaying documents.

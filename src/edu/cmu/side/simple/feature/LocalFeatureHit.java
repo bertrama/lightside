@@ -25,7 +25,7 @@ public class LocalFeatureHit extends FeatureHit
 		super(feature, value, documentIndex);
 		this.hits = hits;
 	}
-
+	
 	public Collection<int[]> getHits()
 	{
 		return hits;

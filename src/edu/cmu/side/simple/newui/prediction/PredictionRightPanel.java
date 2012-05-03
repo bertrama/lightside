@@ -48,7 +48,10 @@ public class PredictionRightPanel extends AbstractListPanel{
 				Object[] row = new Object[annots.size()+1];
 				int j = 0;
 				for(String s : annots){
-					row[j++] = clickedDocs.allAnnotations().get(s).get(i);
+					if(i < clickedDocs.allAnnotations().get(s).size()){
+						row[j] = clickedDocs.allAnnotations().get(s).get(i);						
+					}
+					j++;
 				}
 				row[row.length-1] = text.get(i);
 				displayModel.addRow(row);

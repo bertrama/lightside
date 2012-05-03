@@ -25,7 +25,6 @@ import edu.cmu.side.simple.feature.Feature.Type;
 import edu.cmu.side.simple.newui.features.FeaturePluginPanel;
 
 /**
- * 
  * A many-directional mapping of Features, FeatureHits and indexes into the DocumentList.
  *
  */
@@ -118,6 +117,29 @@ public class FeatureTable implements Serializable
 	public FeatureTable(SimpleDocumentList documents){
 		Set<FeaturePlugin> extractors = new TreeSet<FeaturePlugin>();
 		init(extractors, documents, 0);
+	}
+	
+	public FeatureTable(Collection<FeatureHit> hits, SimpleDocumentList text){
+		this.extractors = null;
+		this.documents = text;
+		this.evaluations = new TreeMap<String, Map<Feature, Comparable>>();
+		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
+		this.activatedFeatures = new HashMap<Feature, Boolean>(30000);
+		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
+		for(int i = 0; i < documents.getSize(); i++){
+			hitsPerDocument.add(new TreeSet<FeatureHit>());
+		}
+		for(FeatureHit hit : hits){
+			if(!hitsPerFeature.containsKey(hit.getFeature())){
+				hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
+				activatedFeatures.put(hit.getFeature(), Boolean.TRUE);
+			}
+			hitsPerFeature.get(hit.getFeature()).add(hit);
+			hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
+		}
+		this.threshold = threshold;
+		this.annot = documents.getCurrentAnnotation();
+
 	}
 
 	private FeatureTable(){}
@@ -258,6 +280,12 @@ public class FeatureTable implements Serializable
 	static double cTime = 0.0;
 	static double dTime = 0.0;
 	static double eTime = 0.0;
+	
+	public Integer getFastVectorIndex(Feature f){
+		String id = f.getExtractorPrefix()+":"+f.getFeatureName();
+		Integer att = attributeMap.get(id);
+		return att;
+	}
 	/**
 	 * Generates Instance objects (weka format) for a document in the corpus. Actually,
 	 * these objects already exist, we're just filling the value.
@@ -272,31 +300,9 @@ public class FeatureTable implements Serializable
 		try{
 			for(FeatureHit hit : hits){
 				Feature f = hit.getFeature();
-				String id = f.getExtractorPrefix()+":"+f.getFeatureName();
-				Integer att = attributeMap.get(id);
+				Integer att = getFastVectorIndex(f);
 				Feature.Type type = f.getFeatureType();
-				switch(type){
-				case NUMERIC:
-					if(hit.getValue() instanceof Integer){
-						values[att] = 0.0+(Integer)hit.getValue();
-					}else{
-						values[att] = (Double)hit.getValue();						
-					}
-					break;
-				case STRING:
-				case NOMINAL:
-					int index = 0;
-					for(String val : f.getNominalValues()){
-						if(val.equals(hit.getValue())){
-							values[att] = index; break;
-						}
-						index++;
-					}
-					break;
-				case BOOLEAN:
-					values[att] = 1;
-					break;
-				}
+				values[att] = getHitValueForFastVector(hit);
 			}
 		}catch(Exception e){
 			e.printStackTrace();
@@ -320,6 +326,30 @@ public class FeatureTable implements Serializable
 		}
 		Instance inst = new SparseInstance(1,values);
 		return inst;
+	}
+
+	public double getHitValueForFastVector(FeatureHit hit) {
+		Type hitType = hit.getFeature().getFeatureType();
+		switch(hitType){
+		case NUMERIC:
+			if(hit.getValue() instanceof Integer){
+				return 0.0+(Integer)hit.getValue();
+			}else{
+				return (Double)hit.getValue();						
+			}
+		case STRING:
+		case NOMINAL:
+			int index = 0;
+			for(String val : hit.getFeature().getNominalValues()){
+				if(val.equals(hit.getValue())){
+					return index;
+				}
+				index++;
+			}
+		case BOOLEAN:
+			return 1;
+		}
+		return 0;
 	}
 
 	/**
@@ -384,7 +414,6 @@ public class FeatureTable implements Serializable
 		Map<Feature, Comparable> hitsMap = new HashMap<Feature, Comparable>();
 		Map<String, Map<Feature, Comparable>> hitsByLabelMap = new TreeMap<String, Map<Feature, Comparable>>();
 		if(getClassValueType()!=Type.NUMERIC){
-
 			double time1 = System.currentTimeMillis();
 			resetCurrentAnnotation();
 
@@ -401,6 +430,7 @@ public class FeatureTable implements Serializable
 			String[] labels = l.toArray(new String[0]);
 
 			for(Feature f : hitsPerFeature.keySet()){
+				if(evaluations.containsKey("hits") && evaluations.get("hits").containsKey(f)) continue;
 				if(f.getFeatureType() == Type.NUMERIC) continue;
 				double f1 = System.currentTimeMillis();
 				Collection<FeatureHit> hits = hitsPerFeature.get(f);
@@ -482,7 +512,7 @@ public class FeatureTable implements Serializable
 			addEvaluation("f-score", fScoreMap);
 			addEvaluation("accuracy", accuracyMap);
 			addEvaluation("hits", hitsMap);
-			if(constantEvaluations.length == 7 && labels != null){
+			if(labels != null){
 				String[] hitLabels = new String[labels.length];
 				for(int i = 0; i < hitLabels.length; i++){
 					hitLabels[i] = "hits_" + labels[i];
@@ -491,10 +521,12 @@ public class FeatureTable implements Serializable
 					}
 					addEvaluation(hitLabels[i], hitsByLabelMap.get(labels[i]));						
 				}
-				String[] newConstants = new String[constantEvaluations.length+hitLabels.length];
-				System.arraycopy(constantEvaluations, 0, newConstants, 0, constantEvaluations.length);
-				System.arraycopy(hitLabels, 0, newConstants, constantEvaluations.length, hitLabels.length);
-				constantEvaluations = newConstants;				
+				if(constantEvaluations.length==7){
+					String[] newConstants = new String[constantEvaluations.length+hitLabels.length];
+					System.arraycopy(constantEvaluations, 0, newConstants, 0, constantEvaluations.length);
+					System.arraycopy(hitLabels, 0, newConstants, constantEvaluations.length, hitLabels.length);
+					constantEvaluations = newConstants;					
+				}
 			}
 		}
 		double time2 = System.currentTimeMillis();
@@ -557,14 +589,18 @@ public class FeatureTable implements Serializable
 			localMap.get(fh.getFeature()).add(fh);
 		}
 		for(Feature f : localMap.keySet()){
-			if(localMap.get(f).size() > threshold){
+			if(localMap.get(f).size() >= threshold){
 				for(FeatureHit fh : localMap.get(f)){
-					hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
+					if(!hitsPerDocument.get(fh.getDocumentIndex()).contains(fh)){
+						hitsPerDocument.get(fh.getDocumentIndex()).add(fh);						
+					}
 					if(!hitsPerFeature.containsKey(fh.getFeature())){
 						hitsPerFeature.put(fh.getFeature(), new HashSet<FeatureHit>());
 						activatedFeatures.put(fh.getFeature(), true);
 					}
-					hitsPerFeature.get(fh.getFeature()).add(fh);
+					if(!hitsPerFeature.get(fh.getFeature()).contains(fh)){
+						hitsPerFeature.get(fh.getFeature()).add(fh);			
+					}
 				}
 			}
 		}
@@ -625,7 +661,15 @@ public class FeatureTable implements Serializable
 	}
 
 	public void addEvaluation(String evaluationName, Map<Feature, Comparable> eval){
-		evaluations.put(evaluationName, eval);
+		if(evaluations.containsKey(evaluationName)){
+			for(Feature f : eval.keySet()){
+				if(!evaluations.get(evaluationName).containsKey(f)){
+					evaluations.get(evaluationName).put(f, eval.get(f));
+				}
+			}
+		}else{
+			evaluations.put(evaluationName, eval);			
+		}
 	}
 
 	public String toString(){
@@ -699,6 +743,7 @@ public class FeatureTable implements Serializable
 		}
 		ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
 		ft.activatedFeatures = new HashMap<Feature, Boolean>();
+		ft.threshold = threshold;
 		fillHitsPerDocument(ft);
 		return ft;
 	}

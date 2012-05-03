@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
+<!--
 	<plugin>
 		<name>Thread Analysis</name>
 		<author>Elijah Mayfield</author>
@@ -8,6 +9,23 @@
 		<jarfile>csc.jar</jarfile>
 		<classname>features.ThreadAnalysis</classname>
 	</plugin>
+	<plugin>
+		<name>Dependencies</name>
+		<author>Zeyu Zheng and Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Extracts dependency features a la Joshi and Rose (2009)]]></description>
+		<jarfile>dependencies.jar</jarfile>
+		<classname>plugin.simple.dependency.Dependencies</classname>
+	</plugin>
+	<plugin>
+		<name>CasesExtractor</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Provides Cases features]]></description>
+		<jarfile>light.jar</jarfile>
+		<classname>plugin.simple.features.CasesExtractor</classname>
+	</plugin>
+	-->
 	<plugin>
 		<name>TagHelperTools</name>
 		<author>Elijah Mayfield</author>

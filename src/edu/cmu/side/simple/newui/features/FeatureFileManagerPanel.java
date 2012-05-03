@@ -90,7 +90,9 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 			public void actionPerformed(ActionEvent ae){
 				if(filenames.size() > 0 && annotationComboBox.getSelectedIndex()>=0 && textColumnComboBox.getSelectedIndex()>=0){
 					try{
-						documents.setTextColumn(textColumnComboBox.getSelectedItem().toString());					}catch(Exception e){
+						documents.setTextColumn(textColumnComboBox.getSelectedItem().toString());	
+						documents.setCurrentAnnotation(annotationComboBox.getSelectedItem().toString());
+					}catch(Exception e){
 						JOptionPane.showMessageDialog(FeatureFileManagerPanel.this, "Document loading failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
 						e.printStackTrace();
 					}
@@ -120,7 +122,9 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 					Set<String> annotationTitles = new TreeSet<String>();
 					for(int i = 0; i < listModel.getSize(); i++){
 						in = new BufferedReader(new FileReader(((File)listModel.get(i)).getAbsolutePath()));
-						String[] annotations = in.readLine().split(",");
+						String header = in.readLine();
+						System.out.println(header);
+						String[] annotations = header.split(",");
 						for(String annot : annotations) annotationTitles.add(annot.replaceAll("\"", "").trim());
 						in.close();
 					}

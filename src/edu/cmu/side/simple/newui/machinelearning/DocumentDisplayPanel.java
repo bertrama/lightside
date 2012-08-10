@@ -17,6 +17,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -37,6 +39,7 @@ import javax.swing.text.StyledDocument;
 
 import se.datadosen.component.RiverLayout;
 
+import edu.cmu.side.export.CSVExporter;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.Feature;
@@ -55,6 +58,8 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 	JRadioButton cellDisplay = new JRadioButton("By Error Cell");
 	JRadioButton featDisplay = new JRadioButton("By Feature");
 	ButtonGroup button = new ButtonGroup();
+	
+	JButton exportButton = new JButton("Export to CSV...");
 
 	JTextPane highlight = new JTextPane();
 	private boolean necessary = false;
@@ -75,7 +80,8 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 		button.add(featDisplay);
 		ActionListener update = new ActionListener() {
 			@Override
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) 
+			{
 				necessary = true;
 				refreshPanel();
 			}
@@ -108,6 +114,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 		groupList.add("left", allDisplay);
 		groupList.add("left", cellDisplay);
 		groupList.add("left", featDisplay);
+		groupList.add("left", exportButton);
 		groupList.add("br hfill", scroll);
 		scroll.addKeyListener(new KeyListener(){
 
@@ -143,6 +150,22 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 		modelZoom.setRightComponent(new JScrollPane(highlight));
 		modelZoom.setBorder(null);
 		add("hfill vfill", modelZoom);
+		
+		exportButton.addActionListener(new ActionListener()
+		{
+			JFileChooser chooser = new JFileChooser(".");
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				int choice = chooser.showSaveDialog(DocumentDisplayPanel.this);
+				if(choice == JFileChooser.APPROVE_OPTION)
+					CSVExporter.exportToCSV(displayModel, chooser.getSelectedFile());
+				
+			}
+		});
+		exportButton.setEnabled(false);
+		
 	}
 
 	public void refreshPanel(){
@@ -162,7 +185,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			SimpleDocumentList evalTable = model.getEvaluationTable().getDocumentList();
 			boolean textExists = evalTable.getTextColumn()!= null;
 			if(model != null){
-				if(allDisplay.isSelected() || (featDisplay.isSelected() && localFeat.getFeatureType().equals(Type.NUMERIC))){
+				if(allDisplay.isSelected() || (localFeat != null && featDisplay.isSelected() && localFeat.getFeatureType().equals(Type.NUMERIC))){
 					for(int i = 0; i < evalTable.getSize(); i++){
 						Object[] row = populateRow(i, textExists);
 						displayModel.addRow(row);
@@ -218,6 +241,8 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			}
 			repaint();
 			necessary = false;
+			
+			exportButton.setEnabled(displayModel.getRowCount() > 0);
 		}
 	}
 

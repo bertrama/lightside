@@ -42,7 +42,7 @@ public class LearningPluginPanel extends AbstractListPanel{
 				if(clickedPlugin != null){
 					configPanel.removeAll();
 					Component c = clickedPlugin.getConfigurationUI();
-					configPanel.add(c);
+					if (c!=null) configPanel.add(c);
 				}
 			}
 		});

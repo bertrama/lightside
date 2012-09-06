@@ -787,6 +787,20 @@ public class FeatureTable implements Serializable
 		activatedFeatures.remove(f);
 	}
 
+	public void deleteFeatureSet(Set<Feature> f){
+		for(int i = 0; i < hitsPerDocument.size(); i++){
+			Collection<FeatureHit> tmphits = new ArrayList<FeatureHit>();
+			for(FeatureHit hit : hitsPerDocument.get(i))
+				if(!f.contains(hit.getFeature()))
+					tmphits.add(hit);
+			hitsPerDocument.set(i, tmphits);
+		}
+		for (Feature fe : f){
+			hitsPerFeature.remove(fe);
+			activatedFeatures.remove(fe);
+		}
+	}
+	
 	/**
 	 * Given two feature tables, alter the feature space of the second table to match the feature
 	 * space in the first table. Returns that second table post-alteration.
@@ -822,10 +836,13 @@ public class FeatureTable implements Serializable
 				}
 			}
 			double time1a = System.currentTimeMillis();
-			for(Feature f : remove)
+			newFeatureTable.deleteFeatureSet(remove);
+
+/*			for(Feature f : remove)
 			{
 				newFeatureTable.deleteFeature(f);
 			}
+*/			
 			double time2 = System.currentTimeMillis();
 
 			oldTableFeatures = oldFeatureTable.getFeatureSet();

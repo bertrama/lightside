@@ -74,6 +74,8 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		text.add(instance);
 	}
 	
+	
+	
 	public SimpleDocumentList(Set<String> filenames, String textCol){
 		double time1 = System.currentTimeMillis();
 		BufferedReader in;
@@ -82,52 +84,49 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		for(String filename : filenames){
 			try{
 				File f = new File(filename);
-				if(!f.exists()){
+				if(!f.exists())
 					f = new File(SimpleWorkbench.dataFolder.getAbsolutePath(), filename.substring(Math.max(filename.lastIndexOf("/"), filename.lastIndexOf("\\"))+1));
-				}
 				in = new BufferedReader(new FileReader(f));
-				StringBuilder sb = new StringBuilder();
 				String line;
-				while((line = in.readLine()) != null){
-					sb.append(line + "\n");
-				}
-				String out = sb.toString().replaceAll("[^\r\n\\p{ASCII}]", "");
-				CSVReader csvReader = new CSVReader(new StringReader(out), 0);
+				String[] headers = in.readLine().replaceAll("\"","").split(",");
 				int textColumnIndex = -1;
-				String[] headers = csvReader.readNextMeaningful();
 				for(int i = 0; i < headers.length; i++){
-					String clean = headers[i].replaceAll("\"", "").trim();
+					String clean = headers[i].trim();
 					headers[i] = clean;
-					if(clean.equals(textColumn)){
+					if(clean.equals(textColumn))
 						textColumnIndex = i;
-					}
 				}
-				for(String annotation : headers){
-					if(!annotation.equals(textColumn) && !allAnnotations.containsKey(annotation)){
+				for(String annotation : headers)
+					if(!annotation.equals(textColumn) && !allAnnotations.containsKey(annotation))
 						allAnnotations.put(annotation, new ArrayList<String>());
-					}
-				}
-				String[] instance;
-				int count = 0;
+					
 				int lineID = 0;
-				while((instance = csvReader.readNextMeaningful()) != null){
-					for(int i = 0; i < instance.length && i < headers.length; i++){
-						String value = instance[i].replaceAll("\"", "").trim();
-						if(i==textColumnIndex){
-							text.add(value);
-						}else{
-							try{
-								allAnnotations.get(headers[i]).add(value);															
-							}catch(Exception e){
-								System.out.println(i + ", " + lineID);
-								e.printStackTrace();
-							}
+				boolean showed = false;
+				while((line = in.readLine()) != null){
+					line = line.replaceAll("[^\r\n\\p{ASCII}]", "");
+					String[] instance = line.split(",");
+					lineID++;
+					if (instance.length != headers.length){
+						if (instance.length > headers.length){
+							CSVReader csvReader = new CSVReader(new StringReader(line), 0);
+							instance = csvReader.readNextMeaningful();
+						}
+						if (instance.length != headers.length){
+							if (!showed) AlertDialog.show("Warning!", "the input csv file's format is wrong at line " + lineID + " and this line is skiped.", null);
+							showed = true;
+							continue;
 						}
 					}
+					
+					for(int i = 0; i < instance.length && i < headers.length; i++){
+						String value = instance[i].replaceAll("\"", "").trim();
+						if(i==textColumnIndex)
+							text.add(value);
+						else
+							allAnnotations.get(headers[i]).add(value);															
+					}
 					filenameList.add(filename);
-					lineID++;
 				}
-				csvReader.close();
 			}catch(Exception e){
 				AlertDialog.show("Error!", "Failed to load CSV into memory.", null);
 				e.printStackTrace();

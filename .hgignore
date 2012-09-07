@@ -7,3 +7,7 @@ syntax:glob
 *.test
 *.model
 *.pred
+*convert_cases*
+data/*
+plugins/dependencies.jar
+*.java.orig

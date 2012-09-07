@@ -73,7 +73,7 @@
 		<author>Elijah Mayfield</author>
 		<version>1.0</version>
 		<description><![CDATA[This plugin provides access to the classifiers which are part of the WEKA toolkit.]]></description>
-		<jarfile>light.jar</jarfile>
+		<jarfile>weka.jar</jarfile>
 		<classname>plugin.simple.learning.WekaLearning</classname>
 	</plugin>
 	<plugin>
@@ -116,4 +116,13 @@
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.evaluation.CellValueComparison</classname>
 	</plugin>
+		<plugin>
+		<name>Confidence Weighted Linear Classifier</name>
+		<author>Zeyu Zheng</author>
+		<version>1.0</version>
+		<description>Confidence Weighed Linear Classifier base code</description>
+		<jarfile>CWLC.jar</jarfile>
+		<classname>plugin.simple.learning.CWLClearning</classname>
+	</plugin>
+	
 </plugins>

@@ -118,7 +118,7 @@ public class FeatureTable implements Serializable
 		Set<FeaturePlugin> extractors = new TreeSet<FeaturePlugin>();
 		init(extractors, documents, 0);
 	}
-	
+
 	public FeatureTable(Collection<FeatureHit> hits, SimpleDocumentList text){
 		this.extractors = null;
 		this.documents = text;
@@ -280,7 +280,7 @@ public class FeatureTable implements Serializable
 	static double cTime = 0.0;
 	static double dTime = 0.0;
 	static double eTime = 0.0;
-	
+
 	public Integer getFastVectorIndex(Feature f){
 		String id = f.getExtractorPrefix()+":"+f.getFeatureName();
 		Integer att = attributeMap.get(id);
@@ -381,11 +381,6 @@ public class FeatureTable implements Serializable
 		}
 
 		Feature[] features = localMap.keySet().toArray(new Feature[0]);
-		for(Feature f : features){
-			if(localMap.get(f).size() < threshold){
-				localMap.remove(f);
-			}
-		}
 		for(Feature f : localMap.keySet()){
 			if(!hitsPerFeature.containsKey(f)){
 				hitsPerFeature.put(f, new ArrayList<FeatureHit>());
@@ -398,6 +393,7 @@ public class FeatureTable implements Serializable
 				hitsPerFeature.get(f).add(hit);
 			}
 		}
+
 		localMap.clear();
 	}
 
@@ -806,15 +802,6 @@ public class FeatureTable implements Serializable
 			for(Feature f: newTableFeatures)
 			{
 				boolean found = oldTableFeatures.contains(f);
-				//				boolean found = false;
-				//				for(Feature oldFeat : oldTableFeatures)
-				//				{
-				//					if(oldFeat.getExtractorPrefix().equals(f.getExtractorPrefix()) && oldFeat.getFeatureName().equals(f.getFeatureName()))
-				//					{
-				//						found = true;
-				//						break;
-				//					}
-				//				}
 				if(!found)
 				{
 					remove.add(f);
@@ -822,9 +809,18 @@ public class FeatureTable implements Serializable
 				}
 			}
 			double time1a = System.currentTimeMillis();
+			for(int i = 0; i < newFeatureTable.hitsPerDocument.size(); i++){
+				FeatureHit[] docHits = newFeatureTable.hitsPerDocument.get(i).toArray(new FeatureHit[0]);
+				for(FeatureHit hit : docHits){
+					if(remove.contains(hit.getFeature())){
+						newFeatureTable.hitsPerDocument.get(i).remove(hit);
+					}
+				}
+			}
 			for(Feature f : remove)
 			{
-				newFeatureTable.deleteFeature(f);
+				newFeatureTable.hitsPerFeature.remove(f);
+				newFeatureTable.activatedFeatures.remove(f);
 			}
 			double time2 = System.currentTimeMillis();
 
@@ -852,6 +848,7 @@ public class FeatureTable implements Serializable
 
 			}
 			double time3 = System.currentTimeMillis();
+			System.out.println("Reconcile: " + (time1a-time1) + ", " + (time2-time1a) + ", " + (time3-time2));
 		}
 		return newFeatureTable;
 	}

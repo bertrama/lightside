@@ -3,7 +3,9 @@ package edu.cmu.side.simple.newui.machinelearning;
 import java.awt.event.ActionEvent;
 
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -12,6 +14,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
@@ -26,8 +29,11 @@ import com.yerihyo.yeritools.io.FileToolkit;
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
 import edu.cmu.side.SimpleWorkbench;
+import edu.cmu.side.dataitem.DocumentListInterface;
 import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.simple.LearningPlugin;
+import edu.cmu.side.simple.SimpleDocumentList;
+import edu.cmu.side.simple.SimpleTrainingResult;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.AbstractListPanel;
 import edu.cmu.side.simple.newui.features.FeatureFileManagerPanel;
@@ -56,7 +62,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 	JProgressBar progressBar = new JProgressBar();
 	JLabel progressLabel = new JLabel();
 	JButton build = new JButton("Build Model");
-
+	JCheckBox savePredictionsCbx = new JCheckBox("Save Predictions to File");
 
 	public LearningConfigPanel(){
 		tablesList.setModel(listModel);
@@ -118,7 +124,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 		add("br left", new JLabel("Name:"));
 		modelName.setText("model");
 		add("hfill", modelName);
-
+		add("br hfill", savePredictionsCbx);
 		add("br hfill", build);
 		add("br hfill", progressBar);
 		add("", halt);
@@ -155,7 +161,10 @@ public class LearningConfigPanel extends AbstractListPanel{
 		protected Void doInBackground(){
 			try{
 				halt.setEnabled(true);
-				TrainingResultInterface result = learn.train(table, modelName.getText(), config, foldsMap, progressLabel);
+				SimpleTrainingResult result = (SimpleTrainingResult)learn.train(table, modelName.getText(), config, foldsMap, progressLabel);
+				if(savePredictionsCbx.isSelected() && !halted){
+					printPredictions(result);
+				}
 				if(halted){
 					halted = false;
 				}else{
@@ -189,6 +198,7 @@ public class LearningConfigPanel extends AbstractListPanel{
 			fireActionEvent();
 			return null;
 		}
+
 	}
 
 	@Override
@@ -205,6 +215,56 @@ public class LearningConfigPanel extends AbstractListPanel{
 		loadFileButton.setEnabled(testSet.isSelected());
 		if(selectedTestFile != null){
 			testFileName.setText(selectedTestFile.getName());			
+		}
+	}
+	
+
+	public static void printPredictions(SimpleTrainingResult result) {
+		List<Comparable> preds = result.getPredictions();
+		SimpleDocumentList data = (SimpleDocumentList)result.getEvaluationTable().getDocumentList();
+		Map<String, StringBuilder> filesOut = new TreeMap<String, StringBuilder>();
+		StringBuilder header = new StringBuilder("prediction,class,");
+		boolean text = !data.getTextColumn().equals("[No Text]");
+		if(text){
+			header.append("text,");
+		}
+		for(String s : data.allAnnotations().keySet()){
+			if(!s.equals(data.getTextColumn()) && !s.equals(data.getCurrentAnnotation())){
+				if(s.equals("prediction") || s.equals("actual") || s.equals("class")){
+					header.append(s+"-orig,");								
+				}else{
+					header.append(s+",");
+				}
+			}
+		}
+		header.append("\n");
+		for(int i = 0; i < data.getSize(); i++){
+			String filename = data.getFilename(i).replace(".csv", ".predictions.csv");
+			if(!filesOut.containsKey(filename)){
+				StringBuilder sb = new StringBuilder(header.toString());
+				filesOut.put(filename, sb);
+			}
+			StringBuilder line = new StringBuilder(preds.get(i).toString()+","+data.getAnnotationArray().get(i)+",");
+			if(text){
+				line.append("\""+data.getCoveredTextList().get(i)+"\",");
+			}
+			for(String s : data.allAnnotations().keySet()){
+				if(!s.equals(data.getTextColumn()) && !s.equals(data.getCurrentAnnotation())){
+					line.append(data.allAnnotations().get(s).get(i)+",");
+				}
+			}
+			line.append("\n");
+			filesOut.get(filename).append(line.toString());
+		}
+		try{
+			for(String f : filesOut.keySet()){
+				System.out.println(f + ": " + filesOut.get(f).toString().split("\n").length);
+				BufferedWriter out = new BufferedWriter(new FileWriter(f));
+				out.write(filesOut.get(f).toString());
+				out.close();
+			}						
+		}catch(Exception e2){
+			e2.printStackTrace();
 		}
 	}
 }

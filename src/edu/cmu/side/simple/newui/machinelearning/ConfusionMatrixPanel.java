@@ -160,8 +160,8 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 					if(vColIndex > 0 && rowIndex == topRow && vColIndex == topCol){
 						rend.setBackground(new Color(0,0,102));
 						rend.setForeground(Color.white);
-					}else if(vColIndex > 0 && ModelListPanel.getSelectedTrainingResult() != null && ModelListPanel.getSelectedTrainingResult().getDocumentList() != null){
-						double total = 0.0+ModelListPanel.getSelectedTrainingResult().getDocumentList().getSize();
+					}else if(vColIndex > 0 && ModelListPanel.getSelectedTrainingResult() != null && ModelListPanel.getSelectedTrainingResult().getEvaluationTable().getDocumentList() != null){
+						double total = 0.0+ModelListPanel.getSelectedTrainingResult().getEvaluationTable().getDocumentList().getSize();
 						Integer intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/total))).intValue();
 						rend.setBackground(new Color(255-intensity, 255-intensity,255));
 						rend.setForeground(Color.black);

@@ -114,8 +114,7 @@ public class ExportShell {
 			System.out.println(result.getSummary());
 		}
 		if(outputFilename != null && table != null){
-			TableModel tableModel = getModelFromFeatureTable(table);
-			CSVExporter.exportToCSV(tableModel, new File(outputFilename));
+			CSVExporter.exportToCSV(table, new File(outputFilename));
 		}
 	}
 

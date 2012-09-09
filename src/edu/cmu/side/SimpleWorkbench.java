@@ -248,7 +248,7 @@ public class SimpleWorkbench {
 					return;
 				}
 				if(exportFormat.equals("CSV")){
-					CSVExporter.exportToCSV(FeatureTablePanel.getTableModel(), chooser.getSelectedFile());
+					CSVExporter.exportToCSV(ft, chooser.getSelectedFile());
 				}
 				else if(exportFormat.equals("ARFF")){
 					ARFFExporter.export(ft, chooser.getSelectedFile());

@@ -1,10 +1,8 @@
 package edu.cmu.side.export;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.util.Set;
-import java.util.TreeSet;
+import weka.core.Instances;
 
 import edu.cmu.side.simple.feature.Feature;
 import edu.cmu.side.simple.feature.FeatureHit;
@@ -21,73 +19,15 @@ public class ARFFExporter {
 	public static void export(FeatureTable ft, File out){
 		try{
 			ft.resetCurrentAnnotation();
-			BufferedWriter write = new BufferedWriter(new FileWriter(out));
-			StringBuilder sb = new StringBuilder("@relation " + ft.getTableName().replaceAll("[\\s\\p{Punct}]","_") + "\n\n");
-			Set<String> existingFeatures = new TreeSet<String>();
-			for(Feature f : ft.getFeatureSet()){
-				if(ft.getActivated(f)){
-					String fName = f.getFeatureName().replaceAll("[\\s\\p{Punct}]","_");
-					sb.append("@attribute " + fName + " ");
-					switch(f.getFeatureType()){
-					case NUMERIC:
-						sb.append("numeric");
-						break;
-					case BOOLEAN:
-						sb.append("{false, true}");
-						break;
-					case NOMINAL:
-						sb.append("{");
-						for(String s : f.getNominalValues()){
-							sb.append(s.toLowerCase() + ", ");
-						}
-						sb.replace(sb.length()-2, sb.length(),"}");
-						break;
-					}
-					sb.append("\n");
-				}
-			}
-			sb.append("@attribute CLASS ");
-			switch(ft.getClassValueType()){
-			case NUMERIC:
-				sb.append("numeric");
-				break;
-			case BOOLEAN:
-				sb.append("{false, true}");
-				break;
-			case NOMINAL:
-				sb.append("{");
-				for(String s : ft.getDocumentList().getLabelArray()){
-					sb.append(s.toLowerCase() + ", ");
-				}
-				sb.replace(sb.length()-2, sb.length(),"}");
-				break;
-			}
-			sb.append("\n\n@data\n");
-			write.write(sb.toString());
-			StringBuilder[] documentStrings = new StringBuilder[ft.getDocumentList().getSize()];
-			for(int i = 0; i < documentStrings.length; i++){
-				documentStrings[i] = new StringBuilder();
-			}
-			int featInd = 0;
-			for(Feature f : ft.getFeatureSet()){
-				Set<Integer> indicesHit = new TreeSet<Integer>();
-				for(FeatureHit hit : ft.getHitsForFeature(f)){
-					if(!indicesHit.contains(hit.getDocumentIndex())){
-						if(f.getFeatureType()!=Type.NUMERIC || hit.getValue() instanceof Integer  || !((Double)hit.getValue()).isNaN()){
-							indicesHit.add(hit.getDocumentIndex());
-							documentStrings[hit.getDocumentIndex()].append(featInd + " " + hit.getValue().toString().toLowerCase() + ", ");						
-						}
-					}
-				}
-				featInd++;
-			}
-			for(int i = 0; i < documentStrings.length; i++){
-				documentStrings[i].append(featInd + " " + ft.getDocumentList().getAnnotationArray().get(i).toLowerCase());
-			}
-			for(StringBuilder string : documentStrings){
-				write.write("{"+string.toString() + "}\n");
-			}
-			write.close();
+			Instances data = ft.getInstances();
+			FileWriter outf = new FileWriter(out);			
+			outf.write("@relation " + ft.getTableName().replaceAll("[\\s\\p{Punct}]","_") + "\n\n");
+			for (int i=0; i<data.numAttributes(); i++)
+				outf.write(data.attribute(i).toString() + "\n");
+			outf.write("\n@data\n");
+			for (int i=0; i<data.numInstances(); i++)
+				outf.write(data.instance(i).toString() + "\n");
+			outf.close();
 		}catch(Exception e){
 			e.printStackTrace();
 		}

@@ -46,7 +46,7 @@ public class FeatureTable implements Serializable
 	private Map<String, Map<Feature, Comparable>> evaluations;
 
 	private String annot;
-	private Integer threshold = 1;
+	private Integer threshold = 5;
 	/** These variables are for weka. Filled when needed only. Stored 
 	 * in the feature table so that it's cleaner to populate. */
 	private FastVector fastVector = null;
@@ -210,6 +210,7 @@ public class FeatureTable implements Serializable
 	 */
 	public Instances getInstances(){
 		if(instances == null){
+			if (fastVector == null) generateFastVector();
 			Instances format = new Instances(getTableName(), fastVector, 0);
 			double runningTotal = 0.0;
 			Feature.Type t = getClassValueType();

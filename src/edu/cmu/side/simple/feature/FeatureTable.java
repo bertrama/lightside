@@ -40,6 +40,8 @@ public class FeatureTable implements Serializable
 	private Map<Feature, Boolean> activatedFeatures;
 	private List<Collection<FeatureHit>> hitsPerDocument;
 	private String tableName;
+	public String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
+
 	/** Stores the type of the class value */
 	private Feature.Type type = null;
 	/** These show up as columns in the FeatureTablePanel */
@@ -401,6 +403,8 @@ public class FeatureTable implements Serializable
 	
 	public void correval(){
 		Map<Feature, Comparable> corr = new HashMap<Feature, Comparable>();
+		Map<Feature, Comparable> predictorOf = new HashMap<Feature, Comparable>();
+		
 		Instances alldata = getInstances();
 		FastVector nowattrs = new FastVector();
 		nowattrs.addElement(new Attribute("f"));
@@ -422,19 +426,20 @@ public class FeatureTable implements Serializable
 				LR.buildClassifier(data);
 				eval.evaluateModel(LR, data);
 				double nowcorr = eval.correlationCoefficient();
+				predictorOf.put(f, nowcorr>0?"POS":"NEG");
 				corr.put(f, nowcorr);
 			} catch (Exception x){
 				System.out.println(x);
 			}
 		}
-		addEvaluation("Correlation", corr);
+		addEvaluation("sign", predictorOf);
+		addEvaluation("correlation", corr);
 	}
 
 	/**
 	 * Evaluates feature table for precision, recall, f-score, and kappa at creation time.
 	 */
 	public void defaultEvaluation(){
-		correval();
 		
 		Map<Feature, Comparable> precisionMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> recallMap = new HashMap<Feature, Comparable>();
@@ -444,7 +449,9 @@ public class FeatureTable implements Serializable
 		Map<Feature, Comparable> bestMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> hitsMap = new HashMap<Feature, Comparable>();
 		Map<String, Map<Feature, Comparable>> hitsByLabelMap = new TreeMap<String, Map<Feature, Comparable>>();
-		if(getClassValueType()!=Type.NUMERIC){
+		if(getClassValueType()==Type.NUMERIC){
+			correval();
+		}else{
 			double time1 = System.currentTimeMillis();
 			resetCurrentAnnotation();
 
@@ -551,6 +558,12 @@ public class FeatureTable implements Serializable
 						hitsByLabelMap.put(labels[i], new HashMap<Feature, Comparable>());
 					}
 					addEvaluation(hitLabels[i], hitsByLabelMap.get(labels[i]));						
+				}
+				if(constantEvaluations.length==7){
+					String[] newConstants = new String[constantEvaluations.length+hitLabels.length];
+					System.arraycopy(constantEvaluations, 0, newConstants, 0, constantEvaluations.length);
+					System.arraycopy(hitLabels, 0, newConstants, constantEvaluations.length, hitLabels.length);
+					constantEvaluations = newConstants;					
 				}
 			}
 		}
@@ -735,7 +748,7 @@ public class FeatureTable implements Serializable
 	}
 
 	public String[] getConstantEvaluations(){
-		return evaluations.keySet().toArray(new String[0]);
+		return getClassValueType().equals(Feature.Type.NUMERIC)?new String[]{"sign","correlation"}:constantEvaluations;
 	}
 
 	public void setActivated(Feature f, boolean active){

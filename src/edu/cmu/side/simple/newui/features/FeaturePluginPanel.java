@@ -186,7 +186,6 @@ public class FeaturePluginPanel extends AbstractListPanel{
 				if(table.getFeatureSet().size() > 0){
 					table.defaultEvaluation();
 					table.setTableName(tableName.getText());
-					
 						SimpleWorkbench.addFeatureTable(table);					
 						List<FeatureTable> fts = SimpleWorkbench.getFeatureTables();
 						String name = "features";

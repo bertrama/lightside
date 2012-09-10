@@ -30,7 +30,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	String currentAnnotation; String textColumn;
 	ArrayList<String> filenameList = new ArrayList<String>();
 	String[] labelArray;
-	
+
 	/**
 	 * wrap a list of unannotated plain-text instances as a DocumentList
 	 */
@@ -38,14 +38,14 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	{
 		text.addAll(instances);
 	}
-	
+
 	public SimpleDocumentList(List<String> text, Map<String, ArrayList<String>> annotations){
 		this(text);
 		for(String ann : annotations.keySet()){
 			addAnnotation(ann, annotations.get(ann));
 		}
 	}
-	
+
 	public SimpleDocumentList createFilteredDocumentList(SimpleDocumentList start, String annotation, String filterKeyword){
 		SimpleDocumentList sdl = new SimpleDocumentList(new ArrayList<String>());
 		sdl.filenameList = start.filenameList;
@@ -73,9 +73,9 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	{
 		text.add(instance);
 	}
-	
-	
-	
+
+
+
 	public SimpleDocumentList(Set<String> filenames, String textCol){
 		double time1 = System.currentTimeMillis();
 		BufferedReader in;
@@ -99,25 +99,37 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 				for(String annotation : headers)
 					if(!annotation.equals(textColumn) && !allAnnotations.containsKey(annotation))
 						allAnnotations.put(annotation, new ArrayList<String>());
-					
+
 				int lineID = 0;
 				boolean showed = false;
 				while((line = in.readLine()) != null){
 					line = line.replaceAll("[^\r\n\\p{ASCII}]", "");
-					String[] instance = line.split(",");
 					lineID++;
+					CSVReader csvReader = new CSVReader(new StringReader(line), 0);
+					String[] instance = csvReader.readNextMeaningful();
 					if (instance.length != headers.length){
-						if (instance.length > headers.length){
-							CSVReader csvReader = new CSVReader(new StringReader(line), 0);
-							instance = csvReader.readNextMeaningful();
+						System.out.println(lineID + ", " + instance.length + ", " + headers.length);
+						if(headers.length < instance.length && !showed){
+							AlertDialog.show("Warning!", "At least one line (" + lineID + ") has more values than annotation columns. Data representation may be corrupted.", null);
 						}
-						if (instance.length != headers.length){
-							if (!showed) AlertDialog.show("Warning!", "the input csv file's format is wrong at line " + lineID + " and this line is skiped.", null);
-							showed = true;
-							continue;
+						if(headers.length > instance.length && !showed){
+							AlertDialog.show("Warning!", "At least one line (" + lineID + ") has an empty annotation. Data representation may be corrupted.", null);
 						}
+						for(int i = 0; i < Math.max(instance.length, headers.length); i++){
+							if(headers.length > i){
+								System.out.print(headers[i]+": ");
+							}else{
+								System.out.print("null: ");
+							}
+							if(instance.length > i){
+								System.out.println(instance[i]);
+							}else{
+								System.out.println("null");
+							}
+						}
+						showed = true;
 					}
-					
+
 					for(int i = 0; i < instance.length && i < headers.length; i++){
 						String value = instance[i].replaceAll("\"", "").trim();
 						if(i==textColumnIndex)
@@ -134,12 +146,12 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		}
 		double time2 = System.currentTimeMillis();
 	}
-	
+
 	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textCol){
 		this(filenames, textCol);
 		setCurrentAnnotation(currentAnnot);		
 	}
-	
+
 	@Override
 	public HashMap<String, ArrayList<String>> allAnnotations() {
 		return allAnnotations;
@@ -158,7 +170,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 
 	@Override
 	public ArrayList<String> getAnnotationArray() {
-//		System.out.println(currentAnnotation + ", " + allAnnotations.containsKey(currentAnnotation) + " SDL156");
+		//		System.out.println(currentAnnotation + ", " + allAnnotations.containsKey(currentAnnotation) + " SDL156");
 		return allAnnotations.get(currentAnnotation);
 	}
 
@@ -195,7 +207,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		}
 		return labelArray;
 	}
-	
+
 	/**
 	 * Used for predicting labels on unannotated data.
 	 * @param labels
@@ -237,15 +249,15 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 			currentAnnotation = annot;
 		}
 	}
-	
+
 	public String getCurrentAnnotation(){
 		return currentAnnotation;
 	}
-	
+
 	public String getTextColumn(){
 		return textColumn;
 	}
-	
+
 	public void setTextColumn(String name){
 		allAnnotations.put(textColumn, text);
 		if(name.equals("[No Text]")){
@@ -256,7 +268,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 			text = allAnnotations.get(name);
 		}
 	}
-	
+
 	/**
 	 * Used for cross-validating by file.
 	 * @param docIndex
@@ -265,13 +277,13 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	public String getFilename(int docIndex){
 		return filenameList.get(docIndex);
 	}
-	
+
 	public Set<String> getFilenames(){
 		Set<String> names = new HashSet<String>();
 		for(String s : filenameList) names.add(s);
 		return names;
 	}
-	
+
 	public Map<Integer, Integer> getFoldsMapByNum(int num){
 		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 		for(int i = 0; i < getSize(); i++){
@@ -279,11 +291,11 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		}
 		return foldsMap;
 	}
-	
+
 	public void setFilenames(ArrayList<String> f){
 		filenameList = f;
 	}
-	
+
 	public Map<Integer, Integer> getFoldsMapByFile(){
 		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 		int foldNum = 0;
@@ -297,14 +309,14 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		}
 		return foldsMap;
 	}
-	
+
 	/**
 	 * Adds a new annotation. Primarily used by the prediction interface.
 	 */
 	public void addAnnotation(String name, ArrayList<String> annots){
 		allAnnotations.put(name, annots);
 	}
-	
+
 	public String toCSVString(){
 		StringBuilder header = new StringBuilder();
 		for(String s : allAnnotations.keySet()){

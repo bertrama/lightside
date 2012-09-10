@@ -235,11 +235,15 @@ public class FeatureTablePanel extends AbstractListPanel{
 			featureTable.setColumnModel(columnModel);
 			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
 			featureTable.setRowSorter(sorter);
-			if(tableModel.getColumnCount()>4){
-				ArrayList<RowSorter.SortKey> sortKey = new ArrayList<RowSorter.SortKey>();
-				sortKey.add(new RowSorter.SortKey(4, SortOrder.DESCENDING));
-				sorter.setSortKeys(sortKey);
-				sorter.sort();			
+			for(int i = 0; i < tableModel.getColumnCount(); i++){
+				if(tableModel.getColumnName(i).equals("kappa") || tableModel.getColumnName(i).equals("correlation")){
+					ArrayList<RowSorter.SortKey> sortKey = new ArrayList<RowSorter.SortKey>();
+					sortKey.add(new RowSorter.SortKey(i, SortOrder.DESCENDING));
+					sorter.setSortKeys(sortKey);
+					sorter.sort();								
+				}
+			}
+			if(tableModel.getColumnCount()>2){
 				for(int i = 0; i < featureTable.getColumnCount(); i++){					
 					featureTable.getColumnModel().getColumn(i).setCellRenderer(activationCellRenderer);
 				}

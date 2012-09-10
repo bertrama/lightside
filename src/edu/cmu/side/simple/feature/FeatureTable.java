@@ -2,8 +2,6 @@ package edu.cmu.side.simple.feature;
 
 import java.io.BufferedWriter;
 
-
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -19,6 +17,9 @@ import weka.core.FastVector;
 import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.SparseInstance;
+import weka.classifiers.functions.LinearRegression;
+import weka.classifiers.Evaluation;
+
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.feature.Feature.Type;
@@ -33,7 +34,6 @@ public class FeatureTable implements Serializable
 	private static final long serialVersionUID = 1048801132974685418L;
 
 	public final int NUM_BASELINE_EVALUATIONS = 7;
-	public String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
 	private Collection<FeaturePlugin> extractors;
 	private SimpleDocumentList documents;
 	private Map<Feature, Collection<FeatureHit>> hitsPerFeature;
@@ -316,7 +316,6 @@ public class FeatureTable implements Serializable
 				for(int j = 0; j < possibleLabels.length; j++){
 					if(possibleLabels[j].equals(getDocumentList().getAnnotationArray().get(i))){
 						values[values.length-1] = j;
-
 					}
 				}
 				break;
@@ -383,25 +382,60 @@ public class FeatureTable implements Serializable
 
 		Feature[] features = localMap.keySet().toArray(new Feature[0]);
 		for(Feature f : localMap.keySet()){
-			if(!hitsPerFeature.containsKey(f)){
-				hitsPerFeature.put(f, new ArrayList<FeatureHit>());
-			}
-			if(!activatedFeatures.containsKey(f)){
-				activatedFeatures.put(f, Boolean.TRUE);
-			}
-			for(FeatureHit hit : localMap.get(f	)){
-				hitsPerDocument.get(hit.documentIndex).add(hit);
-				hitsPerFeature.get(f).add(hit);
+			if (localMap.get(f).size() >= threshold){
+				if(!hitsPerFeature.containsKey(f)){
+					hitsPerFeature.put(f, new ArrayList<FeatureHit>());
+				}
+				if(!activatedFeatures.containsKey(f)){
+					activatedFeatures.put(f, Boolean.TRUE);
+				}
+				for(FeatureHit hit : localMap.get(f	)){
+					hitsPerDocument.get(hit.documentIndex).add(hit);
+					hitsPerFeature.get(f).add(hit);
+				}
 			}
 		}
 
 		localMap.clear();
+	}
+	
+	public void correval(){
+		Map<Feature, Comparable> corr = new HashMap<Feature, Comparable>();
+		Instances alldata = getInstances();
+		FastVector nowattrs = new FastVector();
+		nowattrs.addElement(new Attribute("f"));
+		nowattrs.addElement(new Attribute("c"));
+		
+		for (Feature f: hitsPerFeature.keySet()){
+			int i=getFastVectorIndex(f);
+			Instances data = new Instances("getcorr", nowattrs, 0);
+			double[] values = new double[2];
+			for (int j=0; j<alldata.numInstances(); j++){
+				values[0] = alldata.instance(j).value(i);
+				values[1] = alldata.instance(j).classValue();
+				data.add(new SparseInstance(1,values));
+			}
+			data.setClassIndex(1);
+			try{
+				LinearRegression LR = new LinearRegression();
+				Evaluation eval = new Evaluation(data);
+				LR.buildClassifier(data);
+				eval.evaluateModel(LR, data);
+				double nowcorr = eval.correlationCoefficient();
+				corr.put(f, nowcorr);
+			} catch (Exception x){
+				System.out.println(x);
+			}
+		}
+		addEvaluation("Correlation", corr);
 	}
 
 	/**
 	 * Evaluates feature table for precision, recall, f-score, and kappa at creation time.
 	 */
 	public void defaultEvaluation(){
+		correval();
+		
 		Map<Feature, Comparable> precisionMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> recallMap = new HashMap<Feature, Comparable>();
 		Map<Feature, Comparable> fScoreMap = new HashMap<Feature, Comparable>();
@@ -413,7 +447,6 @@ public class FeatureTable implements Serializable
 		if(getClassValueType()!=Type.NUMERIC){
 			double time1 = System.currentTimeMillis();
 			resetCurrentAnnotation();
-
 
 			ArrayList<String> trueAnnot = documents.getAnnotationArray();
 			double timeA = 0.0;
@@ -429,6 +462,7 @@ public class FeatureTable implements Serializable
 			for(Feature f : hitsPerFeature.keySet()){
 				if(evaluations.containsKey("hits") && evaluations.get("hits").containsKey(f)) continue;
 				if(f.getFeatureType() == Type.NUMERIC) continue;
+				
 				double f1 = System.currentTimeMillis();
 				Collection<FeatureHit> hits = hitsPerFeature.get(f);
 				double maxPrec = Double.NEGATIVE_INFINITY;
@@ -518,12 +552,6 @@ public class FeatureTable implements Serializable
 					}
 					addEvaluation(hitLabels[i], hitsByLabelMap.get(labels[i]));						
 				}
-				if(constantEvaluations.length==7){
-					String[] newConstants = new String[constantEvaluations.length+hitLabels.length];
-					System.arraycopy(constantEvaluations, 0, newConstants, 0, constantEvaluations.length);
-					System.arraycopy(hitLabels, 0, newConstants, constantEvaluations.length, hitLabels.length);
-					constantEvaluations = newConstants;					
-				}
 			}
 		}
 		double time2 = System.currentTimeMillis();
@@ -561,7 +589,7 @@ public class FeatureTable implements Serializable
 	 * @return the set of features extracted from the documents.
 	 */
 	public Collection<Feature> getSortedFeatures()
-	{
+	{	
 		return new TreeSet(hitsPerFeature.keySet());
 	}
 
@@ -658,7 +686,8 @@ public class FeatureTable implements Serializable
 	}
 
 	public void addEvaluation(String evaluationName, Map<Feature, Comparable> eval){
-		if(evaluations.containsKey(evaluationName)){
+		if (eval.keySet().size()==0) return;
+		if (evaluations.containsKey(evaluationName)){
 			for(Feature f : eval.keySet()){
 				if(!evaluations.get(evaluationName).containsKey(f)){
 					evaluations.get(evaluationName).put(f, eval.get(f));
@@ -706,7 +735,7 @@ public class FeatureTable implements Serializable
 	}
 
 	public String[] getConstantEvaluations(){
-		return constantEvaluations;
+		return evaluations.keySet().toArray(new String[0]);
 	}
 
 	public void setActivated(Feature f, boolean active){
@@ -735,7 +764,7 @@ public class FeatureTable implements Serializable
 		ft.extractors = extractors;
 		ft.documents = documents;
 		ft.evaluations = new TreeMap<String, Map<Feature, Comparable>>();
-		for(String eval : constantEvaluations){
+		for(String eval : evaluations.keySet()){
 			ft.evaluations.put(eval, evaluations.get(eval));
 		}
 		ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.

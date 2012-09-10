@@ -26,7 +26,10 @@ public class CSVExporter
             for (int i=0; i<data.numInstances(); i++){
             	outf.write((""+(i+1)));
             	for (int j=0; j<data.numAttributes(); j++)
-            		outf.write("," + data.instance(i).stringValue(j));
+            		if (data.instance(i).attribute(j).isNumeric())
+            			outf.write("," + data.instance(i).value(j));
+            		else
+            			outf.write("," + data.instance(i).stringValue(j));
             	outf.write("\n");
             }
             outf.close();

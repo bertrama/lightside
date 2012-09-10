@@ -235,7 +235,7 @@ public class FeatureTablePanel extends AbstractListPanel{
 			featureTable.setColumnModel(columnModel);
 			TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(tableModel);
 			featureTable.setRowSorter(sorter);
-			if(tableModel.getColumnCount()>1){
+			if(tableModel.getColumnCount()>4){
 				ArrayList<RowSorter.SortKey> sortKey = new ArrayList<RowSorter.SortKey>();
 				sortKey.add(new RowSorter.SortKey(4, SortOrder.DESCENDING));
 				sorter.setSortKeys(sortKey);

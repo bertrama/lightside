@@ -1,5 +1,6 @@
 package edu.cmu.side.simple.newui.features;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 
 import java.awt.Dimension;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -66,13 +68,14 @@ public class FeatureTablePanel extends AbstractListPanel{
 	private JButton loadButton = new JButton("Load");
 	private JButton exportButton = new JButton("Export");
 	public FeatureTablePanel(){
-		setLayout(new RiverLayout());
+		setLayout(new BorderLayout());
 		tableModel = new FeatureTableModel();
-		add("left", new JLabel("Feature Table: "));
-		add("left", selectedTableName);
-		add("left", selectedTableSize);
+		JPanel topPanel = new JPanel(new RiverLayout());
+		topPanel.add("left", new JLabel("Feature Table: "));
+		topPanel.add("left", selectedTableName);
+		topPanel.add("left", selectedTableSize);
 		filterField.setBorder(BorderFactory.createLineBorder(Color.gray));
-		add("br hfill", filterField);
+		topPanel.add("br hfill", filterField);
 		filterField.addKeyListener(new KeyListener() {
 			public void keyTyped(KeyEvent e) {}
 			public void keyPressed(KeyEvent e) {}
@@ -109,7 +112,7 @@ public class FeatureTablePanel extends AbstractListPanel{
 				fireActionEvent();
 			}
 		});
-		add("right", filterButton);
+		topPanel.add("right", filterButton);
 		filterButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -129,13 +132,18 @@ public class FeatureTablePanel extends AbstractListPanel{
 		featureTable.setShowVerticalLines(true);
 		JScrollPane tableScroll = new JScrollPane(featureTable);
 		tableScroll.setPreferredSize(new Dimension(500, 200));
-		add("br hfill", tableScroll);
-		add("br left", activateButton);
-		add("left", labButton);
-		add("left", freezeButton);
-		add("left", saveButton);
-		add("left", exportButton);
-		add("left", loadButton);
+		
+		JPanel bottomPanel = new JPanel(new RiverLayout());
+		bottomPanel.add("br left", activateButton);
+		bottomPanel.add("left", labButton);
+		bottomPanel.add("left", freezeButton);
+		bottomPanel.add("left", saveButton);
+		bottomPanel.add("left", exportButton);
+		bottomPanel.add("left", loadButton);
+
+		add(BorderLayout.NORTH, topPanel);
+		add(BorderLayout.CENTER, tableScroll);
+		add(BorderLayout.SOUTH, bottomPanel);
 		featureTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
 

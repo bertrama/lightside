@@ -1,5 +1,6 @@
 package edu.cmu.side.simple.newui.machinelearning;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -47,8 +48,8 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 
 	public ConfusionMatrixPanel(){
 		setLayout(new GridLayout(2,1));
-		JPanel modelPanel = new JPanel(new RiverLayout());
-		modelPanel.add("left", new JLabel("Model Confusion Matrix:"));
+		JPanel modelPanel = new JPanel(new BorderLayout());
+		modelPanel.add(BorderLayout.NORTH, new JLabel("Model Confusion Matrix:"));
 		matrixDisplay.setModel(matrixModel);
 		matrixDisplay.setBorder(BorderFactory.createLineBorder(Color.gray));
 		matrixDisplay.setShowHorizontalLines(true);
@@ -63,18 +64,16 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 			}
 		});
 		scroll = new JScrollPane(matrixDisplay);
-		scroll.setPreferredSize(new Dimension(300,100));
-		modelPanel.add("br hfill", scroll);
+		modelPanel.add(BorderLayout.CENTER, scroll);
 
-		JPanel zoomPanel = new JPanel(new RiverLayout());
-		zoomPanel.add("left", new JLabel("Highlighted Feature Distribution:"));
+		JPanel zoomPanel = new JPanel(new BorderLayout());
+		zoomPanel.add(BorderLayout.NORTH, new JLabel("Highlighted Feature Distribution:"));
 		zoomMatrixDisplay.setModel(zoomMatrixModel);
 		zoomMatrixDisplay.setShowHorizontalLines(true);
 		zoomMatrixDisplay.setShowVerticalLines(true);
 		JScrollPane zoomScroll = new JScrollPane(zoomMatrixDisplay);
-		zoomScroll.setPreferredSize(new Dimension(300,100));
-		zoomPanel.add("br hfill", zoomScroll);
-		zoomPanel.add("br", selectedFeatureName);
+		zoomPanel.add(BorderLayout.CENTER, zoomScroll);
+		zoomPanel.add(BorderLayout.SOUTH, selectedFeatureName);
 		add(modelPanel);
 		add(zoomPanel);
 	}

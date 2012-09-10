@@ -1,6 +1,8 @@
 package edu.cmu.side.simple.newui.machinelearning;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -76,10 +78,10 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 			public void keyPressed(KeyEvent e) {
 			}
 		});
+		setLayout(new BorderLayout());
 		scroll = new JScrollPane(featureTable);
-		scroll.setPreferredSize(new Dimension(250,250));
-		add("br left", selectedLabel);
-		add("br hfill", scroll);
+		add(BorderLayout.NORTH, selectedLabel);
+		add(BorderLayout.CENTER, scroll);
 
 	}
 

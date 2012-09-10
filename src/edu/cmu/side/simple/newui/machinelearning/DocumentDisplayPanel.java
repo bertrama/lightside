@@ -1,5 +1,6 @@
 package edu.cmu.side.simple.newui.machinelearning;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -108,14 +109,14 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 		setLayout(new RiverLayout());
 		JSplitPane modelZoom = new JSplitPane();
 		JPanel groupList = new JPanel(new RiverLayout());
-		scroll.setPreferredSize(new Dimension(375, 180));
-		groupList.setPreferredSize(new Dimension(400, 225));
 		groupList.add("left", new JLabel("Display: "));
 		groupList.add("left", allDisplay);
 		groupList.add("left", cellDisplay);
 		groupList.add("left", featDisplay);
 		groupList.add("left", exportButton);
-		groupList.add("br hfill", scroll);
+		JPanel leftPanel = new JPanel(new BorderLayout());
+		leftPanel.add(BorderLayout.NORTH, groupList);
+		leftPanel.add(BorderLayout.CENTER, scroll);
 		scroll.addKeyListener(new KeyListener(){
 
 			@Override
@@ -146,7 +147,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			}
 
 		});
-		modelZoom.setLeftComponent(groupList);
+		modelZoom.setLeftComponent(leftPanel);
 		modelZoom.setRightComponent(new JScrollPane(highlight));
 		modelZoom.setBorder(null);
 		add("hfill vfill", modelZoom);

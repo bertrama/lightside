@@ -29,8 +29,13 @@ public class FeatureActivationCell extends DefaultTableCellRenderer{
 				c.setForeground(isSelected?table.getSelectionForeground():table.getForeground());
 			}
 			if(table.getModel().getColumnClass(column).equals(Double.class)){
-		         Number num = (Number) value;  
-		        String text = fmt.format(num);
+		         Number num = (Number) value;
+		         String text;
+		         try{
+		        	 text = fmt.format(num);
+		         } catch (Exception x){
+		        	 text = "";
+		         }
 		        c.setText(text);
 			}
 		}

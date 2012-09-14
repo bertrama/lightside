@@ -40,7 +40,7 @@ public class FeatureTable implements Serializable
 	private Map<Feature, Boolean> activatedFeatures;
 	private List<Collection<FeatureHit>> hitsPerDocument;
 	private String tableName;
-	public String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
+	private String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
 
 	/** Stores the type of the class value */
 	private Feature.Type type = null;
@@ -450,7 +450,7 @@ public class FeatureTable implements Serializable
 		Map<Feature, Comparable> hitsMap = new HashMap<Feature, Comparable>();
 		Map<String, Map<Feature, Comparable>> hitsByLabelMap = new TreeMap<String, Map<Feature, Comparable>>();
 		if(getClassValueType()==Type.NUMERIC){
-			correval();
+			//correval();
 		}else{
 			double time1 = System.currentTimeMillis();
 			resetCurrentAnnotation();
@@ -748,7 +748,17 @@ public class FeatureTable implements Serializable
 	}
 
 	public String[] getConstantEvaluations(){
-		return getClassValueType().equals(Feature.Type.NUMERIC)?new String[]{"sign","correlation"}:constantEvaluations;
+//		return evaluations.keySet().toArray(new String[0]);
+//		return constantEvaluations;
+		List<String> mergedEval = new ArrayList<String>();
+		for (int i=0; i<constantEvaluations.length; i++)
+			if (evaluations.containsKey(constantEvaluations[i]))
+				mergedEval.add(constantEvaluations[i]);
+/*		for (String evalkey : evaluations.keySet())
+			if (!mergedEval.contains(evalkey)) mergedEval.add(evalkey);
+*/			
+		return mergedEval.toArray(new String[0]);	
+		//return getClassValueType().equals(Feature.Type.NUMERIC)?new String[]{/*"sign","correlation"*/}:constantEvaluations;
 	}
 
 	public void setActivated(Feature f, boolean active){

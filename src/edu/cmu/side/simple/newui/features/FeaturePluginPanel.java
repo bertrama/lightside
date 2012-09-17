@@ -24,6 +24,8 @@ import javax.swing.JTextField;
 import com.yerihyo.yeritools.swing.AlertDialog;
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 import edu.cmu.side.SimpleWorkbench;
+import edu.cmu.side.genesis.control.GenesisUpdater;
+import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
@@ -43,7 +45,7 @@ public class FeaturePluginPanel extends AbstractListPanel{
 	JButton halt = new JButton(new ImageIcon("delete.png"));
 
 	boolean halted = false;
-	static JLabel progressLabel = new JLabel();
+	static SwingUpdaterLabel progressLabel = new SwingUpdaterLabel();
 	/** Keeps track of which feature plugin is being configured or added from right now */
 	static FeaturePlugin clickedPlugin = null;
 
@@ -148,7 +150,7 @@ public class FeaturePluginPanel extends AbstractListPanel{
 		}
 	}
 
-	public static JLabel getProgressLabel(){
+	public static GenesisUpdater getProgressLabel(){
 		return progressLabel;
 	}
 

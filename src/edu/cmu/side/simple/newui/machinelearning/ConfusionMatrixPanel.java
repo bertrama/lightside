@@ -96,8 +96,18 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 			selectedFeatureName.setText("Distribution of feature " + highlighted.getFeatureName());
 		}
 		if(clicked != null){
+			if(clicked == trainingResult){
+				selectedFeature = highlighted;
+			}
+			if(clicked != null && trainingResult != null){
+				if(!(clicked.getDocumentList() == trainingResult.getDocumentList() && clicked.getDocumentList().getCurrentAnnotation().equals(trainingResult.getDocumentList().getCurrentAnnotation()))){
+					selectedCell = new Integer[]{-1,-1};					
+				}
+				if(!clicked.getFeatureTable().getFeatureSet().contains(highlighted)){
+					selectedFeature = null;
+				}
+			}
 			trainingResult = clicked;
-			selectedFeature = highlighted;
 			DecimalFormat print = new DecimalFormat("#.###");
 			switch(trainingResult.getEvaluationTable().getClassValueType()){
 			case NOMINAL:

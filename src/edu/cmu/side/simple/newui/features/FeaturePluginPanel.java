@@ -150,7 +150,7 @@ public class FeaturePluginPanel extends AbstractListPanel{
 		}
 	}
 
-	public static GenesisUpdater getProgressLabel(){
+	public static JLabel getProgressLabel(){
 		return progressLabel;
 	}
 

@@ -94,6 +94,9 @@ public class MiniErrorAnalysisPanel extends AbstractListPanel{
 		SimpleTrainingResult clicked = ModelListPanel.getSelectedTrainingResult();
 		Integer[] clickedCell = ConfusionMatrixPanel.getSelectedCell();	
 		if(clicked != trainingResult || clickedCell[0] != localCell[0] || clickedCell[1] != localCell[1]){
+			if(clicked != trainingResult){
+				selectedFeature = null;
+			}
 			trainingResult = clicked;
 			localCell = clickedCell;
 			tableModel = new EvalTableModel();

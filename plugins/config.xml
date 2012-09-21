@@ -59,7 +59,15 @@
 		<jarfile>stretchy.jar</jarfile>
 		<classname>pwg.stretchy.StretchyPatternPlugin</classname>
 	</plugin>
-	-->
+	<plugin>
+		<name>Confidence Weighted Linear Classifier</name>
+		<author>Zeyu Zheng</author>
+		<version>1.0</version>
+		<description>Confidence Weighed Linear Classifier base code</description>
+		<jarfile>CWLC.jar</jarfile>
+		<classname>plugin.simple.learning.CWLClearning</classname>
+	</plugin>
+		-->
 		<plugin>
 		<name>Stretch Patterns</name>
 		<author>Elijah Mayfield</author>
@@ -115,14 +123,6 @@
 		<description><![CDATA[Compares features between two cells in a confusion matrix, taking the absolute difference.]]></description>
 		<jarfile>light.jar</jarfile>
 		<classname>plugin.simple.evaluation.CellValueComparison</classname>
-	</plugin>
-		<plugin>
-		<name>Confidence Weighted Linear Classifier</name>
-		<author>Zeyu Zheng</author>
-		<version>1.0</version>
-		<description>Confidence Weighed Linear Classifier base code</description>
-		<jarfile>CWLC.jar</jarfile>
-		<classname>plugin.simple.learning.CWLClearning</classname>
 	</plugin>
 	
 </plugins>

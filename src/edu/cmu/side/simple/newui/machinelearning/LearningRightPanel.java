@@ -50,6 +50,7 @@ public class LearningRightPanel extends JPanel {
 	public void refreshPanel(){
 		matrixPanel.refreshPanel();
 		errorPanel.refreshPanel();
+		matrixPanel.refreshPanel();
 		outputPanel.refreshPanel();
 		documentPanel.refreshPanel();
 		repaint();

@@ -63,6 +63,14 @@ public abstract class SIDEPlugin implements Cloneable{
 	public abstract String getType();
 
 	/**
+	 * LightSIDE Genesis will remind the user, at many places, what options they selected.
+	 * This method will be called to get that string.
+	 * @return
+	 */
+	public String getDescription(){
+		return "No description available.";
+	}
+	/**
 	 * This method is provided to give you a way to make sure that the pluginWrapper
 	 * has been installed properly. The default implementation prints the name
 	 * and version of the pluginWrapper and a 'success' message. If your implementation

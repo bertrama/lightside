@@ -809,7 +809,7 @@ public class FeatureTable implements Serializable
 			ft.hitsPerDocument.add(new ArrayList<FeatureHit>());
 		}
 		for(Feature f : hitsPerFeature.keySet()){
-			if(activatedFeatures.get(f)){
+			if(!activatedFeatures.containsKey(f) || activatedFeatures.get(f)){
 				ft.hitsPerFeature.put(f, hitsPerFeature.get(f));
 				ft.activatedFeatures.put(f, Boolean.TRUE);
 				for(FeatureHit fh : ft.hitsPerFeature.get(f)){

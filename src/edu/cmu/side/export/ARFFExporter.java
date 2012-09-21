@@ -18,6 +18,8 @@ public class ARFFExporter {
 	 */
 	public static void export(FeatureTable ft, File out){
 		try{
+			if (!out.getName().endsWith(".arff"))
+				out = new File(out.getAbsolutePath() + ".arff");
 			ft.resetCurrentAnnotation();
 			Instances data = ft.getInstances();
 			FileWriter outf = new FileWriter(out);			

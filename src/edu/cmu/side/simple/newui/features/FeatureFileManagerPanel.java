@@ -130,13 +130,35 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 					}
 					String textIndex = null;
 					String annotIndex = null;
-					for(String s : annotationTitles){ 
-						if(annotIndex == null && !s.contains("text")) annotIndex = s; 
-						if(s.equalsIgnoreCase("text")) textIndex = s; 
+					
+					for(String s : annotationTitles){
+						String lowers = s.toLowerCase();
+						if(lowers.equals("label") || lowers.equals("class")) annotIndex = s;
+						if(annotIndex == null && !lowers.contains("text") && !lowers.contains("doc")) annotIndex = s;
+						if(lowers.contains("text") || lowers.contains("doc")) textIndex = s; 
 					}
-					SwingToolkit.reloadComboBoxContent(annotationComboBox, 
-							annotationTitles.toArray(new String[0]), 
-							annotationComboBox.getActionListeners(), true);
+					
+					if (annotIndex != null)
+						SwingToolkit.reloadComboBoxContent(annotationComboBox, 
+								annotationTitles.toArray(new String[0]), annotIndex,
+								annotationComboBox.getActionListeners(), true);
+					else
+						SwingToolkit.reloadComboBoxContent(annotationComboBox, 
+								annotationTitles.toArray(new String[0]), 
+								annotationComboBox.getActionListeners(), true);
+					
+					annotationTitles.add("[No Text]");
+					if(textIndex != null && annotationTitles.size() < 100){
+						SwingToolkit.reloadComboBoxContent(annotationComboBox, 
+								annotationTitles.toArray(new String[0]), textIndex,
+								annotationComboBox.getActionListeners(), true);
+					} else {
+						SwingToolkit.reloadComboBoxContent(annotationComboBox, 
+								annotationTitles.toArray(new String[0]), "[No Text]",
+								annotationComboBox.getActionListeners(), true);
+					}
+					
+
 					if(textIndex != null){
 						SwingToolkit.reloadComboBoxContent(textColumnComboBox, 
 								annotationTitles.toArray(new String[0]), textIndex, 
@@ -157,6 +179,10 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 						}
 					}
 				}catch(Exception ex){
+
+					//To Do
+					//It might be better if we just delete the illegal file, but now I don't know how to do that.
+					listModel.clear();
 					AlertDialog.show("Error!", "CSV File improperly formatted", FeatureFileManagerPanel.this);
 					ex.printStackTrace();
 				}

@@ -17,6 +17,8 @@ public class CSVExporter
 {
 	public static void exportToCSV(FeatureTable ft, File file){
 		try {
+			if (!file.getName().endsWith(".csv"))
+				file = new File(file.getAbsolutePath() + ".csv");
 			Instances data = ft.getInstances();
             FileWriter outf = new FileWriter(file);
             outf.write("#Instance");
@@ -40,6 +42,9 @@ public class CSVExporter
 	
 	public static void exportToCSV(TableModel model, File file){
 		try {
+			if (!file.getName().endsWith(".csv"))
+				file = new File(file.getAbsolutePath() + ".csv");
+			
 			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
             PrintWriter fileWriter = new PrintWriter(bufferedWriter);
 

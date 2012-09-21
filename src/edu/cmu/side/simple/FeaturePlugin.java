@@ -44,6 +44,7 @@ public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
 		super(rootFolder);
 	}
 
+
 	public static String type = "feature_hit_extractor";
 	
 	public String getType() {

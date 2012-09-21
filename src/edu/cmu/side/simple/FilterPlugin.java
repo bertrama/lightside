@@ -15,20 +15,34 @@ import edu.cmu.side.simple.feature.FeatureTable;
  */
 public abstract class FilterPlugin extends SIDEPlugin implements Serializable{
 
-	public abstract Collection<FeatureHit> filter(FeatureTable table);
-
+	protected static boolean halt = false;
 
 	@Override
 	public String getType() {
 		return "filter";
 	}
 
-
+	@Override
+	public void memoryToUI() {}
+	
+	@Override
+	public void uiToMemory() {}
+	
+	/**
+	 * @return A short string for the plugin name.
+	 */
+	public abstract String getOutputName();
+	
+	public abstract FeatureTable filter(FeatureTable orgtable);
+	
 	@Override
 	public boolean doValidation(StringBuffer msg) {
 		// TODO Auto-generated method stub
 		return true;
 	}
-
 	
+	public void stopWhenPossible(){
+		halt = true;
+	}
+
 }

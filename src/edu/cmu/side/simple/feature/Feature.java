@@ -150,4 +150,12 @@ public class Feature implements Serializable, Comparable<Feature>
 		return (o instanceof Feature)&&(this.compareTo((Feature)o)==0)&&this.featureType.equals(((Feature)o).featureType);
 	}
 	
+	//For prediction, newly extracted features may not have some nominalvalues as original one
+	public static Feature reconcile(Feature a, Feature b){
+		if (!a.equals(b))
+			throw new IllegalStateException(a + " is different from " + b);
+		if (b.getFeatureType() == Feature.Type.NOMINAL) 
+			b.setNominalValues(a.getNominalValues());
+		return b;
+	}
 }

@@ -33,7 +33,8 @@ public abstract class FilterPlugin extends SIDEPlugin implements Serializable{
 	 */
 	public abstract String getOutputName();
 	
-	public abstract FeatureTable filter(FeatureTable orgtable);
+	public abstract FeatureTable filter(boolean[] mask, FeatureTable orgtable);
+	public abstract FeatureTable filter(FeatureTable train, FeatureTable orgtable);
 	
 	@Override
 	public boolean doValidation(StringBuffer msg) {

@@ -24,62 +24,16 @@ import edu.cmu.side.dataitem.DocumentListInterface;
 
 public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	private static final long serialVersionUID = -5433699826930815886L;
-
-	ArrayList<String> text = new ArrayList<String>();
-	HashMap<String, ArrayList<String>> allAnnotations = new HashMap<String, ArrayList<String>>();
-	String currentAnnotation; String textColumn;
+	
 	ArrayList<String> filenameList = new ArrayList<String>();
-	String[] labelArray;
-
-	/**
-	 * wrap a list of unannotated plain-text instances as a DocumentList
-	 */
-	public SimpleDocumentList(List<String> instances)
-	{
-		text.addAll(instances);
-	}
-
-	public SimpleDocumentList(List<String> text, Map<String, ArrayList<String>> annotations){
-		this(text);
-		for(String ann : annotations.keySet()){
-			addAnnotation(ann, annotations.get(ann));
-		}
-	}
-
-	public SimpleDocumentList createFilteredDocumentList(SimpleDocumentList start, String annotation, String filterKeyword){
-		SimpleDocumentList sdl = new SimpleDocumentList(new ArrayList<String>());
-		sdl.filenameList = start.filenameList;
-		sdl.labelArray = start.labelArray;
-		sdl.currentAnnotation = start.currentAnnotation;
-		sdl.textColumn = start.textColumn;
-		for(String ann : start.allAnnotations.keySet()){
-			sdl.allAnnotations.put(ann, new ArrayList<String>());
-		}
-		for(int i = 0; i < start.text.size(); i++){
-			if(start.allAnnotations.get(annotation).get(i).equals(filterKeyword)){
-				sdl.text.add(start.text.get(i));
-				for(String ann : start.allAnnotations.keySet()){
-					sdl.allAnnotations.get(ann).add(start.allAnnotations.get(ann).get(i));
-				}
-			}
-		}
-		return sdl;
-	}
-
-	/**
-	 * wrap a single unannotated plain-text instance as a DocumentList
-	 */
-	public SimpleDocumentList(String instance)
-	{
-		text.add(instance);
-	}
-
-
-
-	public SimpleDocumentList(Set<String> filenames, String textCol){
+	HashMap<String, ArrayList<String>> allAnnotations = new HashMap<String, ArrayList<String>>();
+	String currentAnnotation; 
+	String textColumn;
+	
+	public SimpleDocumentList(Set<String> filenames){
 		double time1 = System.currentTimeMillis();
 		BufferedReader in;
-		textColumn = textCol;
+		textColumn = null;
 		currentAnnotation = null;
 		for(String filename : filenames){
 			try{
@@ -89,15 +43,12 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 				in = new BufferedReader(new FileReader(f));
 				String line;
 				String[] headers = in.readLine().replaceAll("\"","").split(",");
-				int textColumnIndex = -1;
-				for(int i = 0; i < headers.length; i++){
-					String clean = headers[i].trim();
-					headers[i] = clean;
-					if(clean.equals(textColumn))
-						textColumnIndex = i;
-				}
+
+				for(int i = 0; i < headers.length; i++)
+					headers[i] = headers[i].trim();
+
 				for(String annotation : headers)
-					if(!annotation.equals(textColumn) && !allAnnotations.containsKey(annotation))
+					if(!allAnnotations.containsKey(annotation))
 						allAnnotations.put(annotation, new ArrayList<String>());
 
 				int lineID = 0;
@@ -135,10 +86,7 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 						if (inserted.contains(headers[i])) continue;
 						inserted.add(headers[i]);
 						String value = instance[i].replaceAll("\"", "").trim();
-						if(i==textColumnIndex)
-							text.add(value);
-						else
-							allAnnotations.get(headers[i]).add(value);															
+						allAnnotations.get(headers[i]).add(value);															
 					}
 					filenameList.add(filename);
 				}
@@ -151,19 +99,20 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	}
 
 	public SimpleDocumentList(Set<String> filenames, String currentAnnot, String textCol){
-		this(filenames, textCol);
+		this(filenames);
+		setTextColumn(textCol);
 		setCurrentAnnotation(currentAnnot);		
 	}
+
+	public SimpleDocumentList(Set<String> filenames, String textCol){
+		this(filenames);
+		setTextColumn(textCol);		
+	}
+
 
 	@Override
 	public HashMap<String, ArrayList<String>> allAnnotations() {
 		return allAnnotations;
-	}
-
-	@Override
-	public Iterator<Object> fullIterator() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
@@ -173,84 +122,29 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 
 	@Override
 	public ArrayList<String> getAnnotationArray() {
-		//		System.out.println(currentAnnotation + ", " + allAnnotations.containsKey(currentAnnotation) + " SDL156");
+		if (currentAnnotation == null) return null;
 		return allAnnotations.get(currentAnnotation);
 	}
 
 	@Override
-	public int[] getAnnotationIndexArray(String[] targetAnnotationListArray) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public int[] getAnnotationIndexArray() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public List<String> getCoveredTextList() {
-		return text;
-	}
-
-	@Override
-	public String[] getLabelArray() {
-		if(labelArray == null){
-			ArrayList<String> labels = getAnnotationArray();
-			Set<String> labelSet = new TreeSet<String>();
-			if(labels != null)
-			{
-				for(String s : labels)
-				{
-					labelSet.add(s);
-				}
-			}
-			labelArray = labelSet.toArray(new String[0]);			
-		}
-		return labelArray;
-	}
-
-	/**
-	 * Used for predicting labels on unannotated data.
-	 * @param labels
-	 */
-	public void setExternalLabelArray(String[] labels){
-		labelArray = labels;
+		if (textColumn == null) return null;
+		return allAnnotations.get(textColumn);
 	}
 
 	@Override
 	public int getSize() {
-		if(getAnnotationArray() != null){
-			return getAnnotationArray().size();			
-		}else if(text != null){
-			return text.size();
-		}else return 0;
-	}
-
-	@Override
-	public Iterator<Object> iterator(String subtype) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Iterator<Object> iterator() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public HashMap<String, Iterator<?>> iterators() {
-		// TODO Auto-generated method stub
-		return null;
+		if (allAnnotations == null) return 0;
+		for (String key : allAnnotations.keySet() )
+			if (allAnnotations.get(key).size() > 0)
+				return allAnnotations.get(key).size();
+		return 0;
 	}
 
 	public void setCurrentAnnotation(String annot){
-		if(annot != currentAnnotation && allAnnotations.containsKey(annot)){
-			labelArray = null;
-			currentAnnotation = annot;
-		}
+		if (!allAnnotations.containsKey(annot))
+			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
+		currentAnnotation = annot;
 	}
 
 	public String getCurrentAnnotation(){
@@ -262,20 +156,17 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	}
 
 	public void setTextColumn(String name){
-		allAnnotations.put(textColumn, text);
-		if(name.equals("[No Text]")){
+		if(name.equals("[No Text]"))
 			textColumn = null;
-			text = null;
-		}else{
+		else {
+			if (!allAnnotations.containsKey(name))
+				throw new IllegalStateException("Can't find the text column named " + name + " in provided file");
 			textColumn = name;
-			text = allAnnotations.get(name);
 		}
 	}
 
 	/**
 	 * Used for cross-validating by file.
-	 * @param docIndex
-	 * @return
 	 */
 	public String getFilename(int docIndex){
 		return filenameList.get(docIndex);
@@ -317,9 +208,85 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 	 * Adds a new annotation. Primarily used by the prediction interface.
 	 */
 	public void addAnnotation(String name, ArrayList<String> annots){
+		while (allAnnotations.containsKey(name))
+			name = name + " (new one)";
 		allAnnotations.put(name, annots);
 	}
 
+	@Override
+	public int[] getAnnotationIndexArray(String[] targetAnnotationListArray) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int[] getAnnotationIndexArray() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<Object> fullIterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Iterator<Object> iterator(String subtype) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Iterator<Object> iterator() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public HashMap<String, Iterator<?>> iterators() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/*
+	// wrap a list of unannotated plain-text instances as a DocumentList
+	public SimpleDocumentList(List<String> instances)
+	{
+		text.addAll(instances);
+	}
+	public SimpleDocumentList(List<String> text, Map<String, ArrayList<String>> annotations){
+		this(text);
+		for(String ann : annotations.keySet()){
+			addAnnotation(ann, annotations.get(ann));
+		}
+	}
+	public SimpleDocumentList createFilteredDocumentList(SimpleDocumentList start, String annotation, String filterKeyword){
+		SimpleDocumentList sdl = new SimpleDocumentList(new ArrayList<String>());
+		sdl.filenameList = start.filenameList;
+		sdl.labelArray = start.labelArray;
+		sdl.currentAnnotation = start.currentAnnotation;
+		sdl.textColumn = start.textColumn;
+		for(String ann : start.allAnnotations.keySet()){
+			sdl.allAnnotations.put(ann, new ArrayList<String>());
+		}
+		for(int i = 0; i < start.text.size(); i++){
+			if(start.allAnnotations.get(annotation).get(i).equals(filterKeyword)){
+				sdl.text.add(start.text.get(i));
+				for(String ann : start.allAnnotations.keySet()){
+					sdl.allAnnotations.get(ann).add(start.allAnnotations.get(ann).get(i));
+				}
+			}
+		}
+		return sdl;
+	}
+	// wrap a single unannotated plain-text instance as a DocumentList
+	public SimpleDocumentList(String instance)
+	{
+		text.add(instance);
+	}
+	
+	
 	public String toCSVString(){
 		StringBuilder header = new StringBuilder();
 		for(String s : allAnnotations.keySet()){
@@ -340,4 +307,6 @@ public class SimpleDocumentList implements DocumentListInterface, Serializable{
 		}
 		return header.toString()+"\n"+body.toString();
 	}
+	*/
+
 }

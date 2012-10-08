@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureTable;
+import edu.cmu.side.genesis.model.GenesisRecipe;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	private static final long serialVersionUID = -7928450759075851993L;
@@ -23,9 +24,10 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return true;
 	}
 
-	public void addEvaluationColumns(FeatureTable ft){
+/*	public void addEvaluationColumns(FeatureTable ft){
 		
 	}
+*/	
 	
 	@Override
 	public void memoryToUI() {}
@@ -57,9 +59,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 */
 	public abstract String getOutputName();
 	
-	public abstract void predict(String name, FeatureTable documents);
+	public abstract void predict(String name, GenesisRecipe documents, String[] possibleLabels);
 	
-	public abstract TrainingResultInterface train(FeatureTable featureTable, String desiredName, Map<String, String> evaluationSettings, Map<Integer, Integer> foldsMap, JLabel progressIndicator) throws Exception;
+	public abstract TrainingResultInterface train(GenesisRecipe recipe, String desiredName, Map<String, String> evaluationSettings, Map<Integer, Integer> foldsMap, JLabel progressIndicator) throws Exception;
 
 	public abstract void toFile(double uniqueID);
 	

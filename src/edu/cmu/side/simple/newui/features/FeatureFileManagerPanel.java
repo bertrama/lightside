@@ -19,6 +19,7 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 
+import com.yerihyo.yeritools.csv.CSVReader;
 import com.yerihyo.yeritools.swing.AlertDialog;
 import com.yerihyo.yeritools.swing.SwingToolkit;
 import com.yerihyo.yeritools.swing.SwingToolkit.DefaultFileListCellRenderer;
@@ -115,17 +116,17 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 
 			@Override
 			public void intervalAdded(ListDataEvent e) {
-				BufferedReader in;
+				CSVReader in;
 				annotationComboBox.removeAllItems();
 				textColumnComboBox.removeAllItems();
 				try{
 					Set<String> annotationTitles = new TreeSet<String>();
 					for(int i = 0; i < listModel.getSize(); i++){
-						in = new BufferedReader(new FileReader(((File)listModel.get(i)).getAbsolutePath()));
-						String header = in.readLine();
-						System.out.println(header);
-						String[] annotations = header.split(",");
-						for(String annot : annotations) annotationTitles.add(annot.replaceAll("\"", "").trim());
+						in = new CSVReader(new FileReader(((File)listModel.get(i)).getAbsolutePath()));
+						String[] annotations = in.readNextMeaningful();
+						for(String annot : annotations){
+							annotationTitles.add(annot.replaceAll("\"", "").trim());
+						}
 						in.close();
 					}
 					String textIndex = null;
@@ -137,7 +138,6 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 						if(annotIndex == null && !lowers.contains("text") && !lowers.contains("doc")) annotIndex = s;
 						if(lowers.contains("text") || lowers.contains("doc")) textIndex = s; 
 					}
-					
 					if (annotIndex != null)
 						SwingToolkit.reloadComboBoxContent(annotationComboBox, 
 								annotationTitles.toArray(new String[0]), annotIndex,
@@ -148,18 +148,8 @@ public class FeatureFileManagerPanel extends AbstractListPanel{
 								annotationComboBox.getActionListeners(), true);
 					
 					annotationTitles.add("[No Text]");
-					if(textIndex != null && annotationTitles.size() < 100){
-						SwingToolkit.reloadComboBoxContent(annotationComboBox, 
-								annotationTitles.toArray(new String[0]), textIndex,
-								annotationComboBox.getActionListeners(), true);
-					} else {
-						SwingToolkit.reloadComboBoxContent(annotationComboBox, 
-								annotationTitles.toArray(new String[0]), "[No Text]",
-								annotationComboBox.getActionListeners(), true);
-					}
 					
-
-					if(textIndex != null){
+					if(textIndex != null && annotationTitles.size() < 100){
 						SwingToolkit.reloadComboBoxContent(textColumnComboBox, 
 								annotationTitles.toArray(new String[0]), textIndex, 
 								textColumnComboBox.getActionListeners(), true);						

@@ -2,6 +2,7 @@ package edu.cmu.side.simple.newui.features;
 
 import java.awt.Component;
 
+
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,8 +25,6 @@ import javax.swing.JTextField;
 import com.yerihyo.yeritools.swing.AlertDialog;
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 import edu.cmu.side.SimpleWorkbench;
-import edu.cmu.side.genesis.control.GenesisUpdater;
-import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
@@ -45,7 +44,7 @@ public class FeaturePluginPanel extends AbstractListPanel{
 	JButton halt = new JButton(new ImageIcon("delete.png"));
 
 	boolean halted = false;
-	static SwingUpdaterLabel progressLabel = new SwingUpdaterLabel();
+	static JLabel progressLabel = new JLabel();
 	/** Keeps track of which feature plugin is being configured or added from right now */
 	static FeaturePlugin clickedPlugin = null;
 

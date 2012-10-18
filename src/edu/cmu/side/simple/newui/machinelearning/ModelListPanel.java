@@ -42,7 +42,7 @@ public class ModelListPanel extends AbstractListPanel{
 				SimpleWorkbench.removeTrainingResult(list.getSelectedIndex());
 			}
 		});
-		scroll.setPreferredSize(new Dimension(250,150));
+		scroll.setPreferredSize(new Dimension(250,120));
 		add("br hfill", scroll);
 		
 		list.addMouseListener(new MouseAdapter(){

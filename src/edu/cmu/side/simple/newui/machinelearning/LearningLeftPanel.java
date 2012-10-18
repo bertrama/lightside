@@ -20,7 +20,7 @@ public class LearningLeftPanel extends JPanel {
 	public LearningLeftPanel(){
 		setLayout(new RiverLayout());
 		setPreferredSize(new Dimension(300,500));
-		pluginPanel.setPreferredSize(new Dimension(280, 100));
+		pluginPanel.setPreferredSize(new Dimension(280, 120));
 		add("left", pluginPanel);
 		configPanel.setPreferredSize(new Dimension(280, 300));
 		add("br left", configPanel);

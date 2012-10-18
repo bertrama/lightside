@@ -290,7 +290,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 			dispText = dispText.replaceAll("\\]", space + "<rightsquareparen>" + space);
 			dispText = dispText.replaceAll("\\s+", " ");
 			if(clickedFeature != null && id != -1){
-				Collection<FeatureHit> hits = clicked.getFeatureTable().getHitsForDocument(id);
+				Collection<FeatureHit> hits = clicked.getEvaluationTable().getHitsForDocument(id);
 				//making sure things stay sorted
 				TreeMap<Integer, int[]> breakpoints = new TreeMap<Integer, int[]>();
 				for(FeatureHit hit : hits){
@@ -313,6 +313,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 					doc.insertString(offset, dispText.substring(offset, dispText.length()), doc.getStyle("regular"));								
 				}catch(Exception e){
 					System.out.println("DDP251");
+					e.printStackTrace();
 				}
 			}else{
 				doc.insertString(0,dispText,doc.getStyle("regular"));
@@ -324,7 +325,7 @@ public class DocumentDisplayPanel extends AbstractListPanel {
 	private Object[] populateRow(int i, boolean textExists) {
 		Object[] row = new Object[4];
 		row[0] = i;
-		row[1] = textExists?(model.getEvaluationTable().getDocumentList().getCoveredTextList().size()==0?"":model.getDocumentList().getCoveredTextList().get(i)):"";
+		row[1] = textExists?(model.getEvaluationTable().getDocumentList().getCoveredTextList().size()==0?"":model.getEvaluationTable().getDocumentList().getCoveredTextList().get(i)):"";
 		row[2] = model.getPredictions().get(i);
 		row[3] = model.getEvaluationTable().getDocumentList().getAnnotationArray().get(i);
 		return row;

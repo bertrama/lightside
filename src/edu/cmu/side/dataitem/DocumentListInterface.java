@@ -23,6 +23,8 @@ public interface DocumentListInterface {
 
 	public abstract Iterator<Object> iterator();
 
+	public abstract String[] getLabelArray();
+
 	public abstract int[] getAnnotationIndexArray(
 			String[] targetAnnotationListArray);
 

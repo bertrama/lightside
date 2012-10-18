@@ -24,5 +24,6 @@ public class PredictionLeftPanel extends JPanel{
 	public void refreshPanel(){
 		filePanel.refreshPanel();
 		configPanel.refreshPanel();
+		repaint();
 	}
 }

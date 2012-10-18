@@ -80,14 +80,16 @@ public class PredictionConfigPanel extends AbstractListPanel{
 		
 		public PredictLabelsTask(JProgressBar progressBar,SimpleTrainingResult m, String a, SimpleDocumentList n){
 			this.addProgressBar(progressBar);
+			System.out.println(m.getFeatureTable().getFeatureSet().size() + " features in model (name " + m.getFeatureTable().getTableName() + ")");
 			model = m;
-			annotName = a;
+			annotName = a;	
 			newDocuments = n;
 		}
 
 		@Override
 		protected Void doInBackground(){
 			try{
+				System.out.println(model.getFeatureTable().getFeatureSet().size() + " up here.");
 				PredictionFileSelectPanel.setPredictionDocuments(model.predictLabels(annotName, newDocuments).getDocumentList());		
 			}catch(Exception e){
 				JOptionPane.showMessageDialog(PredictionConfigPanel.this, "Model building failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);

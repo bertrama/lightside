@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -30,7 +32,7 @@ public class PredictionFileSelectPanel extends AbstractListPanel{
 	private static Set<String> filenames = new TreeSet<String>();
 	private static SimpleDocumentList documents;
 	private static JComboBox textColumnComboBox;
-
+	
 	public PredictionFileSelectPanel(){
 
 		list.setCellRenderer(new DefaultFileListCellRenderer(list));
@@ -49,16 +51,30 @@ public class PredictionFileSelectPanel extends AbstractListPanel{
 		fileAddButton.addActionListener(new SimpleWorkbench.FileAddActionListener(this, listModel));
 		fileRemoveButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
+				System.out.println("frb listens " + filenames.size() + "< " + textColumnComboBox.getSelectedIndex());
 				documents = null;
+				List<ListDataListener> listeners = new ArrayList<ListDataListener>();
+				for(ListDataListener al : listModel.getListDataListeners()){
+					listeners.add(al);
+				}
+				for(ListDataListener al : listeners){
+					listModel.removeListDataListener(al);					
+				}
 				listModel.clear();
+				for(ListDataListener al : listeners){
+					listModel.addListDataListener(al);
+				}
 				filenames.clear();
 				textColumnComboBox.setSelectedIndex(-1);
+				fireActionEvent();
 			}
 		});
 		textColumnComboBox.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
+				System.out.println("tccb listens " + filenames.size() + "< " + textColumnComboBox.getSelectedIndex());
 				if(filenames.size() > 0 && textColumnComboBox.getSelectedIndex()>=0){
 					try{
+						System.out.println("Building docs from tccb");
 						documents = new SimpleDocumentList(filenames, textColumnComboBox.getSelectedItem().toString());						
 					}catch(Exception e){
 						JOptionPane.showMessageDialog(PredictionFileSelectPanel.this, "Document loading failed. Check the terminal for detail.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -102,6 +118,7 @@ public class PredictionFileSelectPanel extends AbstractListPanel{
 					textColumnComboBox.addItem("[No Text]");
 					if(documents == null){
 						if(listModel.getSize()>0){
+							System.out.println("Building docs from aldl");
 							filenames.clear();
 							for(int i = 0; i < listModel.getSize(); i++){
 								filenames.add(((File)listModel.get(i)).getAbsolutePath());

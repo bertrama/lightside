@@ -38,6 +38,7 @@ public class PredictionRightPanel extends AbstractListPanel{
 	public void refreshPanel(){
 		SimpleDocumentList clickedDocs = PredictionFileSelectPanel.getPredictionDocuments();
 		if(clickedDocs != null){
+			System.out.println(clickedDocs);
 			localDocuments = clickedDocs;
 			displayModel = new DefaultTableModel();
 			List<String> text = clickedDocs.getCoveredTextList();
@@ -65,5 +66,6 @@ public class PredictionRightPanel extends AbstractListPanel{
 			displayModel = new DefaultTableModel();
 			display.setModel(displayModel);
 		}
+		repaint();
 	}
 }

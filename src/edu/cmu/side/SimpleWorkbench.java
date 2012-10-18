@@ -146,7 +146,8 @@ public class SimpleWorkbench {
 	public static class FileAddActionListener implements ActionListener {
 		private Component parentComponent;
 		private FastListModel model;
-		
+		private JFileChooser chooser = new JFileChooser(csvFolder);
+
 		public FileAddActionListener(Component parentComponent, FastListModel model){
 			this.parentComponent = parentComponent;
 			this.model = model;
@@ -154,8 +155,6 @@ public class SimpleWorkbench {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JFileChooser chooser = new JFileChooser();
-			chooser.setCurrentDirectory(csvFolder);
 			chooser.setFileFilter(FileToolkit
 					.createExtensionListFileFilter(new String[] { "csv" }, true));
 			chooser.setMultiSelectionEnabled(true);

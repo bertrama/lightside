@@ -1,6 +1,7 @@
 package edu.cmu.side.feature.cluster;
 import java.util.ArrayList;
 
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,8 +12,6 @@ import javax.swing.JLabel;
 
 import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.dataitem.TrainingResultInterface;
-import edu.cmu.side.genesis.control.GenesisUpdater;
-import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.LearningPlugin;
@@ -116,7 +115,7 @@ public class ClusterShell {
 //			}
 			System.out.println("ff:"+threshold+", clusterSim:"+clusterSimilarity+", simWindow:"+similarityWindow+", chunks"+chunks+" localClusters:"+localClusters);
 			
-			Collection hits = extractors.get(0).extractFeatureHits(corpus, new SwingUpdaterLabel(){public void setText(String s){System.out.println(s);}});
+			Collection hits = extractors.get(0).extractFeatureHits(corpus, new JLabel(){public void setText(String s){System.out.println(s);}});
 			
 			corpus = null;
 			

@@ -1,6 +1,7 @@
 package edu.cmu.side.simple;
 
 import java.io.File;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,7 +10,6 @@ import java.util.List;
 import javax.swing.JLabel;
 
 import edu.cmu.side.dataitem.DocumentListInterface;
-import edu.cmu.side.genesis.control.GenesisUpdater;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureHit;
 import edu.cmu.side.simple.feature.FeatureTable;

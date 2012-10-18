@@ -20,6 +20,7 @@ public class ARFFExporter {
 		try{
 			if (!out.getName().endsWith(".arff"))
 				out = new File(out.getAbsolutePath() + ".arff");
+			ft.resetCurrentAnnotation();
 			Instances data = ft.getInstances();
 			FileWriter outf = new FileWriter(out);			
 			outf.write("@relation " + ft.getTableName().replaceAll("[\\s\\p{Punct}]","_") + "\n\n");

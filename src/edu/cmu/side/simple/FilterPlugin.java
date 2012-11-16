@@ -3,7 +3,9 @@ package edu.cmu.side.simple;
 import java.io.Serializable;
 
 import java.util.Collection;
+import java.util.Map;
 
+import edu.cmu.side.genesis.control.GenesisUpdater;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.feature.FeatureHit;
 import edu.cmu.side.simple.feature.FeatureTable;
@@ -15,35 +17,16 @@ import edu.cmu.side.simple.feature.FeatureTable;
  */
 public abstract class FilterPlugin extends SIDEPlugin implements Serializable{
 
-	protected static boolean halt = false;
-
 	@Override
 	public String getType() {
 		return "filter";
 	}
-
-	@Override
-	public void memoryToUI() {}
 	
-	@Override
-	public void uiToMemory() {}
-	
-	/**
-	 * @return A short string for the plugin name.
-	 */
-	public abstract String getOutputName();
-	
-	public abstract FeatureTable filter(boolean[] mask, FeatureTable orgtable);
-	public abstract FeatureTable filter(FeatureTable train, FeatureTable orgtable);
-	
-	@Override
-	public boolean doValidation(StringBuffer msg) {
-		// TODO Auto-generated method stub
-		return true;
+	public FeatureTable filter(String name, FeatureTable original, Map<String, String> configuration, GenesisUpdater progressIndicator){
+		this.configureFromSettings(configuration);
+		return filterForSubclass(name, original, progressIndicator);
 	}
 	
-	public void stopWhenPossible(){
-		halt = true;
-	}
-
+	protected abstract FeatureTable filterForSubclass(String name, FeatureTable original, GenesisUpdater progressIndicator);
+	
 }

@@ -18,14 +18,14 @@ import edu.cmu.side.SimpleWorkbench;
 public abstract class SIDEPlugin implements Cloneable{
 	private transient File rootFolder;
 
+	public static boolean halt;
+	
 	private Map<String,String> aboutMap = new HashMap<String,String>();
 	public Map<String, String> getAboutMap() {
 		return aboutMap;
 	}
-
-	public void configureFromFile(String filename){
-		
-	}
+	
+	public abstract String getOutputName();
 
 	
 	public static String classnameXMLKey = "classname";
@@ -89,12 +89,17 @@ public abstract class SIDEPlugin implements Cloneable{
 		return result;
 	}
 
+	public void stopWhenPossible(){
+		halt = true;
+	}
+
 	/*--------------------------------------------------------------------------------- */
 	/*--------------------------------- OVERLOADABLE METHODS -------------------------- */
 	/*--------------------------------------------------------------------------------- */
 
-	public abstract boolean doValidation(StringBuffer msg);
-
+	public boolean doValidation(StringBuffer msg){
+		return true;
+	}
 	// Perform whatever pluginWrapper-specific validation is necessary
 	// to ensure that the pluginWrapper can run
 
@@ -106,11 +111,10 @@ public abstract class SIDEPlugin implements Cloneable{
 	}
 
 	public Component getConfigurationUI(){
-		this.memoryToUI();
 		return this.getConfigurationUIForSubclass();
 	}
 	
 	protected abstract Component getConfigurationUIForSubclass();
-	public abstract void memoryToUI();
-	public abstract void uiToMemory();
+	public abstract Map<String, String> generateConfigurationSettings();
+	public abstract void configureFromSettings(Map<String, String> settings);
 }

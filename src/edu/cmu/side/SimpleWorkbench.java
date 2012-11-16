@@ -2,6 +2,7 @@
 package edu.cmu.side;
 
 import java.awt.Component;
+
 import org.w3c.dom.*;
 
 import java.awt.Dimension;
@@ -33,7 +34,6 @@ import com.yerihyo.yeritools.xml.XMLToolkit;
 import se.datadosen.component.RiverLayout;
 
 import edu.cmu.side.simple.newui.FastListModel;
-import edu.cmu.side.dataitem.TrainingResultInterface;
 import edu.cmu.side.export.ARFFExporter;
 import edu.cmu.side.export.CSVExporter;
 import edu.cmu.side.plugin.PluginManager;
@@ -311,7 +311,6 @@ public class SimpleWorkbench {
 			}
 			try{
 				BufferedWriter out = new BufferedWriter(new FileWriter(chooser.getSelectedFile()));
-				out.write(output.toCSVString());
 				out.close();
 			}catch(Exception e){
 				e.printStackTrace();

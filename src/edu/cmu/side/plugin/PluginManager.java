@@ -23,7 +23,7 @@ import com.yerihyo.yeritools.xml.XMLToolkit;
 
 public class PluginManager {
 	
-	private ListValueMap<String,PluginWrapper> pluginTypeMap = new ListValueMap<String,PluginWrapper>();
+	private static ListValueMap<String,PluginWrapper> pluginTypeMap = new ListValueMap<String,PluginWrapper>();
 	private String errorMessage;
 	
 
@@ -68,7 +68,7 @@ public class PluginManager {
 		return pluginWrapperList;
 	}
 	
-	public SIDEPlugin[] getSIDEPluginArrayByType(String type)
+	public static SIDEPlugin[] getSIDEPluginArrayByType(String type)
 	{
 		List<SIDEPlugin> sidePluginList = new ArrayList<SIDEPlugin>();
 		

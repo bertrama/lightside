@@ -182,7 +182,7 @@ public class FeaturePluginPanel extends AbstractListPanel{
 				if(clickedPlugin.overridesFeatureTable()){
 					table = clickedPlugin.getCustomFeatureTable(corpus);
 				}else{
-					table = new FeatureTable(clickedPlugin, corpus,thresh);
+					table = new FeatureTable(clickedPlugin, corpus, thresh);
 				}
 				if(table.getFeatureSet().size() > 0){
 					table.defaultEvaluation();

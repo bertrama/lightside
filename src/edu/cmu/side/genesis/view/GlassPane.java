@@ -40,9 +40,7 @@ implements ItemListener {
 	protected void paintComponent(Graphics g) {
 		boolean hasDocs = ExtractFeaturesControl.hasHighlightedDocumentList();
 		boolean hasFeats = ExtractFeaturesControl.hasHighlightedFeatureTable();
-		//g.setColor(Color.gray);
 		g.setColor(new Color(128, 128, 128, 128));
-		//((Graphics2D)g).;
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 30);
 		g.setFont(f);
 		if(!hasDocs){
@@ -52,7 +50,7 @@ implements ItemListener {
 						if(c2 instanceof JSplitPane){
 							for(Component c3 : ((ExtractTopPanel)((JSplitPane)c2).getTopComponent()).getComponents()){
 								if(c3 instanceof JSplitPane){
-									int offsetX = 13;
+									int offsetX = 13; // FIXME
 									int offsetY = 35;
 
 									Component c4 = ((JSplitPane)c3).getRightComponent();
@@ -60,7 +58,7 @@ implements ItemListener {
 									String warning = "Load Documents to Extract Features";
 									g.setColor(Color.white);
 									g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
-									g.setColor(Color.gray);
+									g.setColor(new Color(128, 128, 128, 128));
 								}
 							}
 						}
@@ -73,7 +71,7 @@ implements ItemListener {
 				if(c instanceof ExtractFeaturesPane){
 					for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
 						if(c2 instanceof JSplitPane){
-							int offsetX = 11;
+							int offsetX = 11; // FIXME
 							int offsetY = 33;
 
 							Component c4 = ((JSplitPane)c2).getBottomComponent();

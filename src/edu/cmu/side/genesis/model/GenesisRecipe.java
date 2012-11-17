@@ -23,9 +23,9 @@ public class GenesisRecipe {
 	
 		String stage = null;
 		String recipeName = null;
-		Map<String, Map<String, String>> extractors;
-		Map<String, Map<String, String>> filters;
-		Map<String, Map<String, String>> learners;
+		Map<FeaturePlugin, Map<String, String>> extractors;
+		Map<FilterPlugin, Map<String, String>> filters;
+		Map<LearningPlugin, Map<String, String>> learners;
 
 		SimpleDocumentList documentList;
 		FeatureTable featureTable;
@@ -53,7 +53,6 @@ public class GenesisRecipe {
 		}
 		
 		public String toString(){
-			getStage();
 			String out = "";
 			if(RecipeManager.DOCUMENT_LIST_RECIPES.equals(stage)){
 				String name = "Docs ";
@@ -74,6 +73,10 @@ public class GenesisRecipe {
 			return featureTable;
 		}
 		
+		public Map<FeaturePlugin, Map<String, String>> getExtractors(){
+			return extractors;
+		}
+		
 		public void setDocumentList(SimpleDocumentList sdl){
 			documentList = sdl;
 		}
@@ -82,12 +85,33 @@ public class GenesisRecipe {
 			featureTable = ft;
 		}
 		
-		private GenesisRecipe(){
-			recipeName = "Blank Recipe";
+		public void addExtractor(FeaturePlugin plug){
+			extractors.put(plug, plug.generateConfigurationSettings());
 		}
 		
+		private GenesisRecipe(){
+			recipeName = "Blank Recipe";
+			extractors = new HashMap<FeaturePlugin, Map<String, String>>();
+			filters= new HashMap<FilterPlugin, Map<String, String>>();
+			learners = new HashMap<LearningPlugin, Map<String, String>>();
+			getStage();
+		}
+				
 		public static GenesisRecipe fetchRecipe(){
 			return new GenesisRecipe();
+		}
+		
+		public static GenesisRecipe fetchRecipe(GenesisRecipe prior, Collection<? extends SIDEPlugin> next){
+			String stage = prior.getStage();
+			GenesisRecipe newRecipe = fetchRecipe();
+			if(stage.equals(RecipeManager.DOCUMENT_LIST_RECIPES)){
+				newRecipe.setDocumentList(prior.getDocumentList());
+				for(SIDEPlugin plugin : next){
+					assert next instanceof FeaturePlugin;
+					newRecipe.addExtractor((FeaturePlugin)plugin);
+				}
+			}
+			return newRecipe;
 		}
 		
 }

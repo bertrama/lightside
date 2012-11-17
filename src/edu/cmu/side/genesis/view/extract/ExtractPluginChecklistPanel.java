@@ -1,12 +1,15 @@
 package edu.cmu.side.genesis.view.extract;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.SimpleWorkbench;
+import edu.cmu.side.genesis.control.ExtractFeaturesControl;
 import edu.cmu.side.genesis.view.CheckBoxList;
 import edu.cmu.side.genesis.view.CheckBoxListEntry;
 import edu.cmu.side.plugin.PluginManager;
@@ -23,12 +26,14 @@ public class ExtractPluginChecklistPanel extends AbstractListPanel {
 
 	public ExtractPluginChecklistPanel(){
 		setLayout(new RiverLayout());
-		CheckBoxListEntry[] checkboxes = new CheckBoxListEntry[featureExtractors.length];
-		for(int i = 0 ; i < featureExtractors.length; i++){
-			checkboxes[i] = new CheckBoxListEntry(featureExtractors[i], false);
-			checkboxes[i].addActionListener(new ItemListener()
+		ArrayList<CheckBoxListEntry> pluginsToPass = new ArrayList<CheckBoxListEntry>();
+		Map<FeaturePlugin, Boolean> featurePlugins = ExtractFeaturesControl.getFeaturePlugins();
+		for(FeaturePlugin plug : featurePlugins.keySet()){
+			CheckBoxListEntry entry = new CheckBoxListEntry(plug, featurePlugins.get(plug));
+			entry.addItemListener(new ExtractFeaturesControl.PluginCheckboxListener());
+			pluginsToPass.add(entry);
 		}
-		pluginsModel.addAll(checkboxes);
+		pluginsModel.addAll(pluginsToPass.toArray(new CheckBoxListEntry[0]));
 		pluginsList.setModel(pluginsModel);
 		add("left", new JLabel("Feature Extractor Plugins:"));
 		add("br hfill vfill", pluginsScroll);

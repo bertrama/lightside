@@ -36,13 +36,14 @@ public class GenesisWorkbench{
 
 	public static PluginManager pluginManager = new PluginManager(PLUGIN_FOLDER);
 	public static RecipeManager recipeManager = new RecipeManager();
-	static GenesisWorkbenchPanel panel = new GenesisWorkbenchPanel();
+	static GenesisWorkbenchPanel panel;
 	static GlassPane pane;
 
 	static boolean serverMode = false;
 	
 	public GenesisWorkbench(){
 		JFrame frame = new JFrame();
+		panel = new GenesisWorkbenchPanel();
 		frame.setContentPane(panel);
 		pane = new GlassPane(frame.getContentPane());
 		frame.setGlassPane(pane);

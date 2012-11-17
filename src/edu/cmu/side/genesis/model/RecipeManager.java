@@ -41,6 +41,11 @@ public class RecipeManager {
 		return recipe;
 	}
 	
+	public static void addRecipe(GenesisRecipe rec){
+		recipes.add(rec);
+		GenesisWorkbench.update();
+	}
+	
 	public static void removeRecipe(GenesisRecipe rec){
 		recipes.remove(rec);
 		GenesisWorkbench.update();

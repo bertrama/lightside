@@ -28,6 +28,7 @@ public class SimpleDocumentList implements Serializable{
 	Map<String, List<String>> allAnnotations = new HashMap<String, List<String>>();
 	Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
 	String currentAnnotation; 
+	String[] annotationNames = null;
 	String[] labelArray = null;
 
 	StringBuilder description = new StringBuilder();
@@ -87,6 +88,7 @@ public class SimpleDocumentList implements Serializable{
 				for(int i = 0; i < headers.length; i++){
 					headers[i] = headers[i].trim();
 					if(headers[i].length()>0){
+						System.out.println();
 						annotationColumns.add(i);
 					}
 				}
@@ -218,6 +220,10 @@ public class SimpleDocumentList implements Serializable{
 			labelArray = labelSet.toArray(new String[0]);			
 		}
 		return labelArray;
+	}
+	
+	public String[] getAnnotationNames(){
+		return allAnnotations.keySet().toArray(new String[0]);
 	}
 
 	public int getSize() {

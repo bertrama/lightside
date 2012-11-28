@@ -20,6 +20,7 @@ import edu.cmu.side.genesis.GenesisWorkbench;
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
 import edu.cmu.side.genesis.view.CheckBoxList;
 import edu.cmu.side.genesis.view.CheckBoxListEntry;
+import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 import edu.cmu.side.simple.SimpleDocumentList;
 import edu.cmu.side.simple.newui.FastListModel;
 import edu.cmu.side.simple.newui.features.FeatureFileManagerPanel;
@@ -43,6 +44,7 @@ public class ExtractLoadPanel extends JPanel{
 		pan.add("hfill", annotationField);
 		pan.add("br left", new JLabel("Text Fields:"));
 		pan.add("br hfill", textColumnsScroll);
+		pan.add("br left", (SwingUpdaterLabel)ExtractFeaturesControl.getUpdater());
 		add(BorderLayout.SOUTH, pan);
 	}
 	

@@ -22,11 +22,25 @@ public abstract class FilterPlugin extends SIDEPlugin implements Serializable{
 		return "filter";
 	}
 	
-	public FeatureTable filter(String name, FeatureTable original, Map<String, String> configuration, GenesisUpdater progressIndicator){
+	public FeatureTable filter(FeatureTable original, Map<String, String> configuration, GenesisUpdater progressIndicator){
 		this.configureFromSettings(configuration);
-		return filterForSubclass(name, original, progressIndicator);
+		boolean[] allTrue = new boolean[original.getDocumentList().getSize()];
+		for(int i = 0; i < allTrue.length; i++){ allTrue[i] = true; }
+		return filterWithMaskForSubclass(original, allTrue, progressIndicator);
 	}
 	
-	protected abstract FeatureTable filterForSubclass(String name, FeatureTable original, GenesisUpdater progressIndicator);
+	public FeatureTable filterWithCrossValidation(FeatureTable original, boolean[] mask, Map<String, String> configuration, GenesisUpdater progressIndicator){
+		this.configureFromSettings(configuration);
+		return filterWithMaskForSubclass(original, mask, progressIndicator);
+	}
+	
+	public FeatureTable filterTestSet(FeatureTable original, FeatureTable test, Map<String, String> configuration, GenesisUpdater progressIndicator){
+		this.configureFromSettings(configuration);
+		return filterTestSetForSubclass(original, test, progressIndicator);
+	}
+	
+	protected abstract FeatureTable filterWithMaskForSubclass(FeatureTable original, boolean[] mask, GenesisUpdater progressIndicator);
+
+	protected abstract FeatureTable filterTestSetForSubclass(FeatureTable original, FeatureTable test, GenesisUpdater progressIndicator);
 	
 }

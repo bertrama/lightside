@@ -8,4 +8,14 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.features.BasicFeatures</classname>
     </plugin>
+    
+    <plugin>
+        <name>FScore Plugin</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Basic Fscore evaluations]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.evaluations.tables.FScorePlugin</classname>
+    </plugin>
+    
 </plugins>

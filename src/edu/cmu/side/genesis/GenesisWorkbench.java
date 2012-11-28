@@ -92,7 +92,7 @@ public class GenesisWorkbench{
 		int i = 0;
 		for(Object option : options){
 			dropdown.addItem(option);
-			System.out.println(option + ", " + selected);
+			System.out.println(option + ", " + selected + " GW95");
 			if(option == selected){
 				select = i;
 			}

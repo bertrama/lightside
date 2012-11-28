@@ -24,12 +24,15 @@ import edu.cmu.side.genesis.GenesisWorkbench;
 import edu.cmu.side.genesis.model.GenesisRecipe;
 import edu.cmu.side.genesis.model.RecipeManager;
 import edu.cmu.side.genesis.view.CheckBoxListEntry;
+import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 import edu.cmu.side.genesis.view.extract.ExtractLoadPanel;
 import edu.cmu.side.genesis.view.extract.ExtractFileManagerPanel;
+import edu.cmu.side.genesis.view.extract.ExtractPluginPanel;
 import edu.cmu.side.plugin.PluginManager;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
+import edu.cmu.side.simple.TableEvaluationPlugin;
 import edu.cmu.side.simple.feature.FeatureHit;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.FastListModel;
@@ -40,19 +43,38 @@ public class ExtractFeaturesControl extends GenesisControl{
 	private static GenesisRecipe highlightedDocumentList;
 	private static GenesisRecipe highlightedFeatureTable;
 	private static int threshold;
-	private static GenesisUpdater update;
+	private static String newTableName;
+	private static GenesisUpdater update = new SwingUpdaterLabel();
 	private static Map<FeaturePlugin, Boolean> featurePlugins;
+	private static Map<TableEvaluationPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	
 	static{
+		System.out.println("Attempting to get plugins");
 		featurePlugins = new HashMap<FeaturePlugin, Boolean>();
 		SIDEPlugin[] featureExtractors = PluginManager.getSIDEPluginArrayByType("feature_hit_extractor");
 		for(SIDEPlugin fe : featureExtractors){
+			System.out.println("Adding feature plugin" + fe);
 			featurePlugins.put((FeaturePlugin)fe, false);
+		}
+		tableEvaluationPlugins = new HashMap<TableEvaluationPlugin, Map<String, Boolean>>();
+		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("table_evaluation");
+		for(SIDEPlugin fe : tableEvaluations){
+			tableEvaluationPlugins.put((TableEvaluationPlugin)fe, new TreeMap<String, Boolean>());
 		}
 	}
 	
 	public static Map<FeaturePlugin, Boolean> getFeaturePlugins(){
 		return featurePlugins;
+	}
+	
+	public static Map<TableEvaluationPlugin, Map<String, Boolean>> getTableEvaluationPlugins(){
+		return tableEvaluationPlugins;
+	}
+	
+	public static void clearTableEvaluationPlugins(){
+		for(TableEvaluationPlugin p : tableEvaluationPlugins.keySet()){
+			tableEvaluationPlugins.put(p, new TreeMap<String, Boolean>());
+		}
 	}
 	
 	public static class AddFilesListener implements ActionListener{
@@ -90,13 +112,29 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 	}
 	
+	public static class EvalCheckboxListener implements ItemListener{
+
+		@Override
+		public void itemStateChanged(ItemEvent ie) {
+			String eval = ((CheckBoxListEntry)ie.getSource()).getValue().toString();
+			for(TableEvaluationPlugin plug : tableEvaluationPlugins.keySet()){
+				if(tableEvaluationPlugins.get(plug).containsKey(eval)){
+					boolean flip = !tableEvaluationPlugins.get(plug).get(eval);
+					System.out.println("EFC122 flipping eval checkbox from " + tableEvaluationPlugins.get(plug).get(eval) + " to " + flip);
+					tableEvaluationPlugins.get(plug).put(eval, flip);
+				}
+			}
+			GenesisWorkbench.update();
+		}
+	}
+	
 	public static class PluginCheckboxListener implements ItemListener{
 
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
 			FeaturePlugin plug = (FeaturePlugin)((CheckBoxListEntry)ie.getSource()).getValue();
 			System.out.println(plug + ", " + ie.getStateChange() + ", " + ie.SELECTED + " EFC88");		
-			featurePlugins.put(plug, ie.getStateChange()==ie.SELECTED);
+			featurePlugins.put(plug, !featurePlugins.get(plug));
 			GenesisWorkbench.update();
 		}
 		
@@ -153,14 +191,25 @@ public class ExtractFeaturesControl extends GenesisControl{
 			Collection<FeaturePlugin> plugins = new HashSet<FeaturePlugin>();
 			for(FeaturePlugin plugin : ExtractFeaturesControl.getFeaturePlugins().keySet()){
 				if(ExtractFeaturesControl.getFeaturePlugins().get(plugin)){
+					System.out.println("Adding plugin " + plugin.getOutputName() + " EFC157");
 					plugins.add(plugin);
 				}
 			}
 			GenesisRecipe newRecipe = GenesisRecipe.fetchRecipe(getHighlightedDocumentListRecipe(), plugins);
+			System.out.println(newRecipe.getStage() + " " + newRecipe.getDocumentList().getCurrentAnnotation() + " " + newRecipe.getDocumentList().getSize() + " EFC162");
 			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe);
 			task.execute();
+			System.out.println("Executed EFC165");
 		}
 		
+	}
+	
+	public static String getNewTableName(){
+		return newTableName;
+	}
+	
+	public static void setNewTableName(String n){
+		newTableName = n;
 	}
 	
 
@@ -170,18 +219,29 @@ public class ExtractFeaturesControl extends GenesisControl{
 		
 		public BuildTableTask(JProgressBar progressBar, GenesisRecipe newRecipe){
 			this.addProgressBar(progressBar);
+			plan = newRecipe;
 		}
 
 		@Override
 		protected Void doInBackground(){
 			try{
 				Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-				for(FeaturePlugin plug : plan.getExtractors().keySet()){
-					hits.addAll(plug.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
+				
+				for(SIDEPlugin plug : plan.getExtractors().keySet()){
+					System.out.println("Extracting " + plug.getOutputName() + " starting.");
+					hits.addAll(((FeaturePlugin)plug).extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
+					System.out.println(hits.size() + " featurehits after " + plug.getOutputName() + " finished EFC183");
 				}
+				double timeA = System.currentTimeMillis();
 				FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold);
+				double timeB = System.currentTimeMillis();
+				System.out.println((timeB-timeA) + "ms to construct feature table EFC203");
+				ft.setName(newTableName);
+				System.out.println("EFC205" + ft.getDescriptionString());
 				plan.setFeatureTable(ft);
+				setHighlightedFeatureTable(plan);
 				RecipeManager.addRecipe(plan);
+				GenesisWorkbench.update();
 //				
 //				halt.setEnabled(true);
 //				int thresh = 0;
@@ -305,6 +365,22 @@ public class ExtractFeaturesControl extends GenesisControl{
 	
 	public static void setHighlightedDocumentList(GenesisRecipe highlight){
 		highlightedDocumentList = highlight;
+		SimpleDocumentList sdl = highlight.getDocumentList();
+		System.out.println("EFC334 " + sdl.getCurrentAnnotation() + " annot, " + sdl.getTextColumns().size() + " text columns");
+		if(sdl.getCurrentAnnotation() == null){
+			for(String s : sdl.getAnnotationNames()){
+				if(s.equalsIgnoreCase("class")){
+					sdl.setCurrentAnnotation(s);
+				}
+			}
+		}
+		if(sdl.getTextColumns().size()==0){
+			for(String s : sdl.getAnnotationNames()){
+				if(s.equalsIgnoreCase("text")){
+					sdl.setTextColumn(s, true);
+				}
+			}
+		}
 		GenesisWorkbench.update();
 	}
 	

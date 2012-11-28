@@ -1,11 +1,11 @@
 package edu.cmu.side.simple.newui;
 
 import javax.swing.JTable;
+
 import javax.swing.table.TableCellRenderer;
 
 import edu.cmu.side.simple.feature.Feature;
 import edu.cmu.side.simple.feature.FeatureTable;
-import edu.cmu.side.simple.newui.features.FeatureTableListPanel;
 
 /**
  * This class exists to make small changes to the default behavior of JTables to fit the UI better.
@@ -33,14 +33,14 @@ public class SIDETable extends JTable{
 		boolean allActivated = true;
 		int[] selRows = getSelectedRows();
 		int colCnt = getColumnCount();
-		FeatureTable table = FeatureTableListPanel.getSelectedFeatureTable();
+//		FeatureTable table = FeatureTableListPanel.getSelectedFeatureTable();
 		for(int row : selRows){
 			for(int i = 0; i < colCnt; i++){
 				Object cell = getSortedValue(row,i);
 				if(cell instanceof Feature){
-					if(!table.getActivated((Feature)cell)){
-						allActivated = false;
-					}
+//					if(!table.getActivated((Feature)cell)){
+//						allActivated = false;
+//					}
 				}
 			}
 		}
@@ -48,7 +48,7 @@ public class SIDETable extends JTable{
 			for(int i = 0; i < colCnt; i++){
 				Object cell = getSortedValue(row,i);
 				if(cell instanceof Feature){
-					FeatureTableListPanel.getSelectedFeatureTable().setActivated((Feature)cell, !allActivated);
+//					FeatureTableListPanel.getSelectedFeatureTable().setActivated((Feature)cell, !allActivated);
 				}
 			}
 		}

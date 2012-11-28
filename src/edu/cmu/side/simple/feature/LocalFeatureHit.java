@@ -13,6 +13,8 @@ public class LocalFeatureHit extends FeatureHit
 	 */
 	private Collection<int[]> hits;
 
+	private int[] singleHit;
+	
 	/**
 	 * 
 	 * @param feature the feature which has hit the document in these spots.
@@ -24,6 +26,12 @@ public class LocalFeatureHit extends FeatureHit
 	{
 		super(feature, value, documentIndex);
 		this.hits = hits;
+	}
+	
+	public LocalFeatureHit(Feature feature, Object value, int documentIndex, int[] h)
+	{
+		super(feature, value, documentIndex);
+		this.singleHit = h;
 	}
 	
 	public Collection<int[]> getHits()

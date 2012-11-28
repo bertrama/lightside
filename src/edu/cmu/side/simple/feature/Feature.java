@@ -2,6 +2,7 @@ package edu.cmu.side.simple.feature;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -37,7 +38,7 @@ public class Feature implements Serializable, Comparable<Feature>
 	
 	public static Feature fetchFeature(String prefix, String name, Feature.Type type){
 		if(!featureCache.containsKey(prefix)){
-			featureCache.put(prefix, new TreeMap<String, Feature>());
+			featureCache.put(prefix, new HashMap<String, Feature>(100000));
 		}
 		if(!featureCache.get(prefix).containsKey(name+"_"+type.toString())){
 			Feature newFeat = new Feature(prefix, name, type);

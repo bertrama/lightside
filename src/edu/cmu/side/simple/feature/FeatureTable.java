@@ -33,33 +33,41 @@ import edu.cmu.side.simple.newui.features.FeaturePluginPanel;
 public class FeatureTable implements Serializable
 {	
 	private static final long serialVersionUID = 1048801132974685418L;
+	private SimpleDocumentList documents;
+
 	private Map<Feature, Collection<FeatureHit>> hitsPerFeature;
 	private List<Collection<FeatureHit>> hitsPerDocument;
 	private Feature.Type type = null;
 	private Integer threshold = 5;
-
+	private String name = "no name set";
 	public String getDescriptionString(){
-		return hitsPerFeature.keySet().size() + " Features";
+		return hitsPerFeature.keySet().size() + " Features";	
 	}
 
 	private FeatureTable(){
-		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
+		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(100000); //Rough guess at capacity requirement.
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 	}
-	
+
 	public FeatureTable(SimpleDocumentList sdl, Collection<FeatureHit> hits, int thresh){
 		this();
-		Map<Feature, Set<Integer>> localFeatures = new TreeMap<Feature, Set<Integer>>();
+		double timeA = System.currentTimeMillis();
+		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
 		this.threshold = thresh;
+		this.documents = sdl;
 		for(int i = 0; i < sdl.getSize(); i++){
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
 		}
+		double timeB = System.currentTimeMillis();
+
 		for(FeatureHit hit : hits){
-			if(!localFeatures.containsKey(hit.getFeature())){
-				localFeatures.put(hit.getFeature(), new TreeSet<Integer>());
+			Feature f = hit.getFeature();
+			if(!localFeatures.containsKey(f)){
+				localFeatures.put(f, new TreeSet<Integer>());
 			}
-			localFeatures.get(hit.getFeature()).add(hit.getDocumentIndex());
+			localFeatures.get(f).add(hit.getDocumentIndex());
 		}
+		double timeC = System.currentTimeMillis();
 		for(FeatureHit hit : hits){
 			if(localFeatures.get(hit.getFeature()).size() >= threshold){
 				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
@@ -69,6 +77,47 @@ public class FeatureTable implements Serializable
 				hitsPerFeature.get(hit.getFeature()).add(hit);
 			}
 		}
+		double timeD = System.currentTimeMillis();
+
+		System.out.println((timeB-timeA) + ", " + (timeC-timeB) + ", " + (timeD-timeC) + " ms FT81*********************************");
+		System.out.println("FT82 finished table with " + hitsPerDocument.size() + " documents " + hitsPerFeature.keySet().size() + " features");
+	}
+
+	public void setName(String n){
+		name = n;
+	}
+
+	public void setDocumentList(SimpleDocumentList sdl){
+		documents = sdl;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public SimpleDocumentList getDocumentList(){
+		return documents;
+	}
+
+	/**
+	 * @return the set of features extracted from the documents.
+	 */
+	public Set<Feature> getFeatureSet() {
+		return hitsPerFeature.keySet();
+	}
+	/**
+	 * @return the set of features extracted from the documents.
+	 */
+	public Collection<Feature> getSortedFeatures() {        
+		return new TreeSet(hitsPerFeature.keySet());
+	}
+
+	public Collection<FeatureHit> getHitsForFeature(Feature feature) {
+		return hitsPerFeature.get(feature);
+	}
+
+	public Collection<FeatureHit> getHitsForDocument(int index) {
+		return hitsPerDocument.get(index);
 	}
 	//	    	                
 	//	    	                for(int i = 0; i < Length; i++){
@@ -485,103 +534,6 @@ public class FeatureTable implements Serializable
 	//         * Evaluates feature table for precision, recall, f-score, and kappa at creation time.
 	//         */
 	//        public void defaultEvaluation(){
-	//                Map<Feature, Comparable> precisionMap = new HashMap<Feature, Comparable>();
-	//                Map<Feature, Comparable> recallMap = new HashMap<Feature, Comparable>();
-	//                Map<Feature, Comparable> fScoreMap = new HashMap<Feature, Comparable>();
-	//                Map<Feature, Comparable> accuracyMap = new HashMap<Feature, Comparable>();
-	//                Map<Feature, Comparable> kappaMap = new HashMap<Feature, Comparable>();
-	//                Map<Feature, Comparable> bestMap = new HashMap<Feature, Comparable>();
-	//                Map<Feature, Comparable> hitsMap = new HashMap<Feature, Comparable>();
-	//                Map<String, Map<Feature, Comparable>> hitsByLabelMap = new TreeMap<String, Map<Feature, Comparable>>();
-	//                if(getClassValueType()==Type.NUMERIC){
-	//                        //correval();
-	//                }else{
-	//                        double time1 = System.currentTimeMillis();
-	//                        double timeA = 0.0;
-	//                        double timeA2 = 0.0;
-	//                        double timeB = 0.0;
-	//                        double timeC = 0.0;
-	//                        double timeD = 0.0;
-	//                        double lostTime = System.currentTimeMillis();
-	//
-	//                        String[] possiblelabels = getPossibleLabels();
-	//                        for(Feature f : hitsPerFeature.keySet()){
-	//                                if(evaluations.containsKey("hits") && evaluations.get("hits").containsKey(f)) continue;
-	//                                if(f.getFeatureType() == Type.NUMERIC) continue;
-	//                                
-	//                                double f1 = System.currentTimeMillis();
-	//                                Collection<FeatureHit> hits = hitsPerFeature.get(f);
-	//                                double maxPrec = Double.NEGATIVE_INFINITY;
-	//                                double maxRec = Double.NEGATIVE_INFINITY;
-	//                                double maxF = Double.NEGATIVE_INFINITY;
-	//                                double maxKappa = Double.NEGATIVE_INFINITY;
-	//                                double maxAcc = Double.NEGATIVE_INFINITY;
-	//                                String bestLabel = "[useless]";
-	//
-	//                                double f2 = System.currentTimeMillis();
-	//                                for(String label : possiblelabels){
-	//                                        if(!hitsByLabelMap.containsKey(label)){
-	//                                                hitsByLabelMap.put(label, new HashMap<Feature, Comparable>());                                          
-	//                                        }
-	//                                        double f3 = System.currentTimeMillis();
-	//                                        double[][] kappaMatrix = new double[2][2];
-	//                                        for(int i = 0; i < 2; i++){for(int j = 0; j < 2; j++){ kappaMatrix[i][j]=0;}}
-	//                                        boolean[] hit = new boolean[hitsPerDocument.size()];
-	//                                        int count = 0;
-	//                                        for(FeatureHit fh : hits){
-	//                                                if(checkHitMatch(f, fh.getValue())){
-	//                                                        hit[fh.getDocumentIndex()] = true;
-	//                                                        if(labels[fh.getDocumentIndex()].equals(label)){
-	//                                                                count++;
-	//                                                        }
-	//                                                }
-	//                                        }
-	//                                        hitsByLabelMap.get(label).put(f, count);
-	//                                        double f3a = System.currentTimeMillis();
-	//                                        for(int i = 0; i < getInstanceSize(); i++){
-	//                                                kappaMatrix[labels[i].equals(label)?0:1][hit[i]?0:1]++;
-	//                                        }
-	//                                        double f4 = System.currentTimeMillis();
-	//                                        double rightHits = kappaMatrix[0][0];
-	//                                        double wrongHits = kappaMatrix[1][0];
-	//                                        double all = hitsPerDocument.size();
-	//                                        double featHits = kappaMatrix[0][0] + kappaMatrix[1][0];
-	//                                        double actHits = kappaMatrix[0][0] + kappaMatrix[0][1];
-	//                                        double accuracy = (kappaMatrix[0][0] + kappaMatrix[1][1])/all;
-	//                                        double pChance = ((featHits/all)*(actHits/all))+(((all-featHits)/all)*((all-actHits)/all));
-	//
-	//                                        double prec = rightHits/(rightHits+wrongHits);
-	//                                        double rec = rightHits/actHits;
-	//                                        double fmeasure = (2*prec*rec)/(prec+rec);
-	//                                        double kappa = (accuracy - pChance)/(1 - pChance);
-	//
-	//                                        if(Double.NaN == rec) rec = 0.0;
-	//                                        if(Double.NaN == fmeasure) fmeasure = 0.0;
-	//                                        if(kappa > maxKappa){
-	//                                                maxPrec = prec;
-	//                                                maxRec = rec;
-	//                                                maxF = fmeasure;
-	//                                                maxAcc = accuracy;
-	//                                                maxKappa = kappa;
-	//                                                bestLabel = label;
-	//                                        }
-	//                                        double f5 = System.currentTimeMillis();
-	//                                        timeA2 += (f3a-f3);
-	//                                        timeB += (f4-f3a);
-	//                                        timeC += (f5-f4);
-	//                                }
-	//                                double f6 = System.currentTimeMillis();
-	//                                precisionMap.put(f, maxPrec);
-	//                                recallMap.put(f, maxRec);
-	//                                fScoreMap.put(f, maxF);
-	//                                accuracyMap.put(f, maxAcc);
-	//                                kappaMap.put(f, maxKappa);
-	//                                bestMap.put(f, bestLabel);
-	//                                hitsMap.put(f, hits.size());
-	//                                double f7 = System.currentTimeMillis();
-	//                                timeA += (f2-f1);
-	//                                timeD += (f7-f6);
-	//                        }
 	//                        addEvaluation("predictor of", bestMap);
 	//                        addEvaluation("kappa", kappaMap);
 	//                        addEvaluation("precision", precisionMap);
@@ -609,23 +561,7 @@ public class FeatureTable implements Serializable
 	//                double time2 = System.currentTimeMillis();
 	//        }
 	//
-	//        /**
-	//         * Checks whether this feature "hit" a document, for the purpose of converting all these different
-	//         * feature types into a boolean check for basic evaluations.
-	//         */
-	//        public boolean checkHitMatch(Feature f, Object value){
-	//                switch(f.getFeatureType()){
-	//                case BOOLEAN:
-	//                        return Boolean.TRUE.equals(value);
-	//                case NOMINAL:
-	//                        return false;
-	//                case NUMERIC:
-	//                        return ((Number)value).doubleValue()>0;
-	//                case STRING:
-	//                        return value.toString().length()>0;
-	//                }
-	//                return false;
-	//        }
+
 	//        
 	//        public void addEvaluation(String evaluationName, Map<Feature, Comparable> eval){
 	//                if (eval.keySet().size()==0) return;
@@ -665,27 +601,6 @@ public class FeatureTable implements Serializable
 	//        
 	//        
 	//        
-	//        
-	//        /**
-	//         * @return the set of features extracted from the documents.
-	//         */
-	//        public Set<Feature> getFeatureSet() {
-	//                return hitsPerFeature.keySet();
-	//        }
-	//        /**
-	//         * @return the set of features extracted from the documents.
-	//         */
-	//        public Collection<Feature> getSortedFeatures() {        
-	//                return new TreeSet(hitsPerFeature.keySet());
-	//        }
-	//
-	//        public Collection<FeatureHit> getHitsForFeature(Feature feature) {
-	//                return hitsPerFeature.get(feature);
-	//        }
-	//
-	//        public Collection<FeatureHit> getHitsForDocument(int index) {
-	//                return hitsPerDocument.get(index);
-	//        }
 	//
 	//        public String getTableName(){
 	//                return tableName;
@@ -748,6 +663,7 @@ public class FeatureTable implements Serializable
 	//        }
 	//
 	//
+	//        
 	//        
 	//        
 	//        

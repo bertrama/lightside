@@ -30,7 +30,6 @@ public class RecipeManager {
 				filtered.add(recipe);
 			}
 		}
-		System.out.println(filtered.size() + " recipes of type " + type + " RM33");
 		return filtered;
 	}
 	

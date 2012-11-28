@@ -41,6 +41,6 @@ public class ExtractPluginChecklistPanel extends AbstractListPanel {
 	
 	
 	public void refreshPanel(){
-		
+
 	}
 }

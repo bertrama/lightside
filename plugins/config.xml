@@ -18,4 +18,12 @@
         <classname>plugins.evaluations.tables.FScorePlugin</classname>
     </plugin>
     
+    <plugin>
+        <name>Alphabet Soup</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Alphabets evaluation]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.filters.AlphabetSoup</classname>
+    </plugin>
 </plugins>

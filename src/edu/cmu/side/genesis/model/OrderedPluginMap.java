@@ -20,6 +20,7 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 	}
 	
 	private OrderedPluginComparator comparator = new OrderedPluginComparator(this);
+	
 	@Override
 	public void clear() {
 		ordering.clear();
@@ -48,8 +49,10 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 
 	@Override
 	public Map<String, String> put(SIDEPlugin key, Map<String, String> value) {
+		System.out.println(key.toString() + " Being added to OrderedPluginMap 52");
 		ordering.add(key);
 		configurations.put(key, value);
+		System.out.println(size() + " elements in map OPM55");
 		return value;
 	}
 
@@ -72,6 +75,7 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 
 	@Override
 	public int size() {
+		System.out.println(configurations.size() + " elements in map OPM77");
 		return configurations.size();
 	}
 

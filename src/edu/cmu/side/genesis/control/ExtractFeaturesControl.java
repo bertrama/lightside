@@ -137,7 +137,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 			featurePlugins.put(plug, !featurePlugins.get(plug));
 			GenesisWorkbench.update();
 		}
-		
 	}
 	
 	public static void deleteCurrentDocumentList(){
@@ -195,7 +194,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 					plugins.add(plugin);
 				}
 			}
-			GenesisRecipe newRecipe = GenesisRecipe.fetchRecipe(getHighlightedDocumentListRecipe(), plugins);
+			GenesisRecipe newRecipe = GenesisRecipe.addPluginsToRecipe(getHighlightedDocumentListRecipe(), plugins);
 			System.out.println(newRecipe.getStage() + " " + newRecipe.getDocumentList().getCurrentAnnotation() + " " + newRecipe.getDocumentList().getSize() + " EFC162");
 			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe);
 			task.execute();
@@ -226,7 +225,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 		protected Void doInBackground(){
 			try{
 				Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-				
 				for(SIDEPlugin plug : plan.getExtractors().keySet()){
 					System.out.println("Extracting " + plug.getOutputName() + " starting.");
 					hits.addAll(((FeaturePlugin)plug).extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
@@ -239,53 +237,10 @@ public class ExtractFeaturesControl extends GenesisControl{
 				ft.setName(newTableName);
 				System.out.println("EFC205" + ft.getDescriptionString());
 				plan.setFeatureTable(ft);
-				setHighlightedFeatureTable(plan);
+				setHighlightedFeatureTableRecipe(plan);
+				ModifyFeaturesControl.setHighlightedFeatureTableRecipe(plan);
 				RecipeManager.addRecipe(plan);
 				GenesisWorkbench.update();
-//				
-//				halt.setEnabled(true);
-//				int thresh = 0;
-//				try{
-//					thresh = Integer.parseInt(threshold.getText());
-//				}catch(Exception ex){
-//					AlertDialog.show("Error!", "Threshold is not an integer value.", null);
-//					ex.printStackTrace();
-//				}
-//				FeatureTable table;
-//				if(clickedPlugin.overridesFeatureTable()){
-//					table = clickedPlugin.getCustomFeatureTable(corpus);
-//				}else{
-//					table = new FeatureTable(clickedPlugin, corpus, thresh);
-//				}
-//				if(table.getFeatureSet().size() > 0){
-//					table.defaultEvaluation();
-//					table.setTableName(tableName.getText());
-//						SimpleWorkbench.addFeatureTable(table);					
-//						List<FeatureTable> fts = SimpleWorkbench.getFeatureTables();
-//						String name = "features";
-//						boolean available = true;
-//						for(FeatureTable ft : fts){
-//							if(name.equals(ft.getTableName())) available = false;
-//						}
-//						if(!available){
-//							int count = 0;
-//							while(!available){
-//								count++;
-//								name = "features" + count;
-//								available = true;
-//								for(FeatureTable ft : fts){
-//									if(name.equals(ft.getTableName())) available = false;
-//								}	
-//							}
-//						}
-//						tableName.setText(name);
-//				}
-//				if(halted){
-//					halted = false;
-//				}
-//				progressLabel.setText("");
-//				fireActionEvent();
-//				halt.setEnabled(false);
 			}catch(Exception e){
 //				JTextArea text = new JTextArea();
 //				text.setText(e.toString());
@@ -312,7 +267,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 	
 	public static void generateDocumentListRecipe(Set<String> files){
 		SimpleDocumentList sdl = new SimpleDocumentList(files);
-		setHighlightedDocumentList(RecipeManager.fetchDocumentListRecipe(sdl));
+		setHighlightedDocumentListRecipe(RecipeManager.fetchDocumentListRecipe(sdl));
 	}
 
 	public static int numDocumentLists(){
@@ -363,7 +318,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		return update;
 	}
 	
-	public static void setHighlightedDocumentList(GenesisRecipe highlight){
+	public static void setHighlightedDocumentListRecipe(GenesisRecipe highlight){
 		highlightedDocumentList = highlight;
 		SimpleDocumentList sdl = highlight.getDocumentList();
 		System.out.println("EFC334 " + sdl.getCurrentAnnotation() + " annot, " + sdl.getTextColumns().size() + " text columns");
@@ -384,7 +339,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		GenesisWorkbench.update();
 	}
 	
-	public static void setHighlightedFeatureTable(GenesisRecipe highlight){
+	public static void setHighlightedFeatureTableRecipe(GenesisRecipe highlight){
 		highlightedFeatureTable = highlight;
 		GenesisWorkbench.update();
 	}

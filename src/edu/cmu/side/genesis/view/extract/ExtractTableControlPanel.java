@@ -22,7 +22,7 @@ public class ExtractTableControlPanel extends AbstractListPanel{
 			public void actionPerformed(ActionEvent ae){
 				if(combo.getSelectedItem() != null){
 					GenesisRecipe r = (GenesisRecipe)combo.getSelectedItem();
-					ExtractFeaturesControl.setHighlightedFeatureTable(r);
+					ExtractFeaturesControl.setHighlightedFeatureTableRecipe(r);
 				}
 				GenesisWorkbench.update();
 			}

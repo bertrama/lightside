@@ -16,6 +16,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JComponent;
 import javax.swing.JMenuBar;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
@@ -43,49 +44,45 @@ implements ItemListener {
 		g.setColor(new Color(128, 128, 128, 128));
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 30);
 		g.setFont(f);
-		if(!hasDocs){
-			for(Component c : contentPane.getComponents()){
-				if(c instanceof ExtractFeaturesPane){
-					for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
-						if(c2 instanceof JSplitPane){
-							for(Component c3 : ((ExtractTopPanel)((JSplitPane)c2).getTopComponent()).getComponents()){
-								if(c3 instanceof JSplitPane){
-									int offsetX = 13; // FIXME
-									int offsetY = 35;
+		Component c = ((JTabbedPane)contentPane).getSelectedComponent();
+		if(c instanceof ExtractFeaturesPane){
+			if(!hasDocs){
+				for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
+					if(c2 instanceof JSplitPane){
+						for(Component c3 : ((ExtractTopPanel)((JSplitPane)c2).getTopComponent()).getComponents()){
+							if(c3 instanceof JSplitPane){
+								int offsetX = 13; // FIXME
+								int offsetY = 35;
 
-									Component c4 = ((JSplitPane)c3).getRightComponent();
-									g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
-									String warning = "Load Documents to Extract Features";
-									g.setColor(Color.white);
-									g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
-									g.setColor(new Color(128, 128, 128, 128));
-								}
+								Component c4 = ((JSplitPane)c3).getRightComponent();
+								g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
+								String warning = "Load Documents to Extract Features";
+								g.setColor(Color.white);
+								g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
+								g.setColor(new Color(128, 128, 128, 128));
 							}
 						}
 					}
 				}
-			}			
-		}
-		if(!hasFeats){
-			for(Component c : contentPane.getComponents()){
-				if(c instanceof ExtractFeaturesPane){
-					for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
-						if(c2 instanceof JSplitPane){
-							int offsetX = 11; // FIXME
-							int offsetY = 33;
+			}
+			if(!hasFeats){
+				for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
+					if(c2 instanceof JSplitPane){
+						int offsetX = 11; // FIXME
+						int offsetY = 33;
 
-							Component c4 = ((JSplitPane)c2).getBottomComponent();
-							g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
-							String warning = "Extract Features to View Table";
-							g.setColor(Color.white);
-							g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
-							g.setColor(Color.gray);
+						Component c4 = ((JSplitPane)c2).getBottomComponent();
+						g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
+						String warning = "Extract Features to View Table";
+						g.setColor(Color.white);
+						g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
+						g.setColor(Color.gray);
 
-						}
 					}
 				}
-			}	
+			}
 		}
+
 	}
 
 	public void setPoint(Point p) {
@@ -99,23 +96,23 @@ implements ItemListener {
 		addMouseMotionListener(listener);
 	}
 	@Override
-    public boolean contains(int x, int y)
-    {
-        Component[] components = getComponents();
-        for(int i = 0; i < components.length; i++)
-        {
-            Component component = components[i];
-            Point containerPoint = SwingUtilities.convertPoint(
-                this,
-                x, y,
-                component);
-            if(component.contains(containerPoint))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+	public boolean contains(int x, int y)
+	{
+		Component[] components = getComponents();
+		for(int i = 0; i < components.length; i++)
+		{
+			Component component = components[i];
+			Point containerPoint = SwingUtilities.convertPoint(
+					this,
+					x, y,
+					component);
+			if(component.contains(containerPoint))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 /**

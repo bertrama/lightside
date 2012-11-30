@@ -67,7 +67,8 @@ public class GenesisRecipe {
 			out = name;
 		}else if(RecipeManager.FEATURE_TABLE_RECIPES.equals(stage)){
 			out = "Features " + featureTable.getName();
-
+		}else if(RecipeManager.MODIFIED_TABLE_RECIPES.equals(stage)){
+			out = "Filtered Features " + featureTable.getName();
 		}
 		return out;
 	}
@@ -156,18 +157,35 @@ public class GenesisRecipe {
 		return new GenesisRecipe();
 	}
 
-	public static GenesisRecipe fetchRecipe(GenesisRecipe prior, Collection<? extends SIDEPlugin> next){
+	public static GenesisRecipe addPluginsToRecipe(GenesisRecipe prior, Collection<? extends SIDEPlugin> next){
 		String stage = prior.getStage();
 		GenesisRecipe newRecipe = fetchRecipe();
 		System.out.println(stage + " Stage GR107");
 		if(stage.equals(RecipeManager.DOCUMENT_LIST_RECIPES)){
-			newRecipe.setDocumentList(prior.getDocumentList());
-			for(SIDEPlugin plugin : next){
-				assert next instanceof FeaturePlugin;
-				newRecipe.addExtractor((FeaturePlugin)plugin);
-			}
+			addFeaturePlugins(prior, newRecipe, (Collection<FeaturePlugin>)next);
+		}else if(stage.equals(RecipeManager.FEATURE_TABLE_RECIPES)){
+			addFilterPlugins(prior, newRecipe, (Collection<FilterPlugin>)next);
 		}
 		return newRecipe;
 	}
-
+	
+	protected static void addFeaturePlugins(GenesisRecipe prior, GenesisRecipe newRecipe, Collection<FeaturePlugin> next){
+		newRecipe.setDocumentList(prior.getDocumentList());
+		for(FeaturePlugin plugin : next){
+			assert next instanceof FeaturePlugin;
+			newRecipe.addExtractor(plugin);
+		}
+	}
+	
+	protected static void addFilterPlugins(GenesisRecipe prior, GenesisRecipe newRecipe, Collection<FilterPlugin> next){
+		newRecipe.setDocumentList(prior.getDocumentList());
+		for(SIDEPlugin fp : prior.getExtractors().keySet()){
+			newRecipe.addExtractor((FeaturePlugin)fp);
+		}
+		newRecipe.setFeatureTable(prior.getFeatureTable());
+		for(FilterPlugin plugin : next){
+			assert next instanceof FilterPlugin;
+			newRecipe.addFilter(plugin);
+		}
+	}
 }

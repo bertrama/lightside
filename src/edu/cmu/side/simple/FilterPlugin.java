@@ -14,12 +14,16 @@ import edu.cmu.side.simple.feature.FeatureTable;
  * Filter plugins are used in the Modify Features panel. Given a feature table,
  * along with a list of options specified within a user interface, they return a
  * new set of FeatureHits that will be used in a new FeatureTable.
+ * 
+ * Remember that filter plugin UI components can't be static because we might have
+ * multiples!
+ * 
  */
 public abstract class FilterPlugin extends SIDEPlugin implements Serializable{
 
 	@Override
 	public String getType() {
-		return "filter";
+		return "filter_extractor";
 	}
 	
 	public FeatureTable filter(FeatureTable original, Map<String, String> configuration, GenesisUpdater progressIndicator){

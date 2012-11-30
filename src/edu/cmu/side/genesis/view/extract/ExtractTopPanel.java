@@ -14,7 +14,6 @@ public class ExtractTopPanel extends JPanel{
 	
 	public ExtractTopPanel(){
 		setLayout(new BorderLayout());
-		setBackground(Color.black);
 		JSplitPane pane = new JSplitPane();
 		pane.setLeftComponent(control);
 		pane.setRightComponent(display);

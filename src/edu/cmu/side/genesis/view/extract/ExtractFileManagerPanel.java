@@ -37,7 +37,7 @@ public class ExtractFileManagerPanel extends AbstractListPanel{
 			public void actionPerformed(ActionEvent ae){
 				if(combo.getSelectedItem() != null){
 					GenesisRecipe r = (GenesisRecipe)combo.getSelectedItem();
-					ExtractFeaturesControl.setHighlightedDocumentList(r);
+					ExtractFeaturesControl.setHighlightedDocumentListRecipe(r);
 				}
 				GenesisWorkbench.update();
 			}

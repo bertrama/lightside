@@ -44,6 +44,27 @@ public class FeatureTable implements Serializable
 		return hitsPerFeature.keySet().size() + " Features";	
 	}
 
+
+	/**
+	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
+	 * @return
+	 */
+	public Feature.Type getClassValueType(){
+		if(type == null){
+			for(String s : documents.getLabelArray()){
+				try{
+					Double num = Double.parseDouble(s);
+				}catch(Exception e){
+					type = Feature.Type.NOMINAL;
+					return type;
+				}
+			}
+			type = Feature.Type.NUMERIC;
+		}
+		return type;
+	}
+
+
 	private FeatureTable(){
 		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(100000); //Rough guess at capacity requirement.
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
@@ -91,6 +112,13 @@ public class FeatureTable implements Serializable
 		documents = sdl;
 	}
 
+	public void setThreshold(int n){
+		threshold = n;
+	}
+	
+	public int getThreshold(){
+		return threshold;
+	}
 	public String getName(){
 		return name;
 	}
@@ -275,155 +303,6 @@ public class FeatureTable implements Serializable
 	//
 	//        
 	//        
-	//        
-	//        
-	//        
-	//        
-	//        public Integer getFastVectorIndex(Feature f){
-	//                return attributeMap.get(f);
-	//        }
-	//
-	//        /**
-	//         * Builds a set of features for Weka's internal data structures.
-	//         * Doesn't convert the instances yet (use getInstances() for that).
-	//         */
-	//        public void generateFastVector(){
-	//                double time1 = System.currentTimeMillis();
-	//                if(fastVector == null){
-	//                        FastVector attributes = new FastVector();
-	//                        int index = 0;
-	//                        Collection<Feature> featureSet = getSortedFeatures();
-	//                        for(Feature f : featureSet){
-	//                                Attribute att = null;
-	//                                FastVector fv = new FastVector();
-	//                                switch(f.getFeatureType()){
-	//                                case BOOLEAN:
-	//                                        fv.addElement(Boolean.FALSE.toString());
-	//                                        fv.addElement(Boolean.TRUE.toString());
-	//                                        att = new Attribute(f.getFeatureName(), fv);
-	//                                        break;
-	//                                case NOMINAL:
-	//                                        for(String s : f.getNominalValues()) fv.addElement(s);
-	//                                        att = new Attribute(f.getFeatureName(), fv);
-	//                                        break;
-	//                                case NUMERIC:
-	//                                        att = new Attribute(f.getFeatureName());
-	//                                        break;
-	//                                case STRING:
-	//                                        att = new Attribute(f.getFeatureName(), (FastVector)null);
-	//                                        break;
-	//                                }
-	//                                if(att != null){
-	//                                        attributes.addElement(att);             
-	//                                        attributeMap.put(f, index++);
-	//                                }
-	//                        }
-	//                        switch(getClassValueType()){
-	//                        case NOMINAL:
-	//                                FastVector fv = new FastVector();
-	//                                for(String s : getPossibleLabels()){ 
-	//                                        fv.addElement(s);
-	//                                }
-	//                                attributes.addElement(new Attribute("CLASS", fv));
-	//                                break;
-	//                        case NUMERIC:
-	//                                attributes.addElement(new Attribute("CLASS"));
-	//                                break;
-	//                        }                               
-	//                        fastVector = attributes;
-	//                }
-	//                double time2 = System.currentTimeMillis();
-	//        }
-	//        
-	//        //---------------------------------------------------------------------
-	//        //0 should always represent missing or not occurred in nominal features
-	//        public double getHitValueForFastVector(FeatureHit hit) {
-	//                Type hitType = hit.getFeature().getFeatureType();
-	//                switch(hitType){
-	//                case NUMERIC:
-	//                        if(hit.getValue() instanceof Integer){
-	//                                return 0.0+(Integer)hit.getValue();
-	//                        }else{
-	//                                return (Double)hit.getValue();                                          
-	//                        }
-	//                case STRING:
-	//                case NOMINAL:
-	//                        int index = 0;
-	//                        for(String val : hit.getFeature().getNominalValues()){
-	//                                if(val.equals(hit.getValue())) return index;
-	//                                index++;
-	//                        }
-	//                case BOOLEAN:
-	//                        return 1;
-	//                }
-	//                return 0;
-	//        }
-	//        
-	//        /**
-	//         * Generates Instance objects (weka format) for a document in the corpus. Actually,
-	//         * these objects already exist, we're just filling the value.
-	//         * 
-	//         * @param format The Instances object to put this generated Instance in.
-	//         * @param i The document to fill. 
-	//         */
-	//        private Instance fillInstance(Instances format, Feature.Type t, int i) {
-	//                Collection<FeatureHit> hits = getHitsForDocument(i);
-	//                double[] values = new double[format.numAttributes()];
-	//                for(int j = 0; j < values.length; j++) values[j] = 0.0;
-	//                try{
-	//                        for(FeatureHit hit : hits){
-	//                                Feature f = hit.getFeature();
-	//                                Integer att = getFastVectorIndex(f);
-	//                                Feature.Type type = f.getFeatureType();
-	//                                values[att] = getHitValueForFastVector(hit);
-	//                        }
-	//                }catch(Exception e){
-	//                        e.printStackTrace();
-	//                }
-	//                if(labels != null){
-	//                        switch(t){
-	//                        case NOMINAL:
-	//                        case BOOLEAN:                   
-	//                                for(int j = 0; j < getPossibleLabels().length; j++)
-	//                                        if(getPossibleLabels()[j].equals(labels[i]))
-	//                                                values[values.length-1] = j;
-	//                                break;
-	//                        case NUMERIC:
-	//                                values[values.length-1] = Double.parseDouble(labels[i]);
-	//                                break;
-	//                        }                       
-	//                }
-	//                Instance inst = new SparseInstance(1,values);
-	//                return inst;
-	//        }
-	//        
-	//
-	//        /**
-	//         * Generates the set of instances used for the final model (not for cross-validation)
-	//         * @return
-	//         */
-	//        public Instances getInstances(){
-	//                if(instances == null){
-	//                        if (fastVector == null) generateFastVector();
-	//                        Instances format = new Instances(getTableName(), fastVector, 0);
-	//                        double runningTotal = 0.0;
-	//                        Feature.Type t = getClassValueType();
-	//                        for(int i = 0; i < hitsPerDocument.size(); i++){
-	//                                double time1 = System.currentTimeMillis();
-	//                                format.add(fillInstance(format, t, i));
-	//                                double time2 = System.currentTimeMillis();
-	//                                runningTotal += (time2-time1);
-	//                        }
-	//                        format.setClass(format.attribute("CLASS"));
-	//                        instances = format;                     
-	//                }
-	//                return instances;
-	//        }
-	//        static double getHitsTime = 0.0;
-	//        static double setValueTime = 0.0;
-	//        static double classValueTime = 0.0;
-	//        static double cleanupTime = 0.0;
-	//
 	//
 	//        /**
 	//         * Generates subsets of data from this feature table, used for cross validation. Makes a shallow copy of features
@@ -474,24 +353,6 @@ public class FeatureTable implements Serializable
 	//                        if(foldMap.get(i) != fold) ans[i]=true; else ans[i]=false;
 	//                return ans;
 	//        }
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//
-	//        static double aTime = 0.0;
-	//        static double bTime = 0.0;
-	//        static double cTime = 0.0;
-	//        static double dTime = 0.0;
-	//        static double eTime = 0.0;
-	//
 	//        /**
 	//         * run the extractors on the documents and populate the feature hit tables.
 	//         */
@@ -594,84 +455,19 @@ public class FeatureTable implements Serializable
 	//                return evaluations;
 	//        }
 	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//
-	//        public String getTableName(){
-	//                return tableName;
-	//        }
-	//        
-	//        public int getInstanceSize(){
-	//                return hitsPerDocument.size();
-	//        }
-	//
 	//        public String toString(){
 	//                return getTableName();
 	//        }
-	//
-	//        public String[] getPossibleLabels(){
-	//                if (possibleLabels != null) return possibleLabels;
-	//                if (labels == null) return null;
-	//                Set<String> l = new TreeSet<String>();
-	//                for(String s : labels) l.add(s);
-	//                possibleLabels = l.toArray(new String[0]);
-	//                return possibleLabels;
-	//        }
-	//        
-	//        /**
-	//         * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
-	//         */
-	//        public Feature.Type getClassValueType(){
-	//                if(type == null){
-	//                        if (getPossibleLabels() == null) return null;
-	//                        for(String s : getPossibleLabels()){
-	//                                try{
-	//                                        Double num = Double.parseDouble(s);
-	//                                }catch(Exception e){
-	//                                        type = Feature.Type.NOMINAL;
-	//                                        return type;
-	//                                }
-	//                        }
-	//                        type = Feature.Type.NUMERIC;
-	//                }
-	//                return type;
-	//        }
-	//
-	//        public boolean getActivated(Feature f){
-	//                if(activatedFeatures == null){
-	//                        return true;
-	//                }else if(activatedFeatures.containsKey(f)){
-	//                        return activatedFeatures.get(f);                        
-	//                }else return false;
-	//        }
+	
 	//
 	//        public Integer getThreshold(){
 	//                return threshold;
 	//        }
 	//        
-	//        public void setActivated(Feature f, boolean active){
-	//                activatedFeatures.put(f, active);
-	//        }
-	//
 	//        public void setTableName(String name){
 	//                tableName = name;
 	//        }
 	//
-	//
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        
 	//
 	//        /**
 	//         * Removes a feature and all of its hits from a feature table.

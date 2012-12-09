@@ -26,4 +26,21 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.filters.AlphabetSoup</classname>
     </plugin>
+    <plugin>
+        <name>Weka Logit</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Logistic regression classification]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.learning.WekaLogit</classname>
+    </plugin>
+
+    <plugin>
+        <name>Weka Generic</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Weka's generic interface]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.learning.WekaGeneric</classname>
+    </plugin>
 </plugins>

@@ -12,34 +12,38 @@ import javax.swing.JTextArea;
 
 import se.datadosen.component.RiverLayout;
 
+import edu.cmu.side.genesis.control.ExtractFeaturesControl;
+import edu.cmu.side.genesis.view.generic.FeatureTableDisplayPanel;
 import edu.cmu.side.simple.newui.features.FeatureTableListPanel;
 import edu.cmu.side.simple.newui.features.FeatureTablePanel;
 
 public class ExtractBottomPanel extends JPanel{
-	
-	ExtractTableControlPanel control = new ExtractTableControlPanel();
-	ExtractTableChecklistPanel checklist = new ExtractTableChecklistPanel();
-	ExtractTableDisplayPanel display = new ExtractTableDisplayPanel();
-	
-	public ExtractBottomPanel(){
-		setLayout(new BorderLayout());
-		JSplitPane split = new JSplitPane();
-		split.setLeftComponent(control);
-		
-		JSplitPane displaySplit = new JSplitPane();
-		displaySplit.setLeftComponent(checklist);
-		displaySplit.setRightComponent(display);
-		displaySplit.setPreferredSize(new Dimension(650,200));
-		checklist.setPreferredSize(new Dimension(275,200));
-		display.setPreferredSize(new Dimension(350, 200));
-		split.setRightComponent(displaySplit);
-		control.setPreferredSize(new Dimension(275,200));
-		add(BorderLayout.CENTER, split);
-	}
-	
-	public void refreshPanel(){
-		control.refreshPanel();
-		checklist.refreshPanel();
-		display.refreshPanel();
-	}
+        
+        ExtractTableControlPanel control = new ExtractTableControlPanel();
+        ExtractTableChecklistPanel checklist = new ExtractTableChecklistPanel();
+        FeatureTableDisplayPanel display = new FeatureTableDisplayPanel();
+        
+        public ExtractBottomPanel(){
+                setLayout(new BorderLayout());
+                JSplitPane split = new JSplitPane();
+                split.setLeftComponent(control);
+                
+                JSplitPane displaySplit = new JSplitPane();
+                displaySplit.setLeftComponent(checklist);
+                displaySplit.setRightComponent(display);
+                displaySplit.setPreferredSize(new Dimension(650,200));
+                checklist.setPreferredSize(new Dimension(275,200));
+                display.setPreferredSize(new Dimension(350, 200));
+                split.setRightComponent(displaySplit);
+                control.setPreferredSize(new Dimension(275,200));
+                add(BorderLayout.CENTER, split);
+        }
+        
+        public void refreshPanel(){
+                control.refreshPanel();
+                checklist.refreshPanel();
+                if(ExtractFeaturesControl.hasHighlightedFeatureTable()){
+                	display.refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable(), ExtractFeaturesControl.getTableEvaluationPlugins());
+                }
+        }
 }

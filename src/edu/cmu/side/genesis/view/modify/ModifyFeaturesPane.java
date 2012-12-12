@@ -6,23 +6,32 @@ import java.awt.Dimension;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.genesis.view.generic.GenericTripleFrame;
+
 public class ModifyFeaturesPane extends JPanel{
 
-	private ModifyManagerPanel manage = new ModifyManagerPanel();
-	private ModifyRightPanel right = new ModifyRightPanel();
-	
+	private static GenericTripleFrame top;
+	private static ModifyActionPanel action = new ModifyActionPanel();
+	private static ModifyBottomPanel bottom = new ModifyBottomPanel();
+
 	public ModifyFeaturesPane(){
 		setLayout(new BorderLayout());
-		JSplitPane pane = new JSplitPane();
-		pane.setLeftComponent(manage);
-		pane.setRightComponent(right);
-		manage.setPreferredSize(new Dimension(275, 675));
-		right.setPreferredSize(new Dimension(650, 675));
+		top = new GenericTripleFrame(new ModifyLoadPanel(), new ModifyChecklistPanel(), new ModifyConfigPanel());
+		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+		
+		JPanel panel = new JPanel(new BorderLayout());
+		panel.add(BorderLayout.CENTER, top);
+		panel.add(BorderLayout.SOUTH, action);
+		pane.setTopComponent(panel);
+		pane.setBottomComponent(bottom);
+		top.setPreferredSize(new Dimension(950,450));
+		bottom.setPreferredSize(new Dimension(950,200));
 		add(BorderLayout.CENTER, pane);
 	}
 	
 	public void refreshPanel(){
-		manage.refreshPanel();
-		right.refreshPanel();
+		top.refreshPanel();
+		action.refreshPanel();
+		bottom.refreshPanel();
 	}
 }

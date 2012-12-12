@@ -15,8 +15,9 @@ import se.datadosen.component.RiverLayout;
 
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
 import edu.cmu.side.simple.FeaturePlugin;
+import edu.cmu.side.simple.newui.AbstractListPanel;
 
-public class ExtractPluginConfigPanel extends JPanel {
+public class ExtractPluginConfigPanel extends AbstractListPanel {
 
 	Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
 	

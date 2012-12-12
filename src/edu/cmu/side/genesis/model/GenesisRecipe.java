@@ -25,8 +25,9 @@ public class GenesisRecipe {
 	String recipeName = null;
 	OrderedPluginMap extractors;
 	OrderedPluginMap filters;
-	OrderedPluginMap learners;
-
+	LearningPlugin learner;
+	Map<String, String> learnerSettings;
+	
 	SimpleDocumentList documentList;
 	FeatureTable featureTable;
 	FeatureTable filteredTable;
@@ -69,6 +70,8 @@ public class GenesisRecipe {
 			out = "Features " + featureTable.getName();
 		}else if(RecipeManager.MODIFIED_TABLE_RECIPES.equals(stage)){
 			out = "Filtered Features " + featureTable.getName();
+		}else if(RecipeManager.TRAINED_MODEL_RECIPES.equals(stage)){
+			out = "Trained model " + trainedModel.getSummary();
 		}
 		return out;
 	}
@@ -83,6 +86,10 @@ public class GenesisRecipe {
 	
 	public FeatureTable getFilteredTable(){
 		return filteredTable;
+	}
+	
+	public FeatureTable getTrainingTable(){
+		if(filteredTable == null) return getFeatureTable(); else return getFilteredTable();
 	}
 	
 	public SimpleTrainingResult getTrainingResult(){
@@ -101,8 +108,8 @@ public class GenesisRecipe {
 		return filters;
 	}
 	
-	public OrderedPluginMap getLearners(){
-		return learners;
+	public LearningPlugin getLearner(){
+		return learner;
 	}
 
 	public void setDocumentList(SimpleDocumentList sdl){
@@ -140,16 +147,23 @@ public class GenesisRecipe {
 		resetStage();
 	}
 	
-	public void addLearner(LearningPlugin plug){
-		learners.put(plug, plug.generateConfigurationSettings());
+	public void setLearner(LearningPlugin plug){
+		learner = plug;
 		resetStage();
+	}
+	
+	public void setLearnerSettings(Map<String, String> settings){
+		learnerSettings = settings;
+	}
+	
+	public Map<String, String> getLearnerSettings(){
+		return learnerSettings;
 	}
 
 	private GenesisRecipe(){
 		recipeName = "Blank Recipe";
 		extractors = new OrderedPluginMap();
 		filters= new OrderedPluginMap();
-		learners = new OrderedPluginMap();
 		getStage();
 	}
 
@@ -166,6 +180,23 @@ public class GenesisRecipe {
 		}else if(stage.equals(RecipeManager.FEATURE_TABLE_RECIPES)){
 			addFilterPlugins(prior, newRecipe, (Collection<FilterPlugin>)next);
 		}
+		return newRecipe;
+	}
+	
+	public static GenesisRecipe addLearnerToRecipe(GenesisRecipe prior, LearningPlugin next, Map<String, String> settings){
+		String stage = prior.getStage();
+		GenesisRecipe newRecipe = fetchRecipe();
+		newRecipe.setDocumentList(prior.getDocumentList());
+		for(SIDEPlugin plugin : prior.getExtractors().keySet()){
+			newRecipe.addExtractor((FeaturePlugin)plugin);
+		}
+		newRecipe.setFeatureTable(prior.getFeatureTable());
+		for(SIDEPlugin plugin : prior.getFilters().keySet()){
+			newRecipe.addFilter((FilterPlugin)plugin);
+		}
+		newRecipe.setFilteredTable(prior.getFilteredTable());
+		newRecipe.setLearner(next);
+		newRecipe.setLearnerSettings(settings);
 		return newRecipe;
 	}
 	
@@ -188,4 +219,5 @@ public class GenesisRecipe {
 			newRecipe.addFilter(plugin);
 		}
 	}
+	
 }

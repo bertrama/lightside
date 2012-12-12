@@ -7,18 +7,19 @@ import javax.swing.JSplitPane;
 
 public class ModifyRightPanel extends JSplitPane {
 
+	private ModifyChecklistPanel checklist = new ModifyChecklistPanel();
 	private ModifyConfigPanel config = new ModifyConfigPanel();
-	private ModifyDisplayPanel display = new ModifyDisplayPanel();
-	
+
 	public ModifyRightPanel(){
-		config.setPreferredSize(new Dimension(300,675));
-		display.setPreferredSize(new Dimension(325,675));
-		setLeftComponent(config);
-		setRightComponent(display);		
+		setLeftComponent(checklist);
+		setRightComponent(config);
+		checklist.setPreferredSize(new Dimension(300, 450));
+		config.setPreferredSize(new Dimension(325,450));
+
 	}
 	
 	public void refreshPanel(){
+		checklist.refreshPanel();
 		config.refreshPanel();
-		display.refreshPanel();
 	}
 }

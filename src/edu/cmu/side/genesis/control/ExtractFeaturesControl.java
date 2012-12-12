@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import com.yerihyo.yeritools.io.FileToolkit;
 import com.yerihyo.yeritools.swing.AlertDialog;
@@ -23,11 +24,11 @@ import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.genesis.GenesisWorkbench;
 import edu.cmu.side.genesis.model.GenesisRecipe;
 import edu.cmu.side.genesis.model.RecipeManager;
-import edu.cmu.side.genesis.view.CheckBoxListEntry;
-import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 import edu.cmu.side.genesis.view.extract.ExtractLoadPanel;
 import edu.cmu.side.genesis.view.extract.ExtractFileManagerPanel;
-import edu.cmu.side.genesis.view.extract.ExtractPluginPanel;
+import edu.cmu.side.genesis.view.extract.ExtractActionPanel;
+import edu.cmu.side.genesis.view.generic.CheckBoxListEntry;
+import edu.cmu.side.genesis.view.generic.SwingUpdaterLabel;
 import edu.cmu.side.plugin.PluginManager;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
@@ -42,18 +43,15 @@ public class ExtractFeaturesControl extends GenesisControl{
 
 	private static GenesisRecipe highlightedDocumentList;
 	private static GenesisRecipe highlightedFeatureTable;
-	private static int threshold;
-	private static String newTableName;
 	private static GenesisUpdater update = new SwingUpdaterLabel();
 	private static Map<FeaturePlugin, Boolean> featurePlugins;
 	private static Map<TableEvaluationPlugin, Map<String, Boolean>> tableEvaluationPlugins;
+	private static EvalCheckboxListener eval;
 	
 	static{
-		System.out.println("Attempting to get plugins");
 		featurePlugins = new HashMap<FeaturePlugin, Boolean>();
 		SIDEPlugin[] featureExtractors = PluginManager.getSIDEPluginArrayByType("feature_hit_extractor");
 		for(SIDEPlugin fe : featureExtractors){
-			System.out.println("Adding feature plugin" + fe);
 			featurePlugins.put((FeaturePlugin)fe, false);
 		}
 		tableEvaluationPlugins = new HashMap<TableEvaluationPlugin, Map<String, Boolean>>();
@@ -61,10 +59,15 @@ public class ExtractFeaturesControl extends GenesisControl{
 		for(SIDEPlugin fe : tableEvaluations){
 			tableEvaluationPlugins.put((TableEvaluationPlugin)fe, new TreeMap<String, Boolean>());
 		}
+		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 	}
 	
 	public static Map<FeaturePlugin, Boolean> getFeaturePlugins(){
 		return featurePlugins;
+	}
+	
+	public static EvalCheckboxListener getEvalCheckboxListener(){
+		return eval;
 	}
 	
 	public static Map<TableEvaluationPlugin, Map<String, Boolean>> getTableEvaluationPlugins(){
@@ -112,28 +115,12 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 	}
 	
-	public static class EvalCheckboxListener implements ItemListener{
-
-		@Override
-		public void itemStateChanged(ItemEvent ie) {
-			String eval = ((CheckBoxListEntry)ie.getSource()).getValue().toString();
-			for(TableEvaluationPlugin plug : tableEvaluationPlugins.keySet()){
-				if(tableEvaluationPlugins.get(plug).containsKey(eval)){
-					boolean flip = !tableEvaluationPlugins.get(plug).get(eval);
-					System.out.println("EFC122 flipping eval checkbox from " + tableEvaluationPlugins.get(plug).get(eval) + " to " + flip);
-					tableEvaluationPlugins.get(plug).put(eval, flip);
-				}
-			}
-			GenesisWorkbench.update();
-		}
-	}
 	
 	public static class PluginCheckboxListener implements ItemListener{
 
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
 			FeaturePlugin plug = (FeaturePlugin)((CheckBoxListEntry)ie.getSource()).getValue();
-			System.out.println(plug + ", " + ie.getStateChange() + ", " + ie.SELECTED + " EFC88");		
 			featurePlugins.put(plug, !featurePlugins.get(plug));
 			GenesisWorkbench.update();
 		}
@@ -181,44 +168,46 @@ public class ExtractFeaturesControl extends GenesisControl{
 	public static class BuildTableListener implements ActionListener{
 		
 		private JProgressBar progress;
-		
-		public BuildTableListener(JProgressBar pr){
+		private JTextField text;
+		private JTextField threshold;
+		public BuildTableListener(JProgressBar pr, JTextField n, JTextField thr){
 			progress = pr;
+			text = n;
+			threshold = thr;
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			Collection<FeaturePlugin> plugins = new HashSet<FeaturePlugin>();
 			for(FeaturePlugin plugin : ExtractFeaturesControl.getFeaturePlugins().keySet()){
 				if(ExtractFeaturesControl.getFeaturePlugins().get(plugin)){
-					System.out.println("Adding plugin " + plugin.getOutputName() + " EFC157");
 					plugins.add(plugin);
 				}
 			}
+			int thresh = 1;
+			try{
+				thresh = Integer.parseInt(threshold.getText());		
+			}catch(Exception e){
+				JOptionPane.showMessageDialog(threshold, "Threshold value is not an integer!", "Warning", JOptionPane.WARNING_MESSAGE);
+			}
+
 			GenesisRecipe newRecipe = GenesisRecipe.addPluginsToRecipe(getHighlightedDocumentListRecipe(), plugins);
-			System.out.println(newRecipe.getStage() + " " + newRecipe.getDocumentList().getCurrentAnnotation() + " " + newRecipe.getDocumentList().getSize() + " EFC162");
-			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe);
+			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, text.getText(), thresh);
 			task.execute();
-			System.out.println("Executed EFC165");
 		}
 		
 	}
-	
-	public static String getNewTableName(){
-		return newTableName;
-	}
-	
-	public static void setNewTableName(String n){
-		newTableName = n;
-	}
-	
 
 	private static class BuildTableTask extends OnPanelSwingTask{
 		
 		GenesisRecipe plan;
+		String name;
+		Integer threshold;
 		
-		public BuildTableTask(JProgressBar progressBar, GenesisRecipe newRecipe){
+		public BuildTableTask(JProgressBar progressBar, GenesisRecipe newRecipe, String n, int t){
 			this.addProgressBar(progressBar);
 			plan = newRecipe;
+			name = n;
+			threshold = t;
 		}
 
 		@Override
@@ -226,21 +215,18 @@ public class ExtractFeaturesControl extends GenesisControl{
 			try{
 				Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
 				for(SIDEPlugin plug : plan.getExtractors().keySet()){
-					System.out.println("Extracting " + plug.getOutputName() + " starting.");
 					hits.addAll(((FeaturePlugin)plug).extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
-					System.out.println(hits.size() + " featurehits after " + plug.getOutputName() + " finished EFC183");
 				}
 				double timeA = System.currentTimeMillis();
 				FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold);
 				double timeB = System.currentTimeMillis();
-				System.out.println((timeB-timeA) + "ms to construct feature table EFC203");
-				ft.setName(newTableName);
-				System.out.println("EFC205" + ft.getDescriptionString());
+				ft.setName(name);
 				plan.setFeatureTable(ft);
 				setHighlightedFeatureTableRecipe(plan);
 				ModifyFeaturesControl.setHighlightedFeatureTableRecipe(plan);
 				RecipeManager.addRecipe(plan);
 				GenesisWorkbench.update();
+				update.reset();
 			}catch(Exception e){
 //				JTextArea text = new JTextArea();
 //				text.setText(e.toString());
@@ -270,22 +256,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 		setHighlightedDocumentListRecipe(RecipeManager.fetchDocumentListRecipe(sdl));
 	}
 
-	public static int numDocumentLists(){
-		return getDocumentLists().size();
-	}
-
-	public static int numFeatureTables(){
-		return GenesisWorkbench.getRecipesByPane(RecipeManager.FEATURE_TABLE_RECIPES).size();
-	}
-	
-	public static Collection<GenesisRecipe> getDocumentLists(){
-		return GenesisWorkbench.getRecipesByPane(RecipeManager.DOCUMENT_LIST_RECIPES);
-	}
-	
-	public static Collection<GenesisRecipe> getFeatureTables(){
-		return GenesisWorkbench.getRecipesByPane(RecipeManager.FEATURE_TABLE_RECIPES);
-	}
-
 	public static GenesisRecipe getHighlightedDocumentListRecipe(){
 		return highlightedDocumentList;
 	}
@@ -301,14 +271,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 	public static GenesisRecipe getHighlightedFeatureTableRecipe(){
 		return highlightedFeatureTable;
 	}
-	
-	public static void setThreshold(int n){
-		threshold = n;
-	}
-	
-	public static int getThreshold(){
-		return threshold;
-	}
 
 	public static void setUpdater(GenesisUpdater up){
 		update = up;
@@ -321,7 +283,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 	public static void setHighlightedDocumentListRecipe(GenesisRecipe highlight){
 		highlightedDocumentList = highlight;
 		SimpleDocumentList sdl = highlight.getDocumentList();
-		System.out.println("EFC334 " + sdl.getCurrentAnnotation() + " annot, " + sdl.getTextColumns().size() + " text columns");
 		if(sdl.getCurrentAnnotation() == null){
 			for(String s : sdl.getAnnotationNames()){
 				if(s.equalsIgnoreCase("class")){

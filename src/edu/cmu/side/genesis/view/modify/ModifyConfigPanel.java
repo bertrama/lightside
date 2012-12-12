@@ -24,7 +24,7 @@ import edu.cmu.side.genesis.GenesisWorkbench;
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
 import edu.cmu.side.genesis.control.ModifyFeaturesControl;
 import edu.cmu.side.genesis.model.OrderedPluginMap;
-import edu.cmu.side.genesis.view.SwingUpdaterLabel;
+import edu.cmu.side.genesis.view.generic.SwingUpdaterLabel;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.FilterPlugin;
@@ -37,17 +37,8 @@ public class ModifyConfigPanel extends AbstractListPanel {
 	static List<FilterPlugin> visiblePlugins = new ArrayList<FilterPlugin>();
 	JProgressBar progress = new JProgressBar();
 	
-	JPanel pluginsBox = new JPanel(new RiverLayout());
 	public ModifyConfigPanel(){
-		setLayout(new BorderLayout());
-		add.setText("Filter");
-		add.addActionListener(new ModifyFeaturesControl.FilterTableListener(progress));
-		JPanel buttonsBox = new JPanel(new RiverLayout());
-		buttonsBox.add("left", add);
-		buttonsBox.add("left", (SwingUpdaterLabel)ModifyFeaturesControl.getUpdater());
-		buttonsBox.add("br hfill", progress);
-		add(BorderLayout.CENTER, new JScrollPane(pluginsBox));
-		add(BorderLayout.SOUTH, buttonsBox);
+		setLayout(new RiverLayout());
 	}
 	
 	public static void removePlugin(int i){
@@ -60,7 +51,7 @@ public class ModifyConfigPanel extends AbstractListPanel {
 		System.out.println(plugins.size() + ", " + visiblePlugins.size() + "MCP35");
 		if(visiblePlugins.size() != plugins.size()){
 			visiblePlugins.clear();
-			pluginsBox.removeAll();
+			this.removeAll();
 			int i = 0;
 			for(SIDEPlugin p : plugins.keySet()){
 				FilterPlugin plug = (FilterPlugin)p;
@@ -69,9 +60,9 @@ public class ModifyConfigPanel extends AbstractListPanel {
 				label.setFont(font);
 				JButton clear = new JButton("Clear");
 				clear.addActionListener(new ModifyConfigPanel.ClearButtonListener(i++));
-				pluginsBox.add("br left", clear);
-				pluginsBox.add("left", label);
-				pluginsBox.add("br hfill", plug.getConfigurationUI());
+				add("br left", clear);
+				add("left", label);
+				add("br hfill", plug.getConfigurationUI());
 			}
 		}
 

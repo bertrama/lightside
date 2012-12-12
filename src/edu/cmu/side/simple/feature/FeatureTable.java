@@ -98,7 +98,15 @@ public class FeatureTable implements Serializable
 	public SimpleDocumentList getDocumentList(){
 		return documents;
 	}
+	
+	public String getDomainName(int indx){
+		return documents.getInstanceDomain(indx);
+	}
 
+	public int getThreshold(){
+		return threshold;
+	}
+	
 	/**
 	 * @return the set of features extracted from the documents.
 	 */
@@ -119,6 +127,50 @@ public class FeatureTable implements Serializable
 	public Collection<FeatureHit> getHitsForDocument(int index) {
 		return hitsPerDocument.get(index);
 	}
+	
+
+	/**
+	 * When creating feature hits, they're done on a per-feature basis. This fills the data structure
+     * that maps those hits per document instead.
+    */
+	private void fillHitsPerDocument(FeatureTable ft) {
+		ft.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
+	    for(int i = 0; i < hitsPerDocument.size(); i++)
+	    	ft.hitsPerDocument.add(new ArrayList<FeatureHit>());
+	    
+	    for(Feature f : hitsPerFeature.keySet()){
+	    	ft.hitsPerFeature.put(f, hitsPerFeature.get(f));
+	        for(FeatureHit fh : ft.hitsPerFeature.get(f))
+	        	ft.hitsPerDocument.get(fh.documentIndex).add(fh);
+	    }
+	}
+	
+	public FeatureTable clone(){
+		FeatureTable ft = new FeatureTable();
+	    ft.setName(getName()+" (clone)");
+	    ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
+	    ft.threshold = threshold;
+	    fillHitsPerDocument(ft);
+	    return ft;
+	}
+	
+	public int getInstanceNumber(){
+		return hitsPerDocument.size();
+	}
+	
+	
+    public void deleteFeatureSet(Set<Feature> f){
+    	for(int i = 0; i < hitsPerDocument.size(); i++){
+    		Collection<FeatureHit> tmphits = new ArrayList<FeatureHit>();
+	        for(FeatureHit hit : hitsPerDocument.get(i))
+	        	if(!f.contains(hit.getFeature())) tmphits.add(hit);
+	        hitsPerDocument.set(i, tmphits);
+	     }
+	     for (Feature fe : f)
+	    	 hitsPerFeature.remove(fe);
+    }
+	
+	
 	//	    	                
 	//	    	                for(int i = 0; i < Length; i++){
 	//	    	                        hitsPerDocument.add(new TreeSet<FeatureHit>());
@@ -218,26 +270,7 @@ public class FeatureTable implements Serializable
 	//                return ft;
 	//        }
 	//        
-	//        /**
-	//         * When creating feature hits, they're done on a per-feature basis. This fills the data structure
-	//         * that maps those hits per document instead.
-	//         */
-	//        private void fillHitsPerDocument(FeatureTable ft) {
-	//                ft.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
-	//                for(int i = 0; i < ft.getInstanceSize(); i++)
-	//                {
-	//                        ft.hitsPerDocument.add(new ArrayList<FeatureHit>());
-	//                }
-	//                for(Feature f : hitsPerFeature.keySet()){
-	//                        if(!activatedFeatures.containsKey(f) || activatedFeatures.get(f)){
-	//                                ft.hitsPerFeature.put(f, hitsPerFeature.get(f));
-	//                                ft.activatedFeatures.put(f, Boolean.TRUE);
-	//                                for(FeatureHit fh : ft.hitsPerFeature.get(f)){
-	//                                        ft.hitsPerDocument.get(fh.documentIndex).add(fh);
-	//                                }
-	//                        }
-	//                }
-	//        }
+
 	//        
 	//        /**
 	//         * Called by external classes (notably the FeaturePluginPanel and FeatureLabPanel) to edit 
@@ -656,10 +689,6 @@ public class FeatureTable implements Serializable
 	//        
 	//        public void setActivated(Feature f, boolean active){
 	//                activatedFeatures.put(f, active);
-	//        }
-	//
-	//        public void setTableName(String name){
-	//                tableName = name;
 	//        }
 	//
 	//

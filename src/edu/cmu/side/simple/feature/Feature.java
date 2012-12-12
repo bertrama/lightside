@@ -96,6 +96,12 @@ public class Feature implements Serializable, Comparable<Feature>
 		return featureName;
 	}
 	
+	public Feature clone(String prefix){
+		if (featureType == Feature.Type.NOMINAL)
+			return new Feature(extractorPrefix, prefix+featureName, nominalValues);
+		return new Feature(extractorPrefix, prefix+featureName, featureType);
+	}
+	
 	/**
 	 * @return the prefix-unique name for this feature.
 	 */

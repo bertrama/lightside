@@ -31,6 +31,11 @@ public class FeatureHit implements Comparable<FeatureHit>, Serializable
 		FeatureHit fh = new FeatureHit(feature, value, documentIndex);
 		return fh;
 	}
+	
+	public FeatureHit clone(String prefix){
+		FeatureHit fh = new FeatureHit(feature.clone(prefix), value, documentIndex);
+		return fh;
+	}
 	public FeatureHit(Feature feature, Object value, int documentIndex)
 	{
 		this.feature = feature;

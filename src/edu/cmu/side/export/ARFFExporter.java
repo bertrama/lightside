@@ -3,6 +3,8 @@ package edu.cmu.side.export;
 import java.io.File;
 import java.io.FileWriter;
 import weka.core.Instances;
+import java.util.Collection;
+
 
 import edu.cmu.side.simple.feature.Feature;
 import edu.cmu.side.simple.feature.FeatureHit;
@@ -18,16 +20,16 @@ public class ARFFExporter {
 	 */
 	public static void export(FeatureTable ft, File out){
 		try{
-			if (!out.getName().endsWith(".arff"))
-				out = new File(out.getAbsolutePath() + ".arff");
-			Instances data = ft.getInstances();
-			FileWriter outf = new FileWriter(out);			
-			outf.write("@relation " + ft.getTableName().replaceAll("[\\s\\p{Punct}]","_") + "\n\n");
-			for (int i=0; i<data.numAttributes(); i++)
-				outf.write(data.attribute(i).toString() + "\n");
-			outf.write("\n@data\n");
-			for (int i=0; i<data.numInstances(); i++)
-				outf.write(data.instance(i).toString() + "\n");
+			if (!out.getName().endsWith(".feature"))
+				out = new File(out.getAbsolutePath() + ".feature");
+			FileWriter outf = new FileWriter(out);
+			
+			for (int i=0; i<ft.getInstanceNumber(); i++){
+				Collection<FeatureHit> hits = ft.getHitsForDocument(i);
+				for (FeatureHit hit: hits)
+					outf.write(hit.getFeature().toString()+": "+hit.getValue().toString()+"\t");
+				outf.write("\n");
+			}
 			outf.close();
 		}catch(Exception e){
 			e.printStackTrace();

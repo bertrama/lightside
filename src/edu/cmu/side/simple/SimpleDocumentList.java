@@ -28,6 +28,8 @@ public class SimpleDocumentList implements Serializable{
 	Map<String, List<String>> allAnnotations = new HashMap<String, List<String>>();
 	Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
 	String currentAnnotation; 
+	String currentDomain;
+	
 	String[] annotationNames = null;
 	String[] labelArray = null;
 
@@ -192,7 +194,15 @@ public class SimpleDocumentList implements Serializable{
 	public Set<String> getTextColumns(){
 		return textColumns.keySet();
 	}
+	
+	public void setDomainColumn(String s){
+		currentDomain = s;
+	}
 
+	public String getInstanceDomain(int indx){
+		return allAnnotations.get(currentDomain).get(indx);
+	}
+	
 	/**
 	 * Used for cross-validating by file.
 	 */

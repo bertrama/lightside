@@ -1,5 +1,8 @@
 package edu.cmu.side.genesis.view.modify;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,9 +23,16 @@ public class ModifyActionPanel extends ActionBar{
 		add.setText("Filter");
 		add.addActionListener(new ModifyFeaturesControl.FilterTableListener(progressBar));
 		name.setText("filtered");
+		name.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ExtractFeaturesControl.setNewName(name.getText());
+			}
+		});
 		updaters.add("left", (SwingUpdaterLabel)ModifyFeaturesControl.getUpdater());
 	}
-	
+
 	public void refreshPanel(){
 		add.setEnabled(ModifyFeaturesControl.getFilterPlugins().values().contains(Boolean.TRUE));
 	}

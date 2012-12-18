@@ -50,9 +50,7 @@ public class ExtractFileManagerPanel extends AbstractListPanel{
 	}
 	
 	public void refreshPanel(){
-		System.out.println("EFMP53 " + ExtractFeaturesControl.numDocumentLists());
 		if(combo.getItemCount() != ExtractFeaturesControl.numDocumentLists()){
-			System.out.println("EFMP54 " + ExtractFeaturesControl.numDocumentLists() + " Doc Lists");
 			GenesisWorkbench.reloadComboBoxContent(combo, ExtractFeaturesControl.getDocumentLists(), ExtractFeaturesControl.getHighlightedDocumentListRecipe());
 		}
 		if(ExtractFeaturesControl.hasHighlightedDocumentList()){

@@ -16,7 +16,7 @@ public class BuildModelPane extends JPanel{
 
 	public BuildModelPane(){
 		setLayout(new BorderLayout());
-		top = new GenericTripleFrame(new BuildLoadPanel(), new BuildTestingPanel(), new BuildPluginPanel());
+		top = new GenericTripleFrame(new BuildLoadPanel(), new BuildPluginPanel(), new BuildTestingPanel());
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
 		JPanel panel = new JPanel(new BorderLayout());

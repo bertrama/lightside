@@ -65,7 +65,6 @@ public class GenesisWorkbench{
 	}
 
 	public static void update(){
-		System.out.println("UPDATING " + pane.getClass());
 		pane.repaint();
 		panel.actionPerformed(null);
 	}
@@ -92,7 +91,6 @@ public class GenesisWorkbench{
 		int i = 0;
 		for(Object option : options){
 			dropdown.addItem(option);
-			System.out.println(option + ", " + selected + " GW95");
 			if(option == selected){
 				select = i;
 			}

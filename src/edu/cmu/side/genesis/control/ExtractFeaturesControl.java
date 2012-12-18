@@ -47,6 +47,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 	private static Map<FeaturePlugin, Boolean> featurePlugins;
 	private static Map<TableEvaluationPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static EvalCheckboxListener eval;
+	private static String newName = "features";
 	
 	static{
 		featurePlugins = new HashMap<FeaturePlugin, Boolean>();
@@ -61,6 +62,15 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 	}
+	
+	public static void setNewName(String n){
+		newName = n;
+	}
+	
+	public static String getNewName(){
+		return newName;
+	}
+	
 	
 	public static Map<FeaturePlugin, Boolean> getFeaturePlugins(){
 		return featurePlugins;
@@ -168,11 +178,9 @@ public class ExtractFeaturesControl extends GenesisControl{
 	public static class BuildTableListener implements ActionListener{
 		
 		private JProgressBar progress;
-		private JTextField text;
 		private JTextField threshold;
-		public BuildTableListener(JProgressBar pr, JTextField n, JTextField thr){
+		public BuildTableListener(JProgressBar pr, JTextField thr){
 			progress = pr;
-			text = n;
 			threshold = thr;
 		}
 		@Override
@@ -191,7 +199,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 
 			GenesisRecipe newRecipe = GenesisRecipe.addPluginsToRecipe(getHighlightedDocumentListRecipe(), plugins);
-			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, text.getText(), thresh);
+			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, ExtractFeaturesControl.getNewName(), thresh);
 			task.execute();
 		}
 		
@@ -224,6 +232,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				plan.setFeatureTable(ft);
 				setHighlightedFeatureTableRecipe(plan);
 				ModifyFeaturesControl.setHighlightedFeatureTableRecipe(plan);
+				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
 				RecipeManager.addRecipe(plan);
 				GenesisWorkbench.update();
 				update.reset();

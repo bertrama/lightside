@@ -37,6 +37,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 	private static GenesisUpdater update = new SwingUpdaterLabel();
 	static Map<FilterPlugin, Boolean> filterPlugins;
 	private static EvalCheckboxListener eval;
+	private static String newName = "filtered";
 
 	static{
 		filterPlugins = new HashMap<FilterPlugin, Boolean>();
@@ -52,6 +53,13 @@ public class ModifyFeaturesControl extends GenesisControl{
 		}
 		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 
+	}
+	public static void setNewName(String n){
+		newName = n;
+	}
+	
+	public static String getNewName(){
+		return newName;
 	}
 
 	public static void setUpdater(GenesisUpdater up){
@@ -86,7 +94,6 @@ public class ModifyFeaturesControl extends GenesisControl{
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
 			FilterPlugin ft = (FilterPlugin)((CheckBoxListEntry)ie.getSource()).getValue();
-			System.out.println(ft + ", " + ie.getStateChange() + ", " + ie.SELECTED + " MFC64");		
 			filterPlugins.put(ft, !filterPlugins.get(ft));
 			if(filterPlugins.get(ft)){
 				highlightedFilters.put(ft, ft.generateConfigurationSettings());				
@@ -133,12 +140,10 @@ public class ModifyFeaturesControl extends GenesisControl{
 		protected Void doInBackground(){
 			try{
 				FeatureTable current = plan.getFeatureTable();
-				System.out.println(current.getFeatureSet().size() + " features pre-filter MFC120");
 				for(SIDEPlugin plug : plan.getFilters().keySet()){
 					current = ((FilterPlugin)plug).filter(current, plan.getFilters().get(plug), update);					
 				}
-				current.setName(plan.getFeatureTable().getName());
-				System.out.println(current.getFeatureSet().size() + " features post-filter MFC125");
+				current.setName(ModifyFeaturesControl.getNewName());
 				plan.setFilteredTable(current);
 				setHighlightedFilterTableRecipe(plan);
 				RecipeManager.addRecipe(plan);

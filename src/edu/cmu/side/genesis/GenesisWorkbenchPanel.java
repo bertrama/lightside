@@ -17,6 +17,7 @@ public class GenesisWorkbenchPanel extends JTabbedPane implements ActionListener
 	ExtractFeaturesPane extractFeatures = new ExtractFeaturesPane();
 	ModifyFeaturesPane modifyFeatures = new ModifyFeaturesPane();
 	BuildModelPane buildModel = new BuildModelPane();
+	boolean updating = false;
 	public GenesisWorkbenchPanel(){
 		addTab("Extract Features", extractFeatures);
 		addTab("Modify Tables", modifyFeatures);
@@ -25,10 +26,16 @@ public class GenesisWorkbenchPanel extends JTabbedPane implements ActionListener
 		addTab("Predict Labels", new JPanel());
 	}
 
+	public static int refreshCount = 0;
 	@Override
 	public void actionPerformed(ActionEvent ae){
-		extractFeatures.refreshPanel();
-		modifyFeatures.refreshPanel();
-		buildModel.refreshPanel();
+		if(!updating){
+			refreshCount++;
+			updating = true;
+			extractFeatures.refreshPanel();
+			modifyFeatures.refreshPanel();
+			buildModel.refreshPanel();
+			updating = false;			
+		}
 	}
 }

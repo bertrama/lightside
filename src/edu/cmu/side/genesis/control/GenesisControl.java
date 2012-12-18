@@ -26,7 +26,6 @@ public abstract class GenesisControl {
 			for(TableEvaluationPlugin plug : plugins.keySet()){
 				if(plugins.get(plug).containsKey(eval)){
 					boolean flip = !plugins.get(plug).get(eval);
-					System.out.println("GC26 flipping eval checkbox from " + plugins.get(plug).get(eval) + " to " + flip);
 					plugins.get(plug).put(eval, flip);
 				}
 			}

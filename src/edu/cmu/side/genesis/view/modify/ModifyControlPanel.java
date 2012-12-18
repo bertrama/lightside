@@ -35,7 +35,6 @@ public class ModifyControlPanel extends AbstractListPanel{
 	}
 	
 	public void refreshPanel(){
-		System.out.println(combo.getItemCount() + " combo " + ModifyFeaturesControl.numFilterTables() + " filter tables MDP38");
 		if(combo.getItemCount() != ModifyFeaturesControl.numFilterTables()){
 			GenesisWorkbench.reloadComboBoxContent(combo, ModifyFeaturesControl.getFilterTables(), ModifyFeaturesControl.getHighlightedFilterTableRecipe());
 		}

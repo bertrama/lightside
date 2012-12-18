@@ -34,7 +34,6 @@ public class ExtractPluginConfigPanel extends AbstractListPanel {
 				localSet.add(plugin);
 			}
 		}
-		System.out.println(localSet.size() + ", " + visiblePlugins.size() + "EPConP35");
 		if(!localSet.equals(visiblePlugins)){
 			visiblePlugins = localSet;
 			this.removeAll();

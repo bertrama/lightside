@@ -48,7 +48,6 @@ public class ModifyConfigPanel extends AbstractListPanel {
 	public void refreshPanel(){
 		OrderedPluginMap plugins = ModifyFeaturesControl.getSelectedFilters();
 
-		System.out.println(plugins.size() + ", " + visiblePlugins.size() + "MCP35");
 		if(visiblePlugins.size() != plugins.size()){
 			visiblePlugins.clear();
 			this.removeAll();

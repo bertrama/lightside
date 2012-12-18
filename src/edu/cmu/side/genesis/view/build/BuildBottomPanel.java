@@ -21,8 +21,8 @@ public class BuildBottomPanel extends JPanel {
 		pane.setLeftComponent(control);
 
 		JSplitPane right = new JSplitPane();
-		right.setLeftComponent(confusion);
-		right.setRightComponent(result);
+		right.setLeftComponent(result);
+		right.setRightComponent(confusion);
 		right.setPreferredSize(new Dimension(650,200));
 		pane.setRightComponent(right);
 		control.setPreferredSize(new Dimension(275,200));		

@@ -17,6 +17,14 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.evaluations.tables.FScorePlugin</classname>
     </plugin>
+    <plugin>
+        <name>Hits Plugin</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Feature hit counts]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.evaluations.tables.HitsPlugin</classname>
+    </plugin>
     
     <plugin>
         <name>Alphabet Soup</name>
@@ -26,6 +34,26 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.filters.AlphabetSoup</classname>
     </plugin>
+    
+    <plugin>
+        <name>FEDA</name>
+        <author>Zeyu Zheng</author>
+        <version>1.0</version>
+        <description><![CDATA[FEDA feature duplication]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.filters.FedaFilter</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Evaluation</name>
+        <author>Zeyu Zheng</author>
+        <version>1.0</version>
+        <description><![CDATA[Evaluation filter]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.filters.EvaluationFilter</classname>
+    </plugin>
+    
+    
     <plugin>
         <name>Weka Logit</name>
         <author>Elijah Mayfield</author>

@@ -27,13 +27,20 @@ public class ExtractActionPanel extends ActionBar{
 
 	public ExtractActionPanel(){
 		name.setText("features");
+		name.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				ExtractFeaturesControl.setNewName(name.getText());
+			}
+		});
 		add.setText("Extract");
 		//Doesn't update the backend when the threshold changes!!
 		threshold.setText("5");
 		settings.add("left", new JLabel("Rare Threshold:"));
 		settings.add("left", threshold);
 		updaters.add("left", (SwingUpdaterLabel)ExtractFeaturesControl.getUpdater());
-		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, name, threshold));
+		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, threshold));
 	}
 	
 	public void refreshPanel(){

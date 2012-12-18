@@ -51,6 +51,10 @@ public class SimpleTrainingResult{
 	public void setName(String n){
 		name = n;
 	}
+	
+	public String getDescriptionString(){
+		return "Training Result!";
+	}
 
 	public String getSummary(){
 		return evaluation.get("summary");
@@ -58,6 +62,10 @@ public class SimpleTrainingResult{
 
 	public Map<String, Map<String, ArrayList<Integer>>> getConfusionMatrix(){
 		return confusionMatrix;
+	}
+	
+	public Map<String, String> getEvaluations(){
+		return evaluation;
 	}
 	
 	public SimpleTrainingResult(FeatureTable tr, List<? extends Comparable> pred){

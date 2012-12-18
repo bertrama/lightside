@@ -3,6 +3,7 @@ package edu.cmu.side.simple;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 import java.util.TreeMap;
 
 import edu.cmu.side.plugin.SIDEPlugin;
@@ -39,5 +40,5 @@ public abstract class TableEvaluationPlugin<E extends Comparable<E>> extends SID
 	/**
 	 * 
 	 */
-	public abstract TreeMap<Feature, E> evaluateTableFeatures(FeatureTable model, boolean[] mask, String evaluation);
+	public abstract Map<Feature, E> evaluateTableFeatures(FeatureTable model, boolean[] mask, String evaluation);
 }

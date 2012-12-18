@@ -25,40 +25,38 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	private static final long serialVersionUID = -7928450759075851993L;
 
 	protected static boolean halt = false;
-	
+
 	public static String type = "model_builder";
-	
+
 	public static GenesisUpdater updater;
-	
+
 	public String getType() {
 		return type;
 	}
-	
+
 	public SimpleTrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Object> validationSettings, GenesisUpdater progressIndicator) throws Exception{
-		
+
 		if(table == null){
 			return null;
 		}
 		updater = progressIndicator;
-		
+
 		this.configureFromSettings(configuration);
 		boolean[] mask = new boolean[table.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		SimpleDocumentList sdl = (SimpleDocumentList)validationSettings.get("testSet");
 		SimpleTrainingResult result = null;
-		if(Boolean.TRUE.equals(validationSettings.get("test"))){
+		if(Boolean.TRUE.toString().equals(validationSettings.get("test"))){
 			if(validationSettings.get("type").equals("CV")){
 				Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 				int numFolds = -1;
-				if(Boolean.TRUE.equals(validationSettings.get("specifyNumFolds"))){
-					try{
-						numFolds = Integer.parseInt(validationSettings.get("numFolds").toString());
-					}catch(Exception e){
-						e.printStackTrace();
-					}    							
+				try{
+					numFolds = Integer.parseInt(validationSettings.get("numFolds").toString());
+				}catch(Exception e){
+					e.printStackTrace();
 				}
-				if(validationSettings.get("source").equals("STRATIFIED")){
-					foldsMap = BuildModelControl.getFoldsMapStratified(sdl, numFolds);
+				if(validationSettings.get("source").equals("RANDOM")){
+					foldsMap = BuildModelControl.getFoldsMapRandom(sdl, numFolds);
 				}else if(validationSettings.get("source").equals("ANNOTATIONS")){
 					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, validationSettings.get("annotation").toString(), numFolds);
 				}else if(validationSettings.get("source").equals("FILES")){
@@ -73,7 +71,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		}
 		return result;
 	}
-	
+
 	protected SimpleTrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap){
 		boolean[] mask = new boolean[table.getDocumentList().getSize()];
 		String[] predictions = new String[table.getDocumentList().getSize()];
@@ -90,40 +88,46 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			SimplePredictionResult preds = predictWithMaskForSubclass(table, mask, updater);
+			for(int i = 0; i < mask.length; i++){
+				mask[i] = !mask[i];
+			}
+			SimplePredictionResult preds = predictWithMaskForSubclass(table, table, mask, updater);
 			int predictionIndex = 0;
-			for(int i = 0; i < predictions.length; i++){
-				if(mask[i]){
-					predictions[predictionIndex] = preds.getPredictions().get(predictionIndex++).toString();
+			for(Comparable pred : preds.getPredictions()){
+				while(!mask[predictionIndex]){
+					predictionIndex++;
 				}
+				predictions[predictionIndex] = pred.toString();
+				predictionIndex++;
+
 			}
 		}
 		ArrayList<String> predictionsList = new ArrayList<String>();
 		for(String s : predictions) predictionsList.add(s);
 		return new SimpleTrainingResult(table, predictionsList);
 	}
-	
+
 	protected SimpleTrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet){
 		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
 		boolean[] mask = new boolean[testSet.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
-		SimplePredictionResult predictions = predictWithMaskForSubclass(testSet, mask, updater);
+		SimplePredictionResult predictions = predictWithMaskForSubclass(train, testSet, mask, updater);
 		SimpleTrainingResult training = new SimpleTrainingResult(train, testSet, predictions.getPredictions());
 		return training;
 	}
-	
+
 	protected abstract void trainWithMaskForSubclass(FeatureTable table, boolean[] mask, GenesisUpdater progressIndicator) throws Exception;
-	
-	public SimplePredictionResult predict(FeatureTable newData, Map<String, String> configuration, GenesisUpdater progressIndicator){
+
+	public SimplePredictionResult predict(FeatureTable originalData, FeatureTable newData, Map<String, String> configuration, GenesisUpdater progressIndicator){
 		this.configureFromSettings(configuration);
 		boolean[] mask = new boolean[newData.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
-		return predictWithMaskForSubclass(newData, mask, progressIndicator);
+		return predictWithMaskForSubclass(originalData, newData, mask, progressIndicator);
 	}
-	
-	protected abstract SimplePredictionResult predictWithMaskForSubclass(FeatureTable newData, boolean[] mask, GenesisUpdater progressIndicator);
-	
-	
+
+	protected abstract SimplePredictionResult predictWithMaskForSubclass(FeatureTable originalData, FeatureTable newData, boolean[] mask, GenesisUpdater progressIndicator);
+
+
 	public void stopWhenPossible(){
 		halt = true;
 	}

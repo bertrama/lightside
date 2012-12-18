@@ -46,7 +46,6 @@ public class BuildPluginPanel extends AbstractListPanel {
 	}
 	
 	public void refreshPanel(){
-		System.out.println("****************** " + combo.getItemCount() + ", " + BuildModelControl.numLearningPlugins());
 		if(combo.getItemCount() != BuildModelControl.numLearningPlugins()){
 			LearningPlugin highlight = BuildModelControl.getHighlightedLearningPlugin();
 			GenesisWorkbench.reloadComboBoxContent(combo, BuildModelControl.getLearningPlugins(), highlight);

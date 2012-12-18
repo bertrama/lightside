@@ -9,6 +9,7 @@ import javax.swing.JProgressBar;
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
 import edu.cmu.side.genesis.GenesisWorkbench;
+import edu.cmu.side.genesis.GenesisWorkbenchPanel;
 import edu.cmu.side.genesis.model.GenesisRecipe;
 import edu.cmu.side.genesis.model.RecipeManager;
 import edu.cmu.side.genesis.view.generic.SwingUpdaterLabel;
@@ -31,6 +32,7 @@ public class BuildModelControl extends GenesisControl{
 	private static Map<LearningPlugin, Boolean> learningPlugins;
 	private static LearningPlugin highlightedLearningPlugin;
 	private static GenesisUpdater update = new SwingUpdaterLabel();
+	private static String newName = "model";
 	
 	static{
 		validationSettings = new TreeMap<String, Object>();
@@ -44,12 +46,46 @@ public class BuildModelControl extends GenesisControl{
 	public static void setUpdater(GenesisUpdater up){
 		update = up;
 	}
+
+	public static void setNewName(String n){
+		newName = n;
+	}
+	
+	public static String getNewName(){
+		return newName;
+	}
 	
 	public static GenesisUpdater getUpdater(){
 		return update;
 	}
 	
-    public static Map<Integer, Integer> getFoldsMapStratified(SimpleDocumentList documents, int num){
+	public static Map<String, Object> getValidationSettings(){
+		return validationSettings;
+	}
+	
+	public static void updateValidationSetting(String key, Object value){
+		validationSettings.put(key, value);
+	}
+	
+	public static class ValidationButtonListener implements ActionListener{
+
+		String key;
+		String value;
+		public ValidationButtonListener(String k, String v){
+			key = k;
+			value = v;
+		}
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			BuildModelControl.updateValidationSetting(key, value);
+		}
+		
+		public void setValue(String v){
+			value = v;
+		}
+	}
+	
+    public static Map<Integer, Integer> getFoldsMapRandom(SimpleDocumentList documents, int num){
         Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
         for(int i = 0; i < documents.getSize(); i++){
                 foldsMap.put(i, i%num);
@@ -86,8 +122,14 @@ public class BuildModelControl extends GenesisControl{
     	}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			if(validationSettings.get("test").equals(Boolean.TRUE.toString())){
+				if(validationSettings.get("type").equals("CV")){
+					validationSettings.put("testSet", getHighlightedFeatureTableRecipe().getDocumentList());
+				}
+			}
 			LearningPlugin learner = getHighlightedLearningPlugin();
-			GenesisRecipe newRecipe = GenesisRecipe.addLearnerToRecipe(getHighlightedFeatureTableRecipe(), learner, learner.generateConfigurationSettings());
+			Map<String, String> settings = learner.generateConfigurationSettings();
+			GenesisRecipe newRecipe = GenesisRecipe.addLearnerToRecipe(getHighlightedFeatureTableRecipe(), learner, settings);
 			BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(progress, newRecipe);
 			task.execute();
 		}
@@ -106,10 +148,19 @@ public class BuildModelControl extends GenesisControl{
     		try{
     			FeatureTable current = plan.getTrainingTable();
     			if(current != null){
+    				System.out.println(GenesisWorkbenchPanel.refreshCount +" BMC151");
     				SimpleTrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, BuildModelControl.getUpdater());
+    				System.out.println(GenesisWorkbenchPanel.refreshCount +" BMC153");
     				plan.setTrainingResult(model);
+    				System.out.println(GenesisWorkbenchPanel.refreshCount +" BMC155");
+    				model.setName(BuildModelControl.getNewName());
+    				System.out.println(GenesisWorkbenchPanel.refreshCount +" BMC157");
     				BuildModelControl.setHighlightedTrainedModelRecipe(plan);
+    				System.out.println(GenesisWorkbenchPanel.refreshCount +" BMC159");
+    				RecipeManager.addRecipe(plan);
+    				System.out.println(GenesisWorkbenchPanel.refreshCount +" BMC161");
     				GenesisWorkbench.update();
+    				System.out.println(GenesisWorkbenchPanel.refreshCount +" BMC163");
     				update.reset();
     			}
     		}catch(Exception e){

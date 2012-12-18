@@ -71,7 +71,9 @@ public class GenesisRecipe {
 		}else if(RecipeManager.MODIFIED_TABLE_RECIPES.equals(stage)){
 			out = "Filtered Features " + featureTable.getName();
 		}else if(RecipeManager.TRAINED_MODEL_RECIPES.equals(stage)){
-			out = "Trained model " + trainedModel.getSummary();
+			out = "Trained model " + trainedModel.getName();
+		}else{
+			out = "Default: " + stage;
 		}
 		return out;
 	}

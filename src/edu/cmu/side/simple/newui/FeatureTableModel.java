@@ -7,6 +7,9 @@ public class FeatureTableModel extends DefaultTableModel{
 
 	@Override
 	public Class<?> getColumnClass(int col){
-		return (col > 3?Double.class:Object.class);
+		if(this.getRowCount()>0){
+			return this.getValueAt(0, col).getClass();
+		}
+		else return Object.class;
 	}
 }

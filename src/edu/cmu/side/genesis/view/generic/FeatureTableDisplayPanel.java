@@ -24,12 +24,13 @@ import edu.cmu.side.simple.TableEvaluationPlugin;
 import edu.cmu.side.simple.feature.Feature;
 import edu.cmu.side.simple.feature.FeatureTable;
 import edu.cmu.side.simple.newui.AbstractListPanel;
+import edu.cmu.side.simple.newui.FeatureTableModel;
 import edu.cmu.side.simple.newui.SIDETable;
 
 public class FeatureTableDisplayPanel extends AbstractListPanel {
 
 	SIDETable featureTable = new SIDETable();
-	DefaultTableModel model = new DefaultTableModel();
+	FeatureTableModel model = new FeatureTableModel();
 	public FeatureTableDisplayPanel(){
 		setLayout(new BorderLayout());
 		JPanel top = new JPanel(new RiverLayout());
@@ -54,24 +55,22 @@ public class FeatureTableDisplayPanel extends AbstractListPanel {
 				}
 			}
 			if(countTrues+1 != model.getColumnCount() || model.getRowCount() != table.getFeatureSet().size()){
-				model = new DefaultTableModel();
+				model = new FeatureTableModel();
 				model.addColumn("Feature");
+				boolean[] mask = new boolean[table.getDocumentList().getSize()];
+				for(int i = 0; i < mask.length; i++) mask[i] = true;
 				int rowCount = 1;
 				Map<TableEvaluationPlugin, Map<String, Map<Feature, Comparable>>> evals = new HashMap<TableEvaluationPlugin, Map<String, Map<Feature, Comparable>>>();
 				for(TableEvaluationPlugin plug : tableEvaluationPlugins.keySet()){
 					evals.put(plug, new TreeMap<String, Map<Feature, Comparable>>());
-					System.out.println(plug.getOutputName() + " Evaluation FTDP62");
 					for(String s : tableEvaluationPlugins.get(plug).keySet()){
-						System.out.print(s + ", " + tableEvaluationPlugins.get(plug).get(s) + " ");
 						if(tableEvaluationPlugins.get(plug).get(s)){
 							model.addColumn(s);
-							System.out.println(s + " ADDED COLUMN FTDP67");
 							rowCount++;
-							Map<Feature, Comparable> values = plug.evaluateTableFeatures(table, s);
+							Map<Feature, Comparable> values = plug.evaluateTableFeatures(table, mask, s);
 							evals.get(plug).put(s, values);
 						}
 					}
-					System.out.println();
 				}
 				for(Feature f : table.getFeatureSet()){
 					Object[] row = new Object[rowCount];

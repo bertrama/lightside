@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -32,9 +33,9 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 	private static double sum = 0.0;
 	
 	public ConfusionMatrixPanel(){
-		setLayout(new GridLayout(2,1));
+		setLayout(new BorderLayout());
 		JPanel modelPanel = new JPanel(new BorderLayout());
-		modelPanel.add(BorderLayout.NORTH, new JLabel("Model Confusion Matrix:"));
+		add(BorderLayout.NORTH, new JLabel("Model Confusion Matrix:"));
 		matrixDisplay.setModel(matrixModel);
 		matrixDisplay.setBorder(BorderFactory.createLineBorder(Color.gray));
 		matrixDisplay.setShowHorizontalLines(true);
@@ -48,41 +49,64 @@ public class ConfusionMatrixPanel extends AbstractListPanel{
 			}
 		});
 		describeScroll = new JScrollPane(matrixDisplay);
-		modelPanel.add(BorderLayout.CENTER, describeScroll);
-		add(modelPanel);
+		add(BorderLayout.CENTER, describeScroll);
+		
 	}
 
 	public void refreshPanel(Map<String, Map<String, ArrayList<Integer>>> confusion){
-		Collection<String> labels = confusion.keySet();
-		for(String s : labels){
-			matrixModel.addColumn(s);
-		}
-		sum = 0;
-		for(String act : labels){
-			Object[] row = new Object[labels.size()+1];
-			row[0] = act;
-			int index = 1;
-			for(String pred : labels){
-				List<Integer> cellIndices = confusion.get(pred).get(act);
-				sum += confusion.get(pred).get(act).size();
-				row[index] = cellIndices.size();
-				index++;
-			}
-			matrixModel.addRow(row);
-		}
-		matrixDisplay.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
-			public Component getTableCellRendererComponent(JTable table, Object value,
-					boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-				DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-				if(vColIndex > 0){
-					Integer intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/sum))).intValue();
-					rend.setBackground(new Color(255-intensity, 255-intensity,255));
-					rend.setForeground(Color.black);
+		try{
+			Collection<String> labels = new TreeSet<String>();
+			for(String s : confusion.keySet()){
+				labels.add(s);
+				for(String p : confusion.get(s).keySet()){
+					labels.add(p);
 				}
-				rend.setText(table.getValueAt(rowIndex, vColIndex).toString());
-				return rend;
 			}
-		});
+			matrixModel = new DefaultTableModel();
+			matrixModel.addColumn("Act \\ Pred");
+			
+			for(String s : labels){
+				matrixModel.addColumn(s);
+			}
+			sum = 0;
+			for(String act : labels){
+				Object[] row = new Object[labels.size()+1];
+				row[0] = act;
+				int index = 1;
+				for(String pred : labels){
+					if(confusion.containsKey(pred) && confusion.get(pred).containsKey(act)){
+						List<Integer> cellIndices = confusion.get(pred).get(act);
+						sum += confusion.get(pred).get(act).size();
+						row[index] = cellIndices.size();					
+					}else{
+						row[index] = 0;
+					}
+					index++;
+				}
+				matrixModel.addRow(row);
+			}
+			matrixDisplay.setModel(matrixModel);
+			matrixDisplay.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
+				public Component getTableCellRendererComponent(JTable table, Object value,
+						boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
+					DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
+					if(vColIndex > 0){
+						Integer intensity = 0;
+						try{
+							intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/sum))).intValue();
+						}catch(Exception e){
+							e.printStackTrace();
+						}
+						rend.setBackground(new Color(255-intensity, 255-intensity,255));
+						rend.setForeground(Color.black);
+					}
+					rend.setText(table.getValueAt(rowIndex, vColIndex).toString());
+					return rend;
+				}
+			});			
+		} catch(ArrayIndexOutOfBoundsException e){
+			
+		}
 
 	}
 }

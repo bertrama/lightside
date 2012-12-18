@@ -130,10 +130,6 @@ public class FeatureTable implements Serializable
 	public String getDomainName(int indx){
 		return documents.getInstanceDomain(indx);
 	}
-
-	public int getThreshold(){
-		return threshold;
-	}
 	
 	/**
 	 * @return the set of features extracted from the documents.

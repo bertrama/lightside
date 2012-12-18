@@ -41,12 +41,10 @@ public class ModifyTableChecklistPanel extends AbstractListPanel{
 			for(TableEvaluationPlugin plug : evalPlugins.keySet()){
 				Map<String, Boolean> opts = evalPlugins.get(plug);
 				if(opts == null){
-					System.out.println("MTCP Refreshing at line 45");
 					refresh = true;
 				}
 				for(Object s : plug.getAvailableEvaluations(ft)){
 					if(!opts.containsKey(s.toString())){
-						System.out.println("MTCP Refreshing at line 50");
 						refresh = true;
 					}
 				}

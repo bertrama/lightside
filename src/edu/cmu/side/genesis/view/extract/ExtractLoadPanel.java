@@ -53,7 +53,6 @@ public class ExtractLoadPanel extends AbstractListPanel{
 		files.refreshPanel();
 		if(ExtractFeaturesControl.hasHighlightedDocumentList()){
 			SimpleDocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
-			System.out.println("ECP53 " +sdl.getCurrentAnnotation());
 			GenesisWorkbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
 			Map<String, Boolean> columns = new TreeMap<String, Boolean>();
 			for(String s : sdl.allAnnotations().keySet()){

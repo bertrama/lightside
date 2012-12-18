@@ -31,7 +31,6 @@ public class ExtractTableControlPanel extends AbstractListPanel{
 	}
 	
 	public void refreshPanel(){
-		System.out.println(combo.getItemCount() + " combo " + ExtractFeaturesControl.numFeatureTables() + " feature tables ETCP21");
 		if(combo.getItemCount() != ExtractFeaturesControl.numFeatureTables()){
 			GenesisWorkbench.reloadComboBoxContent(combo, ExtractFeaturesControl.getFeatureTables(), ExtractFeaturesControl.getHighlightedFeatureTableRecipe());
 			

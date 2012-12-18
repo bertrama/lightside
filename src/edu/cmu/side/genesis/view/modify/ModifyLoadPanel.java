@@ -44,7 +44,6 @@ public class ModifyLoadPanel extends AbstractListPanel {
 	}
 	
 	public void refreshPanel(){
-		System.out.println(combo.getItemCount() + " combo " + ModifyFeaturesControl.numFeatureTables() + " feature tables MMP37");
 		if(combo.getItemCount() != ModifyFeaturesControl.numFeatureTables()){
 			GenesisWorkbench.reloadComboBoxContent(combo, ModifyFeaturesControl.getFeatureTables(), ModifyFeaturesControl.getHighlightedFeatureTableRecipe());
 		}

@@ -194,6 +194,18 @@ public class FeatureTable implements Serializable
 	    	 hitsPerFeature.remove(fe);
     }
 	
+	public Double getClassValue(int i){
+		if (getClassValueType() == Feature.Type.NUMERIC)
+			return Double.parseDouble(documents.getAnnotationArray().get(i));
+		if (getClassValueType() == Feature.Type.BOOLEAN)
+			if (documents.getAnnotationArray().get(i).equalsIgnoreCase("true"))
+				return 1.0;
+			else return 0.0;
+		String[] possible = documents.getLabelArray();
+		for (int k=0; k<possible.length; k++)
+			if (documents.getAnnotationArray().get(i).equals(possible[k])) return (double) k;
+		return 0.0;
+	}
 	
 	//	    	                
 	//	    	                for(int i = 0; i < Length; i++){

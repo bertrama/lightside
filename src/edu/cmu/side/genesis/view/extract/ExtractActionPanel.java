@@ -16,8 +16,9 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
-import edu.cmu.side.genesis.view.generic.ActionBar;
-import edu.cmu.side.genesis.view.generic.SwingUpdaterLabel;
+import edu.cmu.side.genesis.control.ModifyFeaturesControl;
+import edu.cmu.side.genesis.view.ActionBar;
+import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 
 import se.datadosen.component.RiverLayout;
 
@@ -39,7 +40,10 @@ public class ExtractActionPanel extends ActionBar{
 		threshold.setText("5");
 		settings.add("left", new JLabel("Rare Threshold:"));
 		settings.add("left", threshold);
-		updaters.add("left", (SwingUpdaterLabel)ExtractFeaturesControl.getUpdater());
+		JPanel updaterPanel = new JPanel(new BorderLayout());
+		updaterPanel.setPreferredSize(new Dimension(150,30));
+		updaterPanel.add(BorderLayout.CENTER, (SwingUpdaterLabel)ExtractFeaturesControl.getUpdater());
+		updaters.add("right", updaterPanel);
 		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, threshold));
 	}
 	

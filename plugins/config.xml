@@ -10,20 +10,39 @@
     </plugin>
     
     <plugin>
-        <name>FScore Plugin</name>
+        <name>Basic Table Plugins</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
         <description><![CDATA[Basic Fscore evaluations]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.evaluations.tables.FScorePlugin</classname>
+        <classname>plugins.evaluations.tables.BasicTableEvaluations</classname>
     </plugin>
+    
     <plugin>
-        <name>Hits Plugin</name>
+        <name>Basic Model Evaluation Plugins</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
-        <description><![CDATA[Feature hit counts]]></description>
+        <description><![CDATA[Basic model accuracy evaluations]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.evaluations.tables.HitsPlugin</classname>
+        <classname>plugins.evaluations.models.BasicModelEvaluations</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Basic Model Analysis Plugins</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Basic error analysis]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.analysis.BasicModelAnalysis</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Basic Model Comparison Plugins</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Basic model comparisons]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.comparisons.BasicModelComparison</classname>
     </plugin>
     
     <plugin>
@@ -61,6 +80,33 @@
         <description><![CDATA[Logistic regression classification]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.learning.WekaLogit</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Weka SVM</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Support Vector Machine classification]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.learning.WekaSVM</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Weka Bayes</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Naive Bayes classification]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.learning.WekaBayes</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Weka Trees</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Decision tree classification]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.learning.WekaTrees</classname>
     </plugin>
 
     <plugin>

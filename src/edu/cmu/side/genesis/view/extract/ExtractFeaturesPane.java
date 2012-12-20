@@ -3,11 +3,16 @@ package edu.cmu.side.genesis.view.extract;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.genesis.control.ExtractFeaturesControl;
+import edu.cmu.side.genesis.view.generic.GenericPluginChecklistPanel;
+import edu.cmu.side.genesis.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.genesis.view.generic.GenericTripleFrame;
+import edu.cmu.side.simple.FeaturePlugin;
 
 public class ExtractFeaturesPane extends JPanel{
 
@@ -17,7 +22,24 @@ public class ExtractFeaturesPane extends JPanel{
 	
 	public ExtractFeaturesPane(){
 		setLayout(new BorderLayout());
-		top = new GenericTripleFrame(new ExtractLoadPanel(), new ExtractPluginChecklistPanel(), new ExtractPluginConfigPanel());
+
+		GenericPluginChecklistPanel<FeaturePlugin> pluginChecklist = new GenericPluginChecklistPanel<FeaturePlugin>("Feature Extractor Plugins:"){
+
+			@Override
+			public Map<FeaturePlugin, Boolean> getPlugins() {
+				return ExtractFeaturesControl.getFeaturePlugins();
+			}
+			
+		};
+		
+		GenericPluginConfigPanel<FeaturePlugin> pluginConfig = new GenericPluginConfigPanel<FeaturePlugin>(){
+			@Override
+			public void refreshPanel() {
+				refreshPanel(ExtractFeaturesControl.getFeaturePlugins());
+			}
+		};
+		
+		top = new GenericTripleFrame(new ExtractCombinedLoadPanel("CSV Files:"), pluginChecklist, pluginConfig);
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 		JPanel panel = new JPanel(new BorderLayout());
@@ -25,7 +47,6 @@ public class ExtractFeaturesPane extends JPanel{
 		panel.add(BorderLayout.SOUTH, action);
 		pane.setTopComponent(panel);
 		pane.setBottomComponent(bottom);
-//		this.setPreferredSize(new Dimension(950,675));
 		top.setPreferredSize(new Dimension(950,400));
 		bottom.setPreferredSize(new Dimension(950,200));
 		add(BorderLayout.CENTER, pane);

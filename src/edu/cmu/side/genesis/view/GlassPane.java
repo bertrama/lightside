@@ -1,6 +1,7 @@
 package edu.cmu.side.genesis.view;
 
 import java.awt.Color;
+
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -21,9 +22,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.MouseInputAdapter;
 
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
-import edu.cmu.side.genesis.view.extract.ExtractPluginPanel;
+import edu.cmu.side.genesis.view.extract.ExtractActionPanel;
 import edu.cmu.side.genesis.view.extract.ExtractFeaturesPane;
-import edu.cmu.side.genesis.view.extract.ExtractTopPanel;
 
 
 /**
@@ -39,50 +39,50 @@ implements ItemListener {
 	}
 
 	protected void paintComponent(Graphics g) {
-		boolean hasDocs = ExtractFeaturesControl.hasHighlightedDocumentList();
-		boolean hasFeats = ExtractFeaturesControl.hasHighlightedFeatureTable();
 		g.setColor(new Color(128, 128, 128, 128));
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 30);
 		g.setFont(f);
 		Component c = ((JTabbedPane)contentPane).getSelectedComponent();
+
 		if(c instanceof ExtractFeaturesPane){
+			boolean hasDocs = ExtractFeaturesControl.hasHighlightedDocumentList();
+			boolean hasFeats = ExtractFeaturesControl.hasHighlightedFeatureTable();
 			if(!hasDocs){
 				for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
 					if(c2 instanceof JSplitPane){
-						for(Component c3 : ((ExtractTopPanel)((JSplitPane)c2).getTopComponent()).getComponents()){
-							if(c3 instanceof JSplitPane){
-								int offsetX = 13; // FIXME
-								int offsetY = 35;
-
-								Component c4 = ((JSplitPane)c3).getRightComponent();
-								g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
-								String warning = "Load Documents to Extract Features";
-								g.setColor(Color.white);
-								g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
-								g.setColor(new Color(128, 128, 128, 128));
-							}
+						for(Component c3 : ((JSplitPane)c2).getComponents()){
+//							if(c3 instanceof JSplitPane){
+//								int offsetX = 13; // FIXME
+//								int offsetY = 35;
+//
+//								Component c4 = ((JSplitPane)c3).getRightComponent();
+//								g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
+//								String warning = "Load Documents to Extract Features";
+//								g.setColor(Color.white);
+//								g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
+//								g.setColor(new Color(128, 128, 128, 128));
+//							}
 						}
 					}
 				}
 			}
-			if(!hasFeats){
-				for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
-					if(c2 instanceof JSplitPane){
-						int offsetX = 11; // FIXME
-						int offsetY = 33;
-
-						Component c4 = ((JSplitPane)c2).getBottomComponent();
-						g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
-						String warning = "Extract Features to View Table";
-						g.setColor(Color.white);
-						g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
-						g.setColor(Color.gray);
-
-					}
-				}
-			}
+//			if(!hasFeats){
+//				for(Component c2 : ((ExtractFeaturesPane)c).getComponents()){
+//					if(c2 instanceof JSplitPane){
+//						int offsetX = 11; // FIXME
+//						int offsetY = 33;
+//
+//						Component c4 = ((JSplitPane)c2).getBottomComponent();
+//						g.fillRect(c4.getX()+offsetX, c4.getY()+offsetY, c4.getWidth(), c4.getHeight());
+//						String warning = "Extract Features to View Table";
+//						g.setColor(Color.white);
+//						g.drawChars(warning.toCharArray(), 0, warning.length(), c4.getX()+offsetX+10, c4.getY()+offsetY+(c4.getHeight()/2));
+//						g.setColor(Color.gray);
+//
+//					}
+//				}
+//			}
 		}
-
 	}
 
 	public void setPoint(Point p) {

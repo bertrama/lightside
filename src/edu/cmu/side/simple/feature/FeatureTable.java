@@ -20,6 +20,7 @@ import weka.core.SparseInstance;
 import weka.classifiers.functions.LinearRegression;
 import weka.classifiers.Evaluation;
 
+import edu.cmu.side.dataitem.FreqMap;
 import edu.cmu.side.genesis.model.GenesisRecipe;
 import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.SimpleDocumentList;
@@ -40,10 +41,11 @@ public class FeatureTable implements Serializable
 	private Feature.Type type = null;
 	private Integer threshold = 5;
 	private String name = "no name set";
+	private String describeDocuments;
+	private String describeFeatures;
 	public String getDescriptionString(){
-		return hitsPerFeature.keySet().size() + " Features";	
+		return describeDocuments + "\n" + describeFeatures;
 	}
-
 
 	/**
 	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
@@ -99,9 +101,21 @@ public class FeatureTable implements Serializable
 			}
 		}
 		double timeD = System.currentTimeMillis();
-
-		System.out.println((timeB-timeA) + ", " + (timeC-timeB) + ", " + (timeD-timeC) + " ms FT81*********************************");
-		System.out.println("FT82 finished table with " + hitsPerDocument.size() + " documents " + hitsPerFeature.keySet().size() + " features");
+		
+		generateDescriptionString();
+	}
+	
+	private void generateDescriptionString(){
+		describeDocuments = "Generated from document list " + documents.getName() + ":\n---------------\n" + documents.getDescriptionString() + "\n---------------";
+		describeFeatures = "Feature set:\n";
+		FreqMap<String> extractors = new FreqMap<String>();
+		for(Feature f : getFeatureSet()){
+			extractors.count(f.getExtractorPrefix());
+		}
+		for(String key : extractors.keySet()){
+			describeFeatures += extractors.get(key) + " features from extractor " + key + ".\n";
+		}
+		describeFeatures += extractors.sum() + " features total.";
 	}
 
 	public void setName(String n){
@@ -178,8 +192,8 @@ public class FeatureTable implements Serializable
 	    return ft;
 	}
 	
-	public int getInstanceNumber(){
-		return hitsPerDocument.size();
+	public int numInstances(){
+		return documents.getSize();
 	}
 	
 	
@@ -207,39 +221,6 @@ public class FeatureTable implements Serializable
 		return 0.0;
 	}
 	
-	//	    	                
-	//	    	                for(int i = 0; i < Length; i++){
-	//	    	                        hitsPerDocument.add(new TreeSet<FeatureHit>());
-	//	    	                }
-	//	    	                for(FeatureHit hit : hits){
-	//	    	                        if(!hitsPerFeature.containsKey(hit.getFeature())){
-	//	    	                                hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
-	//	    	                                activatedFeatures.put(hit.getFeature(), Boolean.TRUE);
-	//	    	                        }
-	//	    	                        hitsPerFeature.get(hit.getFeature()).add(hit);
-	//	    	                        hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
-	//	    	                }
-	//	    	        }
-
-	//        public final int NUM_BASELINE_EVALUATIONS = 7;
-	//        private String[] constantEvaluations = {"predictor of","kappa","precision","recall","f-score","accuracy","hits"};
-	//        /** These show up as columns in the FeatureTablePanel */
-	//        private Map<String, Map<Feature, Comparable>> evaluations;
-	//
-	//        private String tableName = "default";
-	//        private Map<Feature, Boolean> activatedFeatures;
-	//        /** Stores the type of the class value */
-	//        
-	//        private String[] labels;
-	//        private String[] possibleLabels;
-	//        
-	//        /** These variables are for weka. Filled when needed only. Stored 
-	//         * in the feature table so that it's cleaner to populate. */
-	//        private FastVector fastVector = null;
-	//        private Instances instances = null;
-	//        private Map<Feature, Integer> attributeMap = new HashMap<Feature, Integer>();
-	//
-	//        
 	//        
 	//        public void serialize(File f){
 	//                try{
@@ -342,31 +323,6 @@ public class FeatureTable implements Serializable
 	//                defaultEvaluation();
 	//        }
 	//
-	//        
-	//        
-	//
-	//        /**
-	//         * Generates subsets of data from this feature table, used for cross validation. Makes a shallow copy of features
-	//         * from the overall Instances object.
-	//         * 
-	//         * @param foldMap Set of documents to use in this subset.
-	//         * @param fold Number of the fold to use for CV-by-fold radio button.
-	//         * @param train Whether this is the training or test set.
-	//         * @return
-	//         */
-	//        public Instances getInstances(Map<Integer, Integer> foldMap, int fold, boolean train){
-	//                if(instances == null) getInstances();
-	//                
-	//                Instances format = new Instances(getTableName(), fastVector, 0);
-	//                for(int i = 0; i < instances.numInstances(); i++){
-	//                        if((train && foldMap.get(i) != fold) || (!train && foldMap.get(i) == fold)){
-	//                                format.add((Instance)instances.instance(i).copy());
-	//                        }
-	//                        format.setClass(format.attribute("CLASS"));
-	//                }
-	//                return format;
-	//        }
-	//
 	//        /**
 	//         * Since we're doing cross-validation in a more intelligent way than SIDE originally did it (taking every nth instance
 	//         * for n folds, instead of taking the first 100/n% of the data for each fold), we need to keep a map of which keys in the 
@@ -431,82 +387,6 @@ public class FeatureTable implements Serializable
 	//                addEvaluation("sign", predictorOf);
 	//                addEvaluation("correlation", corr);
 	//        }
-	//
-	//        /**
-	//         * Evaluates feature table for precision, recall, f-score, and kappa at creation time.
-	//         */
-	//        public void defaultEvaluation(){
-	//                        addEvaluation("predictor of", bestMap);
-	//                        addEvaluation("kappa", kappaMap);
-	//                        addEvaluation("precision", precisionMap);
-	//                        addEvaluation("recall", recallMap);
-	//                        addEvaluation("f-score", fScoreMap);
-	//                        addEvaluation("accuracy", accuracyMap);
-	//                        addEvaluation("hits", hitsMap);
-	//                        if(possiblelabels != null){
-	//                                String[] hitLabels = new String[possiblelabels.length];
-	//                                for(int i = 0; i < hitLabels.length; i++){
-	//                                        hitLabels[i] = "hits_" + possiblelabels[i];
-	//                                        if(!hitsByLabelMap.containsKey(possiblelabels[i])){
-	//                                                hitsByLabelMap.put(possiblelabels[i], new HashMap<Feature, Comparable>());
-	//                                        }
-	//                                        addEvaluation(hitLabels[i], hitsByLabelMap.get(possiblelabels[i]));                                             
-	//                                }
-	//                                if(constantEvaluations.length==7){
-	//                                        String[] newConstants = new String[constantEvaluations.length+hitLabels.length];
-	//                                        System.arraycopy(constantEvaluations, 0, newConstants, 0, constantEvaluations.length);
-	//                                        System.arraycopy(hitLabels, 0, newConstants, constantEvaluations.length, hitLabels.length);
-	//                                        constantEvaluations = newConstants;                                     
-	//                                }
-	//                        }
-	//                }
-	//                double time2 = System.currentTimeMillis();
-	//        }
-	//
-
-	//        
-	//        public void addEvaluation(String evaluationName, Map<Feature, Comparable> eval){
-	//                if (eval.keySet().size()==0) return;
-	//                if (evaluations.containsKey(evaluationName)){
-	//                        for(Feature f : eval.keySet()){
-	//                                if(!evaluations.get(evaluationName).containsKey(f)){
-	//                                        evaluations.get(evaluationName).put(f, eval.get(f));
-	//                                }
-	//                        }
-	//                }else{
-	//                        evaluations.put(evaluationName, eval);                  
-	//                }
-	//        }
-	//        
-	//        public String[] getConstantEvaluations(){
-	////              return evaluations.keySet().toArray(new String[0]);
-	////              return constantEvaluations;
-	//                List<String> mergedEval = new ArrayList<String>();
-	//                for (int i=0; i<constantEvaluations.length; i++)
-	//                        if (evaluations.containsKey(constantEvaluations[i]))
-	//                                mergedEval.add(constantEvaluations[i]);
-	///*              for (String evalkey : evaluations.keySet())
-	//                        if (!mergedEval.contains(evalkey)) mergedEval.add(evalkey);
-	//*/                      
-	//                return mergedEval.toArray(new String[0]);       
-	//                //return getClassValueType().equals(Feature.Type.NUMERIC)?new String[]{/*"sign","correlation"*/}:constantEvaluations;
-	//        }
-	//
-	//        public Map<String, Map<Feature, Comparable>> getEvaluations(){
-	//                return evaluations;
-	//        }
-	//        
-	//        public String toString(){
-	//                return getTableName();
-	//        }
-	
-	//
-	//        public Integer getThreshold(){
-	//                return threshold;
-	//        }
-	//        
-	//        }
-	//
 	//
 	//        /**
 	//         * Removes a feature and all of its hits from a feature table.

@@ -8,7 +8,9 @@ import java.util.Map;
 import edu.cmu.side.genesis.GenesisWorkbench;
 import edu.cmu.side.genesis.model.GenesisRecipe;
 import edu.cmu.side.genesis.model.RecipeManager;
-import edu.cmu.side.genesis.view.generic.CheckBoxListEntry;
+import edu.cmu.side.genesis.view.CheckBoxListEntry;
+import edu.cmu.side.plugin.SIDEPlugin;
+import edu.cmu.side.simple.FeaturePlugin;
 import edu.cmu.side.simple.TableEvaluationPlugin;
 
 public abstract class GenesisControl {
@@ -16,19 +18,34 @@ public abstract class GenesisControl {
 
 	public static class EvalCheckboxListener implements ItemListener{
 
-		Map<TableEvaluationPlugin, Map<String, Boolean>>  plugins;
-		public EvalCheckboxListener(Map<TableEvaluationPlugin, Map<String, Boolean>> p){
+		Map<? extends SIDEPlugin, Map<String, Boolean>>  plugins;
+		public EvalCheckboxListener(Map<? extends SIDEPlugin, Map<String, Boolean>> p){
 			plugins = p;
 		}
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
 			String eval = ((CheckBoxListEntry)ie.getSource()).getValue().toString();
-			for(TableEvaluationPlugin plug : plugins.keySet()){
+			for(SIDEPlugin plug : plugins.keySet()){
 				if(plugins.get(plug).containsKey(eval)){
 					boolean flip = !plugins.get(plug).get(eval);
 					plugins.get(plug).put(eval, flip);
 				}
 			}
+			GenesisWorkbench.update();
+		}
+	}
+	
+	public static class PluginCheckboxListener<E extends SIDEPlugin> implements ItemListener{
+
+		Map<E, Boolean> plugins;
+		public PluginCheckboxListener(Map<E, Boolean> p){
+			plugins = p;
+		}
+		
+		@Override
+		public void itemStateChanged(ItemEvent ie) {
+			E plug = (E)((CheckBoxListEntry)ie.getSource()).getValue();
+			plugins.put(plug, !plugins.get(plug));
 			GenesisWorkbench.update();
 		}
 	}

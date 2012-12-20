@@ -60,59 +60,38 @@ public class GenesisRecipe {
 	public String toString(){
 		String out = "";
 		if(RecipeManager.DOCUMENT_LIST_RECIPES.equals(stage)){
-			String name = "Docs ";
-			for(String s : documentList.getFilenames()){
-				name += s + ", ";
-			}
-			name = name.substring(0, name.length()-2);
-			out = name;
+			out = documentList.getName();
 		}else if(RecipeManager.FEATURE_TABLE_RECIPES.equals(stage)){
-			out = "Features " + featureTable.getName();
+			out = featureTable.getName();
 		}else if(RecipeManager.MODIFIED_TABLE_RECIPES.equals(stage)){
-			out = "Filtered Features " + featureTable.getName();
+			out = filteredTable.getName();
 		}else if(RecipeManager.TRAINED_MODEL_RECIPES.equals(stage)){
-			out = "Trained model " + trainedModel.getName();
+			out = trainedModel.getName();
 		}else{
 			out = "Default: " + stage;
 		}
 		return out;
 	}
 
-	public SimpleDocumentList getDocumentList(){
-		return documentList;
-	}
+	public SimpleDocumentList getDocumentList(){ return documentList; }
 
-	public FeatureTable getFeatureTable(){
-		return featureTable;
-	}
+	public FeatureTable getFeatureTable(){ return featureTable; }
 	
-	public FeatureTable getFilteredTable(){
-		return filteredTable;
-	}
+	public FeatureTable getFilteredTable(){ return filteredTable; }
 	
 	public FeatureTable getTrainingTable(){
 		if(filteredTable == null) return getFeatureTable(); else return getFilteredTable();
 	}
 	
-	public SimpleTrainingResult getTrainingResult(){
-		return trainedModel;
-	}
+	public SimpleTrainingResult getTrainingResult(){ return trainedModel; }
 	
-	public SimplePredictionResult getPredictionResult(){
-		return predictionResult;
-	}
+	public SimplePredictionResult getPredictionResult(){ return predictionResult; }
 
-	public OrderedPluginMap getExtractors(){
-		return extractors;
-	}
+	public OrderedPluginMap getExtractors(){ return extractors; }
 	
-	public OrderedPluginMap getFilters(){
-		return filters;
-	}
+	public OrderedPluginMap getFilters(){ return filters; }
 	
-	public LearningPlugin getLearner(){
-		return learner;
-	}
+	public LearningPlugin getLearner(){ return learner; }
 
 	public void setDocumentList(SimpleDocumentList sdl){
 		documentList = sdl;
@@ -176,7 +155,6 @@ public class GenesisRecipe {
 	public static GenesisRecipe addPluginsToRecipe(GenesisRecipe prior, Collection<? extends SIDEPlugin> next){
 		String stage = prior.getStage();
 		GenesisRecipe newRecipe = fetchRecipe();
-		System.out.println(stage + " Stage GR107");
 		if(stage.equals(RecipeManager.DOCUMENT_LIST_RECIPES)){
 			addFeaturePlugins(prior, newRecipe, (Collection<FeaturePlugin>)next);
 		}else if(stage.equals(RecipeManager.FEATURE_TABLE_RECIPES)){

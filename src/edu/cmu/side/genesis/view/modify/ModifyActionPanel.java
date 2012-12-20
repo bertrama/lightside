@@ -1,5 +1,7 @@
 package edu.cmu.side.genesis.view.modify;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,8 +15,8 @@ import se.datadosen.component.RiverLayout;
 
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
 import edu.cmu.side.genesis.control.ModifyFeaturesControl;
-import edu.cmu.side.genesis.view.generic.ActionBar;
-import edu.cmu.side.genesis.view.generic.SwingUpdaterLabel;
+import edu.cmu.side.genesis.view.ActionBar;
+import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 
 public class ModifyActionPanel extends ActionBar{
 
@@ -30,7 +32,10 @@ public class ModifyActionPanel extends ActionBar{
 				ExtractFeaturesControl.setNewName(name.getText());
 			}
 		});
-		updaters.add("left", (SwingUpdaterLabel)ModifyFeaturesControl.getUpdater());
+		JPanel updaterPanel = new JPanel(new BorderLayout());
+		updaterPanel.setPreferredSize(new Dimension(150,30));
+		updaterPanel.add((SwingUpdaterLabel)ModifyFeaturesControl.getUpdater());
+		updaters.add("right", updaterPanel);
 	}
 
 	public void refreshPanel(){

@@ -29,6 +29,7 @@ public class SimpleDocumentList implements Serializable{
 	Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
 	String currentAnnotation; 
 	String currentDomain;
+	String name = "Default documents";
 	
 	String[] annotationNames = null;
 	String[] labelArray = null;
@@ -40,6 +41,14 @@ public class SimpleDocumentList implements Serializable{
 	{
 		addAnnotation("text", instances);
 		setTextColumn("text", true);
+	}
+	
+	public void setName(String n){
+		name = n;
+	}
+	
+	public String getName(){
+		return name;
 	}
 
 	public SimpleDocumentList(List<String> text, Map<String, ArrayList<String>> annotations){
@@ -74,8 +83,10 @@ public class SimpleDocumentList implements Serializable{
 		CSVReader in;
 		currentAnnotation = null;
 		int totalLines = 0;
+		String localName = "";
 		for(String filename : filenames){
-
+			int ending = filename.lastIndexOf(".csv");
+			localName += filename.substring(filename.lastIndexOf("/")+1, ending==-1?filename.length():ending) + " ";
 			ArrayList<Integer> blanks = new ArrayList<Integer>();
 			ArrayList<Integer> extras = new ArrayList<Integer>();
 			int lineID = 0;
@@ -90,7 +101,6 @@ public class SimpleDocumentList implements Serializable{
 				for(int i = 0; i < headers.length; i++){
 					headers[i] = headers[i].trim();
 					if(headers[i].length()>0){
-						System.out.println();
 						annotationColumns.add(i);
 					}
 				}
@@ -146,7 +156,17 @@ public class SimpleDocumentList implements Serializable{
 				description.append(" " + extras.size() + " total.\n");
 			}
 		}
-		description.append(filenames.size() + " files, " + totalLines + " lines.\n");
+		description.append(filenames.size() + " files, " + totalLines + " lines.\nAll columns:");
+		for(String ann : allAnnotations.keySet()){
+			description.append(" " + ann);
+		}
+		for(String ann : textColumns.keySet()){
+			description.append(" " + ann);
+		}
+		localName.trim();
+		setName(localName);
+		
+		description.append("\n");
 		double time2 = System.currentTimeMillis();
 	}
 

@@ -13,15 +13,38 @@ import javax.swing.JTextArea;
 import se.datadosen.component.RiverLayout;
 
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
-import edu.cmu.side.genesis.view.generic.FeatureTableDisplayPanel;
+import edu.cmu.side.genesis.model.GenesisRecipe;
+import edu.cmu.side.genesis.view.generic.GenericTableDisplayPanel;
+import edu.cmu.side.genesis.view.generic.GenericLoadPanel;
 import edu.cmu.side.simple.newui.features.FeatureTableListPanel;
 import edu.cmu.side.simple.newui.features.FeatureTablePanel;
 
 public class ExtractBottomPanel extends JPanel{
         
-        ExtractTableControlPanel control = new ExtractTableControlPanel();
+        GenericLoadPanel control = new GenericLoadPanel("Highlighted Feature Table:") {	
+			@Override
+			public void setHighlight(GenesisRecipe r) {
+				ExtractFeaturesControl.setHighlightedFeatureTableRecipe(r);
+			}
+			
+			@Override
+			public void refreshPanel() {
+				refreshPanel(ExtractFeaturesControl.getFeatureTables());
+			}
+			
+			@Override
+			public String getHighlightDescription() {
+				return getHighlight().getFeatureTable().getDescriptionString();
+			}
+			
+			@Override
+			public GenesisRecipe getHighlight() {
+				return ExtractFeaturesControl.getHighlightedFeatureTableRecipe();
+			}
+		};
+		
         ExtractTableChecklistPanel checklist = new ExtractTableChecklistPanel();
-        FeatureTableDisplayPanel display = new FeatureTableDisplayPanel();
+        GenericTableDisplayPanel display = new GenericTableDisplayPanel();
         
         public ExtractBottomPanel(){
                 setLayout(new BorderLayout());

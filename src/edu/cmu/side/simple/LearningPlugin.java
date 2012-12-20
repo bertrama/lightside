@@ -4,6 +4,8 @@ import java.io.File;
 
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -12,6 +14,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.swing.JLabel;
+
+import com.yerihyo.yeritools.math.StatisticsToolkit;
 
 import edu.cmu.side.genesis.control.BuildModelControl;
 import edu.cmu.side.genesis.control.GenesisUpdater;
@@ -55,6 +59,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				}catch(Exception e){
 					e.printStackTrace();
 				}
+				progressIndicator.update("Generating Folds Map", 0,0);
 				if(validationSettings.get("source").equals("RANDOM")){
 					foldsMap = BuildModelControl.getFoldsMapRandom(sdl, numFolds);
 				}else if(validationSettings.get("source").equals("ANNOTATIONS")){
@@ -62,28 +67,33 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				}else if(validationSettings.get("source").equals("FILES")){
 					foldsMap = BuildModelControl.getFoldsMapByFile(sdl, numFolds);
 				}
-				result = evaluateCrossValidation(table, foldsMap);
+				result = evaluateCrossValidation(table, foldsMap, progressIndicator);
 				trainWithMaskForSubclass(table, mask, progressIndicator);
 			}else if(validationSettings.get("type").equals("SUPPLY")){
 				trainWithMaskForSubclass(table, mask, progressIndicator);
-				result = evaluateTestSet(table, (FeatureTable)validationSettings.get("supplied"));
+				result = evaluateTestSet(table, (FeatureTable)validationSettings.get("supplied"), progressIndicator);
 			}
 		}
 		return result;
 	}
 
-	protected SimpleTrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap){
+	protected SimpleTrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, GenesisUpdater progressIndicator){
 		boolean[] mask = new boolean[table.getDocumentList().getSize()];
 		String[] predictions = new String[table.getDocumentList().getSize()];
 		Set<Integer> folds = new TreeSet<Integer>();
 		for(Integer key : foldsMap.keySet()){
 			folds.add(foldsMap.get(key));
 		}
+		ArrayList<Double> times = new ArrayList<Double>();
+		DecimalFormat print = new DecimalFormat("#.###");
 		for(Integer fold : folds){
 			for(Integer key : foldsMap.keySet()){
 				mask[key] = !foldsMap.get(key).equals(fold);
-			}			
+			}
+			double average = StatisticsToolkit.getAverage(times);
+			double timeA = System.currentTimeMillis();
 			try{
+				progressIndicator.update((times.size()>0?"Time per fold: " + print.format(average)+", ":"") + "Training fold", (fold+1), folds.size());
 				trainWithMaskForSubclass(table, mask, updater);				
 			}catch(Exception e){
 				e.printStackTrace();
@@ -91,6 +101,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			for(int i = 0; i < mask.length; i++){
 				mask[i] = !mask[i];
 			}
+			progressIndicator.update("Testing fold", fold, folds.size());
 			SimplePredictionResult preds = predictWithMaskForSubclass(table, table, mask, updater);
 			int predictionIndex = 0;
 			for(Comparable pred : preds.getPredictions()){
@@ -99,15 +110,16 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				}
 				predictions[predictionIndex] = pred.toString();
 				predictionIndex++;
-
 			}
+			double timeB = System.currentTimeMillis();
+			times.add((timeB-timeA)/1000.0);
 		}
 		ArrayList<String> predictionsList = new ArrayList<String>();
 		for(String s : predictions) predictionsList.add(s);
 		return new SimpleTrainingResult(table, predictionsList);
 	}
 
-	protected SimpleTrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet){
+	protected SimpleTrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet,GenesisUpdater updater){
 		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
 		boolean[] mask = new boolean[testSet.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;

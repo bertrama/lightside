@@ -8,13 +8,36 @@ import javax.swing.JSplitPane;
 
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
 import edu.cmu.side.genesis.control.ModifyFeaturesControl;
-import edu.cmu.side.genesis.view.generic.FeatureTableDisplayPanel;
+import edu.cmu.side.genesis.model.GenesisRecipe;
+import edu.cmu.side.genesis.view.generic.GenericLoadPanel;
+import edu.cmu.side.genesis.view.generic.GenericTableDisplayPanel;
 
 public class ModifyBottomPanel extends JPanel{
 
-	private ModifyControlPanel control = new ModifyControlPanel();
+	private GenericLoadPanel control = new GenericLoadPanel("Highlighted Filtered Table:") {
+		
+		@Override
+		public void setHighlight(GenesisRecipe r) {
+			ModifyFeaturesControl.setHighlightedFilterTableRecipe(r);
+		}
+		
+		@Override
+		public void refreshPanel() {
+			refreshPanel(ModifyFeaturesControl.getFilterTables());
+		}
+		
+		@Override
+		public String getHighlightDescription() {
+			return getHighlight().getFilteredTable().getDescriptionString();
+		}
+		
+		@Override
+		public GenesisRecipe getHighlight() {
+			return ModifyFeaturesControl.getHighlightedFilterTableRecipe();
+		}
+	};
 	private ModifyTableChecklistPanel checklist = new ModifyTableChecklistPanel();
-	private FeatureTableDisplayPanel display = new FeatureTableDisplayPanel();
+	private GenericTableDisplayPanel display = new GenericTableDisplayPanel();
 
 	public ModifyBottomPanel(){
 		setLayout(new BorderLayout());

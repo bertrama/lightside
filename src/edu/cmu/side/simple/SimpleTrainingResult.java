@@ -36,9 +36,12 @@ public class SimpleTrainingResult{
 	private String name;
 	private FeatureTable train;
 	private FeatureTable test;
-	private Map<String, String> evaluation = null;
 	private List<? extends Comparable> predictions;
-	private Map<String, Map<String, ArrayList<Integer>>> confusionMatrix = new TreeMap<String, Map<String, ArrayList<Integer>>>();
+	private Map<String, Map<String, List<Integer>>> confusionMatrix = new TreeMap<String, Map<String, List<Integer>>>();
+	private String describeTrain;
+	private String describeTest;
+	private String describeModel;
+	private String describeValidation;
 
 	public String toString(){
 		return name;
@@ -51,27 +54,57 @@ public class SimpleTrainingResult{
 	public void setName(String n){
 		name = n;
 	}
-	
+
+	public void generateDescriptionString(LearningPlugin learner, Map<String, String> settings, Map<String, Object> validation){
+		describeTrain = "Model trained on feature table " + train.getName() + ":\n------------------\n" + train.getDescriptionString() + "\n------------------\n";
+		boolean tested = validation != null && validation.containsKey("test") && validation.get("test").equals(Boolean.TRUE.toString());
+		if(tested){
+			describeTest = "Model evaluated on feature table " + test.getName() + "\n";
+			if(train != test){
+				describeTest += ":\n------------------\n" + test.getDescriptionString() + "\n------------------\n";
+			}
+		}else{
+			describeTest = "Model not evaluated.\n";
+		}
+
+		describeModel = "Model trained using classifier " + learner.getOutputName();
+		if(settings.keySet().size()>0){
+			describeModel += " with settings:\n";
+			for(String s : settings.keySet()){
+				describeModel += s + ": " + settings.get(s) + "\n";
+			}
+		}
+		describeModel += "\n------------------\n";
+		if(tested){
+			describeValidation = "Model validated using the following settings:\n";
+			for(String key : validation.keySet()){
+				describeValidation += key + ": " + validation.get(key).toString() + "\n";
+			}
+			describeValidation += "\n------------------\n";
+		}else describeValidation = "";
+
+	}
 	public String getDescriptionString(){
-		return "Training Result!";
+		return describeTrain + describeTest + describeModel + describeValidation;
 	}
 
-	public String getSummary(){
-		return evaluation.get("summary");
-	}
-
-	public Map<String, Map<String, ArrayList<Integer>>> getConfusionMatrix(){
+	public Map<String, Map<String, List<Integer>>> getConfusionMatrix(){
 		return confusionMatrix;
 	}
-	
-	public Map<String, String> getEvaluations(){
-		return evaluation;
+
+
+	public FeatureTable getEvaluationTable(){
+		return test;
 	}
-	
+
+	public int numEvaluationInstances(){
+		return test.getDocumentList().getSize();
+	}
+
 	public SimpleTrainingResult(FeatureTable tr, List<? extends Comparable> pred){
 		train = tr;
+		test = tr;
 		predictions = pred;
-		evaluation = new TreeMap<String, String>();
 		generateConfusionMatrix(tr.getClassValueType(), tr.getDocumentList().getAnnotationArray(), pred);
 	}
 
@@ -82,7 +115,6 @@ public class SimpleTrainingResult{
 		train = tr;
 		test = te;
 		predictions = pred;
-		evaluation = new TreeMap<String, String>();
 		generateConfusionMatrix(te.getClassValueType(), te.getDocumentList().getAnnotationArray(), pred);
 	}
 
@@ -94,7 +126,7 @@ public class SimpleTrainingResult{
 				String pred = predicted.get(i).toString();
 				String act = actual.get(i);
 				if(!confusionMatrix.containsKey(pred)){
-					confusionMatrix.put(pred, new TreeMap<String, ArrayList<Integer>>());
+					confusionMatrix.put(pred, new TreeMap<String, List<Integer>>());
 				}
 				if(!confusionMatrix.get(pred).containsKey(act)){
 					confusionMatrix.get(pred).put(act, new ArrayList<Integer>());
@@ -125,7 +157,7 @@ public class SimpleTrainingResult{
 				String pred = "Q"+(Qpred+1);
 				String act = "Q"+(Qact+1);
 				if(!confusionMatrix.containsKey(pred)){
-					confusionMatrix.put(pred, new TreeMap<String, ArrayList<Integer>>());
+					confusionMatrix.put(pred, new TreeMap<String, List<Integer>>());
 				}
 				if(!confusionMatrix.get(pred).containsKey(act)){
 					confusionMatrix.get(pred).put(act, new ArrayList<Integer>());
@@ -143,14 +175,14 @@ public class SimpleTrainingResult{
 	//        /** first label is predicted label, second label is actual label. */
 	//
 	//        public SimpleTrainingResult(String modelname, GenesisRecipe gr){
-		//                name = modelname;
-		//                trainrecipe = gr;
-		//                uniqueID = Math.random();
-		//                gr.getLearningPlugin().toFile(uniqueID);
-		//        }
+	//                name = modelname;
+	//                trainrecipe = gr;
+	//                uniqueID = Math.random();
+	//                gr.getLearningPlugin().toFile(uniqueID);
+	//        }
 	//        
 	//        public void serialize(File f){
-		//                try{
+	//                try{
 	//                        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f));                               
 	//                        out.writeObject(name);
 	//                        trainrecipe.writeSerializedTable(out);
@@ -368,37 +400,7 @@ public class SimpleTrainingResult{
 	//                return new ArrayList<Integer>();
 	//        }
 	//        
-	//        public double getKappa(){
-	//                Map<String, Double> predProb = new TreeMap<String, Double>();
-	//                Map<String, Double> actProb = new TreeMap<String, Double>();
-	//                double correctCount = 0.0;
-	//                FeatureTable evaluationList = getEvaluationRecipe().getModifiedTable();
-	//                for(String pred : evaluationList.getPossibleLabels()){
-	//                        for(String act : evaluationList.getPossibleLabels()){
-	//                                List<Integer> cell = getConfusionMatrixCell(pred, act);
-	//                                if(!predProb.containsKey(pred)){
-	//                                        predProb.put(pred, 0.0);
-	//                                }
-	//                                predProb.put(pred, predProb.get(pred)+cell.size());
-	//                                if(!actProb.containsKey(act)){
-	//                                        actProb.put(act, 0.0);
-	//                                }
-	//                                actProb.put(act, actProb.get(act)+cell.size());
-	//                                if(act.equals(pred)){
-	//                                        correctCount += cell.size();
-	//                                }
-	//                        }
-	//                }
-	//                double chance = 0.0;
-	//                for(String lab : evaluationList.getPossibleLabels()){
-	//                        predProb.put(lab, predProb.get(lab)/(0.0+evaluationList.getInstanceSize()));
-	//                        actProb.put(lab, actProb.get(lab)/(0.0+evaluationList.getInstanceSize()));
-	//                        chance += (predProb.get(lab)*actProb.get(lab));
-	//                }
-	//                correctCount /= (0.0+evaluationList.getInstanceSize());
-	//                double kappa = (correctCount-chance)/(1-chance);
-	//                return kappa;
-	//        }
+
 	//        
 	//        public String getTextConfusionMatrix(){
 	//                return getTextConfusionMatrix(trainrecipe.getModifiedTable().getPossibleLabels(), confusionMatrix);

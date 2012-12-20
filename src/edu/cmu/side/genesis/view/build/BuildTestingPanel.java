@@ -95,8 +95,10 @@ public class BuildTestingPanel extends AbstractListPanel {
 		add("left", txtNumFolds);
 		add("br left", radioTestSet);
 		add("left", add);
-		add("br left", radioNone);
+		
+		listScroll.setBorder(new EmptyBorder(0,30,0,0));
 		add("br hfill", listScroll);	
+		add("br left", radioNone);
 		
 
 	}

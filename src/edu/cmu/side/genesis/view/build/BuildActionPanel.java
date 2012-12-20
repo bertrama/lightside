@@ -1,5 +1,7 @@
 package edu.cmu.side.genesis.view.build;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -7,8 +9,8 @@ import javax.swing.JPanel;
 
 import edu.cmu.side.genesis.control.BuildModelControl;
 import edu.cmu.side.genesis.control.ExtractFeaturesControl;
-import edu.cmu.side.genesis.view.generic.ActionBar;
-import edu.cmu.side.genesis.view.generic.SwingUpdaterLabel;
+import edu.cmu.side.genesis.view.ActionBar;
+import edu.cmu.side.genesis.view.SwingUpdaterLabel;
 
 public class BuildActionPanel extends ActionBar {
 
@@ -23,7 +25,10 @@ public class BuildActionPanel extends ActionBar {
 				ExtractFeaturesControl.setNewName(name.getText());
 			}
 		});
-		updaters.add("left", (SwingUpdaterLabel)BuildModelControl.getUpdater());
+		JPanel updaterPanel = new JPanel(new BorderLayout());
+		updaterPanel.setPreferredSize(new Dimension(400,30));
+		updaterPanel.add(BorderLayout.CENTER, (SwingUpdaterLabel)BuildModelControl.getUpdater());
+		updaters.add("right", updaterPanel);
 	}
 
 	public void refreshPanel(){

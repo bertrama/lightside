@@ -2,11 +2,18 @@ package edu.cmu.side.genesis.view.modify;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.genesis.control.ModifyFeaturesControl;
+import edu.cmu.side.genesis.model.GenesisRecipe;
+import edu.cmu.side.genesis.view.generic.GenericLoadPanel;
+import edu.cmu.side.genesis.view.generic.GenericPluginChecklistPanel;
+import edu.cmu.side.genesis.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.genesis.view.generic.GenericTripleFrame;
+import edu.cmu.side.simple.FilterPlugin;
 
 public class ModifyFeaturesPane extends JPanel{
 
@@ -16,7 +23,45 @@ public class ModifyFeaturesPane extends JPanel{
 
 	public ModifyFeaturesPane(){
 		setLayout(new BorderLayout());
-		top = new GenericTripleFrame(new ModifyLoadPanel(), new ModifyChecklistPanel(), new ModifyConfigPanel());
+		GenericLoadPanel load = new GenericLoadPanel("Selected Feature Table:"){
+
+			@Override
+			public void setHighlight(GenesisRecipe r) {
+				ModifyFeaturesControl.setHighlightedFeatureTableRecipe(r);
+			}
+
+			@Override
+			public GenesisRecipe getHighlight() {
+				return ModifyFeaturesControl.getHighlightedFeatureTableRecipe();
+			}
+
+			@Override
+			public String getHighlightDescription() {
+				return getHighlight().getFeatureTable().getDescriptionString();
+			}
+
+			@Override
+			public void refreshPanel() {
+				refreshPanel(ModifyFeaturesControl.getFeatureTables());
+			}
+			
+		};
+		
+		GenericPluginChecklistPanel<FilterPlugin> checklist = new GenericPluginChecklistPanel<FilterPlugin>("Filters Available:"){
+			@Override
+			public Map<FilterPlugin, Boolean> getPlugins() {
+				return ModifyFeaturesControl.getFilterPlugins();
+			}
+		};
+		
+		GenericPluginConfigPanel<FilterPlugin> config = new GenericPluginConfigPanel<FilterPlugin>(){
+			@Override
+			public void refreshPanel() {
+				refreshPanel(ModifyFeaturesControl.getFilterPlugins());
+			}
+		};
+		
+		top = new GenericTripleFrame(load, checklist, config);
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
 		JPanel panel = new JPanel(new BorderLayout());

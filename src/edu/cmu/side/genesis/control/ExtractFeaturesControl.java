@@ -24,11 +24,11 @@ import edu.cmu.side.SimpleWorkbench;
 import edu.cmu.side.genesis.GenesisWorkbench;
 import edu.cmu.side.genesis.model.GenesisRecipe;
 import edu.cmu.side.genesis.model.RecipeManager;
+import edu.cmu.side.genesis.view.CheckBoxListEntry;
+import edu.cmu.side.genesis.view.SwingUpdaterLabel;
+import edu.cmu.side.genesis.view.extract.ExtractCombinedLoadPanel;
 import edu.cmu.side.genesis.view.extract.ExtractLoadPanel;
-import edu.cmu.side.genesis.view.extract.ExtractFileManagerPanel;
 import edu.cmu.side.genesis.view.extract.ExtractActionPanel;
-import edu.cmu.side.genesis.view.generic.CheckBoxListEntry;
-import edu.cmu.side.genesis.view.generic.SwingUpdaterLabel;
 import edu.cmu.side.plugin.PluginManager;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.simple.FeaturePlugin;
@@ -126,16 +126,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 	}
 	
 	
-	public static class PluginCheckboxListener implements ItemListener{
-
-		@Override
-		public void itemStateChanged(ItemEvent ie) {
-			FeaturePlugin plug = (FeaturePlugin)((CheckBoxListEntry)ie.getSource()).getValue();
-			featurePlugins.put(plug, !featurePlugins.get(plug));
-			GenesisWorkbench.update();
-		}
-	}
-	
 	public static void deleteCurrentDocumentList(){
 		if(highlightedDocumentList != null){
 			RecipeManager.removeRecipe(highlightedDocumentList);
@@ -145,9 +135,9 @@ public class ExtractFeaturesControl extends GenesisControl{
 	}
 	
 	public static class AnnotationComboListener implements ActionListener{
-		private ExtractLoadPanel parentComponent;
+		private ExtractCombinedLoadPanel parentComponent;
 
-		public AnnotationComboListener(ExtractLoadPanel parentComponent){
+		public AnnotationComboListener(ExtractCombinedLoadPanel parentComponent){
 			this.parentComponent = parentComponent;
 		}
 		
@@ -262,7 +252,9 @@ public class ExtractFeaturesControl extends GenesisControl{
 	
 	public static void generateDocumentListRecipe(Set<String> files){
 		SimpleDocumentList sdl = new SimpleDocumentList(files);
-		setHighlightedDocumentListRecipe(RecipeManager.fetchDocumentListRecipe(sdl));
+		GenesisRecipe plan = RecipeManager.fetchDocumentListRecipe(sdl);
+		RecipeManager.addRecipe(plan);
+		setHighlightedDocumentListRecipe(plan);
 	}
 
 	public static GenesisRecipe getHighlightedDocumentListRecipe(){

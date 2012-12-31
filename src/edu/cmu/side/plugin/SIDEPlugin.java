@@ -1,19 +1,9 @@
 package edu.cmu.side.plugin;
 
 import java.awt.Component;
-
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import org.w3c.dom.Element;
-
-import com.mysterion.xml.XMLBoss;
-import com.yerihyo.yeritools.xml.XMLable;
-
-import edu.cmu.side.SimpleWorkbench;
-
 
 public abstract class SIDEPlugin implements Cloneable{
 	private transient File rootFolder;

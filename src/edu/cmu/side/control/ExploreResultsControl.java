@@ -3,7 +3,7 @@ package edu.cmu.side.control;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
@@ -41,6 +41,6 @@ public class ExploreResultsControl extends GenesisControl{
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		highlightedTrainedModel = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 }

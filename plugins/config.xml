@@ -15,7 +15,7 @@
         <version>1.0</version>
         <description><![CDATA[Basic Fscore evaluations]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.evaluations.tables.BasicTableEvaluations</classname>
+        <classname>plugins.metrics.tables.BasicTableEvaluations</classname>
     </plugin>
     
     <plugin>
@@ -24,7 +24,7 @@
         <version>1.0</version>
         <description><![CDATA[Basic model accuracy evaluations]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.evaluations.models.BasicModelEvaluations</classname>
+        <classname>plugins.metrics.models.BasicModelEvaluations</classname>
     </plugin>
     
     <plugin>
@@ -33,7 +33,7 @@
         <version>1.0</version>
         <description><![CDATA[Basic error analysis]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.analysis.BasicModelAnalysis</classname>
+        <classname>plugins.analysis.one.BasicModelAnalysis</classname>
     </plugin>
     
     <plugin>
@@ -42,7 +42,7 @@
         <version>1.0</version>
         <description><![CDATA[Basic model comparisons]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.comparisons.BasicModelComparison</classname>
+        <classname>plugins.analysis.two.BasicModelComparison</classname>
     </plugin>
     
     <plugin>

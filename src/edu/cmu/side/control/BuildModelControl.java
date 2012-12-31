@@ -10,10 +10,11 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
@@ -134,9 +135,11 @@ public class BuildModelControl extends GenesisControl{
 	public static class TrainModelListener implements ActionListener{
 
 		JProgressBar progress;
-
-		public TrainModelListener(JProgressBar p){
+		JTextField name;
+		
+		public TrainModelListener(JProgressBar p, JTextField n){
 			progress = p;
+			name = n;
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -148,7 +151,7 @@ public class BuildModelControl extends GenesisControl{
 			LearningPlugin learner = getHighlightedLearningPlugin();
 			Map<String, String> settings = learner.generateConfigurationSettings();
 			Recipe newRecipe = Recipe.addLearnerToRecipe(getHighlightedFeatureTableRecipe(), learner, settings);
-			BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(progress, newRecipe);
+			BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(progress, newRecipe, name.getText());
 			task.execute();
 		}
 
@@ -156,10 +159,12 @@ public class BuildModelControl extends GenesisControl{
 
 	public static class BuildModelTask extends OnPanelSwingTask{
 		Recipe plan;
-
-		public BuildModelTask(JProgressBar progressBar, Recipe newRecipe){
+		String name;
+		
+		public BuildModelTask(JProgressBar progressBar, Recipe newRecipe, String n){
 			this.addProgressBar(progressBar);
 			plan = newRecipe;
+			name = n;
 		}
 
 		protected Void doInBackground(){
@@ -169,10 +174,10 @@ public class BuildModelControl extends GenesisControl{
 					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, BuildModelControl.getUpdater());
 					model.generateDescriptionString(plan.getLearner(), plan.getLearnerSettings(), validationSettings);
 					plan.setTrainingResult(model);
-					model.setName(BuildModelControl.getNewName());
+					model.setName(name);
 					BuildModelControl.setHighlightedTrainedModelRecipe(plan);
 					RecipeManager.addRecipe(plan);
-					GenesisWorkbench.update();
+					Workbench.update();
 					update.reset();
 				}
 			}catch(Exception e){
@@ -228,11 +233,11 @@ public class BuildModelControl extends GenesisControl{
 
 	public static void setHighlightedFeatureTableRecipe(Recipe highlight){
 		highlightedFeatureTable = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		highlightedTrainedModel = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 }

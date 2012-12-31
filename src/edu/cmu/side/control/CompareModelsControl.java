@@ -3,7 +3,7 @@ package edu.cmu.side.control;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.EvaluateTwoModelPlugin;
@@ -54,7 +54,7 @@ public class CompareModelsControl extends GenesisControl{
 
 	public static void setBaselineTrainedModelRecipe(Recipe highlight){
 		baselineModel = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 
 	public static boolean hasCompetingTrainedModelRecipe(){
@@ -67,7 +67,7 @@ public class CompareModelsControl extends GenesisControl{
 
 	public static void setCompetingTrainedModelRecipe(Recipe highlight){
 		competingModel = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 	private static double pairedTTest(){

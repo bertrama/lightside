@@ -1,6 +1,7 @@
 package edu.cmu.side.control;
 
 import java.awt.Component;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -20,7 +21,7 @@ import javax.swing.JTextField;
 import com.yerihyo.yeritools.io.FileToolkit;
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
@@ -43,7 +44,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 	private static Map<FeaturePlugin, Boolean> featurePlugins;
 	private static Map<TableMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static EvalCheckboxListener eval;
-	private static String newName = "features";
 	
 	static{
 		featurePlugins = new HashMap<FeaturePlugin, Boolean>();
@@ -58,19 +58,11 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 	}
-	
-	public static void setNewName(String n){
-		newName = n;
-	}
-	
-	public static String getNewName(){
-		return newName;
-	}
 
 	public static class AddFilesListener implements ActionListener{
 		private Component parentComponent;
 		private FastListModel model;
-		private JFileChooser chooser = new JFileChooser(GenesisWorkbench.csvFolder);
+		private JFileChooser chooser = new JFileChooser(Workbench.csvFolder);
 
 		public AddFilesListener(Component parentComponent){
 			this.parentComponent = parentComponent;
@@ -87,7 +79,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 			Recipe plan = generateDocumentListRecipe(chooser.getSelectedFiles());
 			setHighlightedDocumentListRecipe(plan);
-			GenesisWorkbench.update();
+			Workbench.update();
 		}
 	}
 	
@@ -134,7 +126,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		if(highlightedDocumentList != null){
 			RecipeManager.removeRecipe(highlightedDocumentList);
 			highlightedDocumentList = null;
-			GenesisWorkbench.update();
+			Workbench.update();
 		}
 	}
 	
@@ -163,7 +155,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 					columns.put(s,  true);
 				}
 				parentComponent.reloadCheckBoxList(columns);
-				GenesisWorkbench.update();				
+				Workbench.update();				
 			}
 		}
 	}
@@ -173,9 +165,11 @@ public class ExtractFeaturesControl extends GenesisControl{
 		
 		private JProgressBar progress;
 		private JTextField threshold;
-		public BuildTableListener(JProgressBar pr, JTextField thr){
+		private JTextField name;
+		public BuildTableListener(JProgressBar pr, JTextField thr, JTextField n){
 			progress = pr;
 			threshold = thr;
+			name = n;
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -193,7 +187,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedDocumentListRecipe(), plugins);
-			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, ExtractFeaturesControl.getNewName(), thresh);
+			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, name.getText(), thresh);
 			task.execute();
 		}
 		
@@ -228,7 +222,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				ModifyFeaturesControl.setHighlightedFeatureTableRecipe(plan);
 				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
 				RecipeManager.addRecipe(plan);
-				GenesisWorkbench.update();
+				Workbench.update();
 				update.reset();
 			}catch(Exception e){
 //				JTextArea text = new JTextArea();
@@ -283,11 +277,11 @@ public class ExtractFeaturesControl extends GenesisControl{
 				}
 			}			
 		}
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 	public static void setHighlightedFeatureTableRecipe(Recipe highlight){
 		highlightedFeatureTable = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 }

@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import se.datadosen.component.RiverLayout;
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -35,7 +35,7 @@ public class BuildPluginPanel extends AbstractListPanel {
 					}
 
 				}
-				GenesisWorkbench.update();
+				Workbench.update();
 			}
 		});
 		add(BorderLayout.NORTH, panel);
@@ -45,7 +45,7 @@ public class BuildPluginPanel extends AbstractListPanel {
 	public void refreshPanel(){
 		if(combo.getItemCount() != BuildModelControl.numLearningPlugins()){
 			LearningPlugin highlight = BuildModelControl.getHighlightedLearningPlugin();
-			GenesisWorkbench.reloadComboBoxContent(combo, BuildModelControl.getLearningPlugins(), highlight);
+			Workbench.reloadComboBoxContent(combo, BuildModelControl.getLearningPlugins(), highlight);
 		}
 	}
 }

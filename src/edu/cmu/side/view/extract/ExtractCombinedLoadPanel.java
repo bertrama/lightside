@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import se.datadosen.component.RiverLayout;
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -45,7 +45,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		files.refreshPanel();
 		if(files.getHighlight() != null){
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
-			GenesisWorkbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
+			Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
 			Map<String, Boolean> columns = new TreeMap<String, Boolean>();
 			for(String s : sdl.allAnnotations().keySet()){
 				if(sdl.getCurrentAnnotation() == null || !sdl.getCurrentAnnotation().equals(s)) columns.put(s, false);
@@ -55,7 +55,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 			}
 			reloadCheckBoxList(columns);
 		}else{
-			GenesisWorkbench.reloadComboBoxContent(annotationField, new ArrayList<Object>(), null);
+			Workbench.reloadComboBoxContent(annotationField, new ArrayList<Object>(), null);
 			reloadCheckBoxList(new TreeMap<String, Boolean>());
 		}
 		
@@ -72,8 +72,8 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 				public void itemStateChanged(ItemEvent ie) {
 					DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 					sdl.setTextColumn(((CheckBoxListEntry)ie.getItem()).getValue().toString(), ie.getStateChange()==ItemEvent.SELECTED);
-					GenesisWorkbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
-					GenesisWorkbench.update();						
+					Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
+					Workbench.update();						
 				}
 			});
 			i++;

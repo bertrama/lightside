@@ -16,7 +16,7 @@ import edu.cmu.side.view.WorkbenchPanel;
 import edu.cmu.side.view.util.GlassPane;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
-public class GenesisWorkbench{
+public class Workbench{
 
 	public static File rootFolder = new File(System.getProperty("user.dir"));
 	static public String PLATFORM_FILE_SEPARATOR = System.getProperty("file.separator");
@@ -35,7 +35,7 @@ public class GenesisWorkbench{
 
 	static boolean serverMode = false;
 	
-	public GenesisWorkbench(){
+	public Workbench(){
 		JFrame frame = new JFrame();
 		panel = new WorkbenchPanel();
 		frame.setContentPane(panel);
@@ -55,7 +55,7 @@ public class GenesisWorkbench{
 	public static void main(String[] args) throws Exception{
 		String file = "/Users/emayfiel/movies_train.csv";
 		StatusUpdater update = new SwingUpdaterLabel();
-		GenesisWorkbench workbench = new GenesisWorkbench();
+		Workbench workbench = new Workbench();
 	}
 
 	public static void update(){

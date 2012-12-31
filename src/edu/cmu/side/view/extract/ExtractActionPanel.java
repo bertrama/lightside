@@ -19,13 +19,6 @@ public class ExtractActionPanel extends ActionBar{
 
 	public ExtractActionPanel(){
 		name.setText("features");
-		name.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				ExtractFeaturesControl.setNewName(name.getText());
-			}
-		});
 		add.setText("Extract");
 		//Doesn't update the backend when the threshold changes!!
 		threshold.setText("5");
@@ -35,7 +28,7 @@ public class ExtractActionPanel extends ActionBar{
 		updaterPanel.setPreferredSize(new Dimension(150,30));
 		updaterPanel.add(BorderLayout.CENTER, (SwingUpdaterLabel)ExtractFeaturesControl.getUpdater());
 		updaters.add("right", updaterPanel);
-		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, threshold));
+		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, threshold, name));
 	}
 	
 	public void refreshPanel(){

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.data.DocumentList;
 
 public class RecipeManager {
@@ -30,7 +30,7 @@ public class RecipeManager {
 	
 	public static void deleteRecipe(Recipe rec){
 		recipes.remove(rec);
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 	public static Recipe fetchDocumentListRecipe(DocumentList documents){
@@ -42,12 +42,12 @@ public class RecipeManager {
 	
 	public static void addRecipe(Recipe rec){
 		recipes.add(rec);
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 	public static void removeRecipe(Recipe rec){
 		recipes.remove(rec);
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 	public RecipeManager(){

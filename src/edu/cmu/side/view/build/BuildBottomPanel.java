@@ -13,6 +13,7 @@ import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMatrixPanel;
+import edu.cmu.side.view.generic.GenericModelMetricPanel;
 
 public class BuildBottomPanel extends JPanel {
 
@@ -51,7 +52,8 @@ public class BuildBottomPanel extends JPanel {
 		}
 
 	};
-	private BuildResultPanel result = new BuildResultPanel();
+
+	private GenericModelMetricPanel result = new GenericModelMetricPanel();
 
 	public BuildBottomPanel(){
 		setLayout(new BorderLayout());
@@ -73,6 +75,6 @@ public class BuildBottomPanel extends JPanel {
 	public void refreshPanel(){
 		control.refreshPanel();
 		confusion.refreshPanel();
-		result.refreshPanel();	
+		result.refreshPanel(BuildModelControl.getHighlightedTrainedModelRecipe());	
 	}
 }

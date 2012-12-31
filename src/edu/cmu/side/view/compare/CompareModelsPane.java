@@ -74,8 +74,12 @@ public class CompareModelsPane extends JPanel{
 	};
 	
 	GenericPluginConfigPanel<EvaluateTwoModelPlugin> analysis = new GenericPluginConfigPanel<EvaluateTwoModelPlugin>(){
+		@Override
 		public void refreshPanel(){
 			refreshPanel(CompareModelsControl.getModelComparisonPlugins());
+			for(EvaluateTwoModelPlugin plugin : visiblePlugins){
+				plugin.refreshPanel();
+			}
 		}
 	};
 	

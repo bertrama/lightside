@@ -11,10 +11,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JProgressBar;
+import javax.swing.JTextField;
 
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
@@ -37,8 +38,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	static Map<FilterPlugin, Boolean> filterPlugins;
 	private static EvalCheckboxListener eval;
-	private static String newName = "filtered";
-
+	
 	static{
 		filterPlugins = new HashMap<FilterPlugin, Boolean>();
 		SIDEPlugin[] filterExtractors = PluginManager.getSIDEPluginArrayByType("filter_extractor");
@@ -54,14 +54,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 
 	}
-	public static void setNewName(String n){
-		newName = n;
-	}
 	
-	public static String getNewName(){
-		return newName;
-	}
-
 	public static void setUpdater(StatusUpdater up){
 		update = up;
 	}
@@ -101,16 +94,18 @@ public class ModifyFeaturesControl extends GenesisControl{
 				highlightedFilters.remove(ft);
 			}
 
-			GenesisWorkbench.update();
+			Workbench.update();
 		}
 	}
 	
 	public static class FilterTableListener implements ActionListener{
 		
 		private JProgressBar progress;
+		private JTextField name;
 		
-		public FilterTableListener(JProgressBar pr){
+		public FilterTableListener(JProgressBar pr, JTextField n){
 			progress = pr;
+			name = n;
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -121,7 +116,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 				}
 			}
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedFeatureTableRecipe(), plugins);
-			ModifyFeaturesControl.FilterTableTask task = new ModifyFeaturesControl.FilterTableTask(progress, newRecipe);
+			ModifyFeaturesControl.FilterTableTask task = new ModifyFeaturesControl.FilterTableTask(progress, newRecipe, name.getText());
 			task.execute();
 		}
 		
@@ -130,10 +125,12 @@ public class ModifyFeaturesControl extends GenesisControl{
 	private static class FilterTableTask extends OnPanelSwingTask{
 		
 		Recipe plan;
+		String name;
 		
-		public FilterTableTask(JProgressBar progressBar, Recipe newRecipe){
+		public FilterTableTask(JProgressBar progressBar, Recipe newRecipe, String n){
 			this.addProgressBar(progressBar);
 			plan = newRecipe;
+			name = n;
 		}
 
 		@Override
@@ -143,11 +140,11 @@ public class ModifyFeaturesControl extends GenesisControl{
 				for(SIDEPlugin plug : plan.getFilters().keySet()){
 					current = ((FilterPlugin)plug).filter(current, plan.getFilters().get(plug), update);					
 				}
-				current.setName(ModifyFeaturesControl.getNewName());
+				current.setName(name);
 				plan.setFilteredTable(current);
 				setHighlightedFilterTableRecipe(plan);
 				RecipeManager.addRecipe(plan);
-				GenesisWorkbench.update();
+				Workbench.update();
 				update.reset();
 			}catch(Exception e){
 				e.printStackTrace();
@@ -166,7 +163,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 	
 	public static void setHighlightedFeatureTableRecipe(Recipe highlight){
 		highlightedFeatureTable = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 
 	public static OrderedPluginMap getSelectedFilters(){
@@ -183,6 +180,6 @@ public class ModifyFeaturesControl extends GenesisControl{
 	
 	public static void setHighlightedFilterTableRecipe(Recipe highlight){
 		highlightedFilterTable = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 }

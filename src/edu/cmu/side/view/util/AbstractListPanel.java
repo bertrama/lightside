@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import se.datadosen.component.RiverLayout;
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 
 public abstract class AbstractListPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = -1090634417229954402L;
@@ -78,7 +78,7 @@ public abstract class AbstractListPanel extends JPanel implements ActionListener
 	}
 
 	public void fireActionEvent(){
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 }

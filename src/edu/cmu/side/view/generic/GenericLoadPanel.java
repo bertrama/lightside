@@ -9,7 +9,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import se.datadosen.component.RiverLayout;
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -27,7 +27,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 					Recipe r = (Recipe)combo.getSelectedItem();
 					setHighlight(r);
 				}
-				GenesisWorkbench.update();
+				Workbench.update();
 			}
 		});
 		delete.addActionListener(new DeleteFilesListener(combo, this));
@@ -74,7 +74,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 	public void refreshPanel(Collection<Recipe> recipes){
 		if(combo.getItemCount() != recipes.size()){
-			GenesisWorkbench.reloadComboBoxContent(combo, recipes, getHighlight());
+			Workbench.reloadComboBoxContent(combo, recipes, getHighlight());
 		}
 		if(getHighlight() == null && combo.getItemCount() > 0){
 			Recipe r = (Recipe)combo.getItemAt(combo.getItemCount()-1);

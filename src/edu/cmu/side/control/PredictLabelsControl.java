@@ -3,7 +3,7 @@ package edu.cmu.side.control;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import edu.cmu.side.GenesisWorkbench;
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
@@ -27,7 +27,7 @@ public class PredictLabelsControl extends GenesisControl{
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		trainedModel = highlight;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 	public static boolean hasHighlightedUnlabeledData(){
@@ -40,7 +40,7 @@ public class PredictLabelsControl extends GenesisControl{
 	
 	public static void setHighlightedUnlabeledData(Recipe r){
 		highlightedUnlabeledData = r;
-		GenesisWorkbench.update();
+		Workbench.update();
 	}
 	
 	public static Collection<Recipe> getUnlabeledDataRecipes(){

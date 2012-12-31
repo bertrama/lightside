@@ -18,11 +18,11 @@ import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.FeatureTableModel;
 import edu.cmu.side.view.util.SIDETable;
 
-public class GenericTableDisplayPanel extends AbstractListPanel {
+public class GenericTableMetricPanel extends AbstractListPanel {
 
 	SIDETable featureTable = new SIDETable();
 	FeatureTableModel model = new FeatureTableModel();
-	public GenericTableDisplayPanel(){
+	public GenericTableMetricPanel(){
 		setLayout(new BorderLayout());
 
 		featureTable.setModel(model);

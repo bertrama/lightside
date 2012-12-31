@@ -9,7 +9,7 @@ import javax.swing.JSplitPane;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
-import edu.cmu.side.view.generic.GenericTableDisplayPanel;
+import edu.cmu.side.view.generic.GenericTableMetricPanel;
 
 public class ExtractBottomPanel extends JPanel{
 
@@ -37,7 +37,7 @@ public class ExtractBottomPanel extends JPanel{
 	};
 
 	ExtractTableChecklistPanel checklist = new ExtractTableChecklistPanel();
-	GenericTableDisplayPanel display = new GenericTableDisplayPanel();
+	GenericTableMetricPanel display = new GenericTableMetricPanel();
 
 	public ExtractBottomPanel(){
 		setLayout(new BorderLayout());

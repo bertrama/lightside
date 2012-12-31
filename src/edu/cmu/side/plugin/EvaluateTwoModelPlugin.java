@@ -14,4 +14,5 @@ public abstract class EvaluateTwoModelPlugin extends SIDEPlugin{
 	 */
 	public abstract String getOutputName();
 
+	public abstract void refreshPanel();
 }

@@ -15,7 +15,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends AbstractListPanel {
 
 	Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
-	Set<E> visiblePlugins = new TreeSet<E>();
+	protected Set<E> visiblePlugins = new TreeSet<E>();
 	
 	public GenericPluginConfigPanel(){
 		setLayout(new RiverLayout());

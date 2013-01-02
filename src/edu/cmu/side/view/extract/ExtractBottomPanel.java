@@ -3,6 +3,7 @@ package edu.cmu.side.view.extract;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
@@ -13,7 +14,7 @@ import edu.cmu.side.view.generic.GenericTableMetricPanel;
 
 public class ExtractBottomPanel extends JPanel{
 
-	GenericLoadPanel control = new GenericLoadPanel("Highlighted Feature Table:") {	
+	GenericLoadPanel control = new GenericLoadPanel("Highlight:") {	
 		
 		@Override
 		public void setHighlight(Recipe r) {
@@ -43,10 +44,11 @@ public class ExtractBottomPanel extends JPanel{
 		setLayout(new BorderLayout());
 		JSplitPane split = new JSplitPane();
 		split.setLeftComponent(control);
-
+		split.setBorder(BorderFactory.createEmptyBorder());
 		JSplitPane displaySplit = new JSplitPane();
 		displaySplit.setLeftComponent(checklist);
 		displaySplit.setRightComponent(display);
+		displaySplit.setBorder(BorderFactory.createEmptyBorder());
 		displaySplit.setPreferredSize(new Dimension(650,200));
 		checklist.setPreferredSize(new Dimension(275,200));
 		display.setPreferredSize(new Dimension(350, 200));

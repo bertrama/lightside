@@ -34,7 +34,6 @@ implements ItemListener {
 	}
 
 	protected void paintComponent(Graphics g) {
-		g.setColor(new Color(128, 128, 128, 128));
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 30);
 		g.setFont(f);
 		Component c = ((JTabbedPane)contentPane).getSelectedComponent();

@@ -28,6 +28,10 @@ public class RecipeManager {
 		return filtered;
 	}
 	
+	public static boolean containsRecipe(Recipe rec){
+		return recipes.contains(rec);
+	}
+	
 	public static void deleteRecipe(Recipe rec){
 		recipes.remove(rec);
 		Workbench.update();

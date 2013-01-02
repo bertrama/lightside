@@ -1,5 +1,7 @@
 package edu.cmu.side.view.util;
 
+import java.awt.Color;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -30,8 +32,11 @@ public abstract class AbstractListPanel extends JPanel implements ActionListener
 	protected JButton add;
 	protected JButton delete;
 	protected JButton clear;
+	protected JButton save;
+	protected JButton load;
 	
 	private void init(){
+		setBackground(new Color(246,246,246));
 		this.setLayout(new RiverLayout());
 		listModel = new FastListModel();
 		list = new JList();
@@ -45,6 +50,8 @@ public abstract class AbstractListPanel extends JPanel implements ActionListener
 		add = new JButton("Add");
 		delete = new JButton("Delete");
 		clear = new JButton("Clear");
+		save = new JButton("Save");
+		load = new JButton("Load");
 	}
 	
 	public AbstractListPanel(){

@@ -17,7 +17,7 @@ import edu.cmu.side.view.generic.GenericModelMetricPanel;
 
 public class BuildBottomPanel extends JPanel {
 
-	private GenericLoadPanel control = new GenericLoadPanel("Highlighted Trained Model:"){
+	private GenericLoadPanel control = new GenericLoadPanel("Highlight:"){
 
 		@Override
 		public void setHighlight(Recipe r) {

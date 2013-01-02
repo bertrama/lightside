@@ -17,35 +17,31 @@ public class BuildPluginPanel extends AbstractListPanel {
 
 	public JPanel panel = new JPanel();
 	public JPanel middle = new JPanel();
-	public BuildPluginPanel(){
+	public BuildPluginPanel(BuildActionPanel.NameListener listener){
 		setLayout(new BorderLayout());
 		middle.setLayout(new BorderLayout());
 		panel.setLayout(new RiverLayout());
 		panel.add("left", new JLabel("Selected Learner:"));
 		panel.add("br hfill", combo);
+		Workbench.reloadComboBoxContent(combo, BuildModelControl.getLearningPlugins(), null);
 		combo.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				if(combo.getSelectedItem() != null){
 					LearningPlugin r = (LearningPlugin)combo.getSelectedItem();
 					BuildModelControl.setHighlightedLearningPlugin(r);
 					middle.removeAll();
-					LearningPlugin highlight = BuildModelControl.getHighlightedLearningPlugin();
-					if(highlight != null){
-						middle.add(BorderLayout.CENTER, highlight.getConfigurationUI());				
-					}
-
+					middle.add(BorderLayout.CENTER, r.getConfigurationUI());	
 				}
-				Workbench.update();
 			}
 		});
+		combo.addActionListener(listener);
+		if(combo.getModel().getSize() > 0){
+			combo.setSelectedIndex(0);
+		}
 		add(BorderLayout.NORTH, panel);
 		add(BorderLayout.CENTER, middle);
 	}
 	
 	public void refreshPanel(){
-		if(combo.getItemCount() != BuildModelControl.numLearningPlugins()){
-			LearningPlugin highlight = BuildModelControl.getHighlightedLearningPlugin();
-			Workbench.reloadComboBoxContent(combo, BuildModelControl.getLearningPlugins(), highlight);
-		}
 	}
 }

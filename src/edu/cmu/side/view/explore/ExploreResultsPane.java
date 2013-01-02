@@ -17,7 +17,7 @@ import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 
 public class ExploreResultsPane extends JPanel{
 
-	GenericLoadPanel load = new GenericLoadPanel("Highlighted Trained Model:"){
+	GenericLoadPanel load = new GenericLoadPanel("Highlight:"){
 
 		@Override
 		public void setHighlight(Recipe r) {

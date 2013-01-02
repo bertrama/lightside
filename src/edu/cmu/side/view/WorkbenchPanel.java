@@ -1,9 +1,20 @@
 package edu.cmu.side.view;
 
+import java.awt.Color;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.JTabbedPane;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import com.seaglasslookandfeel.SeaGlassLookAndFeel;
+import com.seaglasslookandfeel.ui.SeaGlassTabbedPaneUI;
+
+import weka.gui.LookAndFeel;
 
 import edu.cmu.side.view.build.BuildModelPane;
 import edu.cmu.side.view.compare.CompareModelsPane;
@@ -20,9 +31,11 @@ public class WorkbenchPanel extends JTabbedPane implements ActionListener{
 	ExploreResultsPane exploreResults = new ExploreResultsPane();
 	CompareModelsPane compareModels = new CompareModelsPane();
 	PredictLabelsPane predictLabels = new PredictLabelsPane();
-	
+
 	boolean updating = false;
 	public WorkbenchPanel(){
+		this.setBorder(BorderFactory.createEmptyBorder());
+		setBackground(new Color(246,246,246));
 		addTab("Extract Features", extractFeatures);
 		addTab("Modify Tables", modifyFeatures);
 		addTab("Build Models", buildModel);

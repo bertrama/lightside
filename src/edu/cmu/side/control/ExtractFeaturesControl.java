@@ -262,20 +262,21 @@ public class ExtractFeaturesControl extends GenesisControl{
 		highlightedDocumentList = highlight;
 		if(highlight != null){
 			DocumentList sdl = highlight.getDocumentList();
+			boolean noText = (sdl.getTextColumns().size()==0);		
 			if(sdl.getCurrentAnnotation() == null){
 				for(String s : sdl.getAnnotationNames()){
-					if(s.equalsIgnoreCase("class")){
+					Set<String> values = new TreeSet<String>();
+					for(String t : sdl.getAnnotationArray(s)){
+						values.add(t);
+					}
+					if(values.size() < (sdl.getSize()/10.0)){
 						sdl.setCurrentAnnotation(s);
 					}
-				}
-			}
-			if(sdl.getTextColumns().size()==0){
-				for(String s : sdl.getAnnotationNames()){
-					if(s.equalsIgnoreCase("text")){
+					if(noText && values.size() >= (sdl.getSize()/2.0)){
 						sdl.setTextColumn(s, true);
 					}
 				}
-			}			
+			}
 		}
 		Workbench.update();
 	}

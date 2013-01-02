@@ -19,13 +19,10 @@ public class ModifyActionPanel extends ActionBar{
 		add.setText("Filter");
 		add.addActionListener(new ModifyFeaturesControl.FilterTableListener(progressBar, name));
 		name.setText("filtered");
-		JPanel updaterPanel = new JPanel(new BorderLayout());
-		updaterPanel.setPreferredSize(new Dimension(150,30));
-		updaterPanel.add((SwingUpdaterLabel)ModifyFeaturesControl.getUpdater());
-		updaters.add("right", updaterPanel);
 	}
 
 	public void refreshPanel(){
+		super.refreshPanel();
 		add.setEnabled(ModifyFeaturesControl.getFilterPlugins().values().contains(Boolean.TRUE));
 	}
 }

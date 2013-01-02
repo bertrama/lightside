@@ -1,7 +1,9 @@
 package edu.cmu.side.control;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
@@ -16,23 +18,32 @@ public class CompareModelsControl extends GenesisControl{
 	private static Recipe baselineModel;
 	private static Recipe competingModel;
 	
-	private static Map<EvaluateTwoModelPlugin, Boolean> modelComparisonPlugins;
+	private static Set<EvaluateTwoModelPlugin> modelComparisonPlugins;
+	private static EvaluateTwoModelPlugin highlightedModelComparisonPlugin;
 	
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	private static EvalCheckboxListener eval;
 
 
 	static{
-		modelComparisonPlugins = new HashMap<EvaluateTwoModelPlugin, Boolean>();
+		modelComparisonPlugins = new HashSet<EvaluateTwoModelPlugin>();
 		SIDEPlugin[] modelComparisons = PluginManager.getSIDEPluginArrayByType("model_comparison");
 		for(SIDEPlugin fe : modelComparisons){
-			modelComparisonPlugins.put((EvaluateTwoModelPlugin)fe, false);
+			modelComparisonPlugins.add((EvaluateTwoModelPlugin)fe);
 		}
-
 	}
 
-	public static Map<EvaluateTwoModelPlugin, Boolean> getModelComparisonPlugins(){
+	public static void setHighlightedModelComparisonPlugin(EvaluateTwoModelPlugin plug){
+		highlightedModelComparisonPlugin = plug;
+		
+	}
+	
+	public static Set<EvaluateTwoModelPlugin> getModelComparisonPlugins(){
 		return modelComparisonPlugins;
+	}
+	
+	public static EvaluateTwoModelPlugin getHighlightedModelComparisonPlugin(){
+		return highlightedModelComparisonPlugin;
 	}
 
 	public static void setUpdater(StatusUpdater up){
@@ -68,13 +79,5 @@ public class CompareModelsControl extends GenesisControl{
 	public static void setCompetingTrainedModelRecipe(Recipe highlight){
 		competingModel = highlight;
 		Workbench.update();
-	}
-	
-	private static double pairedTTest(){
-		return 0.01;
-	}
-	
-	private static double unpairedTTest(){
-		return 1;
 	}
 }

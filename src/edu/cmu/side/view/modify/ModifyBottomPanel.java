@@ -13,7 +13,7 @@ import edu.cmu.side.view.generic.GenericTableMetricPanel;
 
 public class ModifyBottomPanel extends JPanel{
 
-	private GenericLoadPanel control = new GenericLoadPanel("Highlighted Filtered Table:") {
+	private GenericLoadPanel control = new GenericLoadPanel("Highlight:") {
 		
 		@Override
 		public void setHighlight(Recipe r) {

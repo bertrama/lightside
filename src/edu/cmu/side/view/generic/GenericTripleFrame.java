@@ -1,9 +1,11 @@
 package edu.cmu.side.view.generic;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -14,15 +16,19 @@ public class GenericTripleFrame extends JPanel{
 
 	JSplitPane bigSplit = new JSplitPane();
 	JSplitPane smallSplit = new JSplitPane();
+	JScrollPane scroll;
 	ArrayList<AbstractListPanel> panels = new ArrayList<AbstractListPanel>();
 
 	public GenericTripleFrame(AbstractListPanel chooseData, AbstractListPanel choosePlugin, AbstractListPanel chooseSettings){
 		bigSplit.setLeftComponent(chooseData);
 		smallSplit.setLeftComponent(choosePlugin);
-		JScrollPane scroll = new JScrollPane(chooseSettings);
+		scroll = new JScrollPane(chooseSettings);
 		smallSplit.setRightComponent(scroll);
 		bigSplit.setRightComponent(smallSplit);
-
+		scroll.setBorder(BorderFactory.createEmptyBorder());
+		bigSplit.setBorder(BorderFactory.createEmptyBorder());
+		smallSplit.setBorder(BorderFactory.createEmptyBorder());
+		scroll.setBackground(new Color(246,246,246));
 		chooseData.setPreferredSize(new Dimension(275, 450));
 		smallSplit.setPreferredSize(new Dimension(650, 450));
 		choosePlugin.setPreferredSize(new Dimension(300, 450));
@@ -39,5 +45,6 @@ public class GenericTripleFrame extends JPanel{
 		for(AbstractListPanel panel : panels){
 			panel.refreshPanel();
 		}
+		scroll.repaint();
 	}
 }

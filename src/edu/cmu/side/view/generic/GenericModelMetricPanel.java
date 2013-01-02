@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -21,10 +22,19 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 
 	SIDETable featureTable = new SIDETable();
 	FeatureTableModel model = new FeatureTableModel();
-
+	JLabel label = new JLabel("Model Evaluation Metrics:");
+	Map<String, String> allKeys = new TreeMap<String, String>();
+	public void setLabel(String l){
+		label.setText(l);
+	}
+	
+	public Map<String, String> getKeys(){
+		return allKeys;
+	}
+	
 	public GenericModelMetricPanel(){
 		setLayout(new BorderLayout());
-		add(BorderLayout.NORTH, new JLabel("Model Evaluation Metrics:"));
+		add(BorderLayout.NORTH, label);
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
 		featureTable.setShowHorizontalLines(true);
@@ -38,6 +48,7 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 		model.addColumn("Metric");
 		model.addColumn("Value");
 		if(recipe != null && recipe.getTrainingResult() != null){
+			allKeys.clear();
 			TrainingResult result = recipe.getTrainingResult();
 			Collection<ModelMetricPlugin> plugins = BuildModelControl.getModelEvaluationPlugins();
 			for(ModelMetricPlugin plugin : plugins){
@@ -48,6 +59,7 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 					row[1] = keys.get(s);
 					model.addRow(row);
 				}
+				allKeys.putAll(keys);
 			}			
 		}
 		featureTable.setModel(model);

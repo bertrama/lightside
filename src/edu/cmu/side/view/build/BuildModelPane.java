@@ -21,7 +21,7 @@ public class BuildModelPane extends JPanel{
 
 	public BuildModelPane(){
 		setLayout(new BorderLayout());
-		GenericLoadPanel load = new GenericLoadPanel("Selected Feature Table:") {
+		GenericLoadPanel load = new GenericLoadPanel("Highlight:") {
 			@Override
 			public void setHighlight(Recipe r) {
 				BuildModelControl.setHighlightedFeatureTableRecipe(r);
@@ -46,7 +46,7 @@ public class BuildModelPane extends JPanel{
 			}
 		};
 		
-		top = new GenericTripleFrame(load, new BuildPluginPanel(), new BuildTestingPanel());
+		top = new GenericTripleFrame(load, new BuildPluginPanel(action.new NameListener()), new BuildTestingPanel());
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
 		JPanel panel = new JPanel(new BorderLayout());

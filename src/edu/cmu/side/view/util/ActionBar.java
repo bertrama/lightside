@@ -1,5 +1,7 @@
 package edu.cmu.side.view.util;
 
+import java.awt.Color;
+
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -18,6 +20,7 @@ public abstract class ActionBar extends JPanel{
 	protected JPanel updaters = new JPanel(new RiverLayout());
 	
 	public ActionBar(){
+		setBackground(new Color(246,246,246));
 		setLayout(new RiverLayout());
 		settings.add("left", nameLabel);
 		settings.add("left", name);
@@ -27,9 +30,7 @@ public abstract class ActionBar extends JPanel{
 		add("hfill", updaters);
 		add("left", add);
 	}
-	
-	public String getName(){
-		return name.getText();
+
+	public void refreshPanel(){
 	}
-	public abstract void refreshPanel();
 }

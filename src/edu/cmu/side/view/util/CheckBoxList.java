@@ -161,18 +161,11 @@ class CheckboxCellRenderer extends DefaultListCellRenderer {
       boolean isSelected, boolean cellHasFocus) {
     if (value instanceof CheckBoxListEntry) {
       CheckBoxListEntry checkbox = (CheckBoxListEntry) value;
-      checkbox.setBackground(isSelected ? list.getSelectionBackground() : list.getBackground());
-      if (checkbox.isRed()) {
-        checkbox.setForeground(Color.red);
-      } else {
-        checkbox.setForeground(isSelected ? list.getSelectionForeground() : list.getForeground());
-      }
       checkbox.setEnabled(isEnabled());
       checkbox.setFont(getFont());
       checkbox.setFocusPainted(false);
       checkbox.setBorderPainted(true);
-      checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder")
-          : noFocusBorder);
+      checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 
       return checkbox;
     } else if(value != null){

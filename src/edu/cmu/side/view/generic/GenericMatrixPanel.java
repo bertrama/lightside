@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.SIDETable;
@@ -84,26 +85,29 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 				matrixModel.addRow(row);
 			}
 			matrixDisplay.setModel(matrixModel);
-			matrixDisplay.setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
-				public Component getTableCellRendererComponent(JTable table, Object value,
-						boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-					DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-					if(vColIndex > 0){
-						Integer intensity = 0;
-						try{
-							intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/sum))).intValue();
-						}catch(Exception e){
-							e.printStackTrace();
+			for(int i = 0; i < matrixDisplay.getColumnModel().getColumnCount(); i++){
+				TableColumn tc = matrixDisplay.getColumnModel().getColumn(i);
+				tc.setCellRenderer(new DefaultTableCellRenderer(){
+					public Component getTableCellRendererComponent(JTable table, Object value,
+							boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
+						DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
+						rend.setBackground(Color.white);
+						if(vColIndex > 0){
+							Integer intensity = 0;
+							try{
+								intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/sum))).intValue();
+							}catch(Exception e){
+								e.printStackTrace();
+							}
+							rend.setBackground(new Color(255-intensity, 255-intensity,255));
+							rend.setForeground(Color.black);
 						}
-						rend.setBackground(new Color(255-intensity, 255-intensity,255));
-						rend.setForeground(Color.black);
+						rend.setText(table.getValueAt(rowIndex, vColIndex).toString());
+						return rend;
 					}
-					rend.setText(table.getValueAt(rowIndex, vColIndex).toString());
-					return rend;
-				}
-			});			
+				});
+			}	
 		} catch(ArrayIndexOutOfBoundsException e){
-			
 		}
 
 	}

@@ -24,14 +24,11 @@ public class ExtractActionPanel extends ActionBar{
 		threshold.setText("5");
 		settings.add("left", new JLabel("Rare Threshold:"));
 		settings.add("left", threshold);
-		JPanel updaterPanel = new JPanel(new BorderLayout());
-		updaterPanel.setPreferredSize(new Dimension(150,30));
-		updaterPanel.add(BorderLayout.CENTER, (SwingUpdaterLabel)ExtractFeaturesControl.getUpdater());
-		updaters.add("right", updaterPanel);
 		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, threshold, name));
 	}
 	
 	public void refreshPanel(){
+		super.refreshPanel();
 		add.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
 	}
 }

@@ -1,6 +1,19 @@
 package edu.cmu.side;
 
+import java.awt.Color;
 import java.awt.Dimension;
+
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+
+import org.jdesktop.laffy.Laffy;
+
+import com.seaglasslookandfeel.SeaGlassLookAndFeel;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Collection;
@@ -34,32 +47,36 @@ public class Workbench{
 	static GlassPane pane;
 
 	static boolean serverMode = false;
-	
+
 	public Workbench(){
 		JFrame frame = new JFrame();
 		panel = new WorkbenchPanel();
+		panel.setBorder(BorderFactory.createEmptyBorder());
 		frame.setContentPane(panel);
-		pane = new GlassPane(frame.getContentPane());
-		frame.setGlassPane(pane);
+//		pane = new GlassPane(frame.getContentPane());
+//		frame.setGlassPane(pane);
 		frame.setSize(new Dimension(1050,768));
 		frame.setTitle("LightSIDE");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
-		pane.setVisible(true);
+//		pane.setVisible(true);
 		update();
 	}
-	
-	
+
+
 
 	public static void main(String[] args) throws Exception{
-		String file = "/Users/emayfiel/movies_train.csv";
-		StatusUpdater update = new SwingUpdaterLabel();
+		 try {
+	            UIManager.setLookAndFeel(new SeaGlassLookAndFeel());
+	        } catch (UnsupportedLookAndFeelException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
 		Workbench workbench = new Workbench();
 	}
 
 	public static void update(){
-		pane.repaint();
 		panel.actionPerformed(null);
 	}
 
@@ -74,7 +91,7 @@ public class Workbench{
 		for(Object o : options){ obj[i] = o; i++; }
 		reloadComboBoxContent(dropdown, obj, selected);
 	}
-	
+
 	public static void reloadComboBoxContent(JComboBox dropdown, Object[] options, Object selected){	
 		ActionListener[] listeners = dropdown.getActionListeners();
 		for(ActionListener al : listeners){

@@ -23,7 +23,7 @@ public class ModifyFeaturesPane extends JPanel{
 
 	public ModifyFeaturesPane(){
 		setLayout(new BorderLayout());
-		GenericLoadPanel load = new GenericLoadPanel("Selected Feature Table:"){
+		GenericLoadPanel load = new GenericLoadPanel("Modify:"){
 
 			@Override
 			public void setHighlight(Recipe r) {

@@ -1,9 +1,11 @@
 package edu.cmu.side.view.generic;
 
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -16,7 +18,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 
 public abstract class GenericLoadPanel extends AbstractListPanel{
 
-	protected JPanel buttons = new JPanel(new RiverLayout());
+	protected JPanel buttons = new JPanel();
 
 	protected JLabel label;
 	protected GenericLoadPanel(){
@@ -53,10 +55,25 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		this();
 		label = new JLabel(l);
 		add("left", label);
+		buttons.setLayout(new GridLayout(1,3));
+		ImageIcon iconDelete = new ImageIcon("toolkits/icons/cross.png");
+		ImageIcon iconSave = new ImageIcon("toolkits/icons/disk.png");
+		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
+		delete.setText("");
+		delete.setIcon(iconDelete);
+		delete.setToolTipText("Delete");
+		save.setText("");
+		save.setIcon(iconSave);
+		save.setToolTipText("Save");
+		load.setText("");
+		load.setIcon(iconLoad);
+		load.setToolTipText("Load");
 		buttons.add("left", delete);
-		add("left", delete);
-		add("br hfill", combo);
+		buttons.add("left", save);
+		buttons.add("left", load);
+		add("hfill", combo);
 		add("br hfill vfill", describeScroll);
+		add("br hfill", buttons);
 	}
 
 	public abstract void setHighlight(Recipe r);
@@ -80,12 +97,21 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			Recipe r = (Recipe)combo.getItemAt(combo.getItemCount()-1);
 			setHighlight(r);
 		}
+		if(getHighlight() != null && !RecipeManager.containsRecipe(getHighlight())){
+			deleteHighlight();
+		}
 		if(getHighlight() != null){
 			description.setText(getHighlightDescription());
 			combo.setSelectedItem(getHighlight());
+			save.setEnabled(true);
+			combo.setEnabled(true);
+			delete.setEnabled(true);
 		}else{
 			description.setText("");
+			combo.setEnabled(false);
 			combo.setSelectedIndex(-1);
+			save.setEnabled(false);
+			delete.setEnabled(false);
 		}
 	}
 }

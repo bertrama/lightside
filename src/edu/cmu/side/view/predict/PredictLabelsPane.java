@@ -13,7 +13,7 @@ import edu.cmu.side.view.generic.GenericLoadPanel;
 public class PredictLabelsPane extends JPanel{
 
 
-	GenericLoadPanel load = new GenericLoadPanel("Model to Apply:"){
+	GenericLoadPanel load = new GenericLoadPanel("Apply:"){
 
 		@Override
 		public void setHighlight(Recipe r) {

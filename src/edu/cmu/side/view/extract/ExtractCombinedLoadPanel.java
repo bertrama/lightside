@@ -58,6 +58,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 			Workbench.reloadComboBoxContent(annotationField, new ArrayList<Object>(), null);
 			reloadCheckBoxList(new TreeMap<String, Boolean>());
 		}
+		annotationField.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
 		
 	}
 

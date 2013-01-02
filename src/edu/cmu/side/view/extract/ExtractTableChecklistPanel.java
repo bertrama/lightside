@@ -14,14 +14,14 @@ import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.TableMetricPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.CheckBoxList;
+import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
 
 public class ExtractTableChecklistPanel extends AbstractListPanel{
 
 	static FastListModel pluginsModel = new FastListModel();
-	static CheckBoxList pluginsList = new CheckBoxList();
+	static SelectPluginList pluginsList = new SelectPluginList();
 	JScrollPane pluginsScroll = new JScrollPane(pluginsList);
 
 	public ExtractTableChecklistPanel(){

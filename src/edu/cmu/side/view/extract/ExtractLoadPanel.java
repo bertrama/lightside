@@ -1,8 +1,11 @@
 package edu.cmu.side.view.extract;
 
 
+import java.awt.BorderLayout;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
+import javax.swing.JScrollPane;
 
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
@@ -20,12 +23,15 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		load.setText("");
 		load.setToolTipText("Open");
 		load.setIcon(iconLoad);
-
 		load.addActionListener(new ExtractFeaturesControl.AddFilesListener(this));
-		add("left", load);
+		label = new JLabel(s);
+		add("left", label);
+		add("br left", load);
 		add("hfill", combo);
 		add("left", delete);
-		add("br hfill vfill", describeScroll);
+		describeScroll = new JScrollPane();
+		describePanel.add(BorderLayout.CENTER, describeScroll);
+		add("br hfill vfill", describePanel);
 	}
 
 	@Override
@@ -36,11 +42,6 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 	@Override
 	public Recipe getHighlight() {
 		return ExtractFeaturesControl.getHighlightedDocumentListRecipe();
-	}
-
-	@Override
-	public String getHighlightDescription() {
-		return getHighlight().getDocumentList().getDescriptionString();
 	}
 
 	@Override

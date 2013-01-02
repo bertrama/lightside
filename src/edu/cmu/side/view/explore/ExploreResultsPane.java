@@ -30,11 +30,6 @@ public class ExploreResultsPane extends JPanel{
 		}
 
 		@Override
-		public String getHighlightDescription() {
-			return getHighlight().getTrainingResult().getDescriptionString();
-		}
-
-		@Override
 		public void refreshPanel() {
 			refreshPanel(ExploreResultsControl.getTrainedModels());
 		}

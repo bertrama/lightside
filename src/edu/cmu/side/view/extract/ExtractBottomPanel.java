@@ -14,7 +14,7 @@ import edu.cmu.side.view.generic.GenericTableMetricPanel;
 
 public class ExtractBottomPanel extends JPanel{
 
-	GenericLoadPanel control = new GenericLoadPanel("Highlight:") {	
+	GenericLoadPanel control = new GenericLoadPanel("Feature Table:") {	
 		
 		@Override
 		public void setHighlight(Recipe r) {
@@ -24,11 +24,6 @@ public class ExtractBottomPanel extends JPanel{
 		@Override
 		public void refreshPanel() {
 			refreshPanel(ExtractFeaturesControl.getFeatureTables());
-		}
-
-		@Override
-		public String getHighlightDescription() {
-			return getHighlight().getFeatureTable().getDescriptionString();
 		}
 
 		@Override

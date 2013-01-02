@@ -36,11 +36,6 @@ public class ModifyFeaturesPane extends JPanel{
 			}
 
 			@Override
-			public String getHighlightDescription() {
-				return getHighlight().getFeatureTable().getDescriptionString();
-			}
-
-			@Override
 			public void refreshPanel() {
 				refreshPanel(ModifyFeaturesControl.getFeatureTables());
 			}

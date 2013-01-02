@@ -46,78 +46,84 @@ import java.util.List;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
+import javax.swing.JRadioButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 
-public class CheckBoxList extends JList {
+public class SelectPluginList extends JList {
 
-  public CheckBoxList() {
-    super();
+	public SelectPluginList() {
+		super();
 
-    setModel(new FastListModel());
-    setCellRenderer(new CheckboxCellRenderer());
+		setModel(new FastListModel());
+		setCellRenderer(new SelectPluginCellRenderer());
 
-    addMouseListener(new MouseAdapter() {
-      @Override
-      public void mousePressed(MouseEvent e) {
-        int index = locationToIndex(e.getPoint());
+		addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				int index = locationToIndex(e.getPoint());
 
-        if (index != -1) {
-          Object obj = ((FastListModel)getModel()).get(index);
-          if (obj instanceof JCheckBox) {
-            JCheckBox checkbox = (JCheckBox) obj;
+				if (index != -1) {
+					Object obj = ((FastListModel)getModel()).get(index);
+					if (obj instanceof JCheckBox) {
+						JCheckBox checkbox = (JCheckBox) obj;
 
-            checkbox.setSelected(!checkbox.isSelected());
-            repaint();
-          }
-        }
-      }
-    }
+						checkbox.setSelected(!checkbox.isSelected());
+						repaint();
+					}
+					if(obj instanceof JRadioButton){
+						JRadioButton radio = (JRadioButton) obj;
+						radio.setSelected(!radio.isSelected());
+						repaint();
+					}
+				}
+			}
+		}
 
-    );
+				);
 
-    setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-  }
+		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	}
 
-  public int[] getCheckedIndices() {
-    List<Integer> list = new ArrayList<Integer>();
-    FastListModel dlm = (FastListModel) getModel();
-    for (int i = 0; i < dlm.size(); ++i) {
-      Object obj = dlm.get(i);
-      if (obj instanceof JCheckBox) {
-        JCheckBox checkbox = (JCheckBox) obj;
-        if (checkbox.isSelected()) {
-          list.add(new Integer(i));
-        }
-      }
-    }
+	public int[] getCheckedIndices() {
+		List<Integer> list = new ArrayList<Integer>();
+		FastListModel dlm = (FastListModel) getModel();
+		for (int i = 0; i < dlm.size(); ++i) {
+			Object obj = dlm.get(i);
+			if (obj instanceof JCheckBox) {
+				JCheckBox checkbox = (JCheckBox) obj;
+				if (checkbox.isSelected()) {
+					list.add(new Integer(i));
+				}
+			}
+		}
 
-    int[] indices = new int[list.size()];
+		int[] indices = new int[list.size()];
 
-    for (int i = 0; i < list.size(); ++i) {
-      indices[i] = ((Integer) list.get(i)).intValue();
-    }
+		for (int i = 0; i < list.size(); ++i) {
+			indices[i] = ((Integer) list.get(i)).intValue();
+		}
 
-    return indices;
-  }
+		return indices;
+	}
 
-  public List<JCheckBox> getCheckedItems() {
-	List<JCheckBox> list = new ArrayList<JCheckBox>();
-    FastListModel dlm = (FastListModel) getModel();
-    for (int i = 0; i < dlm.size(); ++i) {
-      Object obj = dlm.get(i);
-      if (obj instanceof JCheckBox) {
-        JCheckBox checkbox = (JCheckBox) obj;
-        if (checkbox.isSelected()) {
-          list.add(checkbox);
-        }
-      }
-    }
-    return list;
-  }
+	public List<JCheckBox> getCheckedItems() {
+		List<JCheckBox> list = new ArrayList<JCheckBox>();
+		FastListModel dlm = (FastListModel) getModel();
+		for (int i = 0; i < dlm.size(); ++i) {
+			Object obj = dlm.get(i);
+			if (obj instanceof JCheckBox) {
+				JCheckBox checkbox = (JCheckBox) obj;
+				if (checkbox.isSelected()) {
+					list.add(checkbox);
+				}
+			}
+		}
+		return list;
+	}
 }
 
 /*
@@ -154,28 +160,33 @@ public class CheckBoxList extends JList {
  * 
  * @author gtoffoli
  */
-class CheckboxCellRenderer extends DefaultListCellRenderer {
-  protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+class SelectPluginCellRenderer extends DefaultListCellRenderer {
+	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 
-  public Component getListCellRendererComponent(JList list, Object value, int index,
-      boolean isSelected, boolean cellHasFocus) {
-    if (value instanceof CheckBoxListEntry) {
-      CheckBoxListEntry checkbox = (CheckBoxListEntry) value;
-      checkbox.setEnabled(isEnabled());
-      checkbox.setFont(getFont());
-      checkbox.setFocusPainted(false);
-      checkbox.setBorderPainted(true);
-      checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
-
-      return checkbox;
-    } else if(value != null){
-      return super.getListCellRendererComponent(list, value.getClass().getName(), index,
-          isSelected, cellHasFocus);
-    }else{
-        return super.getListCellRendererComponent(list, "", index,
-                isSelected, cellHasFocus);    	
-    }
-  }
+	public Component getListCellRendererComponent(JList list, Object value, int index,
+			boolean isSelected, boolean cellHasFocus) {
+		if (value instanceof CheckBoxListEntry) {
+			CheckBoxListEntry checkbox = (CheckBoxListEntry) value;
+			checkbox.setEnabled(isEnabled());
+			checkbox.setFont(getFont());
+			checkbox.setFocusPainted(false);
+			checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
+			return checkbox;
+		} else if(value instanceof RadioButtonListEntry){
+			RadioButtonListEntry radioButton = (RadioButtonListEntry) value;
+			radioButton.setEnabled(isEnabled());
+			radioButton.setFont(getFont());
+			radioButton.setFocusPainted(false);
+			radioButton.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
+			return radioButton;
+		} else if(value != null){
+			return super.getListCellRendererComponent(list, value.getClass().getName(), index,
+					isSelected, cellHasFocus);
+		}else{
+			return super.getListCellRendererComponent(list, "", index,
+					isSelected, cellHasFocus);    	
+		}
+	}
 }
 
 /*

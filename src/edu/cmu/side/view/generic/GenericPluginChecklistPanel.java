@@ -10,13 +10,13 @@ import se.datadosen.component.RiverLayout;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.CheckBoxList;
+import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
 
 public abstract class GenericPluginChecklistPanel<E extends SIDEPlugin> extends AbstractListPanel {
 	FastListModel pluginsModel = new FastListModel();
-	CheckBoxList pluginsList = new CheckBoxList();
+	SelectPluginList pluginsList = new SelectPluginList();
 	JScrollPane pluginsScroll = new JScrollPane(pluginsList);
 
 	public GenericPluginChecklistPanel(String label){

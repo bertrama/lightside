@@ -30,11 +30,6 @@ public class BuildBottomPanel extends JPanel {
 		}
 
 		@Override
-		public String getHighlightDescription() {
-			return getHighlight().getTrainingResult().getDescriptionString();
-		}
-
-		@Override
 		public void refreshPanel() {
 			refreshPanel(BuildModelControl.getTrainedModels());
 		}

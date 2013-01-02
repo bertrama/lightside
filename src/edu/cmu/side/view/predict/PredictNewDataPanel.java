@@ -1,16 +1,18 @@
 package edu.cmu.side.view.predict;
 
+import java.awt.BorderLayout;
+
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
-import edu.cmu.side.view.util.CheckBoxList;
+import edu.cmu.side.view.util.SelectPluginList;
 
 public class PredictNewDataPanel extends GenericLoadPanel{
 
-	CheckBoxList textColumnsList = new CheckBoxList();
+	SelectPluginList textColumnsList = new SelectPluginList();
 	JScrollPane textColumnsScroll = new JScrollPane(textColumnsList);
 
 	public PredictNewDataPanel(){
@@ -20,7 +22,10 @@ public class PredictNewDataPanel extends GenericLoadPanel{
 		add("left", add);
 		add("left", delete);
 		add("br hfill", combo);
-		add("br hfill vfill", describeScroll);
+		describeScroll = new JScrollPane();
+		describePanel.add(BorderLayout.CENTER, describeScroll);
+		add("br hfill vfill", describePanel);
+
 	}
 	@Override
 	public void setHighlight(Recipe r) {
@@ -31,12 +36,7 @@ public class PredictNewDataPanel extends GenericLoadPanel{
 	public Recipe getHighlight() {
 		return PredictLabelsControl.getHighlightedUnlabeledData();
 	}
-
-	@Override
-	public String getHighlightDescription() {
-		return getHighlight().getDocumentList().getDescriptionString();
-	}
-
+	
 	@Override
 	public void refreshPanel() {
 		refreshPanel(PredictLabelsControl.getUnlabeledDataRecipes());

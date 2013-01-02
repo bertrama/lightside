@@ -37,8 +37,6 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 		add(BorderLayout.NORTH, label);
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
-		featureTable.setShowHorizontalLines(true);
-		featureTable.setShowVerticalLines(true);
 		JScrollPane tableScroll = new JScrollPane(featureTable);
 		add(BorderLayout.CENTER, tableScroll);
 	}

@@ -28,7 +28,6 @@ public class GenericTripleFrame extends JPanel{
 		scroll.setBorder(BorderFactory.createEmptyBorder());
 		bigSplit.setBorder(BorderFactory.createEmptyBorder());
 		smallSplit.setBorder(BorderFactory.createEmptyBorder());
-		scroll.setBackground(new Color(246,246,246));
 		chooseData.setPreferredSize(new Dimension(275, 450));
 		smallSplit.setPreferredSize(new Dimension(650, 450));
 		choosePlugin.setPreferredSize(new Dimension(300, 450));

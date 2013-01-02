@@ -17,7 +17,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.CheckBoxList;
+import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
 
@@ -25,7 +25,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 	
 	JComboBox annotationField = new JComboBox();
 	ExtractLoadPanel files = new ExtractLoadPanel("CSV Files:");
-	CheckBoxList textColumnsList = new CheckBoxList();
+	SelectPluginList textColumnsList = new SelectPluginList();
 	JScrollPane textColumnsScroll = new JScrollPane(textColumnsList);
 	
 	public ExtractCombinedLoadPanel(String s){

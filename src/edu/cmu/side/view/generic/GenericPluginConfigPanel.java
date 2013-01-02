@@ -40,6 +40,7 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 				this.add("br left", label);
 				this.add("br hfill", plugin.getConfigurationUI());
 			}
+			this.validate();
 		}
 	}
 }

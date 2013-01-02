@@ -1,7 +1,11 @@
 package edu.cmu.side;
 
 import java.awt.Color;
+
+import java.awt.AlphaComposite;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.SplashScreen;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -11,6 +15,8 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.plaf.metal.MetalLookAndFeel;
 
 import org.jdesktop.laffy.Laffy;
+
+import weka.gui.SplashWindow;
 
 import com.seaglasslookandfeel.SeaGlassLookAndFeel;
 
@@ -53,26 +59,18 @@ public class Workbench{
 		panel = new WorkbenchPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder());
 		frame.setContentPane(panel);
-//		pane = new GlassPane(frame.getContentPane());
-//		frame.setGlassPane(pane);
+		//		pane = new GlassPane(frame.getContentPane());
+		//		frame.setGlassPane(pane);
 		frame.setSize(new Dimension(1050,768));
 		frame.setTitle("LightSIDE");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
-//		pane.setVisible(true);
+		//		pane.setVisible(true);
 		update();
 	}
 
-
-
 	public static void main(String[] args) throws Exception{
-		 try {
-	            UIManager.setLookAndFeel(new SeaGlassLookAndFeel());
-	        } catch (UnsupportedLookAndFeelException e) {
-	            // TODO Auto-generated catch block
-	            e.printStackTrace();
-	        }
 		Workbench workbench = new Workbench();
 	}
 

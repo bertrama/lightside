@@ -36,7 +36,6 @@ public abstract class AbstractListPanel extends JPanel implements ActionListener
 	protected JButton load;
 	
 	private void init(){
-		setBackground(new Color(246,246,246));
 		this.setLayout(new RiverLayout());
 		listModel = new FastListModel();
 		list = new JList();

@@ -28,15 +28,17 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 	private JLabel selectedFeatureName = new JLabel("Select a Feature");
 	private static Integer[] selectedCell = {-1,-1};
 
-	private static double sum = 0.0;
+	private double sum = 0.0;
+
+	public Double getSum(){
+		return sum;
+	}
 	
 	public GenericMatrixPanel(){
 		setLayout(new BorderLayout());
 		add(BorderLayout.NORTH, new JLabel("Model Confusion Matrix:"));
 		matrixDisplay.setModel(matrixModel);
 		matrixDisplay.setBorder(BorderFactory.createLineBorder(Color.gray));
-		matrixDisplay.setShowHorizontalLines(true);
-		matrixDisplay.setShowVerticalLines(true);
 		matrixDisplay.addMouseListener(new MouseAdapter() {
 			public void mouseReleased(MouseEvent e){
 				int row = matrixDisplay.getSelectedRow();
@@ -45,13 +47,14 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 				selectedCell = new Integer[]{row, col-1};
 			}
 		});
+		matrixDisplay.setDefaultRenderer(java.lang.Object.class, new ConfusionCellRenderer(this));
 		describeScroll = new JScrollPane(matrixDisplay);
 		add(BorderLayout.CENTER, describeScroll);
 	}
 
 	@Override
 	public abstract void refreshPanel();
-	
+
 	public void refreshPanel(Map<String, Map<String, List<Integer>>> confusion){
 		try{
 			Collection<String> labels = new TreeSet<String>();
@@ -63,7 +66,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 			}
 			matrixModel = new DefaultTableModel();
 			matrixModel.addColumn("Act \\ Pred");
-			
+
 			for(String s : labels){
 				matrixModel.addColumn(s);
 			}
@@ -85,30 +88,34 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 				matrixModel.addRow(row);
 			}
 			matrixDisplay.setModel(matrixModel);
-			for(int i = 0; i < matrixDisplay.getColumnModel().getColumnCount(); i++){
-				TableColumn tc = matrixDisplay.getColumnModel().getColumn(i);
-				tc.setCellRenderer(new DefaultTableCellRenderer(){
-					public Component getTableCellRendererComponent(JTable table, Object value,
-							boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-						DefaultTableCellRenderer rend = new DefaultTableCellRenderer();
-						rend.setBackground(Color.white);
-						if(vColIndex > 0){
-							Integer intensity = 0;
-							try{
-								intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/sum))).intValue();
-							}catch(Exception e){
-								e.printStackTrace();
-							}
-							rend.setBackground(new Color(255-intensity, 255-intensity,255));
-							rend.setForeground(Color.black);
-						}
-						rend.setText(table.getValueAt(rowIndex, vColIndex).toString());
-						return rend;
-					}
-				});
-			}	
 		} catch(ArrayIndexOutOfBoundsException e){
 		}
 
+	}
+}
+
+class ConfusionCellRenderer extends DefaultTableCellRenderer{
+	GenericMatrixPanel parent;
+	
+	public ConfusionCellRenderer(GenericMatrixPanel p){
+		parent = p;
+	}
+	
+	public Component getTableCellRendererComponent(JTable table, Object value,
+			boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
+		double sum = parent.getSum();
+		Component rend = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
+		rend.setBackground(Color.white);
+		if(vColIndex > 0){
+			Integer intensity = 0;
+			try{
+				intensity = ((Double)(255.0*(Double.parseDouble(table.getValueAt(rowIndex, vColIndex).toString())/sum))).intValue();
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			rend.setBackground(new Color(255-intensity, 255-intensity,255));
+			rend.setForeground(Color.black);
+		}
+		return rend;
 	}
 }

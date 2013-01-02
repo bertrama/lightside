@@ -9,8 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
+import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.view.generic.GenericTripleFrame;
 
 public class BuildModelPane extends JPanel{
@@ -19,17 +22,20 @@ public class BuildModelPane extends JPanel{
 	private static BuildActionPanel action = new BuildActionPanel();
 	private static BuildBottomPanel bottom = new BuildBottomPanel();
 
+	private static GenericPluginConfigPanel<LearningPlugin> config = new GenericPluginConfigPanel<LearningPlugin>(){
+
+		@Override
+		public void refreshPanel() {
+			refreshPanel(BuildModelControl.getLearningPlugins());
+		}
+		
+	};
 	public BuildModelPane(){
 		setLayout(new BorderLayout());
 		GenericLoadPanel load = new GenericLoadPanel("Highlight:") {
 			@Override
 			public void setHighlight(Recipe r) {
 				BuildModelControl.setHighlightedFeatureTableRecipe(r);
-			}
-			
-			@Override
-			public String getHighlightDescription() {
-				return getHighlight().getTrainingTable().getDescriptionString();
 			}
 			
 			@Override
@@ -46,7 +52,7 @@ public class BuildModelPane extends JPanel{
 			}
 		};
 		
-		top = new GenericTripleFrame(load, new BuildPluginPanel(action.new NameListener()), new BuildTestingPanel());
+		top = new GenericTripleFrame(load, new BuildPluginPanel(action.new NameListener()), config);
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
 		JPanel panel = new JPanel(new BorderLayout());

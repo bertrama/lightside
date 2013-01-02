@@ -42,11 +42,6 @@ public class CompareModelsPane extends AbstractListPanel{
 		}
 
 		@Override
-		public String getHighlightDescription() {
-			return getHighlight().getTrainingResult().getDescriptionString();
-		}
-
-		@Override
 		public void refreshPanel() {
 			refreshPanel(CompareModelsControl.getTrainedModels());
 		}
@@ -67,11 +62,6 @@ public class CompareModelsPane extends AbstractListPanel{
 		}
 
 		@Override
-		public String getHighlightDescription() {
-			return getHighlight().getTrainingResult().getDescriptionString();
-		}
-
-		@Override
 		public void refreshPanel() {
 			refreshPanel(CompareModelsControl.getTrainedModels());
 		}
@@ -82,12 +72,14 @@ public class CompareModelsPane extends AbstractListPanel{
 		setLayout(new BorderLayout());
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		JPanel grid = new JPanel(new GridLayout(1,2));
-		JPanel top = new JPanel(new RiverLayout());
+		JPanel top = new JPanel(new BorderLayout());
 		grid.add(loadBaseline);
 		grid.add(loadCompetitor);
-		top.add("hfill", grid);
-		top.add("br left", new JLabel("Selected Comparison Plugin:"));
-		top.add("hfill", combo);
+		JPanel dropdown = new JPanel(new RiverLayout());
+		top.add(BorderLayout.CENTER, grid);
+		dropdown.add("br left", new JLabel("Selected Comparison Plugin:"));
+		dropdown.add("hfill", combo);
+		top.add(BorderLayout.SOUTH, dropdown);
 		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins(), null);
 		combo.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){

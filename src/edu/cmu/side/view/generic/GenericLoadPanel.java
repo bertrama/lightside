@@ -1,5 +1,6 @@
 package edu.cmu.side.view.generic;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,9 +10,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -20,6 +23,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 	protected JPanel buttons = new JPanel();
 
+	protected JPanel describePanel = new JPanel(new BorderLayout());
 	protected JLabel label;
 	protected GenericLoadPanel(){
 		setLayout(new RiverLayout());
@@ -28,6 +32,10 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 				if(combo.getSelectedItem() != null){
 					Recipe r = (Recipe)combo.getSelectedItem();
 					setHighlight(r);
+					describeScroll = new JScrollPane(GenesisControl.getRecipeTree(getHighlight()));
+					describePanel.removeAll();
+					describePanel.add(BorderLayout.CENTER, describeScroll);
+					describePanel.validate();
 				}
 				Workbench.update();
 			}
@@ -54,8 +62,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 	public GenericLoadPanel(String l){
 		this();
 		label = new JLabel(l);
-		add("left", label);
-		buttons.setLayout(new GridLayout(1,3));
+		buttons.setLayout(new RiverLayout());
 		ImageIcon iconDelete = new ImageIcon("toolkits/icons/cross.png");
 		ImageIcon iconSave = new ImageIcon("toolkits/icons/disk.png");
 		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
@@ -68,21 +75,23 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		load.setText("");
 		load.setIcon(iconLoad);
 		load.setToolTipText("Load");
-		buttons.add("left", delete);
-		buttons.add("left", save);
 		buttons.add("left", load);
-		add("hfill", combo);
-		add("br hfill vfill", describeScroll);
-		add("br hfill", buttons);
+		buttons.add("left", save);
+		add("left", label);
+		add("br hfill", combo);
+		add("right", delete);
+		describeScroll = new JScrollPane();
+		describePanel.add(BorderLayout.CENTER, describeScroll);
+		add("br hfill vfill", describePanel);
+		add("br left hfill", buttons);
 	}
 
 	public abstract void setHighlight(Recipe r);
 
 	public abstract Recipe getHighlight();
 
-	public abstract String getHighlightDescription();
-
 	public void deleteHighlight(){
+		describeScroll = new JScrollPane();
 		setHighlight(null);
 	}
 
@@ -101,17 +110,18 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			deleteHighlight();
 		}
 		if(getHighlight() != null){
-			description.setText(getHighlightDescription());
 			combo.setSelectedItem(getHighlight());
 			save.setEnabled(true);
 			combo.setEnabled(true);
 			delete.setEnabled(true);
 		}else{
-			description.setText("");
 			combo.setEnabled(false);
 			combo.setSelectedIndex(-1);
 			save.setEnabled(false);
 			delete.setEnabled(false);
+			describeScroll = new JScrollPane();
+			describePanel.removeAll();
+			describePanel.add(BorderLayout.CENTER, describeScroll);
 		}
 	}
 }

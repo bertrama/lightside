@@ -20,7 +20,6 @@ public abstract class ActionBar extends JPanel{
 	protected JPanel updaters = new JPanel(new RiverLayout());
 	
 	public ActionBar(){
-		setBackground(new Color(246,246,246));
 		setLayout(new RiverLayout());
 		settings.add("left", nameLabel);
 		settings.add("left", name);

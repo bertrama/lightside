@@ -1,16 +1,17 @@
 package edu.cmu.side.view.generic;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
+import se.datadosen.component.RiverLayout;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.plugin.TableMetricPlugin;
@@ -23,14 +24,13 @@ public class GenericTableMetricPanel extends AbstractListPanel {
 	SIDETable featureTable = new SIDETable();
 	FeatureTableModel model = new FeatureTableModel();
 	public GenericTableMetricPanel(){
-		setLayout(new BorderLayout());
-
+		setLayout(new RiverLayout());
+		JLabel label = new JLabel("Features:");
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
-		featureTable.setShowHorizontalLines(true);
-		featureTable.setShowVerticalLines(true);
 		JScrollPane tableScroll = new JScrollPane(featureTable);
-		add(BorderLayout.CENTER, tableScroll);
+		add("left", label);
+		add("br hfill vfill", tableScroll);
 	}
 
 	public void refreshPanel(FeatureTable table, Map<TableMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins){

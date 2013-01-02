@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -73,29 +74,35 @@ public class BuildTestingPanel extends AbstractListPanel {
 		BuildModelControl.updateValidationSetting("numFolds", "10");
 		
 		setLayout(new RiverLayout());
-		add("left", new JLabel("Test Settings:"));
 		add("br left", radioCV);
-		radioRandom.setBorder(new EmptyBorder(0,30,0,0));
-		add("br left", radioRandom);
-		radioByAnnotation.setBorder(new EmptyBorder(0,30,0,0));
-		add("br left", radioByAnnotation);
-		combo.setBorder(new EmptyBorder(0,30,0,0));
-		add("br hfill", combo);
-		radioByFile.setBorder(new EmptyBorder(0,30,0,0));
-		add("br left", radioByFile);
-		
-		radioAuto.setBorder(new EmptyBorder(0,30,0,0));
-		add("br left", new JLabel("Number of Folds:"));
-		add("br left", radioAuto);
-		add("left", new JLabel("or"));
-		add("left", radioManual);
-		add("left", txtNumFolds);
 		add("br left", radioTestSet);
-		add("left", add);
+		add("br left", radioNone);
+
+		
+//		radioRandom.setBorder(new EmptyBorder(0,30,0,0));
+//		add("br left", radioRandom);
+//		radioByAnnotation.setBorder(new EmptyBorder(0,30,0,0));
+//		add("br left", radioByAnnotation);
+//		combo.setBorder(new EmptyBorder(0,30,0,0));
+//		add("br hfill", combo);
+//		radioByFile.setBorder(new EmptyBorder(0,30,0,0));
+//		add("br left", radioByFile);
+//		
+//		radioAuto.setBorder(new EmptyBorder(0,30,0,0));
+//		add("br left", new JLabel("Number of Folds:"));
+//		add("br left", radioAuto);
+//		add("left", new JLabel("or"));
+//		add("left", radioManual);
+//		add("left", txtNumFolds);
+//		add.setText("");
+//		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
+//		add.setToolTipText("Open");
+//		add.setIcon(iconLoad);
+//		add("left", add);
+		
 		
 		listScroll.setBorder(new EmptyBorder(0,30,0,0));
 		add("br hfill", listScroll);	
-		add("br left", radioNone);
 		
 
 	}

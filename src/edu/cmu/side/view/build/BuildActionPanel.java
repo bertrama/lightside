@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.util.RadioButtonListEntry;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class BuildActionPanel extends ActionBar {
@@ -26,8 +27,8 @@ public class BuildActionPanel extends ActionBar {
 
 		@Override
 		public void actionPerformed(ActionEvent ae) {
-			if(ae.getSource() instanceof JComboBox){
-				Object o = ((JComboBox)ae.getSource()).getSelectedItem();
+			if(ae.getSource() instanceof RadioButtonListEntry){
+				Object o = ((RadioButtonListEntry)ae.getSource()).getValue();
 				if(o instanceof SIDEPlugin){
 					name.setText(((SIDEPlugin)o).getOutputName());
 				}

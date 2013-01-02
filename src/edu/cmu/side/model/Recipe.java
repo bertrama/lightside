@@ -1,7 +1,11 @@
 package edu.cmu.side.model;
 
+import java.awt.Component;
 import java.util.Collection;
 import java.util.Map;
+
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -27,8 +31,10 @@ public class Recipe {
 	TrainingResult trainedModel;
 	PredictionResult predictionResult;
 
-	String recipeID;
 
+	String recipeID;
+	
+	
 	public String getStage(){
 		if(stage == null){
 			if(predictionResult != null){
@@ -42,6 +48,7 @@ public class Recipe {
 			}else if(documentList != null){
 				stage = RecipeManager.DOCUMENT_LIST_RECIPES;
 			}else stage = "";
+			
 		}
 		return stage;
 	}
@@ -192,5 +199,5 @@ public class Recipe {
 			newRecipe.addFilter(plugin);
 		}
 	}
-	
+
 }

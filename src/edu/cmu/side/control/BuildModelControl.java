@@ -172,7 +172,6 @@ public class BuildModelControl extends GenesisControl{
 				FeatureTable current = plan.getTrainingTable();
 				if(current != null){
 					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, BuildModelControl.getUpdater());
-					model.generateDescriptionString(plan.getLearner(), plan.getLearnerSettings(), validationSettings);
 					plan.setTrainingResult(model);
 					model.setName(name);
 					BuildModelControl.setHighlightedTrainedModelRecipe(plan);
@@ -199,8 +198,8 @@ public class BuildModelControl extends GenesisControl{
 		}
 	}
 
-	public static Collection<LearningPlugin> getLearningPlugins(){
-		return learningPlugins.keySet();
+	public static Map<LearningPlugin, Boolean> getLearningPlugins(){
+		return learningPlugins;
 	}
 
 	public static int numLearningPlugins(){
@@ -209,6 +208,9 @@ public class BuildModelControl extends GenesisControl{
 
 	public static void setHighlightedLearningPlugin(LearningPlugin l){
 		highlightedLearningPlugin = l;
+		for(LearningPlugin plug : learningPlugins.keySet()){
+			learningPlugins.put(plug, plug==l);
+		}
 	}
 
 	public static LearningPlugin getHighlightedLearningPlugin(){

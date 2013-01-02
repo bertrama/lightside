@@ -26,11 +26,6 @@ public class ModifyBottomPanel extends JPanel{
 		}
 		
 		@Override
-		public String getHighlightDescription() {
-			return getHighlight().getFilteredTable().getDescriptionString();
-		}
-		
-		@Override
 		public Recipe getHighlight() {
 			return ModifyFeaturesControl.getHighlightedFilterTableRecipe();
 		}

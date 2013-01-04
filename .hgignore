@@ -8,7 +8,6 @@ syntax:glob
 *.model
 *.pred
 *convert_cases*
-data/*
 plugins/dependencies.jar
 *.java.orig
 plugins/config.xml.orig

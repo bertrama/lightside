@@ -1,7 +1,6 @@
 package edu.cmu.side.control;
 
 import java.awt.Component;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -28,9 +27,10 @@ import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
-import edu.cmu.side.plugin.TableMetricPlugin;
+import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.extract.ExtractCombinedLoadPanel;
 import edu.cmu.side.view.util.FastListModel;
@@ -42,8 +42,9 @@ public class ExtractFeaturesControl extends GenesisControl{
 	private static Recipe highlightedFeatureTable;
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	private static Map<FeaturePlugin, Boolean> featurePlugins;
-	private static Map<TableMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
+	private static Map<TableFeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static EvalCheckboxListener eval;
+	private static String targetAnnotation;
 	
 	static{
 		featurePlugins = new HashMap<FeaturePlugin, Boolean>();
@@ -51,10 +52,10 @@ public class ExtractFeaturesControl extends GenesisControl{
 		for(SIDEPlugin fe : featureExtractors){
 			featurePlugins.put((FeaturePlugin)fe, false);
 		}
-		tableEvaluationPlugins = new HashMap<TableMetricPlugin, Map<String, Boolean>>();
-		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("table_evaluation");
+		tableEvaluationPlugins = new HashMap<TableFeatureMetricPlugin, Map<String, Boolean>>();
+		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("table_feature_evaluation");
 		for(SIDEPlugin fe : tableEvaluations){
-			tableEvaluationPlugins.put((TableMetricPlugin)fe, new TreeMap<String, Boolean>());
+			tableEvaluationPlugins.put((TableFeatureMetricPlugin)fe, new TreeMap<String, Boolean>());
 		}
 		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 	}
@@ -112,14 +113,22 @@ public class ExtractFeaturesControl extends GenesisControl{
 		return eval;
 	}
 	
-	public static Map<TableMetricPlugin, Map<String, Boolean>> getTableEvaluationPlugins(){
+	public static Map<TableFeatureMetricPlugin, Map<String, Boolean>> getTableEvaluationPlugins(){
 		return tableEvaluationPlugins;
 	}
 	
 	public static void clearTableEvaluationPlugins(){
-		for(TableMetricPlugin p : tableEvaluationPlugins.keySet()){
+		for(TableFeatureMetricPlugin p : tableEvaluationPlugins.keySet()){
 			tableEvaluationPlugins.put(p, new TreeMap<String, Boolean>());
 		}
+	}
+	
+	public static void setTargetAnnotation(String s){
+		targetAnnotation = s;
+	}
+	
+	public static String getTargetAnnotation(){
+		return targetAnnotation;
 	}
 	
 	public static void deleteCurrentDocumentList(){

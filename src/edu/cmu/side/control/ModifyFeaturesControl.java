@@ -21,9 +21,10 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
+import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.plugin.FilterPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
-import edu.cmu.side.plugin.TableMetricPlugin;
+import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
@@ -34,10 +35,11 @@ public class ModifyFeaturesControl extends GenesisControl{
 	private static Recipe highlightedFilterTable;
 
 	private static OrderedPluginMap highlightedFilters;
-	private static Map<TableMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
+	private static Map<TableFeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	static Map<FilterPlugin, Boolean> filterPlugins;
 	private static EvalCheckboxListener eval;
+	private static String targetAnnotation;
 	
 	static{
 		filterPlugins = new HashMap<FilterPlugin, Boolean>();
@@ -46,10 +48,10 @@ public class ModifyFeaturesControl extends GenesisControl{
 			filterPlugins.put((FilterPlugin)fe, false);
 		}
 		highlightedFilters = new OrderedPluginMap();
-		tableEvaluationPlugins = new HashMap<TableMetricPlugin, Map<String, Boolean>>();
-		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("table_evaluation");
+		tableEvaluationPlugins = new HashMap<TableFeatureMetricPlugin, Map<String, Boolean>>();
+		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("table_feature_evaluation");
 		for(SIDEPlugin fe : tableEvaluations){
-			tableEvaluationPlugins.put((TableMetricPlugin)fe, new TreeMap<String, Boolean>());
+			tableEvaluationPlugins.put((TableFeatureMetricPlugin)fe, new TreeMap<String, Boolean>());
 		}
 		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 
@@ -63,7 +65,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 		return update;
 	}
 
-	public static Map<TableMetricPlugin, Map<String, Boolean>> getTableEvaluationPlugins(){
+	public static Map<TableFeatureMetricPlugin, Map<String, Boolean>> getTableEvaluationPlugins(){
 		return tableEvaluationPlugins;
 	}
 
@@ -73,7 +75,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 	}
 	
 	public static void clearTableEvaluationPlugins(){
-		for(TableMetricPlugin p : tableEvaluationPlugins.keySet()){
+		for(TableFeatureMetricPlugin p : tableEvaluationPlugins.keySet()){
 			tableEvaluationPlugins.put(p, new TreeMap<String, Boolean>());
 		}
 	}
@@ -173,6 +175,15 @@ public class ModifyFeaturesControl extends GenesisControl{
 	public static boolean hasHighlightedFilterTable(){
 		return highlightedFilterTable != null;
 	}
+
+	public static void setTargetAnnotation(String s){
+		targetAnnotation = s;
+	}
+	
+	public static String getTargetAnnotation(){
+		return targetAnnotation;
+	}
+	
 	
 	public static Recipe getHighlightedFilterTableRecipe(){
 		return highlightedFilterTable;

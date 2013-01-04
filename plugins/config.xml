@@ -10,12 +10,12 @@
     </plugin>
     
     <plugin>
-        <name>Basic Table Plugins</name>
+        <name>Basic Feature Evaluations</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
         <description><![CDATA[Basic Fscore evaluations]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.metrics.tables.BasicTableEvaluations</classname>
+        <classname>plugins.metrics.features.tables.BasicFeatureEvaluations</classname>
     </plugin>
     
     <plugin>
@@ -43,6 +43,15 @@
         <description><![CDATA[Basic model comparisons]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.analysis.two.BasicModelComparison</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Difference Matrix Plugin</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Difference matrix comparisons]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.analysis.two.DifferenceMatrix</classname>
     </plugin>
     
     <plugin>

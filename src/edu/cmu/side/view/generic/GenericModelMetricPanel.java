@@ -10,6 +10,8 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
+import se.datadosen.component.RiverLayout;
+
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.TrainingResult;
@@ -33,12 +35,12 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 	}
 	
 	public GenericModelMetricPanel(){
-		setLayout(new BorderLayout());
-		add(BorderLayout.NORTH, label);
+		setLayout(new RiverLayout());
+		add("left", label);
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
 		JScrollPane tableScroll = new JScrollPane(featureTable);
-		add(BorderLayout.CENTER, tableScroll);
+		add("br hfill vfill", tableScroll);
 	}
 
 	public void refreshPanel(Recipe recipe){
@@ -50,7 +52,7 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 			TrainingResult result = recipe.getTrainingResult();
 			Collection<ModelMetricPlugin> plugins = BuildModelControl.getModelEvaluationPlugins();
 			for(ModelMetricPlugin plugin : plugins){
-				Map<String, String> keys = plugin.evaluateModelFeatures(result, plugin.generateConfigurationSettings());
+				Map<String, String> keys = plugin.evaluateModel(result, plugin.generateConfigurationSettings());
 				for(String s : keys.keySet()){
 					Object[] row = new Object[2];
 					row[0] = s;

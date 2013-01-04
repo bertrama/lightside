@@ -1,12 +1,15 @@
 package edu.cmu.side.control;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
+import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
@@ -16,6 +19,8 @@ public class ExploreResultsControl extends GenesisControl{
 	private static Recipe highlightedTrainedModel;
 	
 	private static Map<EvaluateOneModelPlugin, Boolean> modelAnalysisPlugins;
+	private static Map<ModelFeatureMetricPlugin, Boolean> featureEvaluationPlugins;
+	
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	private static EvalCheckboxListener eval;
 
@@ -25,12 +30,24 @@ public class ExploreResultsControl extends GenesisControl{
 		for(SIDEPlugin fe : modelEvaluations){
 			modelAnalysisPlugins.put((EvaluateOneModelPlugin)fe, false);
 		}
+
+		featureEvaluationPlugins = new TreeMap<ModelFeatureMetricPlugin, Boolean>();
+		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("model_feature_evaluation");
+		for(SIDEPlugin fe : tableEvaluations){
+			featureEvaluationPlugins.put((ModelFeatureMetricPlugin)fe, false);
+		}
 	}
 	
 	public static Map<EvaluateOneModelPlugin, Boolean> getModelAnalysisPlugins(){
 		return modelAnalysisPlugins;
 	}
 	
+	public static void setHighlightedModelAnalysisPlugin(EvaluateOneModelPlugin plug){
+		for(EvaluateOneModelPlugin plugin : modelAnalysisPlugins.keySet()){
+			modelAnalysisPlugins.put(plugin, plugin==plug);
+		}
+	}
+		
 	public static boolean hasHighlightedTrainedModelRecipe(){
 		return highlightedTrainedModel!=null;
 	}

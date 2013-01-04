@@ -1,6 +1,7 @@
 package edu.cmu.side.control;
 
 import java.awt.Component;
+
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Collection;
@@ -21,6 +22,7 @@ import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.CheckBoxListEntry;
+import edu.cmu.side.view.util.RecipeCellRenderer;
 
 public abstract class GenesisControl {
 
@@ -38,9 +40,9 @@ public abstract class GenesisControl {
 				if(plugins.get(plug).containsKey(eval)){
 					boolean flip = !plugins.get(plug).get(eval);
 					plugins.get(plug).put(eval, flip);
+					Workbench.update();
 				}
 			}
-			Workbench.update();
 		}
 	}
 
@@ -130,10 +132,7 @@ public abstract class GenesisControl {
 		}
 
 		JTree recipeComponent = new JTree(top);
-		DefaultTreeCellRenderer renderer = (DefaultTreeCellRenderer) recipeComponent.getCellRenderer();
-//		renderer.setLeafIcon(null);
-//		renderer.setClosedIcon(null);
-//		renderer.setOpenIcon(null);
+		recipeComponent.setCellRenderer(new RecipeCellRenderer());
 		return recipeComponent;
 	}
 
@@ -141,9 +140,7 @@ public abstract class GenesisControl {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Documents: " + docs.getName());
 
 		DefaultMutableTreeNode size = new DefaultMutableTreeNode("Instances: " + docs.getSize());
-		DefaultMutableTreeNode annot = new DefaultMutableTreeNode("Class:");
-		DefaultMutableTreeNode annotName = new DefaultMutableTreeNode(docs.getCurrentAnnotation());
-		annot.add(annotName);
+		DefaultMutableTreeNode annot = new DefaultMutableTreeNode("Class: " + docs.getCurrentAnnotation());
 		DefaultMutableTreeNode text = new DefaultMutableTreeNode("Text Columns:");
 		for(String s : docs.getTextColumns()){
 			DefaultMutableTreeNode textName = new DefaultMutableTreeNode(s);
@@ -156,7 +153,7 @@ public abstract class GenesisControl {
 	}
 
 	public static MutableTreeNode getFilterNodes(Recipe r){
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Feature Filters:");
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Filter Plugins:");
 		for(SIDEPlugin plug : r.getFilters().keySet()){
 			node.add(getPluginNode("",plug));
 		}
@@ -164,7 +161,7 @@ public abstract class GenesisControl {
 	}
 	
 	public static MutableTreeNode getExtractorNodes(Recipe r){
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Feature Extractors:");
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Feature Plugins:");
 		for(SIDEPlugin plug : r.getExtractors().keySet()){
 			node.add(getPluginNode("",plug));
 		}
@@ -187,7 +184,7 @@ public abstract class GenesisControl {
 	}
 
 	public static MutableTreeNode getModelNode(TrainingResult model){
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Model: " + model.getName());
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Trained Model: " + model.getName());
 		return node;
 	}
 

@@ -2,6 +2,8 @@ package edu.cmu.side.view.extract;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ItemListener;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
@@ -9,8 +11,12 @@ import javax.swing.JSplitPane;
 
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.data.FeatureTable;
+import edu.cmu.side.plugin.FeatureMetricPlugin;
+import edu.cmu.side.plugin.TableFeatureMetricPlugin;
+import edu.cmu.side.view.generic.GenericFeatureMetricPanel;
 import edu.cmu.side.view.generic.GenericLoadPanel;
-import edu.cmu.side.view.generic.GenericTableMetricPanel;
+import edu.cmu.side.view.generic.GenericMetricChecklistPanel;
 
 public class ExtractBottomPanel extends JPanel{
 
@@ -32,8 +38,30 @@ public class ExtractBottomPanel extends JPanel{
 		}
 	};
 
-	ExtractTableChecklistPanel checklist = new ExtractTableChecklistPanel();
-	GenericTableMetricPanel display = new GenericTableMetricPanel();
+	GenericMetricChecklistPanel checklist = new GenericMetricChecklistPanel<TableFeatureMetricPlugin>(){
+		@Override
+		public Map<TableFeatureMetricPlugin, Map<String, Boolean>> getEvaluationPlugins() {
+			return ExtractFeaturesControl.getTableEvaluationPlugins();
+		}
+
+		@Override
+		public ItemListener getCheckboxListener() {
+			return ExtractFeaturesControl.getEvalCheckboxListener();
+		}
+
+		@Override
+		public void setTargetAnnotation(String s) {
+			ExtractFeaturesControl.setTargetAnnotation(s);
+		}
+	};
+	GenericFeatureMetricPanel display = new GenericFeatureMetricPanel(){
+
+		@Override
+		public String getTargetAnnotation() {
+			return ExtractFeaturesControl.getTargetAnnotation();
+		}
+		
+	};
 
 	public ExtractBottomPanel(){
 		setLayout(new BorderLayout());
@@ -54,11 +82,15 @@ public class ExtractBottomPanel extends JPanel{
 
 	public void refreshPanel(){
 		control.refreshPanel();
-		checklist.refreshPanel();
-		if(ExtractFeaturesControl.hasHighlightedFeatureTable()){                	
-			display.refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable(), ExtractFeaturesControl.getTableEvaluationPlugins());
+		
+		if(ExtractFeaturesControl.hasHighlightedFeatureTable()){     
+			FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
+			checklist.refreshPanel(table);
+			boolean[] mask = new boolean[table.getDocumentList().getSize()];
+			for(int i = 0; i < mask.length; i++) mask[i] = true;
+			display.refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe(), ExtractFeaturesControl.getTableEvaluationPlugins(), mask);
 		}else{
-			display.refreshPanel(null, ExtractFeaturesControl.getTableEvaluationPlugins());
+			display.refreshPanel(null, ExtractFeaturesControl.getTableEvaluationPlugins(), new boolean[0]);
 		}
 	}
 }

@@ -2,7 +2,9 @@ package edu.cmu.side.view.explore;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -12,8 +14,10 @@ import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
+import edu.cmu.side.view.generic.GenericMatrixPanel;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
+import edu.cmu.side.view.generic.GenericTripleFrame;
 
 public class ExploreResultsPane extends JPanel{
 
@@ -36,42 +40,45 @@ public class ExploreResultsPane extends JPanel{
 		
 	};
 	
-	GenericPluginChecklistPanel<EvaluateOneModelPlugin> checklist = new GenericPluginChecklistPanel<EvaluateOneModelPlugin>("Model Analysis Plugins:"){
-		@Override
-		public Map<EvaluateOneModelPlugin, Boolean> getPlugins() {
-			return ExploreResultsControl.getModelAnalysisPlugins();
-		}
-	};
+	ExploreMatrixPanel matrix = new ExploreMatrixPanel();
 	
-	GenericPluginConfigPanel<EvaluateOneModelPlugin> analysis = new GenericPluginConfigPanel<EvaluateOneModelPlugin>(){
+	ExploreFeaturePanel features = new ExploreFeaturePanel();
+	
+	GenericTripleFrame top;
+	ExploreActionBar middle;
+	
+	GenericPluginConfigPanel<EvaluateOneModelPlugin> analysis = new GenericPluginConfigPanel<EvaluateOneModelPlugin>(false){
 		public void refreshPanel(){
 			refreshPanel(ExploreResultsControl.getModelAnalysisPlugins());
 		}
 	};
 	
+	
 	public ExploreResultsPane(){
 		setLayout(new BorderLayout());
-		JSplitPane pane = new JSplitPane();
 		
 		JSplitPane left = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
-		left.setTopComponent(load);
-		left.setBottomComponent(checklist);
+		top = new GenericTripleFrame(load, matrix, features);
+		middle = new ExploreActionBar();
 		
 		JScrollPane scroll = new JScrollPane(analysis);
-		load.setPreferredSize(new Dimension(275,450));
-		checklist.setPreferredSize(new Dimension(275,200));
-		scroll.setPreferredSize(new Dimension(650,700));
-
-		pane.setLeftComponent(left);
-		pane.setRightComponent(scroll);
-		add(BorderLayout.CENTER, pane);
+		load.setPreferredSize(new Dimension(275,350));
+		
+		JPanel corner = new JPanel(new BorderLayout());
+		
+		corner.add(BorderLayout.CENTER, top);
+		corner.add(BorderLayout.SOUTH, middle);
+		left.setTopComponent(corner);
+		left.setBottomComponent(scroll);
+		add(BorderLayout.CENTER, left);
 
 	}
 	
 	public void refreshPanel(){
 		load.refreshPanel();
-		checklist.refreshPanel();
+		matrix.refreshPanel();
+		features.refreshPanel();
 		analysis.refreshPanel();
 	}
 }

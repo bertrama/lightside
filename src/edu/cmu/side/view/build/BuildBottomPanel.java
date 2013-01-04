@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
@@ -17,7 +18,7 @@ import edu.cmu.side.view.generic.GenericModelMetricPanel;
 
 public class BuildBottomPanel extends JPanel {
 
-	private GenericLoadPanel control = new GenericLoadPanel("Highlight:"){
+	private GenericLoadPanel control = new GenericLoadPanel("Trained Models:"){
 
 		@Override
 		public void setHighlight(Recipe r) {
@@ -55,10 +56,12 @@ public class BuildBottomPanel extends JPanel {
 		JSplitPane pane = new JSplitPane();
 		pane.setLeftComponent(control);
 
+		pane.setBorder(BorderFactory.createEmptyBorder());
 		JSplitPane right = new JSplitPane();
 		right.setLeftComponent(result);
 		right.setRightComponent(confusion);
 		right.setPreferredSize(new Dimension(650,200));
+		right.setBorder(BorderFactory.createEmptyBorder());
 		pane.setRightComponent(right);
 		control.setPreferredSize(new Dimension(275,200));		
 		confusion.setPreferredSize(new Dimension(275,200));

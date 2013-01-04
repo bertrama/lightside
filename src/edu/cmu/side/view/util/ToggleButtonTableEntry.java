@@ -1,17 +1,18 @@
 package edu.cmu.side.view.util;
 
+import javax.swing.JButton;
 import javax.swing.JRadioButton;
+import javax.swing.JToggleButton;
 
-public class RadioButtonListEntry extends JRadioButton{
+public class ToggleButtonTableEntry extends JToggleButton{
 
 
 	  private Object value = null;
 
-	  public RadioButtonListEntry(Object itemValue, boolean selected) {
+	  public ToggleButtonTableEntry(Object itemValue, boolean selected) {
 	    super(itemValue == null ? "" : "" + itemValue, selected);
 	    setValue(itemValue);
 	  }
-
 	  public Object getValue() {
 	    return value;
 	  }
@@ -19,5 +20,5 @@ public class RadioButtonListEntry extends JRadioButton{
 	  public void setValue(Object value) {
 	    this.value = value;
 	  }
-
+	  
 }

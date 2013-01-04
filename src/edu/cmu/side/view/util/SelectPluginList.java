@@ -36,7 +36,6 @@ package edu.cmu.side.view.util;
  *
  * @author gtoffoli
  */
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -45,12 +44,15 @@ import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JCheckBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JRadioButton;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+
+import edu.cmu.side.plugin.SIDEPlugin;
 
 
 public class SelectPluginList extends JList {
@@ -165,18 +167,19 @@ class SelectPluginCellRenderer extends DefaultListCellRenderer {
 
 	public Component getListCellRendererComponent(JList list, Object value, int index,
 			boolean isSelected, boolean cellHasFocus) {
-		if (value instanceof CheckBoxListEntry) {
+		if(value instanceof SIDEPlugin){
+			JLabel label = new JLabel(value.toString());
+			return label;
+		}else if (value instanceof CheckBoxListEntry) {
 			CheckBoxListEntry checkbox = (CheckBoxListEntry) value;
 			checkbox.setEnabled(isEnabled());
 			checkbox.setFont(getFont());
-			checkbox.setFocusPainted(false);
 			checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 			return checkbox;
 		} else if(value instanceof RadioButtonListEntry){
 			RadioButtonListEntry radioButton = (RadioButtonListEntry) value;
 			radioButton.setEnabled(isEnabled());
 			radioButton.setFont(getFont());
-			radioButton.setFocusPainted(false);
 			radioButton.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 			return radioButton;
 		} else if(value != null){

@@ -23,10 +23,10 @@ public abstract class ModelMetricPlugin extends SIDEPlugin{
 	 */
 	public abstract String getOutputName();
 
-	public abstract Collection<String> getAvailableEvaluations(FeatureTable table);
+	public abstract Collection<String> getAvailableEvaluations();
 	
 	/**
 	 * 
 	 */
-	public abstract Map<String, String> evaluateModelFeatures(TrainingResult model, Map<String, String> settings);
+	public abstract Map<String, String> evaluateModel(TrainingResult model, Map<String, String> settings);
 }

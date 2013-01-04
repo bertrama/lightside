@@ -100,10 +100,10 @@ public class BuildTestingPanel extends AbstractListPanel {
 //		add.setIcon(iconLoad);
 //		add("left", add);
 		
-		
-		listScroll.setBorder(new EmptyBorder(0,30,0,0));
-		add("br hfill", listScroll);	
-		
+//		
+//		listScroll.setBorder(new EmptyBorder(0,30,0,0));
+//		add("br hfill", listScroll);	
+//		
 
 	}
 	

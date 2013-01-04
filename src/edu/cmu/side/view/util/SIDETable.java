@@ -14,6 +14,16 @@ public class SIDETable extends JTable{
 		return false;
 	}
 	
+	public Object getDeepValue(int row, int col){
+		Object o = this.getValueAt(row, col);
+		if(o instanceof RadioButtonListEntry){
+			return ((RadioButtonListEntry)o).getValue();
+		}else if(o instanceof ToggleButtonTableEntry){
+			return ((ToggleButtonTableEntry)o).getValue();
+		}else return o;
+
+	}
+	
 	/**
 	 * Corrects the getValueAt method for when the rows in the table have been sorted.
 	 */

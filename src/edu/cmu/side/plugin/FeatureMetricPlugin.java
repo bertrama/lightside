@@ -5,21 +5,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 
-public abstract class TableMetricPlugin<E extends Comparable<E>> extends SIDEPlugin{
+public abstract class FeatureMetricPlugin<E extends Comparable<E>> extends SIDEPlugin{
 
 	ArrayList<String> evaluationNames = new ArrayList<String>();
 	
-	public TableMetricPlugin() {
+	public FeatureMetricPlugin() {
 		super();
-	}
-	
-	public static String type = "table_evaluation";
-	
-	public String getType() {
-		return type;	
 	}
 
 	@Override
@@ -32,10 +27,8 @@ public abstract class TableMetricPlugin<E extends Comparable<E>> extends SIDEPlu
 	 */
 	public abstract String getOutputName();
 
-	public abstract Collection<String> getAvailableEvaluations(FeatureTable table);
+	public abstract Collection<String> getAvailableEvaluations();
+
+	public abstract Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target);
 	
-	/**
-	 * 
-	 */
-	public abstract Map<Feature, E> evaluateTableFeatures(FeatureTable model, boolean[] mask, String evaluation);
 }

@@ -14,11 +14,17 @@ import edu.cmu.side.view.util.AbstractListPanel;
 
 public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends AbstractListPanel {
 
-	Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 20);
+	Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
 	protected Set<E> visiblePlugins = new TreeSet<E>();
 	
+	protected boolean showLabels;
+	
 	public GenericPluginConfigPanel(){
+		this(true);
+	}
+	public GenericPluginConfigPanel(boolean label){
 		setLayout(new RiverLayout());
+		showLabels = label;
 	}
 
 	@Override
@@ -35,9 +41,11 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 			visiblePlugins = localSet;
 			this.removeAll();
 			for(E plugin : visiblePlugins){
-				JLabel label = new JLabel(plugin.toString());
-				label.setFont(font);
-				this.add("br left", label);
+				if(showLabels){
+					JLabel label = new JLabel("Configure " + plugin.toString());
+					label.setFont(font);
+					this.add("br left", label);					
+				}
 				this.add("br hfill", plugin.getConfigurationUI());
 			}
 			this.validate();

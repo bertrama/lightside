@@ -1,6 +1,7 @@
 package edu.cmu.side.view.build;
 
 import java.awt.BorderLayout;
+
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,17 +52,25 @@ public class BuildPluginPanel extends AbstractListPanel {
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
 				RadioButtonListEntry rb = ((RadioButtonListEntry)pluginsModel.get(pluginsList.getSelectedIndex()));
-				LearningPlugin r = (LearningPlugin)rb.getValue();
-				BuildModelControl.setHighlightedLearningPlugin(r);
-				Component c = r.getConfigurationUI();
-				listener.actionPerformed(new ActionEvent(rb, -1, ""));
+				highlight(rb);
 				Workbench.update();
 			}
 		});
+		if(pluginsToPass.size()>0){
+			pluginsToPass.get(0).setSelected(true);	
+			highlight(pluginsToPass.get(0));
+		}
 		panel.add("left", new JLabel("Learning Plugin:"));
 		panel.add("br hfill vfill", pluginsScroll);
 		add(BorderLayout.NORTH, panel);
 		add(BorderLayout.CENTER, test);
+	}
+	
+	public void highlight(RadioButtonListEntry rb){
+		LearningPlugin r = (LearningPlugin)rb.getValue();
+		BuildModelControl.setHighlightedLearningPlugin(r);
+		Component c = r.getConfigurationUI();
+		listener.actionPerformed(new ActionEvent(rb, -1, ""));
 	}
 	
 	public void refreshPanel(){

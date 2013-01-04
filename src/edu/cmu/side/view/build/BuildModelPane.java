@@ -32,7 +32,7 @@ public class BuildModelPane extends JPanel{
 	};
 	public BuildModelPane(){
 		setLayout(new BorderLayout());
-		GenericLoadPanel load = new GenericLoadPanel("Highlight:") {
+		GenericLoadPanel load = new GenericLoadPanel("Feature Tables:") {
 			@Override
 			public void setHighlight(Recipe r) {
 				BuildModelControl.setHighlightedFeatureTableRecipe(r);

@@ -29,7 +29,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 
 public class CompareModelsPane extends AbstractListPanel{
 
-	GenericLoadPanel loadBaseline = new GenericLoadPanel("Baseline:"){
+	GenericLoadPanel loadBaseline = new GenericLoadPanel("Baseline Model:"){
 
 		@Override
 		public void setHighlight(Recipe r) {
@@ -48,8 +48,7 @@ public class CompareModelsPane extends AbstractListPanel{
 
 	};
 	
-
-	GenericLoadPanel loadCompetitor = new GenericLoadPanel("Competing:"){
+	GenericLoadPanel loadCompetitor = new GenericLoadPanel("Competing Model:"){
 
 		@Override
 		public void setHighlight(Recipe r) {
@@ -89,6 +88,8 @@ public class CompareModelsPane extends AbstractListPanel{
 					middle.removeAll();
 					middle.add(BorderLayout.CENTER, plug.getConfigurationUI());
 					plug.refreshPanel();
+					middle.validate();
+					middle.repaint();
 				}
 			}
 		});

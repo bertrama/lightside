@@ -2,19 +2,12 @@ package edu.cmu.side.view;
 
 import java.awt.Color;
 
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
-
-import com.seaglasslookandfeel.SeaGlassLookAndFeel;
-import com.seaglasslookandfeel.ui.SeaGlassTabbedPaneUI;
-
-import weka.gui.LookAndFeel;
 
 import edu.cmu.side.view.build.BuildModelPane;
 import edu.cmu.side.view.compare.CompareModelsPane;

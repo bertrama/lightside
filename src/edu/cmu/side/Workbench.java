@@ -1,39 +1,19 @@
 package edu.cmu.side;
 
-import java.awt.Color;
-
-import java.awt.AlphaComposite;
 import java.awt.Dimension;
-import java.awt.Graphics2D;
-import java.awt.SplashScreen;
-
-import javax.swing.BorderFactory;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.plaf.metal.MetalLookAndFeel;
-
-import org.jdesktop.laffy.Laffy;
-
-import weka.gui.SplashWindow;
-
-import com.seaglasslookandfeel.SeaGlassLookAndFeel;
-
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Collection;
 
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
-import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.WorkbenchPanel;
 import edu.cmu.side.view.util.GlassPane;
-import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class Workbench{
 

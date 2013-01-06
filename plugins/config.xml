@@ -81,6 +81,15 @@
         <classname>plugins.filters.EvaluationFilter</classname>
     </plugin>
     
+    <plugin>
+        <name>GrowthModel</name>
+        <author>Zeyu Zheng</author>
+        <version>1.0</version>
+        <description><![CDATA[Growth Model filter]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.filters.growthmodel</classname>
+    </plugin>
+    
     
     <plugin>
         <name>Weka Logit</name>

@@ -20,7 +20,7 @@ public class ARFFExporter {
 				out = new File(out.getAbsolutePath() + ".feature");
 			FileWriter outf = new FileWriter(out);
 			
-			for (int i=0; i<ft.getInstanceNumber(); i++){
+			for (int i=0; i<ft.getDocumentList().getSize(); i++){
 				Collection<FeatureHit> hits = ft.getHitsForDocument(i);
 				for (FeatureHit hit: hits)
 					outf.write(hit.getFeature().toString()+": "+hit.getValue().toString()+"\t");

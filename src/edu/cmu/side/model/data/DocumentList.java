@@ -208,6 +208,15 @@ public class DocumentList implements Serializable{
 		return labelArray;
 	}
 	
+	public Set<String> getPossibleAnn(String name) {
+		List<String> labels = getAnnotationArray(name);
+		Set<String> labelSet = new TreeSet<String>();
+		if(labels != null) 
+			for(String s : labels)
+				labelSet.add(s);
+		return labelSet;
+	}
+	
 	public String[] getAnnotationNames(){
 		return allAnnotations.keySet().toArray(new String[0]);
 	}

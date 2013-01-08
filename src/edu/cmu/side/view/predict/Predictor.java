@@ -2,10 +2,7 @@ package edu.cmu.side.view.predict;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
-import java.io.PrintStream;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -22,9 +19,8 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeaturePlugin;
-import edu.cmu.side.plugin.FilterPlugin;
+import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
-import edu.cmu.side.plugin.control.PluginManager;
 
 /**
  * loads a model trained using lightSIDE uses it to label new instances.
@@ -104,7 +100,7 @@ public class Predictor
 		FeatureTable ft = new FeatureTable(test, hits, 0);
 		for (SIDEPlugin plug : recipe.getFilters().keySet())
 		{
-			ft = ((FilterPlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), textUpdater);
+			ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), textUpdater);
 		}
 		return ft;
 	}

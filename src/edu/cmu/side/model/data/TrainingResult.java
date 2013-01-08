@@ -1,5 +1,6 @@
 package edu.cmu.side.model.data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import edu.cmu.side.model.feature.Feature;
-import edu.cmu.side.plugin.LearningPlugin;
 
 /**
  * The result of the training process; doesn't actually contain the learning itself,
@@ -15,7 +15,7 @@ import edu.cmu.side.plugin.LearningPlugin;
  * @author emayfiel
  *
  */
-public class TrainingResult{
+public class TrainingResult implements Serializable{
 
 	private String name;
 	private FeatureTable train;

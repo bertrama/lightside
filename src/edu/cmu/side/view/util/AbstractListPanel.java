@@ -1,15 +1,18 @@
 package edu.cmu.side.view.util;
 
-import java.awt.Color;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -51,6 +54,7 @@ public abstract class AbstractListPanel extends JPanel implements ActionListener
 		clear = new JButton("Clear");
 		save = new JButton("Save");
 		load = new JButton("Load");
+		
 	}
 	
 	public AbstractListPanel(){
@@ -86,5 +90,4 @@ public abstract class AbstractListPanel extends JPanel implements ActionListener
 	public void fireActionEvent(){
 		Workbench.update();
 	}
-	
 }

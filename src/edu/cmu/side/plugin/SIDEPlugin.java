@@ -2,8 +2,13 @@ package edu.cmu.side.plugin;
 
 import java.awt.Component;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import edu.cmu.side.Workbench;
 
 public abstract class SIDEPlugin implements Cloneable{
 	private transient File rootFolder;
@@ -107,4 +112,18 @@ public abstract class SIDEPlugin implements Cloneable{
 	protected abstract Component getConfigurationUIForSubclass();
 	public abstract Map<String, String> generateConfigurationSettings();
 	public abstract void configureFromSettings(Map<String, String> settings);
+	
+	public static SIDEPlugin fromSerializable(Serializable pug)
+	{
+		if(pug == null) 
+			return null;
+		
+		SIDEPlugin plugin = Workbench.pluginManager.getPluginWrapperByPluginClassName((String) pug).getSIDEPlugin();
+		return plugin;
+	}
+	
+	public Serializable toSerializable() throws IOException
+	{
+		return this.getClass().getName();
+	}
 }

@@ -2,6 +2,7 @@ package edu.cmu.side.view.extract;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -9,6 +10,7 @@ import javax.swing.JSplitPane;
 
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.plugin.FeaturePlugin;
+import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.view.generic.GenericTripleFrame;

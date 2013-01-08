@@ -58,7 +58,7 @@ public class Workbench{
 		panel.actionPerformed(null);
 	}
 
-	public static Collection<Recipe> getRecipesByPane(String type){
+	public static Collection<Recipe> getRecipesByPane(RecipeManager.Stage type){
 		return recipeManager.getRecipeCollectionByType(type);
 	}
 

@@ -10,6 +10,7 @@ public class RadioButtonListEntry extends JRadioButton{
 	  public RadioButtonListEntry(Object itemValue, boolean selected) {
 	    super(itemValue == null ? "" : "" + itemValue, selected);
 	    setValue(itemValue);
+	    setBackground(null);
 	  }
 
 	  public Object getValue() {

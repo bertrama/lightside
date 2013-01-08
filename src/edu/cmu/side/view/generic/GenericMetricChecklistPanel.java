@@ -64,10 +64,15 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 	}
 
 	public void refreshPanel(FeatureTable table){
+		
 		Set<String> keysLocal = new HashSet<String>();
 		Set<String> keysNew = new HashSet<String>();
-		for(String s : table.getDocumentList().getLabelArray()){
-			keysNew.add(s);
+
+		if(table != null)
+		{
+			for(String s : table.getDocumentList().getLabelArray()){
+				keysNew.add(s);
+			}
 		}
 		for(int i = 0; i < combo.getModel().getSize(); i++){
 			keysLocal.add(combo.getModel().getElementAt(i).toString());			
@@ -75,6 +80,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 		if(!keysNew.equals(keysLocal)){
 			Workbench.reloadComboBoxContent(combo, keysNew, (keysNew.size()>0?keysNew.toArray(new String[0])[0]:null));
 		}
+		
 	}
 	
 	public abstract ItemListener getCheckboxListener();

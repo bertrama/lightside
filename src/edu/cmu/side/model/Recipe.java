@@ -1,11 +1,14 @@
 package edu.cmu.side.model;
 
-import java.awt.Component;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -16,10 +19,11 @@ import edu.cmu.side.plugin.FilterPlugin;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 
-public class Recipe {
+public class Recipe implements Serializable
+{
 
-	String stage = null;
-	String recipeName = null;
+	RecipeManager.Stage stage = null;
+	private String recipeName = "";
 	OrderedPluginMap extractors;
 	OrderedPluginMap filters;
 	LearningPlugin learner;
@@ -30,24 +34,20 @@ public class Recipe {
 	FeatureTable filteredTable;
 	TrainingResult trainedModel;
 	PredictionResult predictionResult;
-
-
-	String recipeID;
 	
-	
-	public String getStage(){
+	public RecipeManager.Stage getStage(){
 		if(stage == null){
 			if(predictionResult != null){
-				stage = RecipeManager.PREDICTION_RESULT_RECIPES;
+				stage = RecipeManager.Stage.PREDICTION_RESULT;
 			}else if(trainedModel != null){
-				stage = RecipeManager.TRAINED_MODEL_RECIPES;
+				stage = RecipeManager.Stage.TRAINED_MODEL;
 			}else if(filteredTable != null){
-				stage = RecipeManager.MODIFIED_TABLE_RECIPES;
+				stage = RecipeManager.Stage.MODIFIED_TABLE;
 			}else if(featureTable != null){
-				stage = RecipeManager.FEATURE_TABLE_RECIPES;
+				stage = RecipeManager.Stage.FEATURE_TABLE;
 			}else if(documentList != null){
-				stage = RecipeManager.DOCUMENT_LIST_RECIPES;
-			}else stage = "";
+				stage = RecipeManager.Stage.DOCUMENT_LIST;
+			}else stage = RecipeManager.Stage.NONE;
 			
 		}
 		return stage;
@@ -59,13 +59,13 @@ public class Recipe {
 
 	public String toString(){
 		String out = "";
-		if(RecipeManager.DOCUMENT_LIST_RECIPES.equals(stage)){
+		if(RecipeManager.Stage.DOCUMENT_LIST.equals(stage)){
 			out = documentList.getName();
-		}else if(RecipeManager.FEATURE_TABLE_RECIPES.equals(stage)){
+		}else if(RecipeManager.Stage.FEATURE_TABLE.equals(stage)){
 			out = featureTable.getName();
-		}else if(RecipeManager.MODIFIED_TABLE_RECIPES.equals(stage)){
+		}else if(RecipeManager.Stage.MODIFIED_TABLE.equals(stage)){
 			out = filteredTable.getName();
-		}else if(RecipeManager.TRAINED_MODEL_RECIPES.equals(stage)){
+		}else if(RecipeManager.Stage.TRAINED_MODEL.equals(stage)){
 			out = trainedModel.getName();
 		}else{
 			out = "Default: " + stage;
@@ -141,8 +141,8 @@ public class Recipe {
 		return learnerSettings;
 	}
 
-	private Recipe(){
-		recipeName = "Blank Recipe";
+	private Recipe()
+	{
 		extractors = new OrderedPluginMap();
 		filters= new OrderedPluginMap();
 		getStage();
@@ -153,18 +153,18 @@ public class Recipe {
 	}
 
 	public static Recipe addPluginsToRecipe(Recipe prior, Collection<? extends SIDEPlugin> next){
-		String stage = prior.getStage();
+		RecipeManager.Stage stage = prior.getStage();
 		Recipe newRecipe = fetchRecipe();
-		if(stage.equals(RecipeManager.DOCUMENT_LIST_RECIPES)){
+		if(stage.equals(RecipeManager.Stage.DOCUMENT_LIST)){
 			addFeaturePlugins(prior, newRecipe, (Collection<FeaturePlugin>)next);
-		}else if(stage.equals(RecipeManager.FEATURE_TABLE_RECIPES)){
+		}else if(stage.equals(RecipeManager.Stage.FEATURE_TABLE)){
 			addFilterPlugins(prior, newRecipe, (Collection<FilterPlugin>)next);
 		}
 		return newRecipe;
 	}
 	
 	public static Recipe addLearnerToRecipe(Recipe prior, LearningPlugin next, Map<String, String> settings){
-		String stage = prior.getStage();
+		RecipeManager.Stage stage = prior.getStage();
 		Recipe newRecipe = fetchRecipe();
 		newRecipe.setDocumentList(prior.getDocumentList());
 		for(SIDEPlugin plugin : prior.getExtractors().keySet()){
@@ -199,5 +199,63 @@ public class Recipe {
 			newRecipe.addFilter(plugin);
 		}
 	}
+
+	public String getRecipeName()
+	{
+		if(recipeName.isEmpty())
+		{
+			String out = "";
+			if(RecipeManager.Stage.DOCUMENT_LIST.equals(stage)){
+				out = documentList.getName();
+			}else if(RecipeManager.Stage.FEATURE_TABLE.equals(stage)){
+				out = featureTable.getName();
+			}else if(RecipeManager.Stage.MODIFIED_TABLE.equals(stage)){
+				out = filteredTable.getName();
+			}else if(RecipeManager.Stage.TRAINED_MODEL.equals(stage)){
+				out = trainedModel.getName();
+			}else{
+				out = "Default: " + stage;
+			}
+			return out+"."+stage.extension;
+		}
+		return recipeName;
+	}
+	public void setRecipeName(String recipeName)
+	{
+		this.recipeName = recipeName;
+	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		System.out.println("reading "+this + " from "+in);
+		stage = (RecipeManager.Stage) in.readObject();
+		recipeName = (String) in.readObject();
+		extractors = (OrderedPluginMap) in.readObject();
+		filters = (OrderedPluginMap) in.readObject();
+		learner = (LearningPlugin) SIDEPlugin.fromSerializable((Serializable) in.readObject()); //it's all for you!
+		learnerSettings = (Map<String, String>) in.readObject();
+		documentList = (DocumentList) in.readObject();
+		featureTable = (FeatureTable) in.readObject();
+		filteredTable = (FeatureTable) in.readObject();
+		trainedModel = (TrainingResult)in.readObject();
+		predictionResult = (PredictionResult) in.readObject();
+	}
+
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		System.out.println("writing "+this + " to "+out);
+		out.writeObject(stage);
+		out.writeObject(recipeName);
+		out.writeObject(extractors);
+		out.writeObject(filters);
+		out.writeObject(learner==null?null:learner.toSerializable());
+		out.writeObject(learnerSettings);
+		out.writeObject(documentList);
+		out.writeObject(featureTable);
+		out.writeObject(filteredTable);
+		out.writeObject(trainedModel);
+		out.writeObject(predictionResult);
+	}
+
 
 }

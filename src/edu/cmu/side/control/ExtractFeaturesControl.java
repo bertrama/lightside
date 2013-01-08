@@ -49,8 +49,10 @@ public class ExtractFeaturesControl extends GenesisControl{
 	static{
 		featurePlugins = new HashMap<FeaturePlugin, Boolean>();
 		SIDEPlugin[] featureExtractors = PluginManager.getSIDEPluginArrayByType("feature_hit_extractor");
+		boolean selected = true;
 		for(SIDEPlugin fe : featureExtractors){
-			featurePlugins.put((FeaturePlugin)fe, false);
+			featurePlugins.put((FeaturePlugin)fe, selected);
+			selected = false;
 		}
 		tableEvaluationPlugins = new HashMap<TableFeatureMetricPlugin, Map<String, Boolean>>();
 		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("table_feature_evaluation");

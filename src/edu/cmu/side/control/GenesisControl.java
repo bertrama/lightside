@@ -62,19 +62,19 @@ public abstract class GenesisControl {
 	}
 
 	public static Collection<Recipe> getDocumentLists(){
-		return Workbench.getRecipesByPane(RecipeManager.DOCUMENT_LIST_RECIPES);
+		return Workbench.getRecipesByPane(RecipeManager.Stage.DOCUMENT_LIST);
 	}
 
 	public static Collection<Recipe> getFeatureTables(){
-		return Workbench.getRecipesByPane(RecipeManager.FEATURE_TABLE_RECIPES);
+		return Workbench.getRecipesByPane(RecipeManager.Stage.FEATURE_TABLE);
 	}
 
 	public static Collection<Recipe> getFilterTables(){
-		return Workbench.getRecipesByPane(RecipeManager.MODIFIED_TABLE_RECIPES);
+		return Workbench.getRecipesByPane(RecipeManager.Stage.MODIFIED_TABLE);
 	}
 
 	public static Collection<Recipe> getTrainedModels(){
-		return Workbench.getRecipesByPane(RecipeManager.TRAINED_MODEL_RECIPES);
+		return Workbench.getRecipesByPane(RecipeManager.Stage.TRAINED_MODEL);
 	}
 
 	public static int numFeatureTables(){

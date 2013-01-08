@@ -1,8 +1,9 @@
 package edu.cmu.side.model.data;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PredictionResult {
+public class PredictionResult implements Serializable{
 
 	private String name;
 	private FeatureTable test;

@@ -1,14 +1,20 @@
 package edu.cmu.side.view.generic;
 
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -25,6 +31,9 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 	protected JPanel describePanel = new JPanel(new BorderLayout());
 	protected JLabel label;
+	
+	protected JFileChooser chooser = new JFileChooser(new File("saved"));
+	
 	protected GenericLoadPanel(){
 		setLayout(new RiverLayout());
 		combo.addActionListener(new ActionListener(){
@@ -75,15 +84,19 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		load.setText("");
 		load.setIcon(iconLoad);
 		load.setToolTipText("Load");
-		buttons.add("left", load);
-		buttons.add("left", save);
-		add("left", label);
+		//buttons.add("left", load);
+		//buttons.add("left", save);
+		add("hfill", label);
+		add("right", load);
 		add("br hfill", combo);
+		add("right", save);
 		add("right", delete);
 		describeScroll = new JScrollPane();
 		describePanel.add(BorderLayout.CENTER, describeScroll);
 		add("br hfill vfill", describePanel);
-		add("br left hfill", buttons);
+		//add("br left hfill", buttons);
+		
+		connectButtonListeners();
 	}
 
 	public abstract void setHighlight(Recipe r);
@@ -122,6 +135,115 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			describeScroll = new JScrollPane();
 			describePanel.removeAll();
 			describePanel.add(BorderLayout.CENTER, describeScroll);
+		}
+	}
+	
+	/** load/save/delete button listeners*/
+	private void connectButtonListeners()
+	{
+		save.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if(combo.getSelectedIndex() >= 0)
+				{
+					saveSelectedItem();
+				}
+			}
+			
+		});
+		
+//		delete.addActionListener(new ActionListener()
+//		{
+//
+//			@Override
+//			public void actionPerformed(ActionEvent arg0)
+//			{
+//				if(combo.getSelectedIndex() >= 0)
+//				{
+//					deleteSelectedItem();
+//				}
+//			}
+//			
+//		});
+		
+
+		load.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				loadNewItem();
+			}
+			
+		});
+	}
+	
+	public void saveSelectedItem()
+	{
+		Recipe recipe = (Recipe) combo.getSelectedItem();//TODO: should this be more generic?
+		
+		chooser.setSelectedFile(new File("saved/"+recipe.getRecipeName()));
+		int response = chooser.showSaveDialog(this);
+		if(response == JFileChooser.APPROVE_OPTION)
+		{
+			File target = chooser.getSelectedFile();
+			if(target.exists())
+			{
+				response = JOptionPane.showConfirmDialog(this, "Do you want to overwrite "+target+"?");
+				if(response != JOptionPane.YES_OPTION)
+					return;
+			}
+			
+			try
+			{
+				FileOutputStream fout = new FileOutputStream(target);
+				ObjectOutputStream oos = new ObjectOutputStream(fout);
+				oos.writeObject(recipe);
+				
+			}
+			catch(Exception e)
+			{
+				JOptionPane.showMessageDialog(this, "Error while saving:\n"+e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	public void deleteSelectedItem()
+	{
+		Recipe recipe = (Recipe) combo.getSelectedItem();//TODO: should this be more generic?
+		RecipeManager.removeRecipe(recipe);
+	};
+	
+	public void loadNewItem()
+	{
+		int response = chooser.showOpenDialog(this);
+		if(response == JFileChooser.APPROVE_OPTION)
+		{
+			File target = chooser.getSelectedFile();
+			if(!target.exists())
+			{
+				JOptionPane.showMessageDialog(this, "There's not a file there!", "No Such File", JOptionPane.ERROR_MESSAGE);
+			}
+			
+			try
+			{
+				FileInputStream fout = new FileInputStream(target);
+				ObjectInputStream in = new ObjectInputStream(fout);
+				Recipe recipe = (Recipe) in.readObject(); //TODO: should this be more generic?
+				RecipeManager.addRecipe(recipe);
+			}
+			catch(Exception e)
+			{
+				JOptionPane.showMessageDialog(this, "Error while loading:\n"+e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+				e.printStackTrace();
+			}
+			
 		}
 	}
 }

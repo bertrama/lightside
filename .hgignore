@@ -2,6 +2,7 @@ syntax:glob
 .*
 *.class
 *.ser
+*.side
 *csc*
 *.train
 *.test
@@ -13,4 +14,4 @@ plugins/dependencies.jar
 plugins/config.xml.orig
 toolkits/en-sent.bin
 toolkits/englishPCFG_old.ser.gz
-
+*.DS_Store

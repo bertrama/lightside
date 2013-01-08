@@ -25,9 +25,9 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		load.setIcon(iconLoad);
 		load.addActionListener(new ExtractFeaturesControl.AddFilesListener(this));
 		label = new JLabel(s);
-		add("left", label);
-		add("br left", load);
-		add("hfill", combo);
+		add("hfill", label);
+		add("right", load);
+		add("br hfill", combo);
 		add("left", delete);
 		describeScroll = new JScrollPane();
 		describePanel.add(BorderLayout.CENTER, describeScroll);

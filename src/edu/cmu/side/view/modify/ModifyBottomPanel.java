@@ -83,13 +83,14 @@ public class ModifyBottomPanel extends JPanel{
 	
 	public void refreshPanel(){
 		control.refreshPanel();
-		checklist.refreshPanel();
 		if(ModifyFeaturesControl.hasHighlightedFilterTable()){
 			FeatureTable table = ModifyFeaturesControl.getHighlightedFilterTableRecipe().getFilteredTable();
+			checklist.refreshPanel(table);
 			boolean[] mask = new boolean[table.getDocumentList().getSize()];
 			for(int i = 0; i < mask.length; i++) mask[i] = true;
 			display.refreshPanel(ModifyFeaturesControl.getHighlightedFilterTableRecipe(), ModifyFeaturesControl.getTableEvaluationPlugins(), mask);	
 		}else{
+			checklist.refreshPanel(null);
 			display.refreshPanel(null, ModifyFeaturesControl.getTableEvaluationPlugins(), new boolean[0]);
 		}
 	}

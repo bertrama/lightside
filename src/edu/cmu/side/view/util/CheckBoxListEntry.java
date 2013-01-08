@@ -13,6 +13,7 @@ public class CheckBoxListEntry extends JCheckBox{
   public CheckBoxListEntry(Object itemValue, boolean selected) {
     super(itemValue == null ? "" : "" + itemValue, selected);
     setValue(itemValue);
+    setBackground(null);
   }
 
   public boolean isSelected() {

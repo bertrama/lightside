@@ -175,6 +175,7 @@ public class BuildModelControl extends GenesisControl{
 					plan.setTrainingResult(model);
 					model.setName(name);
 					BuildModelControl.setHighlightedTrainedModelRecipe(plan);
+					plan.setLearnerSettings(plan.getLearner().generateConfigurationSettings());
 					RecipeManager.addRecipe(plan);
 					Workbench.update();
 					update.reset();

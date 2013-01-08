@@ -10,7 +10,7 @@ import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeaturePlugin;
-import edu.cmu.side.plugin.FilterPlugin;
+import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 
@@ -116,7 +116,7 @@ public class Shell {
 				FeatureTable ft = new FeatureTable(dl, hits, threshold);
 				ARFFExporter.export(ft, new File("original.feature"));
 				
-				FilterPlugin filter = new EvaluationFilter();
+				RestructurePlugin filter = new EvaluationFilter();
 				dl.setDomainColumn("domain");
 				ARFFExporter.export(filter.filterTestSet(ft, ft, null, null), new File("filtered.feature"));
 				

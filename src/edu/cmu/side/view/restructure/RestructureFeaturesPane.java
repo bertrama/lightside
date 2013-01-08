@@ -1,4 +1,4 @@
-package edu.cmu.side.view.modify;
+package edu.cmu.side.view.restructure;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -7,52 +7,52 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import edu.cmu.side.control.ModifyFeaturesControl;
+import edu.cmu.side.control.RestructureTablesControl;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.plugin.FilterPlugin;
+import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.view.generic.GenericTripleFrame;
 
-public class ModifyFeaturesPane extends JPanel{
+public class RestructureFeaturesPane extends JPanel{
 
 	private static GenericTripleFrame top;
-	private static ModifyActionPanel action = new ModifyActionPanel();
-	private static ModifyBottomPanel bottom = new ModifyBottomPanel();
+	private static RestructureActionPanel action = new RestructureActionPanel();
+	private static RestructureBottomPanel bottom = new RestructureBottomPanel();
 
-	public ModifyFeaturesPane(){
+	public RestructureFeaturesPane(){
 		setLayout(new BorderLayout());
 		GenericLoadPanel load = new GenericLoadPanel("Feature Tables:"){
 
 			@Override
 			public void setHighlight(Recipe r) {
-				ModifyFeaturesControl.setHighlightedFeatureTableRecipe(r);
+				RestructureTablesControl.setHighlightedFeatureTableRecipe(r);
 			}
 
 			@Override
 			public Recipe getHighlight() {
-				return ModifyFeaturesControl.getHighlightedFeatureTableRecipe();
+				return RestructureTablesControl.getHighlightedFeatureTableRecipe();
 			}
 
 			@Override
 			public void refreshPanel() {
-				refreshPanel(ModifyFeaturesControl.getFeatureTables());
+				refreshPanel(RestructureTablesControl.getFeatureTables());
 			}
 			
 		};
 		
-		GenericPluginChecklistPanel<FilterPlugin> checklist = new GenericPluginChecklistPanel<FilterPlugin>("Filters Available:"){
+		GenericPluginChecklistPanel<RestructurePlugin> checklist = new GenericPluginChecklistPanel<RestructurePlugin>("Filters Available:"){
 			@Override
-			public Map<FilterPlugin, Boolean> getPlugins() {
-				return ModifyFeaturesControl.getFilterPlugins();
+			public Map<RestructurePlugin, Boolean> getPlugins() {
+				return RestructureTablesControl.getFilterPlugins();
 			}
 		};
 		
-		GenericPluginConfigPanel<FilterPlugin> config = new GenericPluginConfigPanel<FilterPlugin>(){
+		GenericPluginConfigPanel<RestructurePlugin> config = new GenericPluginConfigPanel<RestructurePlugin>(){
 			@Override
 			public void refreshPanel() {
-				refreshPanel(ModifyFeaturesControl.getFilterPlugins());
+				refreshPanel(RestructureTablesControl.getFilterPlugins());
 			}
 		};
 		

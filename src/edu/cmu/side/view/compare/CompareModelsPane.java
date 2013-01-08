@@ -67,6 +67,8 @@ public class CompareModelsPane extends AbstractListPanel{
 	};
 	
 	JPanel middle = new JPanel(new BorderLayout());
+	CompareActionBar dropdown = new CompareActionBar();
+
 	public CompareModelsPane(){
 		setLayout(new BorderLayout());
 		JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
@@ -74,12 +76,9 @@ public class CompareModelsPane extends AbstractListPanel{
 		JPanel top = new JPanel(new BorderLayout());
 		grid.add(loadBaseline);
 		grid.add(loadCompetitor);
-		JPanel dropdown = new JPanel(new RiverLayout());
 		top.add(BorderLayout.CENTER, grid);
-		dropdown.add("br left", new JLabel("Selected Comparison Plugin:"));
-		dropdown.add("hfill", combo);
 		top.add(BorderLayout.SOUTH, dropdown);
-		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins(), null);
+		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins().keySet(), null);
 		combo.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				if(combo.getSelectedItem() != null){
@@ -109,6 +108,7 @@ public class CompareModelsPane extends AbstractListPanel{
 	public void refreshPanel(){
 		loadBaseline.refreshPanel();
 		loadCompetitor.refreshPanel();
+		dropdown.refreshPanel();
 		if(CompareModelsControl.getHighlightedModelComparisonPlugin() != null){
 			CompareModelsControl.getHighlightedModelComparisonPlugin().refreshPanel();
 		}

@@ -22,14 +22,14 @@ import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.FeatureMetricPlugin;
-import edu.cmu.side.plugin.FilterPlugin;
+import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
-public class ModifyFeaturesControl extends GenesisControl{
+public class RestructureTablesControl extends GenesisControl{
 
 	private static Recipe highlightedFeatureTable;
 	private static Recipe highlightedFilterTable;
@@ -37,15 +37,15 @@ public class ModifyFeaturesControl extends GenesisControl{
 	private static OrderedPluginMap highlightedFilters;
 	private static Map<TableFeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static StatusUpdater update = new SwingUpdaterLabel();
-	static Map<FilterPlugin, Boolean> filterPlugins;
+	static Map<RestructurePlugin, Boolean> filterPlugins;
 	private static EvalCheckboxListener eval;
 	private static String targetAnnotation;
 	
 	static{
-		filterPlugins = new HashMap<FilterPlugin, Boolean>();
-		SIDEPlugin[] filterExtractors = PluginManager.getSIDEPluginArrayByType("filter_extractor");
+		filterPlugins = new HashMap<RestructurePlugin, Boolean>();
+		SIDEPlugin[] filterExtractors = PluginManager.getSIDEPluginArrayByType("restructure_table");
 		for(SIDEPlugin fe : filterExtractors){
-			filterPlugins.put((FilterPlugin)fe, false);
+			filterPlugins.put((RestructurePlugin)fe, false);
 		}
 		highlightedFilters = new OrderedPluginMap();
 		tableEvaluationPlugins = new HashMap<TableFeatureMetricPlugin, Map<String, Boolean>>();
@@ -80,7 +80,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 		}
 	}
 	
-	public static Map<FilterPlugin, Boolean> getFilterPlugins(){
+	public static Map<RestructurePlugin, Boolean> getFilterPlugins(){
 		return filterPlugins;
 	}
 
@@ -88,7 +88,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
-			FilterPlugin ft = (FilterPlugin)((CheckBoxListEntry)ie.getSource()).getValue();
+			RestructurePlugin ft = (RestructurePlugin)((CheckBoxListEntry)ie.getSource()).getValue();
 			filterPlugins.put(ft, !filterPlugins.get(ft));
 			if(filterPlugins.get(ft)){
 				highlightedFilters.put(ft, ft.generateConfigurationSettings());				
@@ -111,14 +111,14 @@ public class ModifyFeaturesControl extends GenesisControl{
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			Collection<FilterPlugin> plugins = new HashSet<FilterPlugin>();
-			for(FilterPlugin plugin : ModifyFeaturesControl.getFilterPlugins().keySet()){
-				if(ModifyFeaturesControl.getFilterPlugins().get(plugin)){
+			Collection<RestructurePlugin> plugins = new HashSet<RestructurePlugin>();
+			for(RestructurePlugin plugin : RestructureTablesControl.getFilterPlugins().keySet()){
+				if(RestructureTablesControl.getFilterPlugins().get(plugin)){
 					plugins.add(plugin);
 				}
 			}
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedFeatureTableRecipe(), plugins);
-			ModifyFeaturesControl.FilterTableTask task = new ModifyFeaturesControl.FilterTableTask(progress, newRecipe, name.getText());
+			RestructureTablesControl.FilterTableTask task = new RestructureTablesControl.FilterTableTask(progress, newRecipe, name.getText());
 			task.execute();
 		}
 		
@@ -140,7 +140,7 @@ public class ModifyFeaturesControl extends GenesisControl{
 			try{
 				FeatureTable current = plan.getFeatureTable();
 				for(SIDEPlugin plug : plan.getFilters().keySet()){
-					current = ((FilterPlugin)plug).filter(current, plan.getFilters().get(plug), update);					
+					current = ((RestructurePlugin)plug).restructure(current, plan.getFilters().get(plug), update);					
 				}
 				current.setName(name);
 				plan.setFilteredTable(current);

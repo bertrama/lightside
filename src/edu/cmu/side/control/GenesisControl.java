@@ -46,7 +46,7 @@ public abstract class GenesisControl {
 		}
 	}
 
-	public static class PluginCheckboxListener<E extends SIDEPlugin> implements ItemListener{
+	public static class PluginCheckboxListener<E> implements ItemListener{
 
 		Map<E, Boolean> plugins;
 		public PluginCheckboxListener(Map<E, Boolean> p){

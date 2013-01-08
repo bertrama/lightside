@@ -67,7 +67,6 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 		
 		Set<String> keysLocal = new HashSet<String>();
 		Set<String> keysNew = new HashSet<String>();
-
 		if(table != null)
 		{
 			for(String s : table.getDocumentList().getLabelArray()){

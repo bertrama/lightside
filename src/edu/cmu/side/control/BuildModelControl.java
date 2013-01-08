@@ -23,7 +23,7 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeaturePlugin;
-import edu.cmu.side.plugin.FilterPlugin;
+import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.ModelMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
@@ -195,7 +195,7 @@ public class BuildModelControl extends GenesisControl{
 		}
 		FeatureTable ft = new FeatureTable(test, hits, train.getFeatureTable().getThreshold());
 		for(SIDEPlugin plug : train.getFilters().keySet()){
-			ft = ((FilterPlugin)plug).filterTestSet(train.getTrainingTable(), ft, train.getFilters().get(plug), update);
+			ft = ((RestructurePlugin)plug).filterTestSet(train.getTrainingTable(), ft, train.getFilters().get(plug), update);
 		}
 	}
 

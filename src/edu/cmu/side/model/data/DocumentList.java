@@ -264,28 +264,7 @@ public class DocumentList implements Serializable{
 	public void setFilenames(ArrayList<String> f){
 		filenameList = f;
 	}
-
-	//        public SimpleDocumentList createFilteredDocumentList(SimpleDocumentList start, String annotation, String filterKeyword){
-	//                SimpleDocumentList sdl = new SimpleDocumentList(new ArrayList<String>());
-	//                sdl.filenameList = start.filenameList;
-	//                sdl.labelArray = start.labelArray;
-	//                sdl.currentAnnotation = start.currentAnnotation;
-	//                sdl.textColumn = start.textColumn;
-	//                for(String ann : start.allAnnotations.keySet()){
-	//                        sdl.allAnnotations.put(ann, new ArrayList<String>());
-	//                }
-	//                for(int i = 0; i < start.text.size(); i++){
-	//                        if(start.allAnnotations.get(annotation).get(i).equals(filterKeyword)){
-	//                                sdl.text.add(start.text.get(i));
-	//                                for(String ann : start.allAnnotations.keySet()){
-	//                                        sdl.allAnnotations.get(ann).add(start.allAnnotations.get(ann).get(i));
-	//                                }
-	//                        }
-	//                }
-	//                return sdl;
-	//        }
-	//        
-	//        
+	
 	//	        public String toCSVString(){
 	//	                StringBuilder header = new StringBuilder();
 	//	                for(String s : allAnnotations.keySet()){

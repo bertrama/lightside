@@ -1,5 +1,6 @@
 package edu.cmu.side.model.feature;
 
+import java.util.Arrays;
 import java.util.Collection;
 
 /**
@@ -32,6 +33,7 @@ public class LocalFeatureHit extends FeatureHit
 	{
 		super(feature, value, documentIndex);
 		this.singleHit = h;
+		hits = Arrays.asList(h);
 	}
 	
 	public Collection<int[]> getHits()
@@ -41,9 +43,12 @@ public class LocalFeatureHit extends FeatureHit
 	
 	public String toString()
 	{
-		String x = getDocumentIndex()+"";
-		for(int[] h : hits)
-			x+="("+h[0]+","+h[1]+") ";
+		String x = feature+"@"+documentIndex+"("+value+"):";
+		if(hits != null)
+		{
+			for(int[] h : hits)
+				x+="("+h[0]+","+h[1]+") ";
+		}
 		return x;
 	}
 }

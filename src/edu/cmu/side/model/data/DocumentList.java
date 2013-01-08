@@ -208,6 +208,14 @@ public class DocumentList implements Serializable{
 		return labelArray;
 	}
 	
+	/**
+	 * For predictions on unlabled data, it's neccessary to know what's possible
+	 */
+	public void setLabelArray(String[] labels)
+	{
+		labelArray = labels;
+	}
+	
 	public Set<String> getPossibleAnn(String name) {
 		List<String> labels = getAnnotationArray(name);
 		Set<String> labelSet = new TreeSet<String>();

@@ -174,11 +174,14 @@ public class BuildModelControl extends GenesisControl{
 					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, BuildModelControl.getUpdater());
 					plan.setTrainingResult(model);
 					model.setName(name);
-					BuildModelControl.setHighlightedTrainedModelRecipe(plan);
+
 					plan.setLearnerSettings(plan.getLearner().generateConfigurationSettings());
 					RecipeManager.addRecipe(plan);
+
+					BuildModelControl.setHighlightedTrainedModelRecipe(plan);
 					Workbench.update();
 					update.reset();
+
 				}
 			}catch(Exception e){
 				e.printStackTrace();

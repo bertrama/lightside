@@ -31,7 +31,6 @@ import org.simpleframework.transport.Server;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
-import edu.cmu.side.view.predict.Predictor;
 
 /**
  * loads a model trained using lightSIDE uses it to label new instances via the

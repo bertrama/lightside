@@ -1,4 +1,4 @@
-package edu.cmu.side.view.predict;
+package edu.cmu.side;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -222,7 +222,7 @@ public class Predictor
 
 	public static void main(String[] args) throws Exception
 	{
-		String modelPath = "saved/bayes.model.side";
+		String modelPath = "saved/svm.model.side";
 		if (args.length < 1)
 		{
 			System.err.println("usage: just_predict.sh path/to/model.ser [annotation_name]");

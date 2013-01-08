@@ -3,6 +3,8 @@ package edu.cmu.side.view.generic;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,6 +32,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 
 	SIDETable featureTable = new SIDETable();
 	FeatureTableModel model = new FeatureTableModel();
+	FeatureTableModel display = new FeatureTableModel();
 	JTextField text = new JTextField(20);
 	public GenericFeatureMetricPanel(){
 		setLayout(new RiverLayout());
@@ -37,6 +40,25 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
 		JScrollPane tableScroll = new JScrollPane(featureTable);
+		text.addKeyListener(new KeyListener(){
+
+			@Override
+			public void keyPressed(KeyEvent arg0) {}
+
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				display = filterTable(model, text.getText());
+				System.out.println("Keypressed GFMP48");
+				featureTable.setModel(display);
+				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(display);
+				featureTable.setRowSorter(sorter);
+				featureTable.validate();
+			}
+
+			@Override
+			public void keyTyped(KeyEvent arg0) {}
+			
+		});
 		add("left", label);
 		add("br left", new JLabel("Search:"));
 		add("hfill", text);
@@ -66,6 +88,11 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 							model.addColumn(s);
 							rowCount++;
 							Map<Feature, Comparable> values = plug.evaluateFeatures(recipe, mask, s, getTargetAnnotation());
+							for(Feature f : values.keySet()){
+								if(f.getFeatureName().contains("remove")){
+									System.out.println(f.getFeatureName() + ", " + s + ": " + values.get(f) + " GFM93");
+								}
+							}
 							evals.get(plug).put(s, values);
 						}
 					}
@@ -76,6 +103,9 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 					int r = 1;
 					for(FeatureMetricPlugin tep : evals.keySet()){
 						for(String eval : evals.get(tep).keySet()){
+							if(f.getFeatureName().contains("remove")){
+								System.out.println(f.getFeatureName() + ", " + eval + ": " + evals.get(tep).get(eval).get(f)+ " GFM107");
+							}
 							row[r++] = evals.get(tep).get(eval).get(f);
 						}
 					}
@@ -83,10 +113,29 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 				}
 			}
 		}
-		featureTable.setModel(model);
-		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
+		display = filterTable(model, text.getText());
+		featureTable.setModel(display);
+		TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(display);
 		featureTable.setRowSorter(sorter);
 	}
 	
+	public FeatureTableModel filterTable(FeatureTableModel ftm, String t){
+		FeatureTableModel disp = new FeatureTableModel();
+		for(int i = 0; i < ftm.getColumnCount(); i++){
+			disp.addColumn(ftm.getColumnName(i));
+		}
+		if(disp.getColumnCount() > 0){
+			for(int i = 0; i < ftm.getRowCount(); i++){
+				if(ftm.getValueAt(i, 0).toString().contains(t)){
+					Object[] row = new Object[ftm.getColumnCount()];
+					for(int j = 0; j < ftm.getColumnCount(); j++){
+						row[j] = ftm.getValueAt(i,j);
+					}
+					disp.addRow(row);
+				}
+			}			
+		}
+		return disp;
+	}
 	public abstract String getTargetAnnotation();
 }

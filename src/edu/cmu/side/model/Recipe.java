@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import edu.cmu.side.model.data.DocumentList;
@@ -15,8 +12,8 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.plugin.FeaturePlugin;
-import edu.cmu.side.plugin.FilterPlugin;
 import edu.cmu.side.plugin.LearningPlugin;
+import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 
 public class Recipe implements Serializable
@@ -123,7 +120,7 @@ public class Recipe implements Serializable
 		resetStage();
 	}
 	
-	public void addFilter(FilterPlugin plug){
+	public void addFilter(RestructurePlugin plug){
 		filters.put(plug, plug.generateConfigurationSettings());
 		resetStage();
 	}
@@ -158,7 +155,7 @@ public class Recipe implements Serializable
 		if(stage.equals(RecipeManager.Stage.DOCUMENT_LIST)){
 			addFeaturePlugins(prior, newRecipe, (Collection<FeaturePlugin>)next);
 		}else if(stage.equals(RecipeManager.Stage.FEATURE_TABLE)){
-			addFilterPlugins(prior, newRecipe, (Collection<FilterPlugin>)next);
+			addRestructurePlugins(prior, newRecipe, (Collection<RestructurePlugin>)next);
 		}
 		return newRecipe;
 	}
@@ -172,7 +169,7 @@ public class Recipe implements Serializable
 		}
 		newRecipe.setFeatureTable(prior.getFeatureTable());
 		for(SIDEPlugin plugin : prior.getFilters().keySet()){
-			newRecipe.addFilter((FilterPlugin)plugin);
+			newRecipe.addFilter((RestructurePlugin)plugin);
 		}
 		newRecipe.setFilteredTable(prior.getFilteredTable());
 		newRecipe.setLearner(next);
@@ -188,14 +185,14 @@ public class Recipe implements Serializable
 		}
 	}
 	
-	protected static void addFilterPlugins(Recipe prior, Recipe newRecipe, Collection<FilterPlugin> next){
+	protected static void addRestructurePlugins(Recipe prior, Recipe newRecipe, Collection<RestructurePlugin> next){
 		newRecipe.setDocumentList(prior.getDocumentList());
 		for(SIDEPlugin fp : prior.getExtractors().keySet()){
 			newRecipe.addExtractor((FeaturePlugin)fp);
 		}
 		newRecipe.setFeatureTable(prior.getFeatureTable());
-		for(FilterPlugin plugin : next){
-			assert next instanceof FilterPlugin;
+		for(RestructurePlugin plugin : next){
+			assert next instanceof RestructurePlugin;
 			newRecipe.addFilter(plugin);
 		}
 	}

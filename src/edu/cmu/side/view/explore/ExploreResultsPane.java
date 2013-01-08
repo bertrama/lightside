@@ -2,9 +2,6 @@ package edu.cmu.side.view.explore;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,10 +11,9 @@ import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
-import edu.cmu.side.view.generic.GenericMatrixPanel;
-import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.view.generic.GenericTripleFrame;
+import edu.cmu.side.view.util.AbstractListPanel;
 
 public class ExploreResultsPane extends JPanel{
 
@@ -42,10 +38,13 @@ public class ExploreResultsPane extends JPanel{
 	
 	ExploreMatrixPanel matrix = new ExploreMatrixPanel();
 	
+	ExploreMetricChecklistPanel checklist = new ExploreMetricChecklistPanel();
+
 	ExploreFeaturePanel features = new ExploreFeaturePanel();
 	
-	GenericTripleFrame top;
+	GenericTripleFrame triple;
 	ExploreActionBar middle;
+
 	
 	GenericPluginConfigPanel<EvaluateOneModelPlugin> analysis = new GenericPluginConfigPanel<EvaluateOneModelPlugin>(false){
 		public void refreshPanel(){
@@ -58,18 +57,35 @@ public class ExploreResultsPane extends JPanel{
 		setLayout(new BorderLayout());
 		
 		JSplitPane left = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
+
+		matrix.setPreferredSize(new Dimension(325, 150));
+		checklist.setPreferredSize(new Dimension(325, 150));
+
+		features.setPreferredSize(new Dimension(325, 250));
+
+		AbstractListPanel panel = new AbstractListPanel();
+		panel.setPreferredSize(new Dimension(325,325));
+		panel.removeAll();
+		panel.setLayout(new BorderLayout());
+		panel.add(BorderLayout.CENTER, matrix);
 		
-		top = new GenericTripleFrame(load, matrix, features);
+		
+		panel.add(BorderLayout.SOUTH, checklist);
+		triple = new GenericTripleFrame(load, panel, features);
 		middle = new ExploreActionBar();
 		
 		JScrollPane scroll = new JScrollPane(analysis);
-		load.setPreferredSize(new Dimension(275,350));
 		
-		JPanel corner = new JPanel(new BorderLayout());
+		JPanel top = new JPanel(new BorderLayout());
 		
-		corner.add(BorderLayout.CENTER, top);
-		corner.add(BorderLayout.SOUTH, middle);
-		left.setTopComponent(corner);
+
+		triple.setPreferredSize(new Dimension(950,400));
+		top.setPreferredSize(new Dimension(950,400));
+
+		top.add(BorderLayout.CENTER, triple);
+		top.add(BorderLayout.SOUTH, middle);
+
+		left.setTopComponent(top);
 		left.setBottomComponent(scroll);
 		add(BorderLayout.CENTER, left);
 
@@ -79,6 +95,11 @@ public class ExploreResultsPane extends JPanel{
 		load.refreshPanel();
 		matrix.refreshPanel();
 		features.refreshPanel();
+		if(ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
+			checklist.refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getFeatureTable());			
+		}else{
+			checklist.refreshPanel(null);
+		}
 		analysis.refreshPanel();
 	}
 }

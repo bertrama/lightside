@@ -1,4 +1,4 @@
-package edu.cmu.side.view.modify;
+package edu.cmu.side.view.restructure;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -9,7 +9,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
-import edu.cmu.side.control.ModifyFeaturesControl;
+import edu.cmu.side.control.RestructureTablesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
@@ -17,52 +17,52 @@ import edu.cmu.side.view.generic.GenericFeatureMetricPanel;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMetricChecklistPanel;
 
-public class ModifyBottomPanel extends JPanel{
+public class RestructureBottomPanel extends JPanel{
 
-	private GenericLoadPanel control = new GenericLoadPanel("Filtered Tables:") {
+	private GenericLoadPanel control = new GenericLoadPanel("Restructured Tables:") {
 		
 		@Override
 		public void setHighlight(Recipe r) {
-			ModifyFeaturesControl.setHighlightedFilterTableRecipe(r);
+			RestructureTablesControl.setHighlightedFilterTableRecipe(r);
 		}
 		
 		@Override
 		public void refreshPanel() {
-			refreshPanel(ModifyFeaturesControl.getFilterTables());
+			refreshPanel(RestructureTablesControl.getFilterTables());
 		}
 		
 		@Override
 		public Recipe getHighlight() {
-			return ModifyFeaturesControl.getHighlightedFilterTableRecipe();
+			return RestructureTablesControl.getHighlightedFilterTableRecipe();
 		}
 	};
 
 	GenericMetricChecklistPanel checklist = new GenericMetricChecklistPanel<TableFeatureMetricPlugin>(){
 		@Override
 		public Map<TableFeatureMetricPlugin, Map<String, Boolean>> getEvaluationPlugins() {
-			return ModifyFeaturesControl.getTableEvaluationPlugins();
+			return RestructureTablesControl.getTableEvaluationPlugins();
 		}
 
 		@Override
 		public ItemListener getCheckboxListener() {
-			return ModifyFeaturesControl.getEvalCheckboxListener();
+			return RestructureTablesControl.getEvalCheckboxListener();
 		}
 
 		@Override
 		public void setTargetAnnotation(String s) {
-			ModifyFeaturesControl.setTargetAnnotation(s);
+			RestructureTablesControl.setTargetAnnotation(s);
 		}
 	};
 	private GenericFeatureMetricPanel display = new GenericFeatureMetricPanel(){
 
 		@Override
 		public String getTargetAnnotation() {
-			return ModifyFeaturesControl.getTargetAnnotation();
+			return RestructureTablesControl.getTargetAnnotation();
 		}
 
 	};
 
-	public ModifyBottomPanel(){
+	public RestructureBottomPanel(){
 		setLayout(new BorderLayout());
 		JSplitPane pane = new JSplitPane();
 		pane.setLeftComponent(control);
@@ -83,15 +83,15 @@ public class ModifyBottomPanel extends JPanel{
 	
 	public void refreshPanel(){
 		control.refreshPanel();
-		if(ModifyFeaturesControl.hasHighlightedFilterTable()){
-			FeatureTable table = ModifyFeaturesControl.getHighlightedFilterTableRecipe().getFilteredTable();
+		if(RestructureTablesControl.hasHighlightedFilterTable()){
+			FeatureTable table = RestructureTablesControl.getHighlightedFilterTableRecipe().getFilteredTable();
 			checklist.refreshPanel(table);
 			boolean[] mask = new boolean[table.getDocumentList().getSize()];
 			for(int i = 0; i < mask.length; i++) mask[i] = true;
-			display.refreshPanel(ModifyFeaturesControl.getHighlightedFilterTableRecipe(), ModifyFeaturesControl.getTableEvaluationPlugins(), mask);	
+			display.refreshPanel(RestructureTablesControl.getHighlightedFilterTableRecipe(), RestructureTablesControl.getTableEvaluationPlugins(), mask);	
 		}else{
 			checklist.refreshPanel(null);
-			display.refreshPanel(null, ModifyFeaturesControl.getTableEvaluationPlugins(), new boolean[0]);
+			display.refreshPanel(null, RestructureTablesControl.getTableEvaluationPlugins(), new boolean[0]);
 		}
 	}
 }

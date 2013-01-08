@@ -1,20 +1,15 @@
 package edu.cmu.side.view.explore;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JCheckBox;
-import javax.swing.JRadioButton;
-import javax.swing.JToggleButton;
 
 import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.view.generic.GenericMatrixPanel;
+import edu.cmu.side.view.util.ToggleMouseAdapter;
 import edu.cmu.side.view.util.RadioButtonListEntry;
-import edu.cmu.side.view.util.SIDETable;
 import edu.cmu.side.view.util.ToggleButtonTableEntry;
 
 public class ExploreMatrixPanel extends GenericMatrixPanel{
@@ -25,7 +20,7 @@ public class ExploreMatrixPanel extends GenericMatrixPanel{
 		super();
 		label.setText("Cell Highlight:");
 		this.getDisplayTable().setCellSelectionEnabled(false);
-		this.getDisplayTable().addMouseListener(new MatrixMouseAdapter(this.getDisplayTable()));
+		this.getDisplayTable().addMouseListener(new ToggleMouseAdapter(this.getDisplayTable()));
 	}
 	@Override
 	public Object getCellObject(Object o){
@@ -45,38 +40,4 @@ public class ExploreMatrixPanel extends GenericMatrixPanel{
 		}
 	}
 
-}
-
-class MatrixMouseAdapter extends MouseAdapter{
-	SIDETable panel;
-	public MatrixMouseAdapter(SIDETable p){
-		super();
-		panel = p;
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		int col = panel.columnAtPoint(e.getPoint());
-		int row = panel.rowAtPoint(e.getPoint());
-		if (col > 0 && row != -1) {
-			Object obj = panel.getValueAt(row, col);
-			if (obj instanceof JCheckBox) {
-				JCheckBox checkbox = (JCheckBox) obj;
-
-				checkbox.setSelected(!checkbox.isSelected());
-				panel.repaint();
-			}
-			if(obj instanceof JRadioButton){
-				JRadioButton radio = (JRadioButton) obj;
-				radio.setSelected(!radio.isSelected());
-				panel.repaint();
-			}
-
-			if(obj instanceof JToggleButton){
-				JToggleButton radio = (JToggleButton) obj;
-				radio.setSelected(!radio.isSelected());
-				panel.repaint();
-			}
-		}
-	}
 }

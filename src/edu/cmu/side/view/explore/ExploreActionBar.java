@@ -26,7 +26,7 @@ public class ExploreActionBar extends ActionBar{
 				ExploreResultsControl.setHighlightedModelAnalysisPlugin((EvaluateOneModelPlugin)combo.getSelectedItem());
 			}
 		});
-		add("left", new JLabel("Analysis Plugin:"));
+		add("left", new JLabel("Comparison Plugin:"));
 		add("hfill", combo);
 		EvaluateOneModelPlugin plug = (ExploreResultsControl.getModelAnalysisPlugins().keySet().size()>0?
 				ExploreResultsControl.getModelAnalysisPlugins().keySet().toArray(new EvaluateOneModelPlugin[0])[0]:null);

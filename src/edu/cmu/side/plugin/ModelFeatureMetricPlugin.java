@@ -15,9 +15,9 @@ public abstract class ModelFeatureMetricPlugin<E extends Comparable<E>> extends 
 		return type;	
 	}
 	
-	public abstract Map<Feature, E> evaluateModelFeatures(TrainingResult model, boolean[] mask, String eval, String target);
+	public abstract Map<Feature, E> evaluateModelFeatures(TrainingResult model, boolean[] mask, String eval);
 
 	public Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target){
-		return evaluateModelFeatures(recipe.getTrainingResult(), mask, eval, target);
+		return evaluateModelFeatures(recipe.getTrainingResult(), mask, eval);
 	}
 }

@@ -18,7 +18,7 @@ public class CompareModelsControl extends GenesisControl{
 	private static Recipe baselineModel;
 	private static Recipe competingModel;
 	
-	private static Set<EvaluateTwoModelPlugin> modelComparisonPlugins;
+	private static Map<EvaluateTwoModelPlugin, Boolean> modelComparisonPlugins;
 	private static EvaluateTwoModelPlugin highlightedModelComparisonPlugin;
 	
 	private static StatusUpdater update = new SwingUpdaterLabel();
@@ -26,19 +26,21 @@ public class CompareModelsControl extends GenesisControl{
 
 
 	static{
-		modelComparisonPlugins = new HashSet<EvaluateTwoModelPlugin>();
+		modelComparisonPlugins = new HashMap<EvaluateTwoModelPlugin, Boolean>();
 		SIDEPlugin[] modelComparisons = PluginManager.getSIDEPluginArrayByType("model_comparison");
 		for(SIDEPlugin fe : modelComparisons){
-			modelComparisonPlugins.add((EvaluateTwoModelPlugin)fe);
+			modelComparisonPlugins.put((EvaluateTwoModelPlugin)fe, false);
 		}
 	}
 
 	public static void setHighlightedModelComparisonPlugin(EvaluateTwoModelPlugin plug){
-		highlightedModelComparisonPlugin = plug;
-		
+		for(EvaluateTwoModelPlugin plugin : modelComparisonPlugins.keySet()){
+			modelComparisonPlugins.put(plugin, plugin==plug);
+		}
+		highlightedModelComparisonPlugin = plug;	
 	}
 	
-	public static Set<EvaluateTwoModelPlugin> getModelComparisonPlugins(){
+	public static Map<EvaluateTwoModelPlugin, Boolean> getModelComparisonPlugins(){
 		return modelComparisonPlugins;
 	}
 	

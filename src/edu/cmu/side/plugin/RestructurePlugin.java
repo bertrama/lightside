@@ -15,32 +15,27 @@ import edu.cmu.side.model.data.FeatureTable;
  * multiples!
  * 
  */
-public abstract class FilterPlugin extends SIDEPlugin implements Serializable{
+public abstract class RestructurePlugin extends SIDEPlugin implements Serializable{
 
 	@Override
 	public String getType() {
-		return "filter_extractor";
+		return "restructure_table";
 	}
 	
-	public FeatureTable filter(FeatureTable original, Map<String, String> configuration, StatusUpdater progressIndicator){
+	public FeatureTable restructure(FeatureTable original, Map<String, String> configuration, StatusUpdater progressIndicator){
 		this.configureFromSettings(configuration);
 		boolean[] allTrue = new boolean[original.getDocumentList().getSize()];
 		for(int i = 0; i < allTrue.length; i++){ allTrue[i] = true; }
-		return filterWithMaskForSubclass(original, allTrue, progressIndicator);
-	}
-	
-	public FeatureTable filterWithCrossValidation(FeatureTable original, boolean[] mask, Map<String, String> configuration, StatusUpdater progressIndicator){
-		this.configureFromSettings(configuration);
-		return filterWithMaskForSubclass(original, mask, progressIndicator);
+		return restructureWithMaskForSubclass(original, allTrue, progressIndicator);
 	}
 	
 	public FeatureTable filterTestSet(FeatureTable original, FeatureTable test, Map<String, String> configuration, StatusUpdater progressIndicator){
 		this.configureFromSettings(configuration);
-		return filterTestSetForSubclass(original, test, progressIndicator);
+		return restructureTestSetForSubclass(original, test, progressIndicator);
 	}
 	
-	protected abstract FeatureTable filterWithMaskForSubclass(FeatureTable original, boolean[] mask, StatusUpdater progressIndicator);
+	protected abstract FeatureTable restructureWithMaskForSubclass(FeatureTable original, boolean[] mask, StatusUpdater progressIndicator);
 
-	protected abstract FeatureTable filterTestSetForSubclass(FeatureTable original, FeatureTable test, StatusUpdater progressIndicator);
+	protected abstract FeatureTable restructureTestSetForSubclass(FeatureTable original, FeatureTable test, StatusUpdater progressIndicator);
 	
 }

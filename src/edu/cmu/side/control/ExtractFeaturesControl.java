@@ -230,7 +230,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				ft.setName(name);
 				plan.setFeatureTable(ft);
 				setHighlightedFeatureTableRecipe(plan);
-				ModifyFeaturesControl.setHighlightedFeatureTableRecipe(plan);
+				RestructureTablesControl.setHighlightedFeatureTableRecipe(plan);
 				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
 				RecipeManager.addRecipe(plan);
 				Workbench.update();

@@ -20,7 +20,7 @@ import javax.swing.JTextArea;
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 
-public abstract class AbstractListPanel extends JPanel implements ActionListener{
+public class AbstractListPanel extends JPanel implements ActionListener{
 	private static final long serialVersionUID = -1090634417229954402L;
 
 	protected FastListModel listModel;

@@ -136,4 +136,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	public void stopWhenPossible(){
 		halt = true;
 	}
+	
+	public abstract void loadClassifierFromSettings(Map<String, String> settings);
 }

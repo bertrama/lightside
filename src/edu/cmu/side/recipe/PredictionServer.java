@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.cmu.side;
+package edu.cmu.side.recipe;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,4 +1,4 @@
-package edu.cmu.side;
+package edu.cmu.side.recipe;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -188,7 +188,7 @@ public class Predictor
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(modelFile));
 				recipe = (Recipe) in.readObject();
 
-				recipe.getLearner().configureFromSettings(recipe.getLearnerSettings());
+				recipe.getLearner().loadClassifierFromSettings(recipe.getLearnerSettings());
 			}
 
 			catch (Exception e)
@@ -222,10 +222,10 @@ public class Predictor
 
 	public static void main(String[] args) throws Exception
 	{
-		String modelPath = "saved/svm.model.side";
+		String modelPath = "saved/logit.model.side";
 		if (args.length < 1)
 		{
-			System.err.println("usage: just_predict.sh path/to/model.ser [annotation_name]");
+			System.err.println("usage: just_predict.sh path/to/my.model.side [annotation_name]");
 		}
 		else
 			modelPath = args[0];
@@ -233,6 +233,7 @@ public class Predictor
 		String annotation = "class";
 		if (args.length > 1) annotation = args[1];
 
+		//to swallow all output except for the classifications
 //		PrintStream actualOut = System.out;
 //
 //		try

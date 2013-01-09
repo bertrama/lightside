@@ -2,6 +2,7 @@ package edu.cmu.side.control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,9 +24,9 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeaturePlugin;
-import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.ModelMetricPlugin;
+import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
@@ -35,7 +36,7 @@ public class BuildModelControl extends GenesisControl{
 	private static Recipe highlightedFeatureTable;
 	private static Recipe highlightedTrainedModel;
 
-	private static Map<String, Object> validationSettings;
+	private static Map<String, Serializable> validationSettings;
 	private static Map<LearningPlugin, Boolean> learningPlugins;
 	private static LearningPlugin highlightedLearningPlugin;
 	
@@ -44,7 +45,7 @@ public class BuildModelControl extends GenesisControl{
 	private static String newName = "model";
 
 	static{
-		validationSettings = new TreeMap<String, Object>();
+		validationSettings = new TreeMap<String, Serializable>();
 		learningPlugins = new HashMap<LearningPlugin, Boolean>();
 		SIDEPlugin[] learners = PluginManager.getSIDEPluginArrayByType("model_builder");
 		for(SIDEPlugin le : learners){
@@ -78,11 +79,11 @@ public class BuildModelControl extends GenesisControl{
 		return update;
 	}
 
-	public static Map<String, Object> getValidationSettings(){
+	public static Map<String, Serializable> getValidationSettings(){
 		return validationSettings;
 	}
 
-	public static void updateValidationSetting(String key, Object value){
+	public static void updateValidationSetting(String key, Serializable value){
 		validationSettings.put(key, value);
 	}
 
@@ -176,6 +177,7 @@ public class BuildModelControl extends GenesisControl{
 					model.setName(name);
 
 					plan.setLearnerSettings(plan.getLearner().generateConfigurationSettings());
+					plan.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
 					RecipeManager.addRecipe(plan);
 
 					BuildModelControl.setHighlightedTrainedModelRecipe(plan);

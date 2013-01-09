@@ -353,45 +353,45 @@ public class TrainingResult implements Serializable{
 	//        }
 	//        
 
-	//        
-	//        public String getTextConfusionMatrix(){
-	//                return getTextConfusionMatrix(trainrecipe.getModifiedTable().getPossibleLabels(), confusionMatrix);
-	//        }
-	//        
-	//        public static String getTextConfusionMatrix(String[] labelArray, Map<String, Map<String, ArrayList<Integer>>> confusion){
-	//                StringBuilder sb = new StringBuilder();
-	//                int max = 4;
-	//                for(String p : labelArray){
-	//                        for(String a : labelArray){
-	//                                max = Math.max(max, Math.max(p.length(), a.length()));
-	//                                int numDigits = 1;
-	//                                int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
-	//                                while(numHits>=10){
-	//                                        numHits /= 10;
-	//                                        numDigits++;
-	//                                }
-	//                                max =  Math.max(max, numDigits);
-	//                        }
-	//                }
-	//                for(int i = 0; i < max; i++){
-	//                        sb.append(" ");
-	//                }
-	//                String format = "%"+max+"s";
-	//                for(String p : labelArray){
-	//                        sb.append(String.format(format,p));
-	//                }
-	//                sb.append("\n");
-	//                for(String a : labelArray){
-	//                        sb.append(String.format(format,a));
-	//                        for(String p : labelArray){
-	//                                int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
-	//                                sb.append(String.format(format,(""+numHits)));                  
-	//                        }
-	//                        sb.append("\n");
-	//                }
-	//                return sb.toString();
-	//        }
-	//
+	        
+	        public String getTextConfusionMatrix(){
+	                return getTextConfusionMatrix(confusionMatrix.keySet().toArray(new String[0]), confusionMatrix);
+	        }
+	        
+	        protected static String getTextConfusionMatrix(String[] labelArray, Map<String, Map<String, List<Integer>>> confusion){
+	                StringBuilder sb = new StringBuilder();
+	                int max = 4;
+	                for(String p : labelArray){
+	                        for(String a : labelArray){
+	                                max = Math.max(max, Math.max(p.length(), a.length()));
+	                                int numDigits = 1;
+	                                int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
+	                                while(numHits>=10){
+	                                        numHits /= 10;
+	                                        numDigits++;
+	                                }
+	                                max =  Math.max(max, numDigits);
+	                        }
+	                }
+	                for(int i = 0; i < max; i++){
+	                        sb.append(" ");
+	                }
+	                String format = "%"+max+"s";
+	                for(String p : labelArray){
+	                        sb.append(String.format(format,p));
+	                }
+	                sb.append("\n");
+	                for(String a : labelArray){
+	                        sb.append(String.format(format,a));
+	                        for(String p : labelArray){
+	                                int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
+	                                sb.append(String.format(format,(""+numHits)));                  
+	                        }
+	                        sb.append("\n");
+	                }
+	                return sb.toString();
+	        }
+	
 	//        public Double getAverageValue(List<Integer> docIndices, Feature f){
 	//                Double accumulator = 0.0;
 	//                if(docIndices.size()==0) return 0.0;

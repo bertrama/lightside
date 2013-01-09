@@ -32,7 +32,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return type;
 	}
 
-	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Object> validationSettings, StatusUpdater progressIndicator) throws Exception{
+	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> map, StatusUpdater progressIndicator) throws Exception{
 
 		if(table == null){
 			return null;
@@ -42,30 +42,30 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		this.configureFromSettings(configuration);
 		boolean[] mask = new boolean[table.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
-		DocumentList sdl = (DocumentList)validationSettings.get("testSet");
+		DocumentList sdl = (DocumentList)map.get("testSet");
 		TrainingResult result = null;
-		if(Boolean.TRUE.toString().equals(validationSettings.get("test"))){
-			if(validationSettings.get("type").equals("CV")){
+		if(Boolean.TRUE.toString().equals(map.get("test"))){
+			if(map.get("type").equals("CV")){
 				Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 				int numFolds = -1;
 				try{
-					numFolds = Integer.parseInt(validationSettings.get("numFolds").toString());
+					numFolds = Integer.parseInt(map.get("numFolds").toString());
 				}catch(Exception e){
 					e.printStackTrace();
 				}
 				progressIndicator.update("Generating Folds Map", 0,0);
-				if(validationSettings.get("source").equals("RANDOM")){
+				if(map.get("source").equals("RANDOM")){
 					foldsMap = BuildModelControl.getFoldsMapRandom(sdl, numFolds);
-				}else if(validationSettings.get("source").equals("ANNOTATIONS")){
-					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, validationSettings.get("annotation").toString(), numFolds);
-				}else if(validationSettings.get("source").equals("FILES")){
+				}else if(map.get("source").equals("ANNOTATIONS")){
+					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, map.get("annotation").toString(), numFolds);
+				}else if(map.get("source").equals("FILES")){
 					foldsMap = BuildModelControl.getFoldsMapByFile(sdl, numFolds);
 				}
 				result = evaluateCrossValidation(table, foldsMap, progressIndicator);
 				trainWithMaskForSubclass(table, mask, progressIndicator);
-			}else if(validationSettings.get("type").equals("SUPPLY")){
+			}else if(map.get("type").equals("SUPPLY")){
 				trainWithMaskForSubclass(table, mask, progressIndicator);
-				result = evaluateTestSet(table, (FeatureTable)validationSettings.get("supplied"), progressIndicator);
+				result = evaluateTestSet(table, (FeatureTable)map.get("supplied"), progressIndicator);
 			}
 		}
 		return result;

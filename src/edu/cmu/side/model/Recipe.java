@@ -25,7 +25,8 @@ public class Recipe implements Serializable
 	OrderedPluginMap filters;
 	LearningPlugin learner;
 	Map<String, String> learnerSettings;
-	
+	Map<String, Serializable> validationSettings;
+
 	DocumentList documentList;
 	FeatureTable featureTable;
 	FeatureTable filteredTable;
@@ -115,12 +116,16 @@ public class Recipe implements Serializable
 		resetStage();
 	}
 	
-	public void addExtractor(FeaturePlugin plug){
-		extractors.put(plug, plug.generateConfigurationSettings());
+	public void addExtractor(FeaturePlugin plug, Map<String, String> settings){
+		if(settings == null)
+			settings = plug.generateConfigurationSettings();
+		extractors.put(plug, settings);
 		resetStage();
 	}
 	
-	public void addFilter(RestructurePlugin plug){
+	public void addFilter(RestructurePlugin plug, Map<String, String> settings){
+		if(settings == null)
+			settings = plug.generateConfigurationSettings();
 		filters.put(plug, plug.generateConfigurationSettings());
 		resetStage();
 	}
@@ -136,6 +141,18 @@ public class Recipe implements Serializable
 	
 	public Map<String, String> getLearnerSettings(){
 		return learnerSettings;
+	}
+	
+
+	
+	public Map<String, Serializable> getValidationSettings()
+	{
+		return validationSettings;
+	}
+
+	public void setValidationSettings(Map<String, Serializable> validationSettings)
+	{
+		this.validationSettings = validationSettings;
 	}
 
 	private Recipe()
@@ -165,11 +182,11 @@ public class Recipe implements Serializable
 		Recipe newRecipe = fetchRecipe();
 		newRecipe.setDocumentList(prior.getDocumentList());
 		for(SIDEPlugin plugin : prior.getExtractors().keySet()){
-			newRecipe.addExtractor((FeaturePlugin)plugin);
+			newRecipe.addExtractor((FeaturePlugin)plugin, prior.getExtractors().get(plugin));
 		}
 		newRecipe.setFeatureTable(prior.getFeatureTable());
 		for(SIDEPlugin plugin : prior.getFilters().keySet()){
-			newRecipe.addFilter((RestructurePlugin)plugin);
+			newRecipe.addFilter((RestructurePlugin)plugin, prior.getFilters().get(plugin));
 		}
 		newRecipe.setFilteredTable(prior.getFilteredTable());
 		newRecipe.setLearner(next);
@@ -177,23 +194,45 @@ public class Recipe implements Serializable
 		return newRecipe;
 	}
 	
+	public static Recipe copyEmptyRecipe(Recipe prior)
+	{
+		RecipeManager.Stage stage = prior.getStage();
+		Recipe newRecipe = fetchRecipe();
+//		newRecipe.setDocumentList(prior.getDocumentList());
+		for (SIDEPlugin plugin : prior.getExtractors().keySet())
+		{
+			newRecipe.addExtractor((FeaturePlugin) plugin, prior.getExtractors().get(plugin));
+		}
+//		newRecipe.setFeatureTable(prior.getFeatureTable());
+		for (SIDEPlugin plugin : prior.getFilters().keySet())
+		{
+			newRecipe.addFilter((RestructurePlugin) plugin, prior.getFilters().get(plugin));
+		}
+//		newRecipe.setFilteredTable(prior.getFilteredTable());
+		newRecipe.setLearner(prior.getLearner());
+		newRecipe.setLearnerSettings(prior.getLearnerSettings());
+		newRecipe.setValidationSettings(prior.getValidationSettings());
+
+		return newRecipe;
+	}
+	
 	protected static void addFeaturePlugins(Recipe prior, Recipe newRecipe, Collection<FeaturePlugin> next){
 		newRecipe.setDocumentList(prior.getDocumentList());
 		for(FeaturePlugin plugin : next){
 			assert next instanceof FeaturePlugin;
-			newRecipe.addExtractor(plugin);
+			newRecipe.addExtractor(plugin, prior.getExtractors().get(plugin));
 		}
 	}
 	
 	protected static void addRestructurePlugins(Recipe prior, Recipe newRecipe, Collection<RestructurePlugin> next){
 		newRecipe.setDocumentList(prior.getDocumentList());
-		for(SIDEPlugin fp : prior.getExtractors().keySet()){
-			newRecipe.addExtractor((FeaturePlugin)fp);
+		for(SIDEPlugin plugin : prior.getExtractors().keySet()){
+			newRecipe.addExtractor((FeaturePlugin)plugin, prior.getExtractors().get(plugin));
 		}
 		newRecipe.setFeatureTable(prior.getFeatureTable());
 		for(RestructurePlugin plugin : next){
 			assert next instanceof RestructurePlugin;
-			newRecipe.addFilter(plugin);
+			newRecipe.addFilter(plugin, prior.getExtractors().get(plugin));
 		}
 	}
 
@@ -236,6 +275,7 @@ public class Recipe implements Serializable
 		filteredTable = (FeatureTable) in.readObject();
 		trainedModel = (TrainingResult)in.readObject();
 		predictionResult = (PredictionResult) in.readObject();
+		validationSettings = (Map<String, Serializable>) in.readObject();
 	}
 
 	private void writeObject(ObjectOutputStream out) throws IOException
@@ -252,6 +292,7 @@ public class Recipe implements Serializable
 		out.writeObject(filteredTable);
 		out.writeObject(trainedModel);
 		out.writeObject(predictionResult);
+		out.writeObject(validationSettings);
 	}
 
 

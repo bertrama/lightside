@@ -64,6 +64,7 @@ public class Chef
 		DocumentList corpus = recipe.getDocumentList();
 		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
 		OrderedPluginMap extractors = recipe.getExtractors();
+		
 		for (SIDEPlugin plug : extractors.keySet())
 		{
 			System.out.println("Extractor Settings: "+extractors.get(plug));
@@ -122,9 +123,26 @@ public class Chef
 	{
 		DocumentList original = originalRecipe.getDocumentList();
 		corpus.setLabelArray(original.getLabelArray());
-		corpus.setCurrentAnnotation(original.getCurrentAnnotation());
+		String currentAnnotation = original.getCurrentAnnotation();
+		if(corpus.allAnnotations().containsKey(currentAnnotation))
+		{
+			corpus.setCurrentAnnotation(currentAnnotation);
+		}
+		else
+		{
+			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
+		}
 		for(String column : original.getTextColumns())
-			corpus.setTextColumn(column, true);
+		{
+			if(corpus.allAnnotations().containsKey(column))
+			{			
+				corpus.setTextColumn(column, true);
+			}
+			else
+			{
+				System.err.println("Warning: data has no "+column+" annotation. Using default text column...");
+			}
+		}
 	}
 
 
@@ -175,10 +193,9 @@ public class Chef
 		Recipe recipe = loadRecipe(recipePath);
 		Recipe result = followRecipe(recipe, new DocumentList(corpusFiles), recipe.getStage());
 
+		System.out.println("extracted "+result.getFeatureTable().getFeatureSet().size()+" features.");
 		if(result.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
 			System.out.println(result.getTrainingResult().getTextConfusionMatrix());
-		else
-			System.out.println("extracted "+result.getFeatureTable().getFeatureSet().size()+" features.");
 		
 	}
 

@@ -2,6 +2,7 @@ package edu.cmu.side.recipe;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.List;
@@ -13,6 +14,7 @@ import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -67,7 +69,7 @@ public class Predictor
 		}
 	};
 
-	public Predictor(Map<String, String> params) throws DeserializationException
+	public Predictor(Map<String, String> params) throws DeserializationException, FileNotFoundException
 	{
 		System.out.println(params);
 
@@ -77,7 +79,7 @@ public class Predictor
 		loadModel();
 	}
 
-	public Predictor(String modelPath, String annotationName) throws DeserializationException
+	public Predictor(String modelPath, String annotationName) throws DeserializationException, FileNotFoundException
 	{
 		this.modelPath = modelPath;
 		this.predictionAnnotation = "predicted";
@@ -131,9 +133,20 @@ public class Predictor
 	 */
 	protected PredictionResult predict(DocumentList corpus)
 	{
-		FeatureTable table = prepareTestSet(corpus);
+		PredictionResult result = null;
+		try
+		{
+			Recipe newRecipe = newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE);
+			FeatureTable ft = newRecipe.getTrainingTable();
+			//FeatureTable ft = prepareTestSet(corpus);
+			result = recipe.getLearner().predict(recipe.getFeatureTable(), ft, recipe.getLearnerSettings(), textUpdater);
+		}
+		catch (Exception e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		PredictionResult result = recipe.getLearner().predict(recipe.getFeatureTable(), table, recipe.getLearnerSettings(), textUpdater);
 		return result;	
 	}
 	
@@ -171,33 +184,12 @@ public class Predictor
 	}
 
 	/**
+	 * @throws FileNotFoundException 
 	 * 
 	 */
-	protected void loadModel() throws DeserializationException
+	protected void loadModel() throws DeserializationException, FileNotFoundException
 	{
-		File modelFile = new File(modelPath);
-		if (!modelFile.exists())
-		{
-			System.err.println("No model file at " + modelFile.getPath());
-		}
-		else
-		{
-
-			try
-			{
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream(modelFile));
-				recipe = (Recipe) in.readObject();
-
-				recipe.getLearner().loadClassifierFromSettings(recipe.getLearnerSettings());
-			}
-
-			catch (Exception e)
-			{
-
-				// TODO Auto-generated catch block
-				throw new DeserializationException(e);
-			}
-		}
+		recipe = Chef.loadRecipe(modelPath);
 	}
 
 	public String getModelPath()
@@ -222,7 +214,7 @@ public class Predictor
 
 	public static void main(String[] args) throws Exception
 	{
-		String modelPath = "saved/logit.model.side";
+		String modelPath = "saved/bayes.model.side";
 		if (args.length < 1)
 		{
 			System.err.println("usage: just_predict.sh path/to/my.model.side [annotation_name]");
@@ -249,13 +241,13 @@ public class Predictor
 //		}
 
 
-		Predictor predict = new Predictor(modelPath, annotation);
+		Predictor predictor = new Predictor(modelPath, annotation);
 		Scanner input = new Scanner(System.in);
 
 		while (input.hasNextLine())
 		{
 			String sentence = input.nextLine();
-			String answer = predict.prettyPredict(sentence);
+			String answer = predictor.prettyPredict(sentence);
 //			actualOut.println(answer);
 			System.out.println(answer + "\t" + sentence.substring(0, Math.min(sentence.length(), 100)));
 		}

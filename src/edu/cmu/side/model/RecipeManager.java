@@ -17,12 +17,12 @@ public class RecipeManager {
 	
 	public enum Stage 
 	{
+		NONE("blank.side"),
 		DOCUMENT_LIST("docs.side"), 
 		FEATURE_TABLE("table.side"), 
 		MODIFIED_TABLE("struct.side"), 
 		TRAINED_MODEL("model.side"), 
-		PREDICTION_RESULT("pred.side"), 
-		NONE("blank.side");
+		PREDICTION_RESULT("pred.side");
 		
 		public final String extension;
 		

@@ -42,10 +42,15 @@ public abstract class ActionBar extends JPanel{
 		cancel.setIcon(iconCancel);
 		cancel.setEnabled(false);
 		cancel.setToolTipText("Cancel");
+		cancel.setBorderPainted(true);
 		updaters.add("right", cancel);
 		add("left", add);
 		add("left", settings);
-		add("hfill", updaters);
+		JLabel spacer = new JLabel("status!");
+		spacer.setHorizontalAlignment(JLabel.RIGHT);
+		spacer.setBackground(Color.white);
+		add("hfill", spacer);
+		add("right", updaters);
 	}
 
 	public void refreshPanel(){

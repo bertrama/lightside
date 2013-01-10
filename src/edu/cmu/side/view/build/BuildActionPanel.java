@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
@@ -19,6 +20,8 @@ public class BuildActionPanel extends ActionBar {
 
 	public BuildActionPanel(){
 		add.setText("Train");
+		add.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
+		add.setIconTextGap(10);
 		add.addActionListener(new BuildModelControl.TrainModelListener(progressBar, name));
 		name.setText("model");
 	}

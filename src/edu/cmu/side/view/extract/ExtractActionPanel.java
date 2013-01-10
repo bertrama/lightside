@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -20,6 +21,7 @@ public class ExtractActionPanel extends ActionBar{
 	public ExtractActionPanel(){
 		name.setText("features");
 		add.setText("Extract");
+		add.setIcon(new ImageIcon("toolkits/icons/application_view_columns.png"));
 		//Doesn't update the backend when the threshold changes!!
 		threshold.setText("5");
 		settings.add("left", new JLabel("Rare Threshold:"));

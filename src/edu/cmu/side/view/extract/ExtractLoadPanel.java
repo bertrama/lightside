@@ -20,10 +20,12 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		delete.setText("");
 		delete.setIcon(iconDelete);
 		delete.setToolTipText("Delete");
+		delete.setBorderPainted(true);
 		load.setText("");
 		load.setToolTipText("Open");
 		load.setIcon(iconLoad);
 		load.addActionListener(new ExtractFeaturesControl.AddFilesListener(this));
+		load.setBorderPainted(true);
 		label = new JLabel(s);
 		add("hfill", label);
 		add("right", load);

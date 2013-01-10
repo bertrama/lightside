@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import edu.cmu.side.control.RestructureTablesControl;
@@ -17,6 +18,8 @@ public class RestructureActionPanel extends ActionBar{
 	public RestructureActionPanel(){
 		super();
 		add.setText("Restructure");
+		add.setIcon(new ImageIcon("toolkits/icons/application_side_expand.png"));
+		add.setIconTextGap(10);
 		add.addActionListener(new RestructureTablesControl.FilterTableListener(progressBar, name));
 		name.setText("restructured");
 	}

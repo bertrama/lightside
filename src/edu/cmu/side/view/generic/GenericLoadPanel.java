@@ -78,12 +78,15 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		delete.setText("");
 		delete.setIcon(iconDelete);
 		delete.setToolTipText("Delete");
+		delete.setBorderPainted(true);
 		save.setText("");
 		save.setIcon(iconSave);
 		save.setToolTipText("Save");
+		save.setBorderPainted(true);
 		load.setText("");
 		load.setIcon(iconLoad);
 		load.setToolTipText("Load");
+		load.setBorderPainted(true);
 		//buttons.add("left", load);
 		//buttons.add("left", save);
 		add("hfill", label);

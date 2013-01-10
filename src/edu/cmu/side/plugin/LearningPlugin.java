@@ -124,14 +124,13 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	protected abstract void trainWithMaskForSubclass(FeatureTable table, boolean[] mask, StatusUpdater progressIndicator) throws Exception;
 
 	public PredictionResult predict(FeatureTable originalData, FeatureTable newData, Map<String, String> configuration, StatusUpdater progressIndicator){
-		this.configureFromSettings(configuration);
+		this.loadClassifierFromSettings(configuration);
 		boolean[] mask = new boolean[newData.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		return predictWithMaskForSubclass(originalData, newData, mask, progressIndicator);
 	}
 
 	protected abstract PredictionResult predictWithMaskForSubclass(FeatureTable originalData, FeatureTable newData, boolean[] mask, StatusUpdater progressIndicator);
-
 
 	public void stopWhenPossible(){
 		halt = true;

@@ -46,7 +46,7 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 					label.setFont(font);
 					this.add("br left", label);					
 				}
-				this.add("br hfill", plugin.getConfigurationUI());
+				this.add("br hfill vfill", plugin.getConfigurationUI());
 			}
 			this.validate();
 		}

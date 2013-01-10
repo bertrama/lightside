@@ -22,19 +22,11 @@ public class ToggleMouseAdapter extends MouseAdapter{
 			Object obj = panel.getValueAt(row, col);
 			if (obj instanceof JCheckBox) {
 				JCheckBox checkbox = (JCheckBox) obj;
-				System.out.println(checkbox.isSelected() + "TMA25");
 				checkbox.setSelected(!checkbox.isSelected());
-				System.out.println(checkbox.isSelected() + "TMA27\n----------");
 				panel.repaint();
 			}
 			if(obj instanceof JRadioButton){
 				JRadioButton radio = (JRadioButton) obj;
-				radio.setSelected(!radio.isSelected());
-				panel.repaint();
-			}
-
-			if(obj instanceof JToggleButton){
-				JToggleButton radio = (JToggleButton) obj;
 				radio.setSelected(!radio.isSelected());
 				panel.repaint();
 			}

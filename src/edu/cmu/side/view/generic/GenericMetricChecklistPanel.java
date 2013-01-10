@@ -52,7 +52,9 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 		combo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				setTargetAnnotation(combo.getSelectedItem().toString());
+				if(combo.getSelectedItem() != null){
+					setTargetAnnotation(combo.getSelectedItem().toString());					
+				}
 				Workbench.update();
 			}
 		});

@@ -19,11 +19,15 @@ public class GenericTripleFrame extends JPanel{
 	JScrollPane scroll;
 	ArrayList<AbstractListPanel> panels = new ArrayList<AbstractListPanel>();
 
-	public GenericTripleFrame(AbstractListPanel chooseData, AbstractListPanel choosePlugin, AbstractListPanel chooseSettings){
+	public GenericTripleFrame(AbstractListPanel chooseData, AbstractListPanel choosePlugin, AbstractListPanel chooseSettings, boolean scrollable){
 		bigSplit.setLeftComponent(chooseData);
 		smallSplit.setLeftComponent(choosePlugin);
-		scroll = new JScrollPane(chooseSettings);
-		smallSplit.setRightComponent(scroll);
+		if(scrollable){
+			scroll = new JScrollPane(chooseSettings);
+			smallSplit.setRightComponent(scroll);			
+		}else{
+			smallSplit.setRightComponent(chooseSettings);
+		}
 		bigSplit.setRightComponent(smallSplit);
 		scroll.setBorder(BorderFactory.createEmptyBorder());
 		bigSplit.setBorder(BorderFactory.createEmptyBorder());
@@ -38,6 +42,9 @@ public class GenericTripleFrame extends JPanel{
 		panels.add(chooseSettings);
 		setLayout(new BorderLayout());
 		add(BorderLayout.CENTER, bigSplit);
+	}
+	public GenericTripleFrame(AbstractListPanel chooseData, AbstractListPanel choosePlugin, AbstractListPanel chooseSettings){
+		this(chooseData, choosePlugin, chooseSettings, true);
 	}
 	
 	public void refreshPanel(){

@@ -55,8 +55,9 @@ public abstract class GenesisControl {
 
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
-			E plug = (E)((CheckBoxListEntry)ie.getSource()).getValue();
-			plugins.put(plug, !plugins.get(plug));
+			CheckBoxListEntry check = ((CheckBoxListEntry)ie.getSource());
+			E plug = (E)check.getValue();
+			plugins.put(plug, check.isSelected());
 			Workbench.update();
 		}
 	}

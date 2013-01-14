@@ -144,6 +144,7 @@ public class BuildModelControl extends GenesisControl{
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			progress.setVisible(true);
 			if(validationSettings.get("test").equals(Boolean.TRUE.toString())){
 				if(validationSettings.get("type").equals("CV")){
 					validationSettings.put("testSet", getHighlightedFeatureTableRecipe().getDocumentList());
@@ -161,11 +162,14 @@ public class BuildModelControl extends GenesisControl{
 	public static class BuildModelTask extends OnPanelSwingTask{
 		Recipe plan;
 		String name;
+
+		JProgressBar visible;
 		
 		public BuildModelTask(JProgressBar progressBar, Recipe newRecipe, String n){
 			this.addProgressBar(progressBar);
 			plan = newRecipe;
 			name = n;
+			visible = progressBar;
 		}
 
 		protected Void doInBackground(){
@@ -183,7 +187,7 @@ public class BuildModelControl extends GenesisControl{
 					BuildModelControl.setHighlightedTrainedModelRecipe(plan);
 					Workbench.update();
 					update.reset();
-
+					visible.setVisible(false);
 				}
 			}catch(Exception e){
 				e.printStackTrace();

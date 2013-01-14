@@ -18,7 +18,7 @@ import edu.cmu.side.view.generic.GenericTripleFrame;
 public class ExtractFeaturesPane extends JPanel{
 
 	private static GenericTripleFrame top;
-	private static ExtractActionPanel action = new ExtractActionPanel();
+	private static ExtractActionPanel action = new ExtractActionPanel(ExtractFeaturesControl.getUpdater());
 	private static ExtractBottomPanel bottom = new ExtractBottomPanel();
 	
 	public ExtractFeaturesPane(){

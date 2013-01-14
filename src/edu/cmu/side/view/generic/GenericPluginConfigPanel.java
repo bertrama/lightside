@@ -16,9 +16,9 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 
 	Font font = new Font(Font.SANS_SERIF, Font.PLAIN, 18);
 	protected Set<E> visiblePlugins = new TreeSet<E>();
-	
+
 	protected boolean showLabels;
-	
+
 	public GenericPluginConfigPanel(){
 		this(true);
 	}
@@ -29,26 +29,20 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 
 	@Override
 	public abstract void refreshPanel();
-	
+
 	public void refreshPanel(Map<E, Boolean> plugins){
-		Set<E> localSet = new HashSet<E>();
+
+		this.removeAll();
 		for(E plugin : plugins.keySet()){
 			if(plugins.get(plugin)){
-				localSet.add(plugin);
-			}
-		}
-		if(!localSet.equals(visiblePlugins)){
-			visiblePlugins = localSet;
-			this.removeAll();
-			for(E plugin : visiblePlugins){
 				if(showLabels){
 					JLabel label = new JLabel("Configure " + plugin.toString());
 					label.setFont(font);
 					this.add("br left", label);					
 				}
-				this.add("br hfill vfill", plugin.getConfigurationUI());
+				this.add("br hfill vfill", plugin.getConfigurationUI());				
 			}
-			this.validate();
 		}
+		this.validate();
 	}
 }

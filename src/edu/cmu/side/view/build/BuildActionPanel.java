@@ -1,6 +1,7 @@
 package edu.cmu.side.view.build;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -10,15 +11,18 @@ import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import se.datadosen.component.RiverLayout;
+
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.ActionBar;
 import edu.cmu.side.view.util.RadioButtonListEntry;
-import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class BuildActionPanel extends ActionBar {
 
-	public BuildActionPanel(){
+	public BuildActionPanel(StatusUpdater update){
+		super(update);
 		add.setText("Train");
 		add.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
 		add.setIconTextGap(10);

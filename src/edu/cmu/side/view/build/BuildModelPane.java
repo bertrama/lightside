@@ -19,7 +19,7 @@ import edu.cmu.side.view.generic.GenericTripleFrame;
 public class BuildModelPane extends JPanel{
 
 	private static GenericTripleFrame top;
-	private static BuildActionPanel action = new BuildActionPanel();
+	private static BuildActionPanel action = new BuildActionPanel(BuildModelControl.getUpdater());
 	private static BuildBottomPanel bottom = new BuildBottomPanel();
 
 	private static GenericPluginConfigPanel<LearningPlugin> config = new GenericPluginConfigPanel<LearningPlugin>(){

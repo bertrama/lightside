@@ -18,7 +18,7 @@ import edu.cmu.side.view.generic.GenericTripleFrame;
 public class RestructureFeaturesPane extends JPanel{
 
 	private static GenericTripleFrame top;
-	private static RestructureActionPanel action = new RestructureActionPanel();
+	private static RestructureActionPanel action = new RestructureActionPanel(RestructureTablesControl.getUpdater());
 	private static RestructureBottomPanel bottom = new RestructureBottomPanel();
 
 	public RestructureFeaturesPane(){

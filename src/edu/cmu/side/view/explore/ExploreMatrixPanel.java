@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import javax.swing.ButtonGroup;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.view.generic.GenericMatrixPanel;
 import edu.cmu.side.view.util.ToggleMouseAdapter;
@@ -20,7 +21,16 @@ public class ExploreMatrixPanel extends GenericMatrixPanel{
 		super();
 		label.setText("Cell Highlight:");
 		this.getDisplayTable().setCellSelectionEnabled(false);
-		this.getDisplayTable().addMouseListener(new ToggleMouseAdapter(this.getDisplayTable()));
+		this.getDisplayTable().addMouseListener(new ToggleMouseAdapter(this.getDisplayTable()){
+
+			@Override
+			public void setHighlight(Object row, String col) {
+				System.out.println("Setting highlight EMP27 " + row + ", " + col);
+				ExploreResultsControl.setHighlightedCell(row.toString(), col);
+				Workbench.update();
+			}
+			
+		});
 	}
 	@Override
 	public Object getCellObject(Object o){

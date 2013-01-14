@@ -30,7 +30,7 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 			rend = radioButton;
 		}
 		
-		if(vColIndex > 0){
+		if(vColIndex > 0 && sum > 0){
 			Integer intensity = 0;
 			try{
 				intensity = 

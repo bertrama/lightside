@@ -1,14 +1,10 @@
 package edu.cmu.side.view.generic;
 
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
@@ -19,9 +15,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import se.datadosen.component.RiverLayout;
-import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -30,7 +24,7 @@ import edu.cmu.side.view.util.SIDETable;
 
 public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 
-	SIDETable featureTable = new SIDETable();
+	protected SIDETable featureTable = new SIDETable();
 	FeatureTableModel model = new FeatureTableModel();
 	FeatureTableModel display = new FeatureTableModel();
 	JTextField text = new JTextField(20);
@@ -48,7 +42,6 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				display = filterTable(model, text.getText());
-				System.out.println("Keypressed GFMP48");
 				featureTable.setModel(display);
 				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(display);
 				featureTable.setRowSorter(sorter);
@@ -88,24 +81,17 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 							model.addColumn(s);
 							rowCount++;
 							Map<Feature, Comparable> values = plug.evaluateFeatures(recipe, mask, s, getTargetAnnotation());
-							for(Feature f : values.keySet()){
-								if(f.getFeatureName().contains("remove")){
-									System.out.println(f.getFeatureName() + ", " + s + ": " + values.get(f) + " GFM93");
-								}
-							}
+							
 							evals.get(plug).put(s, values);
 						}
 					}
 				}
 				for(Feature f : recipe.getTrainingTable().getFeatureSet()){
 					Object[] row = new Object[rowCount];
-					row[0] = f;
+					row[0] = getCellObject(f);
 					int r = 1;
 					for(FeatureMetricPlugin tep : evals.keySet()){
 						for(String eval : evals.get(tep).keySet()){
-							if(f.getFeatureName().contains("remove")){
-								System.out.println(f.getFeatureName() + ", " + eval + ": " + evals.get(tep).get(eval).get(f)+ " GFM107");
-							}
 							row[r++] = evals.get(tep).get(eval).get(f);
 						}
 					}
@@ -137,5 +123,10 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		}
 		return disp;
 	}
+	
+	public Object getCellObject(Object o){
+		return o;
+	}
+	
 	public abstract String getTargetAnnotation();
 }

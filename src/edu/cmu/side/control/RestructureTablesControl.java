@@ -111,6 +111,7 @@ public class RestructureTablesControl extends GenesisControl{
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			progress.setVisible(true);
 			Collection<RestructurePlugin> plugins = new HashSet<RestructurePlugin>();
 			for(RestructurePlugin plugin : RestructureTablesControl.getFilterPlugins().keySet()){
 				if(RestructureTablesControl.getFilterPlugins().get(plugin)){
@@ -128,11 +129,14 @@ public class RestructureTablesControl extends GenesisControl{
 		
 		Recipe plan;
 		String name;
+
+		JProgressBar visible;
 		
 		public FilterTableTask(JProgressBar progressBar, Recipe newRecipe, String n){
 			this.addProgressBar(progressBar);
 			plan = newRecipe;
 			name = n;
+			visible = progressBar;
 		}
 
 		@Override
@@ -148,6 +152,7 @@ public class RestructureTablesControl extends GenesisControl{
 				RecipeManager.addRecipe(plan);
 				Workbench.update();
 				update.reset();
+				visible.setVisible(false);
 			}catch(Exception e){
 				e.printStackTrace();
 			}

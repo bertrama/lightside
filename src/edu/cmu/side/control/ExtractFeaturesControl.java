@@ -184,6 +184,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			progress.setVisible(true);
 			Collection<FeaturePlugin> plugins = new HashSet<FeaturePlugin>();
 			for(FeaturePlugin plugin : ExtractFeaturesControl.getFeaturePlugins().keySet()){
 				if(ExtractFeaturesControl.getFeaturePlugins().get(plugin)){
@@ -209,12 +210,14 @@ public class ExtractFeaturesControl extends GenesisControl{
 		Recipe plan;
 		String name;
 		Integer threshold;
+		JProgressBar visible;
 		
 		public BuildTableTask(JProgressBar progressBar, Recipe newRecipe, String n, int t){
 			this.addProgressBar(progressBar);
 			plan = newRecipe;
 			name = n;
 			threshold = t;
+			visible = progressBar;
 		}
 
 		@Override
@@ -235,6 +238,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				RecipeManager.addRecipe(plan);
 				Workbench.update();
 				update.reset();
+				visible.setVisible(false);
 			}catch(Exception e){
 //				JTextArea text = new JTextArea();
 //				text.setText(e.toString());

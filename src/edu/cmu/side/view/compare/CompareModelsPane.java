@@ -67,7 +67,7 @@ public class CompareModelsPane extends AbstractListPanel{
 	};
 	
 	JPanel middle = new JPanel(new BorderLayout());
-	CompareActionBar dropdown = new CompareActionBar();
+	CompareActionBar dropdown = new CompareActionBar(null);
 
 	public CompareModelsPane(){
 		setLayout(new BorderLayout());
@@ -79,20 +79,8 @@ public class CompareModelsPane extends AbstractListPanel{
 		top.add(BorderLayout.CENTER, grid);
 		top.add(BorderLayout.SOUTH, dropdown);
 		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins().keySet(), null);
-		combo.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent ae){
-				if(combo.getSelectedItem() != null){
-					EvaluateTwoModelPlugin plug = (EvaluateTwoModelPlugin)combo.getSelectedItem();
-					CompareModelsControl.setHighlightedModelComparisonPlugin(plug);
-					middle.removeAll();
-					middle.add(BorderLayout.CENTER, plug.getConfigurationUI());
-					plug.refreshPanel();
-					middle.validate();
-					middle.repaint();
-				}
-			}
-		});
-		if(combo.getModel().getSize() > 0){
+		if(combo.getItemCount() > 0){
+			System.out.println("Setting combo!");
 			combo.setSelectedIndex(0);
 		}
 		JScrollPane scroll = new JScrollPane(middle);
@@ -110,7 +98,10 @@ public class CompareModelsPane extends AbstractListPanel{
 		loadCompetitor.refreshPanel();
 		dropdown.refreshPanel();
 		if(CompareModelsControl.getHighlightedModelComparisonPlugin() != null){
+			middle.removeAll();
+			middle.add(BorderLayout.CENTER, CompareModelsControl.getHighlightedModelComparisonPlugin().getConfigurationUI());
 			CompareModelsControl.getHighlightedModelComparisonPlugin().refreshPanel();
+			middle.validate();
 		}
 	}
 }

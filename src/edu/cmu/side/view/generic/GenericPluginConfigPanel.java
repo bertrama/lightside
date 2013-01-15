@@ -43,6 +43,6 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 				this.add("br hfill vfill", plugin.getConfigurationUI());				
 			}
 		}
-		this.validate();
+		this.revalidate();
 	}
 }

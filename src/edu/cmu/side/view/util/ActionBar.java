@@ -1,6 +1,7 @@
 package edu.cmu.side.view.util;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -15,6 +16,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 import se.datadosen.component.RiverLayout;
+import edu.cmu.side.model.StatusUpdater;
 
 public abstract class ActionBar extends JPanel{
 	
@@ -29,16 +31,18 @@ public abstract class ActionBar extends JPanel{
 	protected JPanel updaters = new JPanel(new RiverLayout());
 	Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
 
-	public ActionBar(){
-		setLayout(new GridLayout(1,3));
+	public ActionBar(StatusUpdater update){
+		setLayout(new RiverLayout());
 		add.setFont(font);
+		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.gray));
 		settings.setBackground(Color.white);
 		updaters.setBackground(Color.white);
 		settings.add("left", nameLabel);
 		settings.add("left", name);
 		progressBar.setPreferredSize(new Dimension(50,25));
-		updaters.add("center hfill", progressBar);
+		updaters.add("hfill", (Component)update);
+		updaters.add("right", progressBar);
 		progressBar.setVisible(false);
 		ImageIcon iconCancel = new ImageIcon("toolkits/icons/cancel.png");
 		cancel.setText("");
@@ -48,16 +52,12 @@ public abstract class ActionBar extends JPanel{
 		JPanel left = new JPanel(new RiverLayout());
 		JPanel middle = new JPanel(new RiverLayout());
 		JPanel right = new JPanel(new RiverLayout());
-		left.add("hfill", settings);
-		middle.add("hfill", add);
 		right.add("hfill", updaters);
 		right.add("left", cancel);
-		left.setBackground(Color.white);
-		middle.setBackground(Color.white);
 		right.setBackground(Color.white);
-		add(left);
-		add(middle);
-		add(right);
+		add("left", add);
+		add("hfill", settings);
+		add("left", right);
 	}
 
 	public void refreshPanel(){

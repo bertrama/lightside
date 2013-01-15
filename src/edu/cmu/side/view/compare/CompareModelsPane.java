@@ -67,7 +67,7 @@ public class CompareModelsPane extends AbstractListPanel{
 	};
 	
 	JPanel middle = new JPanel(new BorderLayout());
-	CompareActionBar dropdown = new CompareActionBar(null);
+	CompareActionBar dropdown = new CompareActionBar(CompareModelsControl.getUpdater());
 
 	public CompareModelsPane(){
 		setLayout(new BorderLayout());
@@ -101,7 +101,7 @@ public class CompareModelsPane extends AbstractListPanel{
 			middle.removeAll();
 			middle.add(BorderLayout.CENTER, CompareModelsControl.getHighlightedModelComparisonPlugin().getConfigurationUI());
 			CompareModelsControl.getHighlightedModelComparisonPlugin().refreshPanel();
-			middle.validate();
+			middle.revalidate();
 		}
 	}
 }

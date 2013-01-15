@@ -72,7 +72,7 @@ public class ExploreResultsPane extends JPanel{
 		
 		panel.add(BorderLayout.SOUTH, checklist);
 		triple = new GenericTripleFrame(load, panel, features);
-		middle = new ExploreActionBar(null);
+		middle = new ExploreActionBar(ExploreResultsControl.getUpdater());
 		
 		JScrollPane scroll = new JScrollPane(analysis);
 		
@@ -105,6 +105,6 @@ public class ExploreResultsPane extends JPanel{
 			checklist.refreshPanel(null);
 		}
 		analysis.refreshPanel();
-		validate();
+		revalidate();
 	}
 }

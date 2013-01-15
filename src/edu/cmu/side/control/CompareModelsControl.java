@@ -32,6 +32,10 @@ public class CompareModelsControl extends GenesisControl{
 			modelComparisonPlugins.put((EvaluateTwoModelPlugin)fe, false);
 		}
 	}
+	
+	public static StatusUpdater getUpdater(){
+		return update;
+	}
 
 	public static void setHighlightedModelComparisonPlugin(EvaluateTwoModelPlugin plug){
 		for(EvaluateTwoModelPlugin plugin : modelComparisonPlugins.keySet()){

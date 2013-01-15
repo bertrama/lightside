@@ -45,7 +45,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 				featureTable.setModel(display);
 				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(display);
 				featureTable.setRowSorter(sorter);
-				featureTable.validate();
+				featureTable.revalidate();
 			}
 
 			@Override

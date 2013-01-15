@@ -42,7 +42,16 @@
         <version>1.0</version>
         <description><![CDATA[Basic error analysis]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.analysis.one.BasicModelAnalysis</classname>
+        <classname>plugins.analysis.one.metric.FeatureMetricAnalysis</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Document Display Plugins</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Basic document display for error analysis]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.analysis.one.display.DocumentsDisplay</classname>
     </plugin>
     
     <plugin>

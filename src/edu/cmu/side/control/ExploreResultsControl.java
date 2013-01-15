@@ -45,6 +45,9 @@ public class ExploreResultsControl extends GenesisControl{
 		eval = new EvalCheckboxListener(featureEvaluationPlugins);
 	}
 	
+	public static StatusUpdater getUpdater(){
+		return update;
+	}
 	public static EvalCheckboxListener getCheckboxListener(){
 		return eval;
 	}
@@ -81,7 +84,6 @@ public class ExploreResultsControl extends GenesisControl{
 	public static void setHighlightedModelAnalysisPlugin(EvaluateOneModelPlugin plug){
 		for(EvaluateOneModelPlugin plugin : modelAnalysisPlugins.keySet()){
 			modelAnalysisPlugins.put(plugin, plugin==plug);
-			System.out.println(plugin.toString() + " " + modelAnalysisPlugins.get(plugin) + " ERC76");
 		}
 	}
 		

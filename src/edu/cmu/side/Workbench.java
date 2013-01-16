@@ -41,7 +41,9 @@ public class Workbench{
 	public Workbench(){
 
 		
-
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		iconImage = kit.createImage("toolkits/icons/bulb.png");
+		
 		JFrame frame = new JFrame();
 		frame.setIconImage(iconImage); //for windows?
 		
@@ -65,24 +67,7 @@ public class Workbench{
 	public static void main(String[] args) throws Exception
 	{
 
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		iconImage = kit.createImage("toolkits/icons/bulb.png");
-		
-		if(System.getProperty("os.name").equals("Mac OS X"))
-		{
-		    System.setProperty("apple.laf.useScreenMenuBar", "true");
-			System.setProperty("com.apple.mrj.application.apple.menu.about.name", "LightSIDE");
-			com.apple.eawt.Application.getApplication().setDockIconImage(iconImage);
-		}
-		
-		EventQueue.invokeLater(new Runnable()
-		{
-			@Override
-			public void run()
-			{
-				Workbench workbench = new Workbench();
-			}
-		});
+		Workbench workbench = new Workbench();
 	}
 
 	public static void update(){

@@ -1,7 +1,10 @@
 package edu.cmu.side.view.util;
 
 import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -13,6 +16,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 import se.datadosen.component.RiverLayout;
+import edu.cmu.side.model.StatusUpdater;
 
 public abstract class ActionBar extends JPanel{
 	
@@ -27,30 +31,33 @@ public abstract class ActionBar extends JPanel{
 	protected JPanel updaters = new JPanel(new RiverLayout());
 	Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
 
-	public ActionBar(){
+	public ActionBar(StatusUpdater update){
 		setLayout(new RiverLayout());
-		setBackground(Color.white);
 		add.setFont(font);
+		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.gray));
 		settings.setBackground(Color.white);
 		updaters.setBackground(Color.white);
 		settings.add("left", nameLabel);
 		settings.add("left", name);
-		updaters.add("center hfill", progressBar);
+		progressBar.setPreferredSize(new Dimension(50,25));
+		updaters.add("hfill", (Component)update);
+		updaters.add("right", progressBar);
+		progressBar.setVisible(false);
 		ImageIcon iconCancel = new ImageIcon("toolkits/icons/cancel.png");
 		cancel.setText("");
 		cancel.setIcon(iconCancel);
 		cancel.setEnabled(false);
 		cancel.setToolTipText("Cancel");
-		cancel.setBorderPainted(true);
-		updaters.add("right", cancel);
+		JPanel left = new JPanel(new RiverLayout());
+		JPanel middle = new JPanel(new RiverLayout());
+		JPanel right = new JPanel(new RiverLayout());
+		right.add("hfill", updaters);
+		right.add("left", cancel);
+		right.setBackground(Color.white);
 		add("left", add);
-		add("left", settings);
-		JLabel spacer = new JLabel("status!");
-		spacer.setHorizontalAlignment(JLabel.RIGHT);
-		spacer.setBackground(Color.white);
-		add("hfill", spacer);
-		add("right", updaters);
+		add("hfill", settings);
+		add("left", right);
 	}
 
 	public void refreshPanel(){

@@ -10,27 +10,32 @@ import javax.swing.JLabel;
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.CompareModelsControl;
+import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.EvaluateTwoModelPlugin;
 import edu.cmu.side.view.util.ActionBar;
 
 public class CompareActionBar extends ActionBar {
 
-	public CompareActionBar(){
+	public CompareActionBar(StatusUpdater update){
+		super(update);
 		removeAll();
 		setLayout(new RiverLayout());
 		setBackground(Color.white);
 		combo = new JComboBox();
+		EvaluateTwoModelPlugin plug = (CompareModelsControl.getModelComparisonPlugins().keySet().size()>0?
+				CompareModelsControl.getModelComparisonPlugins().keySet().toArray(new EvaluateTwoModelPlugin[0])[0]:null);
+		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins().keySet(), plug);
 		combo.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(combo.getSelectedItem() + "CAB29");
 				CompareModelsControl.setHighlightedModelComparisonPlugin((EvaluateTwoModelPlugin)combo.getSelectedItem());
+				Workbench.update();
 			}
 		});
 		add("left", new JLabel("Comparison Plugin:"));
 		add("hfill", combo);
-		EvaluateTwoModelPlugin plug = (CompareModelsControl.getModelComparisonPlugins().keySet().size()>0?
-				CompareModelsControl.getModelComparisonPlugins().keySet().toArray(new EvaluateTwoModelPlugin[0])[0]:null);
-		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins().keySet(), plug);
+		
 	}
 	
 }

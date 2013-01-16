@@ -3,6 +3,8 @@ package edu.cmu.side.view.explore;
 import java.awt.event.ItemListener;
 import java.util.Map;
 
+import javax.swing.JLabel;
+
 import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.view.generic.GenericMetricChecklistPanel;
@@ -12,6 +14,7 @@ public class ExploreMetricChecklistPanel extends GenericMetricChecklistPanel<Mod
 		public ExploreMetricChecklistPanel(){
 			super();
 			this.removeAll();
+			add("left", new JLabel("Evaluations to Display:"));
 			add("br hfill vfill", describeScroll);
 		}
 		
@@ -27,6 +30,7 @@ public class ExploreMetricChecklistPanel extends GenericMetricChecklistPanel<Mod
 
 		@Override
 		public void setTargetAnnotation(String s) {}
+		
 	
 	
 }

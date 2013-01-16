@@ -1,6 +1,7 @@
 package edu.cmu.side.view.restructure;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -9,14 +10,16 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.RestructureTablesControl;
+import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.util.ActionBar;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class RestructureActionPanel extends ActionBar{
 
-	public RestructureActionPanel(){
-		super();
+	public RestructureActionPanel(StatusUpdater update){
+		super(update);
 		add.setText("Restructure");
 		add.setIcon(new ImageIcon("toolkits/icons/application_side_expand.png"));
 		add.setIconTextGap(10);

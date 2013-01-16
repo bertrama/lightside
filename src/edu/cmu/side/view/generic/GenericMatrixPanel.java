@@ -3,6 +3,7 @@ package edu.cmu.side.view.generic;
 import java.awt.Color;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -14,23 +15,39 @@ import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 import se.datadosen.component.RiverLayout;
+import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.ConfusionCellRenderer;
 import edu.cmu.side.view.util.SIDETable;
 
 public abstract class GenericMatrixPanel extends AbstractListPanel{
-	private SIDETable matrixDisplay = new SIDETable();
-	private DefaultTableModel matrixModel = new DefaultTableModel();
+	protected SIDETable matrixDisplay = new SIDETable();
+	protected DefaultTableModel matrixModel = new DefaultTableModel();
 
 	protected JLabel label;
-	private double sum = 0.0;
+	
+	protected ModelFeatureMetricPlugin plugin;
+	protected String setting;
+	
+	protected Double[] sum = new Double[]{0.0,0.0};
 
-	public Double getSum(){
+	public Double[] getSum(){
 		return sum;
 	}
 
 	public SIDETable getDisplayTable(){
 		return matrixDisplay;
+	}
+	
+	public GenericMatrixPanel(ModelFeatureMetricPlugin p, String s){
+		this();
+		plugin = p;
+		setting = s;
+	}
+	
+	public GenericMatrixPanel(String l){
+		this();
+		label.setText(l);
 	}
 	
 	public GenericMatrixPanel(){
@@ -56,6 +73,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 
 	public void refreshPanel(Map<String, Map<String, List<Integer>>> confusion){
 		try{
+			matrixModel = new DefaultTableModel();
 			Collection<String> labels = new TreeSet<String>();
 			for(String s : confusion.keySet()){
 				labels.add(s);
@@ -63,32 +81,43 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 					labels.add(p);
 				}
 			}
-			matrixModel = new DefaultTableModel();
 			matrixModel.addColumn("Act \\ Pred");
 
 			for(String s : labels){
 				matrixModel.addColumn(s);
 			}
-			sum = 0;
-			for(String act : labels){
-				Object[] row = new Object[labels.size()+1];
-				row[0] = act;
-				int index = 1;
-				for(String pred : labels){
-					if(confusion.containsKey(pred) && confusion.get(pred).containsKey(act)){
-						List<Integer> cellIndices = confusion.get(pred).get(act);
-						sum += confusion.get(pred).get(act).size();
-						row[index] = getCellObject(cellIndices.size());			
-					}else{
-						row[index] = getCellObject(0);
-					}
-					index++;
-				}
+			sum = new Double[]{0.0,0.0};
+			List<Object[]> rowsToPass = generateRows(confusion, labels);
+			for(Object[] row : rowsToPass){
 				matrixModel.addRow(row);
 			}
 			matrixDisplay.setModel(matrixModel);
 		} catch(ArrayIndexOutOfBoundsException e){
+			
 		}
+	}
+	
+	protected List<Object[]> generateRows(Map<String, Map<String, List<Integer>>> confusion, Collection<String> labels) {
+		List<Object[]> rowsToPass = new ArrayList<Object[]>();
+		double localSum = 0;
+		for(String act : labels){
+			Object[] row = new Object[labels.size()+1];
+			row[0] = act;
+			int index = 1;
+			for(String pred : labels){
+				if(confusion.containsKey(pred) && confusion.get(pred).containsKey(act)){
+					List<Integer> cellIndices = confusion.get(pred).get(act);
+					localSum += confusion.get(pred).get(act).size();
+					row[index] = getCellObject(cellIndices.size());			
+				}else{
+					row[index] = getCellObject(0);
+				}
+				index++;
+			}
+			rowsToPass.add(row);
+		}
+		sum = new Double[]{0.0,localSum};
+		return rowsToPass;
 	}
 
 	public Object getCellObject(Object o){

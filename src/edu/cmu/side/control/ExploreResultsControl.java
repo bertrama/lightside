@@ -1,18 +1,16 @@
 package edu.cmu.side.control;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
 import edu.cmu.side.Workbench;
-import edu.cmu.side.control.GenesisControl.EvalCheckboxListener;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
+import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
-import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
@@ -23,6 +21,9 @@ public class ExploreResultsControl extends GenesisControl{
 	private static Map<EvaluateOneModelPlugin, Boolean> modelAnalysisPlugins;
 	private static Map<ModelFeatureMetricPlugin, Map<String, Boolean>> featureEvaluationPlugins;
 	private static StatusUpdater update = new SwingUpdaterLabel();
+	private static String highlightedRow; private static String highlightedColumn;
+	private static Feature highlightedFeature;
+	
 	private static EvalCheckboxListener eval;
 
 	static{
@@ -44,8 +45,23 @@ public class ExploreResultsControl extends GenesisControl{
 		eval = new EvalCheckboxListener(featureEvaluationPlugins);
 	}
 	
+	public static StatusUpdater getUpdater(){
+		return update;
+	}
 	public static EvalCheckboxListener getCheckboxListener(){
 		return eval;
+	}
+
+	public static void setHighlightedCell(String row, String col){
+		highlightedRow = row;
+		highlightedColumn = col;
+	}
+	
+	public static String getHighlightedRow(){
+		return highlightedRow;
+	}
+	public static String getHighlightedColumn(){
+		return highlightedColumn;
 	}
 	
 	public static Map<EvaluateOneModelPlugin, Boolean> getModelAnalysisPlugins(){
@@ -54,6 +70,14 @@ public class ExploreResultsControl extends GenesisControl{
 
 	public static Map<ModelFeatureMetricPlugin, Map<String, Boolean>> getFeatureEvaluationPlugins(){
 		return featureEvaluationPlugins;
+	}
+	
+	public static Feature getHighlightedFeature(){
+		return highlightedFeature;
+	}
+	
+	public static void setHighlightedFeature(Feature f){
+		highlightedFeature = f;
 	}
 	
 	

@@ -44,7 +44,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 					describeScroll = new JScrollPane(GenesisControl.getRecipeTree(getHighlight()));
 					describePanel.removeAll();
 					describePanel.add(BorderLayout.CENTER, describeScroll);
-					describePanel.validate();
+					describePanel.revalidate();
 				}
 				Workbench.update();
 			}

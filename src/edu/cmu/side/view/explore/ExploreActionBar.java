@@ -10,20 +10,27 @@ import javax.swing.JLabel;
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;
+import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.view.util.ActionBar;
 
 public class ExploreActionBar extends ActionBar{
 	
-	public ExploreActionBar(){
+	public ExploreActionBar(StatusUpdater update){
+		super(update);
 		removeAll();
 		setLayout(new RiverLayout());
 		setBackground(Color.white);
 		combo = new JComboBox();
+		if(combo.getItemCount()>0 && combo.getSelectedIndex()==-1){
+			combo.setSelectedIndex(0);
+		}
 		combo.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
+				System.out.println(combo.getSelectedIndex() + " selected EAB28");
 				ExploreResultsControl.setHighlightedModelAnalysisPlugin((EvaluateOneModelPlugin)combo.getSelectedItem());
+				Workbench.update();
 			}
 		});
 		add("left", new JLabel("Comparison Plugin:"));

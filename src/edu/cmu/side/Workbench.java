@@ -86,7 +86,9 @@ public class Workbench{
 	}
 
 	public static void update(){
-		panel.actionPerformed(null);
+		if(panel != null){
+			panel.actionPerformed(null);			
+		}
 	}
 
 	public static Collection<Recipe> getRecipesByPane(RecipeManager.Stage type){

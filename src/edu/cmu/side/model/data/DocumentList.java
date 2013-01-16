@@ -162,6 +162,21 @@ public class DocumentList implements Serializable{
 	public Map<String, List<String>> getCoveredTextList() {
 		return textColumns;
 	}
+	
+	public String getPrintableTextAt(int index){
+		boolean labels = getTextColumns().size()>1;
+		StringBuilder sb = new StringBuilder();
+		for(String key : getTextColumns()){
+			if(labels){
+				sb.append(key + ":\n");
+			}
+			sb.append(getCoveredTextList().get(key).get(index));
+			if(labels){
+				sb.append("\n");
+			}
+		}
+		return sb.toString();
+	}
 
 	public String getCurrentAnnotation(){
 		return currentAnnotation;

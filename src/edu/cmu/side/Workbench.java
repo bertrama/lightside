@@ -1,12 +1,13 @@
 package edu.cmu.side;
 
 import java.awt.Dimension;
-import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -41,11 +42,9 @@ public class Workbench{
 	public Workbench(){
 
 		
-		Toolkit kit = Toolkit.getDefaultToolkit();
-		iconImage = kit.createImage("toolkits/icons/bulb.png");
 		
 		JFrame frame = new JFrame();
-		frame.setIconImage(iconImage); //for windows?
+		frame.setIconImages(getIcons("toolkits/icons/bulbs/bulb_128.png", "toolkits/icons/bulbs/simple_32.png", "toolkits/icons/bulbs/simple_16.png")); //for windows?
 		
 		
 		panel = new WorkbenchPanel();
@@ -64,6 +63,18 @@ public class Workbench{
 		update();
 	}
 
+	public List<? extends Image> getIcons(String... paths)
+	{
+		ArrayList<Image> icons = new ArrayList<Image>();
+
+		Toolkit kit = Toolkit.getDefaultToolkit();
+		for(String iconPath : paths)
+		{
+			icons.add(kit.createImage(iconPath));
+		}
+		return icons;
+	}
+	
 	public static void main(String[] args) throws Exception
 	{
 

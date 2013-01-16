@@ -136,10 +136,10 @@ public class PredictionServer implements Container
 	{
 		try
 		{
-			File icon = new File("cfl.ico");
+			File icon = new File("toolkits/icons/cfl.ico");
 			response.setDate("Last-Modified", icon.lastModified());
 			response.setValue("Content-Type", "image/ico");
-			FileInputStream in = new FileInputStream("cfl.ico");
+			FileInputStream in = new FileInputStream(icon);
 			
 			byte[] buffer = new byte[1024];
 			int len = in.read(buffer);

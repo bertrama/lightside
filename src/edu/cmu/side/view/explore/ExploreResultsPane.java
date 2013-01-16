@@ -106,5 +106,6 @@ public class ExploreResultsPane extends JPanel{
 		}
 		analysis.refreshPanel();
 		revalidate();
+		repaint();
 	}
 }

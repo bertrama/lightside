@@ -81,7 +81,6 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 							model.addColumn(s);
 							rowCount++;
 							Map<Feature, Comparable> values = plug.evaluateFeatures(recipe, mask, s, getTargetAnnotation());
-							
 							evals.get(plug).put(s, values);
 						}
 					}

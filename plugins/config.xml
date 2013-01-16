@@ -69,7 +69,7 @@
         <version>1.0</version>
         <description><![CDATA[Difference matrix comparisons]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.analysis.two.DifferenceMatrix</classname>
+        <classname>plugins.analysis.two.matrix.DifferenceMatrixPlugin</classname>
     </plugin>
     
     <plugin>

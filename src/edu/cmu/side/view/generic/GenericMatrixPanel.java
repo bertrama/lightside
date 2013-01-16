@@ -21,17 +21,17 @@ import edu.cmu.side.view.util.ConfusionCellRenderer;
 import edu.cmu.side.view.util.SIDETable;
 
 public abstract class GenericMatrixPanel extends AbstractListPanel{
-	private SIDETable matrixDisplay = new SIDETable();
-	private DefaultTableModel matrixModel = new DefaultTableModel();
+	protected SIDETable matrixDisplay = new SIDETable();
+	protected DefaultTableModel matrixModel = new DefaultTableModel();
 
 	protected JLabel label;
 	
 	protected ModelFeatureMetricPlugin plugin;
 	protected String setting;
 	
-	private double sum = 0.0;
+	protected Double[] sum = new Double[]{0.0,0.0};
 
-	public Double getSum(){
+	public Double[] getSum(){
 		return sum;
 	}
 
@@ -43,6 +43,11 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 		this();
 		plugin = p;
 		setting = s;
+	}
+	
+	public GenericMatrixPanel(String l){
+		this();
+		label.setText(l);
 	}
 	
 	public GenericMatrixPanel(){
@@ -81,7 +86,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 			for(String s : labels){
 				matrixModel.addColumn(s);
 			}
-			sum = 0;
+			sum = new Double[]{0.0,0.0};
 			List<Object[]> rowsToPass = generateRows(confusion, labels);
 			for(Object[] row : rowsToPass){
 				matrixModel.addRow(row);
@@ -94,6 +99,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 	
 	protected List<Object[]> generateRows(Map<String, Map<String, List<Integer>>> confusion, Collection<String> labels) {
 		List<Object[]> rowsToPass = new ArrayList<Object[]>();
+		double localSum = 0;
 		for(String act : labels){
 			Object[] row = new Object[labels.size()+1];
 			row[0] = act;
@@ -101,7 +107,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 			for(String pred : labels){
 				if(confusion.containsKey(pred) && confusion.get(pred).containsKey(act)){
 					List<Integer> cellIndices = confusion.get(pred).get(act);
-					sum += confusion.get(pred).get(act).size();
+					localSum += confusion.get(pred).get(act).size();
 					row[index] = getCellObject(cellIndices.size());			
 				}else{
 					row[index] = getCellObject(0);
@@ -110,6 +116,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 			}
 			rowsToPass.add(row);
 		}
+		sum = new Double[]{0.0,localSum};
 		return rowsToPass;
 	}
 

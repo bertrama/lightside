@@ -16,7 +16,7 @@ public class ExploreFeatureMetricPanel extends GenericFeatureMetricPanel{
 
 	public ExploreFeatureMetricPanel(){
 		super();
-		featureTable.addMouseListener(new ToggleMouseAdapter(featureTable){
+		featureTable.addMouseListener(new ToggleMouseAdapter(featureTable, true){
 
 			@Override
 			public void setHighlight(Object row, String col) {

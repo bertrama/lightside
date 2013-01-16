@@ -1,17 +1,14 @@
 package edu.cmu.side.view.build;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
-import javax.swing.JPanel;
-
-import se.datadosen.component.RiverLayout;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.StatusUpdater;
@@ -21,12 +18,29 @@ import edu.cmu.side.view.util.RadioButtonListEntry;
 
 public class BuildActionPanel extends ActionBar {
 
+	JCheckBox featureSelection = new JCheckBox("Feature Selection?");
+	JTextField numFeatures = new JTextField(5);
+	JLabel numLabel = new JLabel("#:");
+
 	public BuildActionPanel(StatusUpdater update){
 		super(update);
 		add.setText("Train");
 		add.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
 		add.setIconTextGap(10);
 		add.addActionListener(new BuildModelControl.TrainModelListener(progressBar, name));
+		settings.add("left", featureSelection);
+		settings.add("left", numLabel);
+		settings.add("left", numFeatures);
+		numLabel.setVisible(false);
+		numFeatures.setVisible(false);
+		featureSelection.addItemListener(new ItemListener() {
+			
+			@Override
+			public void itemStateChanged(ItemEvent arg0) {
+				numFeatures.setVisible(featureSelection.isSelected());
+				numLabel.setVisible(featureSelection.isSelected());
+			}
+		});
 		name.setText("model");
 	}
 	

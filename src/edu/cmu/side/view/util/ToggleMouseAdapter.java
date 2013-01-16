@@ -8,9 +8,11 @@ import javax.swing.JRadioButton;
 
 public abstract class ToggleMouseAdapter extends MouseAdapter{
 	SIDETable panel;
-	public ToggleMouseAdapter(SIDETable p){
+	Boolean flip;
+	public ToggleMouseAdapter(SIDETable p, boolean f){
 		super();
 		panel = p;
+		flip = f;
 	}
 
 	@Override
@@ -22,12 +24,12 @@ public abstract class ToggleMouseAdapter extends MouseAdapter{
 			String colName = panel.getColumnName(col);
 			setHighlight(rowObj, colName);
 			Object obj = panel.getValueAt(row, col);
-			if (obj instanceof JCheckBox) {
+			if (obj instanceof JCheckBox && flip) {
 				JCheckBox checkbox = (JCheckBox) obj;
 				checkbox.setSelected(!checkbox.isSelected());
 				panel.repaint();
 			}
-			if(obj instanceof JRadioButton){
+			if(obj instanceof JRadioButton && flip){
 				JRadioButton radio = (JRadioButton) obj;
 				radio.setSelected(!radio.isSelected());
 				panel.repaint();

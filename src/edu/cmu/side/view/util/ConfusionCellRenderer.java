@@ -11,17 +11,18 @@ import edu.cmu.side.view.generic.GenericMatrixPanel;
 
 public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 	GenericMatrixPanel parent;
-	
+
 	public ConfusionCellRenderer(GenericMatrixPanel p){
 		parent = p;
 	}
-	
+
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-		double sum = parent.getSum();
+		Double[] sum = parent.getSum();
 		Component rend = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 		rend.setBackground(Color.white);
-		
+		rend.setFocusable(false);
+
 		if(value instanceof RadioButtonListEntry){
 			RadioButtonListEntry radioButton = (RadioButtonListEntry) value;
 			radioButton.setEnabled(isEnabled());
@@ -29,22 +30,27 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 			radioButton.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 			rend = radioButton;
 		}
-		
-		if(vColIndex > 0 && sum > 0){
+
+		if(vColIndex > 0){
 			Integer intensity = 0;
 			try{
-				intensity = 
-						((Double)(255.0*
-								(Double.parseDouble(
-										((SIDETable)table).getDeepValue(rowIndex, vColIndex).toString()
-												   ))/sum)).intValue();
+				double numberValue =(Double.parseDouble(((SIDETable)table).getDeepValue(rowIndex, vColIndex).toString()));
+				if(numberValue > 0){
+					Double outValue = ((Double)(255.0*numberValue)) / sum[1];
+					intensity = outValue.intValue();
+					rend.setBackground(new Color(255-intensity, 255-intensity,255));
+					rend.setForeground(intensity<128?Color.black:Color.white);
+				}else if(numberValue < 0){
+					Double outValue = -((Double)(255.0*numberValue)) / sum[1];
+					intensity = outValue.intValue();
+					rend.setBackground(new Color(255, (new Double(255-(intensity/2.0))).intValue(),255-intensity));
+					rend.setForeground(intensity<128?Color.black:Color.white);
+				}
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			rend.setBackground(new Color(255-intensity, 255-intensity,255));
-			rend.setForeground(Color.black);
 		}
-		
+
 		return rend;
 	}
 }

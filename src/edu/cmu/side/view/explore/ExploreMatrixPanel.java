@@ -21,7 +21,7 @@ public class ExploreMatrixPanel extends GenericMatrixPanel{
 		super();
 		label.setText("Cell Highlight:");
 		this.getDisplayTable().setCellSelectionEnabled(false);
-		this.getDisplayTable().addMouseListener(new ToggleMouseAdapter(this.getDisplayTable()){
+		this.getDisplayTable().addMouseListener(new ToggleMouseAdapter(this.getDisplayTable(), true){
 
 			@Override
 			public void setHighlight(Object row, String col) {

@@ -1,6 +1,8 @@
 package edu.cmu.side;
 
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Collection;
@@ -36,12 +38,16 @@ public class Workbench{
 
 	public Workbench(){
 		JFrame frame = new JFrame();
+//		Toolkit kit = Toolkit.getDefaultToolkit();
+//		Image img = kit.createImage("toolkits/icons/bulb.png"); 
+//		frame.setIconImage(img); //for windows?
+		
 		panel = new WorkbenchPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder());
 		frame.setContentPane(panel);
 		//		pane = new GlassPane(frame.getContentPane());
 		//		frame.setGlassPane(pane);
-		frame.setSize(new Dimension(1050,768));
+		frame.setSize(new Dimension(1024,768));
 		frame.setTitle("LightSIDE");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();

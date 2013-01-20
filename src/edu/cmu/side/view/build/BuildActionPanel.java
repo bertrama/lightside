@@ -27,7 +27,7 @@ public class BuildActionPanel extends ActionBar {
 		add.setText("Train");
 		add.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
 		add.setIconTextGap(10);
-		add.addActionListener(new BuildModelControl.TrainModelListener(progressBar, name));
+		add.addActionListener(new BuildModelControl.TrainModelListener(progressBar, name, cancel));
 		settings.add("left", featureSelection);
 		settings.add("left", numLabel);
 		settings.add("left", numFeatures);

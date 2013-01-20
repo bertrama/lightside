@@ -28,13 +28,13 @@ public class BuildPluginPanel extends AbstractListPanel {
 
 	public JPanel panel = new JPanel(new RiverLayout());
 	public JPanel middle = new JPanel(new BorderLayout());
+	public BuildTestingPanel test = new BuildTestingPanel();
 	
 	FastListModel pluginsModel = new FastListModel();
 	SelectPluginList pluginsList = new SelectPluginList();
 	JScrollPane pluginsScroll = new JScrollPane(pluginsList);
 	BuildActionPanel.NameListener listener;
 	public BuildPluginPanel(BuildActionPanel.NameListener list){
-		BuildTestingPanel test = new BuildTestingPanel();
 		setLayout(new BorderLayout());
 		listener = list;
 		ArrayList<RadioButtonListEntry> pluginsToPass = new ArrayList<RadioButtonListEntry>();
@@ -74,6 +74,8 @@ public class BuildPluginPanel extends AbstractListPanel {
 	}
 	
 	public void refreshPanel(){
+
 		repaint();
+		test.refreshPanel();
 	}
 }

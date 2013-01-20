@@ -34,6 +34,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 
 	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> map, StatusUpdater progressIndicator) throws Exception{
 
+		halt = false;
 		if(table == null){
 			return null;
 		}
@@ -44,28 +45,48 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		DocumentList sdl = (DocumentList)map.get("testSet");
 		TrainingResult result = null;
-		if(Boolean.TRUE.toString().equals(map.get("test"))){
-			if(map.get("type").equals("CV")){
+		if (Boolean.TRUE.toString().equals(map.get("test")))
+		{
+			if (map.get("type").equals("CV"))
+			{
 				Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 				int numFolds = -1;
-				try{
+				try
+				{
 					numFolds = Integer.parseInt(map.get("numFolds").toString());
-				}catch(Exception e){
+				}
+				catch (Exception e)
+				{
 					e.printStackTrace();
 				}
-				progressIndicator.update("Generating Folds Map", 0,0);
-				if(map.get("source").equals("RANDOM")){
+				progressIndicator.update("Generating Folds Map", 0, 0);
+				if (map.get("source").equals("RANDOM"))
+				{
 					foldsMap = BuildModelControl.getFoldsMapRandom(sdl, numFolds);
-				}else if(map.get("source").equals("ANNOTATIONS")){
+				}
+				else if (map.get("source").equals("ANNOTATIONS"))
+				{
+					if(map.get("foldMethod").equals("AUTO"))
+					{
+						numFolds = sdl.getPossibleAnn(sdl.getCurrentAnnotation()).size();
+					}
 					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, map.get("annotation").toString(), numFolds);
-				}else if(map.get("source").equals("FILES")){
+				}
+				else if (map.get("source").equals("FILES"))
+				{
+					if(map.get("foldMethod").equals("AUTO"))
+					{
+						numFolds = sdl.getFilenames().size();
+					}
 					foldsMap = BuildModelControl.getFoldsMapByFile(sdl, numFolds);
 				}
 				result = evaluateCrossValidation(table, foldsMap, progressIndicator);
 				trainWithMaskForSubclass(table, mask, progressIndicator);
-			}else if(map.get("type").equals("SUPPLY")){
+			}
+			else if (map.get("type").equals("SUPPLY"))
+			{
 				trainWithMaskForSubclass(table, mask, progressIndicator);
-				result = evaluateTestSet(table, (FeatureTable)map.get("supplied"), progressIndicator);
+				result = evaluateTestSet(table, (FeatureTable) map.get("testFeatureTable"), progressIndicator);
 			}
 		}
 		return result;
@@ -107,10 +128,18 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			}
 			double timeB = System.currentTimeMillis();
 			times.add((timeB-timeA)/1000.0);
+			if(halt)
+			{
+				break;
+			}
 		}
-		ArrayList<String> predictionsList = new ArrayList<String>();
-		for(String s : predictions) predictionsList.add(s);
-		return new TrainingResult(table, predictionsList);
+		if(!halt)
+		{
+			ArrayList<String> predictionsList = new ArrayList<String>();
+			for(String s : predictions) predictionsList.add(s);
+			return new TrainingResult(table, predictionsList);
+		}
+		else return null;
 	}
 
 	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet,StatusUpdater updater){
@@ -134,6 +163,11 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 
 	public void stopWhenPossible(){
 		halt = true;
+	}
+	
+	public boolean isStopped()
+	{
+		return halt;
 	}
 	
 	public abstract void loadClassifierFromSettings(Map<String, String> settings);

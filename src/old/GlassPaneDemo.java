@@ -40,7 +40,7 @@ public class GlassPaneDemo {
  
         //Start creating and adding components.
         JCheckBox changeButton =
-                new JCheckBox("Glass pane \"visible\"");
+                new JCheckBox("Glass pane \"progress\"");
         changeButton.setSelected(false);
          
         //Set up the content pane, where the "main GUI" lives.

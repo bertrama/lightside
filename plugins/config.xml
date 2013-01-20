@@ -10,6 +10,15 @@
     </plugin>
     
     <plugin>
+        <name>Sequential Features</name>
+        <author>David Adamson</author>
+        <version>1.0</version>
+        <description><![CDATA[Extraction of Features from Previous Turns (for sequential data)]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.features.SequentialFeatures</classname>
+    </plugin>
+    
+    <plugin>
         <name>Basic Feature Evaluations</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>

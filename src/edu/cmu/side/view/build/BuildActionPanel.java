@@ -1,5 +1,6 @@
 package edu.cmu.side.view.build;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -38,10 +39,13 @@ public class BuildActionPanel extends ActionBar {
 		trainingLabel.setVisible(false);
 		settings.add("left", trainingLabel);
 		
+		updaters.removeAll();
+		updaters.add("right", (Component) update);
+		updaters.add("right", trainingLabel);
+		
 		numLabel.setVisible(false);
 		numFeatures.setVisible(false);
 		featureSelection.addItemListener(new ItemListener() {
-			
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
 				numFeatures.setVisible(featureSelection.isSelected());

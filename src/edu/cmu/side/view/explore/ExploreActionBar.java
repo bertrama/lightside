@@ -39,5 +39,19 @@ public class ExploreActionBar extends ActionBar{
 				ExploreResultsControl.getModelAnalysisPlugins().keySet().toArray(new EvaluateOneModelPlugin[0])[0]:null);
 		Workbench.reloadComboBoxContent(combo, ExploreResultsControl.getModelAnalysisPlugins().keySet(), plug);
 	}
+
+	@Override
+	public void startedTask()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endedTask()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

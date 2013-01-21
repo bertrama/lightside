@@ -32,6 +32,10 @@ public abstract class ActionBar extends JPanel{
 	protected JComboBox combo;
 	protected JPanel updaters = new JPanel(new RiverLayout());
 	Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+
+	JPanel left = new JPanel(new RiverLayout());
+	JPanel middle = new JPanel(new RiverLayout());
+	JPanel right = new JPanel(new RiverLayout());
 	
 	protected StatusUpdater update;
 
@@ -56,9 +60,6 @@ public abstract class ActionBar extends JPanel{
 		cancel.setIcon(iconCancel);
 		cancel.setEnabled(false);
 		cancel.setToolTipText("Cancel");
-		JPanel left = new JPanel(new RiverLayout());
-		JPanel middle = new JPanel(new RiverLayout());
-		JPanel right = new JPanel(new RiverLayout());
 		right.add("hfill", updaters);
 		right.add("left", cancel);
 		right.setBackground(Color.white);

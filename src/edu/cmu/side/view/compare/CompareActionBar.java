@@ -37,5 +37,19 @@ public class CompareActionBar extends ActionBar {
 		add("hfill", combo);
 		
 	}
+
+	@Override
+	public void startedTask()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endedTask()
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

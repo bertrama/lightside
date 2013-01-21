@@ -15,6 +15,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
+import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
+
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.model.StatusUpdater;
 
@@ -30,8 +32,13 @@ public abstract class ActionBar extends JPanel{
 	protected JComboBox combo;
 	protected JPanel updaters = new JPanel(new RiverLayout());
 	Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+	
+	protected StatusUpdater update;
 
-	public ActionBar(StatusUpdater update){
+	public ActionBar(StatusUpdater update)
+	{
+		this.update = update;
+		
 		setLayout(new RiverLayout());
 		add.setFont(font);
 		setBackground(Color.white);
@@ -62,4 +69,8 @@ public abstract class ActionBar extends JPanel{
 
 	public void refreshPanel(){
 	}
+
+	public abstract void startedTask();
+
+	public abstract void endedTask();
 }

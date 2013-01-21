@@ -23,12 +23,26 @@ public class RestructureActionPanel extends ActionBar{
 		add.setText("Restructure");
 		add.setIcon(new ImageIcon("toolkits/icons/application_side_expand.png"));
 		add.setIconTextGap(10);
-		add.addActionListener(new RestructureTablesControl.FilterTableListener(progressBar, name));
+		add.addActionListener(new RestructureTablesControl.FilterTableListener(this, name));
 		name.setText("restructured");
 	}
 
 	public void refreshPanel(){
 		super.refreshPanel();
 		add.setEnabled(RestructureTablesControl.getFilterPlugins().values().contains(Boolean.TRUE));
+	}
+
+	@Override
+	public void startedTask()
+	{
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void endedTask()
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }

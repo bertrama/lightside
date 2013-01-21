@@ -10,10 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-
-import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
@@ -21,11 +18,12 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
-import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
+import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.util.ActionBarTask;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
@@ -102,16 +100,16 @@ public class RestructureTablesControl extends GenesisControl{
 	
 	public static class FilterTableListener implements ActionListener{
 		
-		private JProgressBar progress;
+		private ActionBar actionBar;
 		private JTextField name;
 		
-		public FilterTableListener(JProgressBar pr, JTextField n){
-			progress = pr;
+		public FilterTableListener(ActionBar action, JTextField n){
+			actionBar = action;
 			name = n;
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			progress.setVisible(true);
+			actionBar.setVisible(true);
 			Collection<RestructurePlugin> plugins = new HashSet<RestructurePlugin>();
 			for(RestructurePlugin plugin : RestructureTablesControl.getFilterPlugins().keySet()){
 				if(RestructureTablesControl.getFilterPlugins().get(plugin)){
@@ -119,44 +117,49 @@ public class RestructureTablesControl extends GenesisControl{
 				}
 			}
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedFeatureTableRecipe(), plugins);
-			RestructureTablesControl.FilterTableTask task = new RestructureTablesControl.FilterTableTask(progress, newRecipe, name.getText());
+			RestructureTablesControl.FilterTableTask task = new RestructureTablesControl.FilterTableTask(actionBar, newRecipe, name.getText());
 			task.execute();
 		}
 		
 	}
 
-	private static class FilterTableTask extends OnPanelSwingTask{
+	private static class FilterTableTask extends ActionBarTask{
 		
 		Recipe plan;
 		String name;
 
-		JProgressBar visible;
 		
-		public FilterTableTask(JProgressBar progressBar, Recipe newRecipe, String n){
-			this.addProgressBar(progressBar);
+		public FilterTableTask(ActionBar progressBar, Recipe newRecipe, String n){
+			super(progressBar);
 			plan = newRecipe;
 			name = n;
-			visible = progressBar;
 		}
 
 		@Override
-		protected Void doInBackground(){
-			try{
+		protected void doTask(){
+			try
+			{
 				FeatureTable current = plan.getFeatureTable();
-				for(SIDEPlugin plug : plan.getFilters().keySet()){
-					current = ((RestructurePlugin)plug).restructure(current, plan.getFilters().get(plug), update);					
+				for (SIDEPlugin plug : plan.getFilters().keySet())
+				{
+					current = ((RestructurePlugin) plug).restructure(current, plan.getFilters().get(plug), update);
 				}
 				current.setName(name);
 				plan.setFilteredTable(current);
 				setHighlightedFilterTableRecipe(plan);
 				RecipeManager.addRecipe(plan);
 				Workbench.update();
-				update.reset();
-				visible.setVisible(false);
-			}catch(Exception e){
-				e.printStackTrace();
 			}
-			return null;				
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}			
+		}
+
+		@Override
+		public void requestCancel()
+		{
+			forceCancel();
 		}
 	}
 

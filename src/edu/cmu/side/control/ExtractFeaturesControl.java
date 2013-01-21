@@ -12,29 +12,26 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 import com.yerihyo.yeritools.io.FileToolkit;
-import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
 import edu.cmu.side.Workbench;
-import edu.cmu.side.control.BuildModelControl.BuildModelTask;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.FeatureHit;
-import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.extract.ExtractCombinedLoadPanel;
+import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.util.ActionBarTask;
 import edu.cmu.side.view.util.FastListModel;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
@@ -176,84 +173,65 @@ public class ExtractFeaturesControl extends GenesisControl{
 	
 	public static class BuildTableListener implements ActionListener{
 		
-		private JProgressBar progress;
+		private ActionBar actionBar;
 		private JTextField threshold;
 		private JTextField name;
-		private JButton haltButton;
 		
-		public BuildTableListener(JProgressBar pr, JTextField thr, JTextField n, JButton cancel){
-			progress = pr;
+		public BuildTableListener(ActionBar action, JTextField thr, JTextField n){
+			actionBar = action;
 			threshold = thr;
 			name = n;
-			haltButton = cancel;
 		}
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			progress.setVisible(true);
+		public void actionPerformed(ActionEvent arg0) 
+		{
 			Collection<FeaturePlugin> plugins = new HashSet<FeaturePlugin>();
-			for(FeaturePlugin plugin : ExtractFeaturesControl.getFeaturePlugins().keySet()){
-				if(ExtractFeaturesControl.getFeaturePlugins().get(plugin)){
+			for (FeaturePlugin plugin : ExtractFeaturesControl.getFeaturePlugins().keySet())
+			{
+				if (ExtractFeaturesControl.getFeaturePlugins().get(plugin))
+				{
 					plugins.add(plugin);
 				}
 			}
 			int thresh = 1;
-			try{
-				thresh = Integer.parseInt(threshold.getText());		
-			}catch(Exception e){
+			try
+			{
+				thresh = Integer.parseInt(threshold.getText());
+			}
+			catch (Exception e)
+			{
 				JOptionPane.showMessageDialog(threshold, "Threshold value is not an integer!", "Warning", JOptionPane.WARNING_MESSAGE);
 			}
 
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedDocumentListRecipe(), plugins);
-			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, name.getText(), thresh, haltButton);
+			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(actionBar, newRecipe, name.getText(), thresh);
 			task.execute();
 		}
 		
 	}
 
-	private static class BuildTableTask extends OnPanelSwingTask{
+	private static class BuildTableTask extends ActionBarTask
+	{
 		
 		Recipe plan;
 		String name;
 		Integer threshold;
-		JProgressBar progress;
-		JButton haltButton;
-		ActionListener stopListener;
 		boolean halt = false;
 		FeaturePlugin activeExtractor =  null;
 		
-		public BuildTableTask(JProgressBar progressBar, Recipe newRecipe, String n, int t, JButton haltButton){
-			this.addProgressBar(progressBar);
+		public BuildTableTask(ActionBar action, Recipe newRecipe, String n, int t){
+			super(action);
 			plan = newRecipe;
 			name = n;
 			threshold = t;
-			progress = progressBar;
-			this.haltButton = haltButton;
 
-			stopListener = new ActionListener(){
-		
-					@Override
-					public void actionPerformed(ActionEvent arg0)
-					{
-						System.out.println("stopping extraction...");
-						halt = true;
-						if(activeExtractor != null && !activeExtractor.isStopped())
-							activeExtractor.stopWhenPossible();
-						else //we tried to be nice
-						{
-							BuildTableTask.this.cancel(true);
-							resetStatusIndicators();
-						}
-					}
-					
-				};
 		}
 
 		@Override
-		protected Void doInBackground(){
+		protected void doTask(){
 			try
 			{
-				haltButton.addActionListener(stopListener);
-				haltButton.setEnabled(true);
+				
 				Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
 				double timeA = System.currentTimeMillis();
 				for (SIDEPlugin plug : plan.getExtractors().keySet())
@@ -276,7 +254,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 					RecipeManager.addRecipe(plan);
 					Workbench.update();
 				}
-				resetStatusIndicators();
 			}
 			catch (Exception e)
 			{
@@ -286,18 +263,21 @@ public class ExtractFeaturesControl extends GenesisControl{
 				// JScrollPane(text), "Feature Extraction Failed",
 				// JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
-				resetStatusIndicators();
-			}
-			return null;				
+			}				
 		}
 
-		protected void resetStatusIndicators()
+		@Override
+		public void requestCancel()
 		{
-			halt = false;
-			update.reset();
-			progress.setVisible(false);
-			haltButton.setEnabled(false);
-			haltButton.removeActionListener(stopListener);
+			System.out.println("stopping extraction...");
+			halt = true;
+			if(activeExtractor != null && !activeExtractor.isStopped())
+				activeExtractor.stopWhenPossible();
+			else //we tried to be nice
+			{
+				forceCancel();
+			}
+			
 		}
 	}
 

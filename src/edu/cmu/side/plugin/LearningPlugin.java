@@ -22,8 +22,6 @@ import edu.cmu.side.model.feature.FeatureHit;
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	private static final long serialVersionUID = -7928450759075851993L;
 
-	protected static boolean halt = false;
-
 	public static String type = "model_builder";
 
 	public static StatusUpdater updater;
@@ -101,37 +99,53 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		}
 		ArrayList<Double> times = new ArrayList<Double>();
 		DecimalFormat print = new DecimalFormat("#.###");
-		for(Integer fold : folds){
-			for(Integer key : foldsMap.keySet()){
+		for(Integer fold : folds)
+		{
+			if(halt)
+			{
+				break;
+			}
+			
+			for (Integer key : foldsMap.keySet())
+			{
 				mask[key] = !foldsMap.get(key).equals(fold);
 			}
 			double average = StatisticsToolkit.getAverage(times);
 			double timeA = System.currentTimeMillis();
-			try{
-				progressIndicator.update((times.size()>0?"Time per fold: " + print.format(average)+", ":"") + "Training fold", (fold+1), folds.size());
-				trainWithMaskForSubclass(table, mask, updater);				
-			}catch(Exception e){
+			try
+			{
+				progressIndicator
+						.update((times.size() > 0 ? "Time per fold: " + print.format(average) + ", " : "") + "Training fold", (fold + 1), folds.size());
+				trainWithMaskForSubclass(table, mask, updater);
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
-			for(int i = 0; i < mask.length; i++){
+			for (int i = 0; i < mask.length; i++)
+			{
 				mask[i] = !mask[i];
 			}
+
+			if (halt)
+			{
+				break;
+			}
+
 			progressIndicator.update("Testing fold", fold, folds.size());
 			PredictionResult preds = predictWithMaskForSubclass(table, table, mask, updater);
 			int predictionIndex = 0;
-			for(Comparable pred : preds.getPredictions()){
-				while(!mask[predictionIndex]){
+			for (Comparable pred : preds.getPredictions())
+			{
+				while (!mask[predictionIndex])
+				{
 					predictionIndex++;
 				}
 				predictions[predictionIndex] = pred.toString();
 				predictionIndex++;
 			}
 			double timeB = System.currentTimeMillis();
-			times.add((timeB-timeA)/1000.0);
-			if(halt)
-			{
-				break;
-			}
+			times.add((timeB - timeA) / 1000.0);
 		}
 		if(!halt)
 		{

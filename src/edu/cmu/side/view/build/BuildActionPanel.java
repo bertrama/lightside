@@ -21,16 +21,23 @@ public class BuildActionPanel extends ActionBar {
 	JCheckBox featureSelection = new JCheckBox("Feature Selection?");
 	JTextField numFeatures = new JTextField(5);
 	JLabel numLabel = new JLabel("#:");
+	JLabel trainingLabel = new JLabel();
 
 	public BuildActionPanel(StatusUpdater update){
 		super(update);
 		add.setText("Train");
 		add.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
 		add.setIconTextGap(10);
-		add.addActionListener(new BuildModelControl.TrainModelListener(progressBar, name, cancel));
+		add.addActionListener(new BuildModelControl.TrainModelListener(this, name));
+		
 		settings.add("left", featureSelection);
 		settings.add("left", numLabel);
 		settings.add("left", numFeatures);
+
+		trainingLabel.setIcon(new ImageIcon("toolkits/icons/training.gif"));
+		trainingLabel.setVisible(false);
+		settings.add("left", trainingLabel);
+		
 		numLabel.setVisible(false);
 		numFeatures.setVisible(false);
 		featureSelection.addItemListener(new ItemListener() {
@@ -59,7 +66,18 @@ public class BuildActionPanel extends ActionBar {
 	}
 
 	public void refreshPanel(){
-		super.refreshPanel();
 		add.setEnabled(BuildModelControl.hasHighlightedFeatureTableRecipe());
+	}
+
+	@Override
+	public void startedTask()
+	{
+		trainingLabel.setVisible(true);
+	}
+
+	@Override
+	public void endedTask()
+	{
+		trainingLabel.setVisible(false);	
 	}
 }

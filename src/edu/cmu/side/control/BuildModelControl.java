@@ -33,6 +33,8 @@ import edu.cmu.side.plugin.ModelMetricPlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
+import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.util.ActionBarTask;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class BuildModelControl extends GenesisControl{
@@ -153,18 +155,16 @@ public class BuildModelControl extends GenesisControl{
 
 	public static class TrainModelListener implements ActionListener{
 
-		JProgressBar progress;
+		ActionBar action;
 		JTextField name;
-		JButton haltButton;
 		
-		public TrainModelListener(JProgressBar p, JTextField n, JButton h){
-			progress = p;
+		public TrainModelListener(ActionBar action, JTextField n){
+			this.action = action;
 			name = n;
-			haltButton = h;
 		}
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
-			progress.setVisible(true);
+		public void actionPerformed(ActionEvent arg0) 
+		{
 			Workbench.update();
 			
 			try
@@ -185,13 +185,12 @@ public class BuildModelControl extends GenesisControl{
 				LearningPlugin learner = getHighlightedLearningPlugin();
 				Map<String, String> settings = learner.generateConfigurationSettings();
 				Recipe newRecipe = Recipe.addLearnerToRecipe(getHighlightedFeatureTableRecipe(), learner, settings);
-				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(progress, newRecipe, name.getText(), haltButton);
+				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
 				task.execute();
 			}
 			catch(Exception e)
 			{
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Build Model", JOptionPane.ERROR_MESSAGE);
-				haltButton.setEnabled(false);
 			}
 		}
 
@@ -217,42 +216,24 @@ public class BuildModelControl extends GenesisControl{
 		
 	}
 
-
-	public static class BuildModelTask extends OnPanelSwingTask{
+	public static class BuildModelTask extends ActionBarTask
+	{
 		Recipe plan;
 		String name;
 
-		JProgressBar progress;
-		JButton haltButton;
-		ActionListener stopListener ;
 		
-		public BuildModelTask(JProgressBar progressBar, Recipe newRecipe, String n, JButton h){
-			this.addProgressBar(progressBar);
+		public BuildModelTask(ActionBar action, Recipe newRecipe, String n)
+		{
+			super(action);
 			plan = newRecipe;
 			name = n;
-			progress = progressBar;
-			haltButton = h;
-			stopListener = new ActionListener(){
-		
-					@Override
-					public void actionPerformed(ActionEvent arg0)
-					{
-						if(!plan.getLearner().isStopped())
-							plan.getLearner().stopWhenPossible();
-						else //we tried to be nice
-						{
-							BuildModelTask.this.cancel(true);
-							resetStatusIndicators();
-						}
-					}
-					
-				};
-			haltButton.addActionListener(stopListener);
+
 		}
-		protected Void doInBackground(){
+		
+		@Override
+		protected void doTask(){
 			try
 			{
-				haltButton.setEnabled(true);
 				FeatureTable current = plan.getTrainingTable();
 				if (current != null)
 				{
@@ -276,18 +257,19 @@ public class BuildModelControl extends GenesisControl{
 			{
 				e.printStackTrace();
 			}
-			resetStatusIndicators();
-			return null;
+			finishTask();
 		}
-		/**
-		 * 
-		 */
-		protected void resetStatusIndicators()
+
+		@Override
+		public void requestCancel()
 		{
-			update.reset();
-			progress.setVisible(false);
-			haltButton.setEnabled(false);
-			haltButton.removeActionListener(stopListener);
+			if(!plan.getLearner().isStopped())
+				plan.getLearner().stopWhenPossible();
+			else //we tried to be nice
+			{
+				BuildModelTask.this.cancel(true);
+				finishTask();
+			}
 		}
 	}
 

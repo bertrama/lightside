@@ -42,10 +42,10 @@ public class Predictor
 
 	// File name/location is defined in parameter map
 	Recipe recipe;
+	boolean quiet = true;
 	
 	StatusUpdater textUpdater = new StatusUpdater()
 	{
-		boolean quiet = true;
 		
 		@Override
 		public void update(String updateSlot, int slot1, int slot2)
@@ -68,6 +68,13 @@ public class Predictor
 			
 		}
 	};
+	
+	public Predictor(Recipe r, String p)
+	{
+		this.recipe = r;
+		this.predictionAnnotation = p;
+		quiet = true;
+	}
 
 	public Predictor(Map<String, String> params) throws DeserializationException, FileNotFoundException
 	{
@@ -131,11 +138,12 @@ public class Predictor
 	 * @param corpus
 	 * @return
 	 */
-	protected PredictionResult predict(DocumentList corpus)
+	public PredictionResult predict(DocumentList corpus)
 	{
 		PredictionResult result = null;
 		try
 		{
+			Chef.quiet = quiet;
 			Recipe newRecipe = newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE);
 			FeatureTable ft = newRecipe.getTrainingTable();
 			//FeatureTable ft = prepareTestSet(corpus);

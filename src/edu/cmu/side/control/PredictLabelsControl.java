@@ -2,10 +2,17 @@ package edu.cmu.side.control;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
+import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.model.data.PredictionResult;
+import edu.cmu.side.recipe.Predictor;
+import edu.cmu.side.view.predict.PredictActionBar;
+import edu.cmu.side.view.util.ActionBarTask;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class PredictLabelsControl extends GenesisControl{
@@ -16,6 +23,11 @@ public class PredictLabelsControl extends GenesisControl{
 	private static Collection<Recipe> unlabeledDataRecipes = new ArrayList<Recipe>();
 	
 	private static StatusUpdater update = new SwingUpdaterLabel();
+
+	public static StatusUpdater getUpdater()
+	{
+		return update;
+	}
 
 	public static boolean hasHighlightedTrainedModelRecipe(){
 		return trainedModel!=null;
@@ -45,6 +57,43 @@ public class PredictLabelsControl extends GenesisControl{
 	
 	public static Collection<Recipe> getUnlabeledDataRecipes(){
 		return unlabeledDataRecipes;
+	}
+
+	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showDists)
+	{
+		new ActionBarTask(predictActionBar){
+
+			@Override
+			public void requestCancel()
+			{
+				forceCancel();
+			}
+
+			@Override
+			protected void doTask()
+			{
+				Predictor predictor = new Predictor(trainedModel, name);
+				DocumentList docs = highlightedUnlabeledData.getDocumentList();
+				PredictionResult results = predictor.predict(docs);
+				
+				List<String> predictions = (List<String>) results.getPredictions();
+				
+				docs.addAnnotation(name, predictions);
+				
+				List<String> likely = new ArrayList<String>();
+
+				List<Map<String, Double>> distributions = results.getDistributions();
+				if(distributions != null && showDists)
+				{
+					for(int i = 0; i < predictions.size(); i++)
+					{
+						likely.add(String.format("%.3f", distributions.get(i).get(predictions.get(i))));
+					}
+					docs.addAnnotation(name+"_score", likely);
+				}
+						
+			}
+		}.execute();
 	}
 	
 }

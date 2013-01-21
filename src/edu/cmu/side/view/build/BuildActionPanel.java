@@ -26,10 +26,10 @@ public class BuildActionPanel extends ActionBar {
 
 	public BuildActionPanel(StatusUpdater update){
 		super(update);
-		add.setText("Train");
-		add.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
-		add.setIconTextGap(10);
-		add.addActionListener(new BuildModelControl.TrainModelListener(this, name));
+		actionButton.setText("Train");
+		actionButton.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
+		actionButton.setIconTextGap(10);
+		actionButton.addActionListener(new BuildModelControl.TrainModelListener(this, name));
 		
 		settings.add("left", featureSelection);
 		settings.add("left", numLabel);
@@ -70,7 +70,7 @@ public class BuildActionPanel extends ActionBar {
 	}
 
 	public void refreshPanel(){
-		add.setEnabled(BuildModelControl.hasHighlightedFeatureTableRecipe());
+		actionButton.setEnabled(BuildModelControl.hasHighlightedFeatureTableRecipe());
 	}
 
 	@Override

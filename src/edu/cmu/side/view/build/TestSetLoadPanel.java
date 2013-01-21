@@ -34,7 +34,7 @@ public class TestSetLoadPanel extends GenericLoadPanel
 		load.setText("");
 		load.setToolTipText("Load Test Set");
 		load.setIcon(iconLoad);
-		chooser = new JFileChooser("data");
+		chooser.setCurrentDirectory(new File("data"));
 
 		describePanel.setPreferredSize(new Dimension(120, 120));
 		remove(save);
@@ -82,23 +82,7 @@ public class TestSetLoadPanel extends GenericLoadPanel
 	@Override
 	public void loadNewItem()
 	{
-		chooser.setFileFilter(FileToolkit.createExtensionListFileFilter(new String[] { "csv" }, true));
-		chooser.setMultiSelectionEnabled(true);
-		int result = chooser.showOpenDialog(TestSetLoadPanel.this);
-		if (result != JFileChooser.APPROVE_OPTION) { return; }
-
-		File[] selectedFiles = chooser.getSelectedFiles();
-		HashSet<String> docNames = new HashSet<String>();
-
-		for (File f : selectedFiles)
-		{
-			docNames.add(f.getPath());
-		}
-
-		DocumentList testDocs = new DocumentList(docNames);
-		Recipe r = RecipeManager.fetchDocumentListRecipe(testDocs);
-		setHighlight(r);
-
-		Workbench.update();
+		loadNewDocumentsFromCSV();
 	}
+	
 }

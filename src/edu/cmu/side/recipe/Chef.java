@@ -31,10 +31,10 @@ import edu.cmu.side.plugin.SIDEPlugin;
  */
 public class Chef
 {
+	static boolean quiet = false;
 
 	static StatusUpdater textUpdater = new StatusUpdater()
 	{
-		boolean quiet = false;
 		
 		@Override
 		public void update(String updateSlot, int slot1, int slot2)
@@ -138,9 +138,9 @@ public class Chef
 			{			
 				corpus.setTextColumn(column, true);
 			}
-			else
+			else if(! corpus.getTextColumns().contains(column))
 			{
-				System.err.println("Warning: data has no "+column+" annotation. Using default text column...");
+				System.err.println("Warning: data has no '"+column+"' text column.");
 			}
 		}
 	}

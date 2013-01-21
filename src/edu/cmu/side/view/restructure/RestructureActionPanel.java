@@ -20,16 +20,16 @@ public class RestructureActionPanel extends ActionBar{
 
 	public RestructureActionPanel(StatusUpdater update){
 		super(update);
-		add.setText("Restructure");
-		add.setIcon(new ImageIcon("toolkits/icons/application_side_expand.png"));
-		add.setIconTextGap(10);
-		add.addActionListener(new RestructureTablesControl.FilterTableListener(this, name));
+		actionButton.setText("Restructure");
+		actionButton.setIcon(new ImageIcon("toolkits/icons/application_side_expand.png"));
+		actionButton.setIconTextGap(10);
+		actionButton.addActionListener(new RestructureTablesControl.FilterTableListener(this, name));
 		name.setText("restructured");
 	}
 
 	public void refreshPanel(){
 		super.refreshPanel();
-		add.setEnabled(RestructureTablesControl.getFilterPlugins().values().contains(Boolean.TRUE));
+		actionButton.setEnabled(RestructureTablesControl.getFilterPlugins().values().contains(Boolean.TRUE));
 	}
 
 	@Override

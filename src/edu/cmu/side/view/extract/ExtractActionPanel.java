@@ -24,18 +24,18 @@ public class ExtractActionPanel extends ActionBar{
 	public ExtractActionPanel(StatusUpdater update){
 		super(update);
 		name.setText("features");
-		add.setText("Extract");
-		add.setIcon(new ImageIcon("toolkits/icons/application_view_columns.png"));
+		actionButton.setText("Extract");
+		actionButton.setIcon(new ImageIcon("toolkits/icons/application_view_columns.png"));
 		//Doesn't update the backend when the threshold changes!!
 		threshold.setText("5");
 		settings.add("left", new JLabel("Rare Threshold:"));
 		settings.add("left", threshold);
-		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(this, threshold, name));
+		actionButton.addActionListener(new ExtractFeaturesControl.BuildTableListener(this, threshold, name));
 	}
 	
 	public void refreshPanel(){
 		super.refreshPanel();
-		add.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
+		actionButton.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
 	}
 
 	@Override

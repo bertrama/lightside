@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
@@ -18,11 +19,15 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import com.yerihyo.yeritools.io.FileToolkit;
+
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.view.build.TestSetLoadPanel;
 import edu.cmu.side.view.util.AbstractListPanel;
 
 public abstract class GenericLoadPanel extends AbstractListPanel{
@@ -248,5 +253,27 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			}
 			
 		}
+	}
+	
+	protected void loadNewDocumentsFromCSV()
+	{
+		chooser.setFileFilter(FileToolkit.createExtensionListFileFilter(new String[] { "csv" }, true));
+		chooser.setMultiSelectionEnabled(true);
+		int result = chooser.showOpenDialog(GenericLoadPanel.this);
+		if (result != JFileChooser.APPROVE_OPTION) { return; }
+
+		File[] selectedFiles = chooser.getSelectedFiles();
+		HashSet<String> docNames = new HashSet<String>();
+
+		for (File f : selectedFiles)
+		{
+			docNames.add(f.getPath());
+		}
+
+		DocumentList testDocs = new DocumentList(docNames);
+		Recipe r = RecipeManager.fetchDocumentListRecipe(testDocs);
+		setHighlight(r);
+
+		Workbench.update();
 	}
 }

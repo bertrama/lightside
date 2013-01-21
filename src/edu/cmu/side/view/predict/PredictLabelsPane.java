@@ -5,15 +5,18 @@ import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTable;
 
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
+import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.util.DocumentListTableModel;
 
 public class PredictLabelsPane extends JPanel{
 
 
-	GenericLoadPanel load = new GenericLoadPanel("Apply:"){
+	GenericLoadPanel load = new GenericLoadPanel("Model to Apply:"){
 
 		@Override
 		public void setHighlight(Recipe r) {
@@ -32,12 +35,19 @@ public class PredictLabelsPane extends JPanel{
 		
 	};
 	
+
+	ActionBar predictActionBar = new PredictActionBar(PredictLabelsControl.getUpdater());
+	
 	PredictNewDataPanel newData = new PredictNewDataPanel();
 	PredictOutputPanel output = new PredictOutputPanel();
+	DocumentListTableModel docTableModel =new DocumentListTableModel(null);
+	JTable docDisplay = new JTable(docTableModel);
 	
 	public PredictLabelsPane(){
 		setLayout(new BorderLayout());
 		JSplitPane pane = new JSplitPane();
+		
+		
 		
 		JPanel left = new JPanel(new GridLayout(2,1));
 		left.add(load);
@@ -45,11 +55,13 @@ public class PredictLabelsPane extends JPanel{
 		pane.setLeftComponent(left);
 		pane.setRightComponent(output);
 		add(BorderLayout.CENTER, pane);
+		add(BorderLayout.SOUTH, predictActionBar);
+		
 	}
 	
 	public void refreshPanel(){
 		load.refreshPanel();
 		newData.refreshPanel();
-		output.refreshPanel();
+		output.refreshPanel(PredictLabelsControl.getHighlightedUnlabeledData());
 	}
 }

@@ -22,7 +22,7 @@ import edu.cmu.side.model.StatusUpdater;
 
 public abstract class ActionBar extends JPanel{
 	
-	protected JButton add = new JButton();
+	protected JButton actionButton = new JButton();
 	protected JButton cancel = new JButton();
 	
 	protected JProgressBar progressBar = new JProgressBar();
@@ -44,7 +44,7 @@ public abstract class ActionBar extends JPanel{
 		this.update = update;
 		
 		setLayout(new RiverLayout());
-		add.setFont(font);
+		actionButton.setFont(font);
 		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.gray));
 		settings.setBackground(Color.white);
@@ -63,7 +63,7 @@ public abstract class ActionBar extends JPanel{
 		right.add("hfill", updaters);
 		right.add("left", cancel);
 		right.setBackground(Color.white);
-		add("left", add);
+		add("left", actionButton);
 		add("hfill", settings);
 		add("left", right);
 	}

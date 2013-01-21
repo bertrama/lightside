@@ -30,7 +30,7 @@ public class ExtractActionPanel extends ActionBar{
 		threshold.setText("5");
 		settings.add("left", new JLabel("Rare Threshold:"));
 		settings.add("left", threshold);
-		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, threshold, name));
+		add.addActionListener(new ExtractFeaturesControl.BuildTableListener(progressBar, threshold, name, cancel));
 	}
 	
 	public void refreshPanel(){

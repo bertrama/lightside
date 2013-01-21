@@ -12,6 +12,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
@@ -21,6 +22,7 @@ import com.yerihyo.yeritools.io.FileToolkit;
 import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
 import edu.cmu.side.Workbench;
+import edu.cmu.side.control.BuildModelControl.BuildModelTask;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
@@ -177,10 +179,13 @@ public class ExtractFeaturesControl extends GenesisControl{
 		private JProgressBar progress;
 		private JTextField threshold;
 		private JTextField name;
-		public BuildTableListener(JProgressBar pr, JTextField thr, JTextField n){
+		private JButton haltButton;
+		
+		public BuildTableListener(JProgressBar pr, JTextField thr, JTextField n, JButton cancel){
 			progress = pr;
 			threshold = thr;
 			name = n;
+			haltButton = cancel;
 		}
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
@@ -199,7 +204,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedDocumentListRecipe(), plugins);
-			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, name.getText(), thresh);
+			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(progress, newRecipe, name.getText(), thresh, haltButton);
 			task.execute();
 		}
 		
@@ -210,42 +215,89 @@ public class ExtractFeaturesControl extends GenesisControl{
 		Recipe plan;
 		String name;
 		Integer threshold;
-		JProgressBar visible;
+		JProgressBar progress;
+		JButton haltButton;
+		ActionListener stopListener;
+		boolean halt = false;
+		FeaturePlugin activeExtractor =  null;
 		
-		public BuildTableTask(JProgressBar progressBar, Recipe newRecipe, String n, int t){
+		public BuildTableTask(JProgressBar progressBar, Recipe newRecipe, String n, int t, JButton haltButton){
 			this.addProgressBar(progressBar);
 			plan = newRecipe;
 			name = n;
 			threshold = t;
-			visible = progressBar;
+			progress = progressBar;
+			this.haltButton = haltButton;
+
+			stopListener = new ActionListener(){
+		
+					@Override
+					public void actionPerformed(ActionEvent arg0)
+					{
+						System.out.println("stopping extraction...");
+						halt = true;
+						if(activeExtractor != null && !activeExtractor.isStopped())
+							activeExtractor.stopWhenPossible();
+						else //we tried to be nice
+						{
+							BuildTableTask.this.cancel(true);
+							resetStatusIndicators();
+						}
+					}
+					
+				};
 		}
 
 		@Override
 		protected Void doInBackground(){
-			try{
+			try
+			{
+				haltButton.addActionListener(stopListener);
+				haltButton.setEnabled(true);
 				Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-				for(SIDEPlugin plug : plan.getExtractors().keySet()){
-					hits.addAll(((FeaturePlugin)plug).extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
-				}
 				double timeA = System.currentTimeMillis();
-				FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold);
+				for (SIDEPlugin plug : plan.getExtractors().keySet())
+				{
+					if(!halt)
+					{
+						activeExtractor = (FeaturePlugin) plug;
+						hits.addAll(activeExtractor.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
+					}
+				}
 				double timeB = System.currentTimeMillis();
-				ft.setName(name);
-				plan.setFeatureTable(ft);
-				setHighlightedFeatureTableRecipe(plan);
-				RestructureTablesControl.setHighlightedFeatureTableRecipe(plan);
-				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
-				RecipeManager.addRecipe(plan);
-				Workbench.update();
-				update.reset();
-				visible.setVisible(false);
-			}catch(Exception e){
-//				JTextArea text = new JTextArea();
-//				text.setText(e.toString());
-//				JOptionPane.showMessageDialog(FeaturePluginPanel.this, new JScrollPane(text), "Feature Extraction Failed", JOptionPane.ERROR_MESSAGE);
+				if(!halt)
+				{
+					FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold);
+					ft.setName(name);
+					plan.setFeatureTable(ft);
+					setHighlightedFeatureTableRecipe(plan);
+					RestructureTablesControl.setHighlightedFeatureTableRecipe(plan);
+					BuildModelControl.setHighlightedFeatureTableRecipe(plan);
+					RecipeManager.addRecipe(plan);
+					Workbench.update();
+				}
+				resetStatusIndicators();
+			}
+			catch (Exception e)
+			{
+				// JTextArea text = new JTextArea();
+				// text.setText(e.toString());
+				// JOptionPane.showMessageDialog(FeaturePluginPanel.this, new
+				// JScrollPane(text), "Feature Extraction Failed",
+				// JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
+				resetStatusIndicators();
 			}
 			return null;				
+		}
+
+		protected void resetStatusIndicators()
+		{
+			halt = false;
+			update.reset();
+			progress.setVisible(false);
+			haltButton.setEnabled(false);
+			haltButton.removeActionListener(stopListener);
 		}
 	}
 

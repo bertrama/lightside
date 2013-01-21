@@ -13,7 +13,7 @@ import edu.cmu.side.Workbench;
 public abstract class SIDEPlugin implements Cloneable{
 	private transient File rootFolder;
 
-	public static boolean halt;
+	protected boolean halt;
 	
 	private Map<String,String> aboutMap = new HashMap<String,String>();
 	public Map<String, String> getAboutMap() {
@@ -125,5 +125,10 @@ public abstract class SIDEPlugin implements Cloneable{
 	public Serializable toSerializable() throws IOException
 	{
 		return this.getClass().getName();
+	}
+	
+	public boolean isStopped()
+	{
+		return halt;
 	}
 }

@@ -24,6 +24,7 @@ public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
 	 */
 	public Collection<FeatureHit> extractFeatureHits(DocumentList documents, Map<String, String> configuration, StatusUpdater update)
 	{
+		halt = false;
 		this.configureFromSettings(configuration);
 		return extractFeatureHitsForSubclass(documents, update);
 	}

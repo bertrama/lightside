@@ -165,10 +165,5 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		halt = true;
 	}
 	
-	public boolean isStopped()
-	{
-		return halt;
-	}
-	
 	public abstract void loadClassifierFromSettings(Map<String, String> settings);
 }

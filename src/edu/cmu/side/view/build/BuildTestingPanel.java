@@ -1,5 +1,6 @@
 package edu.cmu.side.view.build;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -55,10 +56,11 @@ public class BuildTestingPanel extends AbstractListPanel {
 	JRadioButton radioManual = new JRadioButton("Manual:");
 	
 	JComboBox annotations = new JComboBox();
-	JTextArea testSetSummary = new JTextArea();
+//	JTextArea testSetSummary = new JTextArea();
+	TestSetLoadPanel testSetLoadPanel = new TestSetLoadPanel("Select Test Set");
 	
 	JPanel cvControlPanel = new JPanel(new RiverLayout(0, 3));
-	JPanel testSetControlPanel = new JPanel(new RiverLayout(0, 3));
+	JPanel testSetControlPanel = new JPanel(new BorderLayout());
 	
 	JPanel controlPanel = new JPanel(new RiverLayout(0,0));
 	JPanel selectPanel = new JPanel(new RiverLayout(10, 3));
@@ -220,63 +222,66 @@ public class BuildTestingPanel extends AbstractListPanel {
 	 */
 	protected void buildTestSetControlPanel()
 	{
-		add.setText("");
-		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
-		add.setToolTipText("Load Test Set...");
-		add.setIcon(iconLoad);
+
+		testSetControlPanel.add(testSetLoadPanel, BorderLayout.CENTER);
+//		add.setText("");
+//		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
+//		add.setToolTipText("Load Test Set...");
+//		add.setIcon(iconLoad);
+//		
+////		testSetSummary.setPreferredSize(new Dimension(120, 80));
+//		testSetSummary.setText("Load Test Set...");
+//		testSetSummary.setEditable(false);
+//		JScrollPane summaryScroll = new JScrollPane(testSetSummary);
+//		
+//		summaryScroll.setPreferredSize(new Dimension(120, 100));
 		
-//		testSetSummary.setPreferredSize(new Dimension(120, 80));
-		testSetSummary.setText("Load Test Set...");
-		testSetSummary.setEditable(false);
-		JScrollPane summaryScroll = new JScrollPane(testSetSummary);
-		
-		summaryScroll.setPreferredSize(new Dimension(120, 100));
-		
-		//testSetControlPanel.setBorder(new EmptyBorder(0,0,0,0));
-		testSetControlPanel.add("left", add);
-		//testSetControlPanel.add("left", new JLabel("Load Test Files"));
-		testSetControlPanel.add("br hfill vfill", summaryScroll);
+//		testSetControlPanel.setBorder(new EmptyBorder(0,0,0,0));
+//		testSetControlPanel.add("left", add);
+//		testSetControlPanel.add("left", new JLabel("Load Test Files"));
+//		testSetControlPanel.add("br hfill vfill", summaryScroll);
 
 		
-		add.addActionListener(new ActionListener() 
-		{
-			private JFileChooser chooser = new JFileChooser(Workbench.csvFolder);
-			
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				chooser.setFileFilter(FileToolkit
-						.createExtensionListFileFilter(new String[] { "csv" }, true));
-				chooser.setMultiSelectionEnabled(true);
-				int result = chooser.showOpenDialog(BuildTestingPanel.this);
-				if (result != JFileChooser.APPROVE_OPTION) {
-					return;
-				}
-				
-				File[] selectedFiles = chooser.getSelectedFiles();
-				HashSet<String> docNames = new HashSet<String>();
-				
-				String description = "";
-				for(File f : selectedFiles)
-				{
-					docNames.add(f.getPath());
-					description += f.getName()+"\n";
-				}	
-				
-				DocumentList testDocs = new DocumentList(docNames);
-				BuildModelControl.updateValidationSetting("testSet", testDocs);
-				testSetSummary.setText(description);
-				
-				Workbench.update();
-			}
-			
-		});
+//		add.addActionListener(new ActionListener() 
+//		{
+//			private JFileChooser chooser = new JFileChooser(Workbench.csvFolder);
+//			
+//
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				chooser.setFileFilter(FileToolkit
+//						.createExtensionListFileFilter(new String[] { "csv" }, true));
+//				chooser.setMultiSelectionEnabled(true);
+//				int result = chooser.showOpenDialog(BuildTestingPanel.this);
+//				if (result != JFileChooser.APPROVE_OPTION) {
+//					return;
+//				}
+//				
+//				File[] selectedFiles = chooser.getSelectedFiles();
+//				HashSet<String> docNames = new HashSet<String>();
+//				
+//				String description = "";
+//				for(File f : selectedFiles)
+//				{
+//					docNames.add(f.getPath());
+//					description += f.getName()+"\n";
+//				}	
+//				
+//				DocumentList testDocs = new DocumentList(docNames);
+//				BuildModelControl.updateValidationSetting("testSet", testDocs);
+//				testSetSummary.setText(description);
+//				
+//				Workbench.update();
+//			}
+//			
+//		});
 	}
 	
 	public void refreshPanel()
 	{
 		reloadAnnotationList();
 		updateNumFolds();
+		testSetLoadPanel.refreshPanel();
 	}
 
 	/**

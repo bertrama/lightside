@@ -265,11 +265,6 @@ public class BuildModelControl extends GenesisControl{
 		{
 			if(!plan.getLearner().isStopped())
 				plan.getLearner().stopWhenPossible();
-			else //we tried to be nice
-			{
-				BuildModelTask.this.cancel(true);
-				finishTask();
-			}
 		}
 	}
 

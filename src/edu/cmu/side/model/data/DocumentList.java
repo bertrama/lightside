@@ -268,6 +268,19 @@ public class DocumentList implements Serializable{
 		getLabelArray();
 	}
 
+	//TODO: use this in BuildModel and Chef and anywhere else we're translating a recipe to a new document list
+	public void setTextColumns(Set<String> columns)
+	{
+		for(String s : getTextColumns())
+		{
+			setTextColumn(s, false);
+		}
+		for(String s : columns)
+		{
+			setTextColumn(s, true);
+		}
+	}
+	
 	public void setTextColumn(String name, boolean isText){
 		if(isText){
 			if (!allAnnotations.containsKey(name)){

@@ -7,20 +7,28 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
+
+import edu.cmu.side.Workbench;
 
 public abstract class ActionBarTask extends SwingWorker<Void, Void> implements PropertyChangeListener
 {
 	protected List<JProgressBar> progressBarList;
 
-	ActionBar actionBar;
-	ActionListener stopListener ;
+	protected ActionBar actionBar;
+	protected ActionListener stopListener ;
+	protected Icon originalIcon ;
 	
-	public abstract void requestCancel();
 	protected abstract void doTask();
+	protected boolean halt = false;
+	
+	protected static Icon dangerIcon = new ImageIcon("toolkits/icons/exclamation.png");
 	
 
+	public abstract void requestCancel();
 	public void forceCancel()
 	{
 		cancel(true);
@@ -33,8 +41,10 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 		actionBar.progressBar.setVisible(false);
 		actionBar.cancel.setEnabled(false);
 		actionBar.cancel.removeActionListener(stopListener);
+		actionBar.cancel.setIcon(originalIcon);
 
 		actionBar.endedTask();
+		Workbench.update(); //this is the only SIDE-specific code in this class...
 	}
 	
 	@Override
@@ -51,10 +61,12 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	
 	protected void beginTask()
 	{
+		halt = false;
+		originalIcon = actionBar.cancel.getIcon();
 		actionBar.cancel.addActionListener(stopListener);
 		actionBar.cancel.setEnabled(true);
 		actionBar.progressBar.setVisible(true);
-
+		actionBar.actionButton.setEnabled(false);
 		actionBar.startedTask();
 	}
 
@@ -71,12 +83,21 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				requestCancel();
+				if(halt)
+				{
+					forceCancel();
+				}
+				else
+				{
+					halt = true;
+					actionBar.cancel.setIcon(dangerIcon);
+					requestCancel();
+				}
 			}};
 	}
 
 	
-	//FROM OnPanelSwingTask
+	//from OnPanelSwingTask
 	public void propertyChange(PropertyChangeEvent evt)
 	{
 		evt.getSource();

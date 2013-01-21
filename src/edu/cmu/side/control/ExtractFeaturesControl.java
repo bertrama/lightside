@@ -216,7 +216,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 		Recipe plan;
 		String name;
 		Integer threshold;
-		boolean halt = false;
 		FeaturePlugin activeExtractor =  null;
 		
 		public BuildTableTask(ActionBar action, Recipe newRecipe, String n, int t){
@@ -270,14 +269,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 		public void requestCancel()
 		{
 			System.out.println("stopping extraction...");
-			halt = true;
 			if(activeExtractor != null && !activeExtractor.isStopped())
 				activeExtractor.stopWhenPossible();
-			else //we tried to be nice
-			{
-				forceCancel();
-			}
-			
 		}
 	}
 

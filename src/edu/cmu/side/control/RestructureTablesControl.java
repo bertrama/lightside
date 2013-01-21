@@ -159,7 +159,7 @@ public class RestructureTablesControl extends GenesisControl{
 		@Override
 		public void requestCancel()
 		{
-			forceCancel();
+			//TODO: halt nicely.
 		}
 	}
 

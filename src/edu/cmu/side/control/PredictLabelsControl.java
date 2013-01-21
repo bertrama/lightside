@@ -66,7 +66,7 @@ public class PredictLabelsControl extends GenesisControl{
 			@Override
 			public void requestCancel()
 			{
-				forceCancel();
+				//TODO: halt nicely.
 			}
 
 			@Override

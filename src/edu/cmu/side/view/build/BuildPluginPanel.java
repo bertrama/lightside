@@ -6,6 +6,8 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 
 import javax.swing.ButtonGroup;
@@ -20,6 +22,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
 import edu.cmu.side.view.util.RadioButtonListEntry;
 import edu.cmu.side.view.util.SelectPluginList;
@@ -45,6 +48,16 @@ public class BuildPluginPanel extends AbstractListPanel {
 			pluginsToPass.add(entry);
 			bg.add(entry);
 		}
+		Collections.sort(pluginsToPass, new Comparator<RadioButtonListEntry>(){
+
+			@Override
+			public int compare(RadioButtonListEntry arg0, RadioButtonListEntry arg1)
+			{
+				LearningPlugin one = (LearningPlugin) arg0.getValue();
+				LearningPlugin other = (LearningPlugin) arg1.getValue();
+				return one.getOutputName().compareTo(other.getOutputName());
+			}});
+		
 		pluginsModel.addAll(pluginsToPass.toArray(new RadioButtonListEntry[0]));
 		pluginsList.setModel(pluginsModel);
 		pluginsList.addListSelectionListener(new ListSelectionListener() {

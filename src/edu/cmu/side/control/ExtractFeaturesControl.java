@@ -80,8 +80,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 				return;
 			}
 			Recipe plan = generateDocumentListRecipe(chooser.getSelectedFiles());
+			plan.getDocumentList().guessTextAndAnnotationColumns();
 			setHighlightedDocumentListRecipe(plan);
-			Workbench.update();
 		}
 	}
 	
@@ -300,26 +300,10 @@ public class ExtractFeaturesControl extends GenesisControl{
 	
 	public static void setHighlightedDocumentListRecipe(Recipe highlight){
 		highlightedDocumentList = highlight;
-		if(highlight != null){
-			DocumentList sdl = highlight.getDocumentList();
-			boolean noText = (sdl.getTextColumns().size()==0);		
-			if(sdl.getCurrentAnnotation() == null){
-				for(String s : sdl.getAnnotationNames()){
-					Set<String> values = new TreeSet<String>();
-					for(String t : sdl.getAnnotationArray(s)){
-						values.add(t);
-					}
-					if(values.size() < (sdl.getSize()/10.0)){
-						sdl.setCurrentAnnotation(s);
-					}
-					if(noText && values.size() >= (sdl.getSize()/2.0)){
-						sdl.setTextColumn(s, true);
-					}
-				}
-			}
-		}
 		Workbench.update();
 	}
+
+
 	
 	public static void setHighlightedFeatureTableRecipe(Recipe highlight){
 		highlightedFeatureTable = highlight;

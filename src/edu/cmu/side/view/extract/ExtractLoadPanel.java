@@ -50,4 +50,5 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 	public void refreshPanel() {		
 		refreshPanel(ExtractFeaturesControl.getDocumentLists());
 	}
+	
 }

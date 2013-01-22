@@ -334,10 +334,7 @@ public class BuildModelControl extends GenesisControl{
 		try
 		{
 			test.setCurrentAnnotation(train.getCurrentAnnotation());
-			for(String column : train.getTextColumns())
-			{
-				test.setTextColumn(column, true);
-			}
+			test.setTextColumns(train.getTextColumns());
 
 			
 			List<String> trainColumns = train.getAnnotationArray();

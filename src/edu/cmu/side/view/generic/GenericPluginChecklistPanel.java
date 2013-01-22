@@ -1,6 +1,8 @@
 package edu.cmu.side.view.generic;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Map;
 
 import javax.swing.JLabel;
@@ -10,9 +12,9 @@ import se.datadosen.component.RiverLayout;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
+import edu.cmu.side.view.util.SelectPluginList;
 
 public abstract class GenericPluginChecklistPanel<E extends SIDEPlugin> extends AbstractListPanel {
 	FastListModel pluginsModel = new FastListModel();
@@ -28,6 +30,14 @@ public abstract class GenericPluginChecklistPanel<E extends SIDEPlugin> extends 
 			entry.addItemListener(new GenesisControl.PluginCheckboxListener<E>(plugins));
 			pluginsToPass.add(entry);
 		}
+		Collections.sort(pluginsToPass, new Comparator<CheckBoxListEntry>(){
+
+			@Override
+			public int compare(CheckBoxListEntry arg0, CheckBoxListEntry arg1)
+			{
+				return arg0.getValue().toString().compareTo(arg1.getValue().toString());
+			}});
+		
 		pluginsModel.addAll(pluginsToPass.toArray(new CheckBoxListEntry[0]));
 		pluginsList.setModel(pluginsModel);
 		add("left", new JLabel(label));

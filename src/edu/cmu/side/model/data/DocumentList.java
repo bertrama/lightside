@@ -140,6 +140,41 @@ public class DocumentList implements Serializable{
 	public Map<String, List<String>> allAnnotations() {
 		return allAnnotations;
 	}
+	
+	public void guessTextAndAnnotationColumns()
+	{
+		
+		if(currentAnnotation == null && allAnnotations.containsKey("class"))
+		{
+			setCurrentAnnotation("class");
+		}
+		if(getTextColumns().isEmpty() && allAnnotations.containsKey("text"))
+		{
+			setTextColumn("text", true);
+		}
+		
+		for (String s : this.getAnnotationNames())
+		{
+			Set<String> values = new TreeSet<String>();
+			double length = 0;
+			for (String t : this.getAnnotationArray(s))
+			{
+				values.add(t);
+				length += t.length();
+			}
+			length = length/getSize();
+			
+			if(currentAnnotation == null && values.size() < (this.getSize() / 10.0))
+			{
+				this.setCurrentAnnotation(s);
+			}
+			
+			if (getTextColumns().isEmpty() && length > 10 && values.size() >= (this.getSize() / 2.0))
+			{
+				this.setTextColumn(s, true);
+			}
+		}
+	}
 
 	/**
 	 * Adds a new annotation. Primarily used by the prediction interface.

@@ -132,17 +132,7 @@ public class Chef
 		{
 			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
 		}
-		for(String column : original.getTextColumns())
-		{
-			if(corpus.allAnnotations().containsKey(column))
-			{			
-				corpus.setTextColumn(column, true);
-			}
-			else if(! corpus.getTextColumns().contains(column))
-			{
-				System.err.println("Warning: data has no '"+column+"' text column.");
-			}
-		}
+		corpus.setTextColumns(original.getTextColumns());
 	}
 
 

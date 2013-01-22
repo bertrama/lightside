@@ -109,7 +109,7 @@ public class Workbench{
 		int i = 0;
 		for(Object option : options){
 			dropdown.addItem(option);
-			if(option == selected){
+			if(option.equals(selected)){
 				select = i;
 			}
 			i++;

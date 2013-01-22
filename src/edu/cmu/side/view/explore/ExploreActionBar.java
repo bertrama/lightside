@@ -12,7 +12,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
-import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.generic.ActionBar;
 
 public class ExploreActionBar extends ActionBar{
 	

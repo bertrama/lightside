@@ -10,7 +10,7 @@ public class PredictionResult implements Serializable{
 	private FeatureTable test; //what is my purpose?
 	private boolean[] mask; //what is my purpose?
 	private List<? extends Comparable<?>> predictions;
-	private List<Map<String, Double>> distributions;
+	private Map<String, List<Double>> distributions;
 
 	public String toString(){
 		if(name != null)
@@ -31,13 +31,18 @@ public class PredictionResult implements Serializable{
 		test = te; mask = m; predictions = pred;
 	}
 	
-	public PredictionResult(FeatureTable te, boolean[] m, List<String> pred, List<Map<String, Double>> dist)
+	public PredictionResult(FeatureTable te, boolean[] m, List<String> pred, Map<String, List<Double>> dist)
 	{
 		this(te, m, pred);
 		distributions = dist;
 	}
 
-	public List<Map<String, Double>> getDistributions()
+	public List<Double> getScoresForLabel(String label)
+	{
+		return distributions.get(label);
+	}
+	
+	public Map<String, List<Double>> getDistributions()
 	{
 		return distributions;
 	}

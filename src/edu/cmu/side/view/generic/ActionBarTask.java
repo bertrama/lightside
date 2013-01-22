@@ -1,4 +1,4 @@
-package edu.cmu.side.view.util;
+package edu.cmu.side.view.generic;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.StatusUpdater;
-import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class ExtractActionPanel extends ActionBar{

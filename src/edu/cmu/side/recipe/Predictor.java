@@ -144,7 +144,7 @@ public class Predictor
 		try
 		{
 			Chef.quiet = quiet;
-			Recipe newRecipe = newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE);
+			Recipe newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE);
 			FeatureTable ft = newRecipe.getTrainingTable();
 			//FeatureTable ft = prepareTestSet(corpus);
 			result = recipe.getLearner().predict(recipe.getFeatureTable(), ft, recipe.getLearnerSettings(), textUpdater);
@@ -170,7 +170,7 @@ public class Predictor
 		prediction = predictionResult.getPredictions().get(0).toString();
 		if(predictionResult.getDistributions() != null)
 		{
-			prediction = prediction + "\t "+ (int)(predictionResult.getDistributions().get(0).get(prediction)*100) + "%";
+			prediction = prediction + "\t "+ (int)(predictionResult.getDistributions().get(prediction).get(0)*100) + "%";
 		}
 		
 		return prediction;

@@ -22,8 +22,8 @@ import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
-import edu.cmu.side.view.util.ActionBar;
-import edu.cmu.side.view.util.ActionBarTask;
+import edu.cmu.side.view.generic.ActionBar;
+import edu.cmu.side.view.generic.ActionBarTask;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 

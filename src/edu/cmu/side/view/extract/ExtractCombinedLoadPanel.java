@@ -16,6 +16,7 @@ import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
@@ -33,6 +34,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		add(BorderLayout.CENTER, files);
 		JPanel pan = new JPanel(new RiverLayout());
 		annotationField.addActionListener(new ExtractFeaturesControl.AnnotationComboListener(this));
+		annotationField.setRenderer(new AbbreviatedComboBoxCellRenderer(15));
 		pan.add("left", new JLabel("Class:"));
 		pan.add("hfill", annotationField);
 		pan.add("br left", new JLabel("Text Fields:"));

@@ -9,8 +9,8 @@ import javax.swing.JTable;
 
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.GenericLoadPanel;
-import edu.cmu.side.view.util.ActionBar;
 import edu.cmu.side.view.util.DocumentListTableModel;
 
 public class PredictLabelsPane extends JPanel{
@@ -36,7 +36,7 @@ public class PredictLabelsPane extends JPanel{
 	};
 	
 
-	ActionBar predictActionBar = new PredictActionBar(PredictLabelsControl.getUpdater());
+	ActionBar actionBar = new PredictActionBar(PredictLabelsControl.getUpdater());
 	
 	PredictNewDataPanel newData = new PredictNewDataPanel();
 	PredictOutputPanel output = new PredictOutputPanel();
@@ -55,7 +55,7 @@ public class PredictLabelsPane extends JPanel{
 		pane.setLeftComponent(left);
 		pane.setRightComponent(output);
 		add(BorderLayout.CENTER, pane);
-		add(BorderLayout.SOUTH, predictActionBar);
+		add(BorderLayout.SOUTH, actionBar);
 		
 	}
 	
@@ -63,5 +63,6 @@ public class PredictLabelsPane extends JPanel{
 		load.refreshPanel();
 		newData.refreshPanel();
 		output.refreshPanel(PredictLabelsControl.getHighlightedUnlabeledData());
+		actionBar.refreshPanel();
 	}
 }

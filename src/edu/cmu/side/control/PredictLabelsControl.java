@@ -11,8 +11,8 @@ import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.recipe.Predictor;
+import edu.cmu.side.view.generic.ActionBarTask;
 import edu.cmu.side.view.predict.PredictActionBar;
-import edu.cmu.side.view.util.ActionBarTask;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class PredictLabelsControl extends GenesisControl{
@@ -59,7 +59,7 @@ public class PredictLabelsControl extends GenesisControl{
 		return unlabeledDataRecipes;
 	}
 
-	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showDists)
+	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showMaxScore, final boolean showDists)
 	{
 		new ActionBarTask(predictActionBar){
 
@@ -74,22 +74,44 @@ public class PredictLabelsControl extends GenesisControl{
 			{
 				Predictor predictor = new Predictor(trainedModel, name);
 				DocumentList docs = highlightedUnlabeledData.getDocumentList();
+
+				
+				
 				PredictionResult results = predictor.predict(docs);
 				
 				List<String> predictions = (List<String>) results.getPredictions();
 				
+				
 				docs.addAnnotation(name, predictions);
 				
-				List<String> likely = new ArrayList<String>();
 
-				List<Map<String, Double>> distributions = results.getDistributions();
-				if(distributions != null && showDists)
+				Map<String, List<Double>> distributions = results.getDistributions();
+				if(distributions != null)
 				{
-					for(int i = 0; i < predictions.size(); i++)
+					List<String> likely = new ArrayList<String>();
+					if(showMaxScore)
 					{
-						likely.add(String.format("%.3f", distributions.get(i).get(predictions.get(i))));
+						for(int i = 0; i < predictions.size(); i++)
+						{
+							likely.add(String.format("%.3f", distributions.get(predictions.get(i)).get(i)));
+						}
+						docs.addAnnotation(name+"_score", likely);
 					}
-					docs.addAnnotation(name+"_score", likely);
+					
+					if(showDists)
+					{
+						for(String label : trainedModel.getDocumentList().getLabelArray())
+						{
+							List<String> dist = new ArrayList<String>();
+
+							for(int i = 0; i < predictions.size(); i++)
+							{
+								dist.add(String.format("%.3f", distributions.get(label).get(i)));
+							}
+							
+							docs.addAnnotation(name+"_"+label+"_score", dist);
+						}
+					}
 				}
 						
 			}

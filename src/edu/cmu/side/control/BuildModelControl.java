@@ -6,17 +6,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
-
-import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
@@ -33,8 +30,8 @@ import edu.cmu.side.plugin.ModelMetricPlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
-import edu.cmu.side.view.util.ActionBar;
-import edu.cmu.side.view.util.ActionBarTask;
+import edu.cmu.side.view.generic.ActionBar;
+import edu.cmu.side.view.generic.ActionBarTask;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class BuildModelControl extends GenesisControl{
@@ -249,7 +246,6 @@ public class BuildModelControl extends GenesisControl{
 						RecipeManager.addRecipe(plan);
 	
 						BuildModelControl.setHighlightedTrainedModelRecipe(plan);
-						Workbench.update();
 					}
 				}
 			}
@@ -263,8 +259,7 @@ public class BuildModelControl extends GenesisControl{
 		@Override
 		public void requestCancel()
 		{
-			if(!plan.getLearner().isStopped())
-				plan.getLearner().stopWhenPossible();
+			plan.getLearner().stopWhenPossible();
 		}
 	}
 
@@ -334,7 +329,7 @@ public class BuildModelControl extends GenesisControl{
 		try
 		{
 			test.setCurrentAnnotation(train.getCurrentAnnotation());
-			test.setTextColumns(train.getTextColumns());
+			test.setTextColumns(new HashSet<String>(train.getTextColumns()));
 
 			
 			List<String> trainColumns = train.getAnnotationArray();

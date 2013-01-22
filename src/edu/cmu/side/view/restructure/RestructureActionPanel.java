@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.RestructureTablesControl;
 import edu.cmu.side.model.StatusUpdater;
-import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class RestructureActionPanel extends ActionBar{

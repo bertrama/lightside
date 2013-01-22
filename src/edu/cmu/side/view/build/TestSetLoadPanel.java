@@ -24,31 +24,13 @@ public class TestSetLoadPanel extends GenericLoadPanel
 
 	public TestSetLoadPanel(String s)
 	{
-		super(s);
-		ImageIcon iconDelete = new ImageIcon("toolkits/icons/cross.png");
-		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
-		delete.setText("");
-		delete.setIcon(iconDelete);
-		delete.setToolTipText("Delete Document List");
-		delete.setBorderPainted(true);
-		load.setText("");
+		super(s, true, true, false);
 		load.setToolTipText("Load Test Set");
-		load.setIcon(iconLoad);
 		chooser.setCurrentDirectory(new File("data"));
 
 		describePanel.setPreferredSize(new Dimension(120, 120));
 		remove(save);
 		revalidate();
-
-		// load.addActionListener(new
-		// ExtractFeaturesControl.AddFilesListener(this));
-		// load.setBorderPainted(true);
-		// label = new JLabel(s);
-		// add("hfill", label);
-		// add("right", load);
-		// add("br hfill", combo);
-		// add("left", delete);
-		// add("br hfill vfill", describePanel);
 
 	}
 

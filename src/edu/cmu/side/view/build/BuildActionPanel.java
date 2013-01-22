@@ -14,7 +14,7 @@ import javax.swing.JTextField;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.SIDEPlugin;
-import edu.cmu.side.view.util.ActionBar;
+import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.RadioButtonListEntry;
 
 public class BuildActionPanel extends ActionBar {

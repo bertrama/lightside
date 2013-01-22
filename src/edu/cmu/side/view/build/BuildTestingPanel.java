@@ -33,6 +33,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
 
 public class BuildTestingPanel extends AbstractListPanel {
@@ -198,6 +199,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 		
 		cvControlPanel.setBorder(new EmptyBorder(0,0,0,0));
 		annotations.setBorder(new EmptyBorder(0,20,0,20));
+		annotations.setRenderer(new AbbreviatedComboBoxCellRenderer(15));
 
 		JLabel howToFoldLabel = new JLabel("Fold Assignment:");
 		cvControlPanel.add("br left", howToFoldLabel);

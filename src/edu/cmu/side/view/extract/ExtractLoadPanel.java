@@ -10,6 +10,7 @@ import javax.swing.JScrollPane;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
+import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 
 public class ExtractLoadPanel extends GenericLoadPanel{
 
@@ -34,6 +35,8 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		describeScroll = new JScrollPane();
 		describePanel.add(BorderLayout.CENTER, describeScroll);
 		add("br hfill vfill", describePanel);
+		
+		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(40));
 	}
 
 	@Override

@@ -132,7 +132,7 @@ public class Chef
 		{
 			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
 		}
-		corpus.setTextColumns(original.getTextColumns());
+		corpus.setTextColumns(new HashSet<String>(original.getTextColumns()));
 	}
 
 

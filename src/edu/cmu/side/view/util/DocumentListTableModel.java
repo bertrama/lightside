@@ -1,6 +1,8 @@
 package edu.cmu.side.view.util;
 
-import javax.swing.event.TableModelListener;
+import java.util.List;
+import java.util.TreeSet;
+
 import javax.swing.table.AbstractTableModel;
 
 import edu.cmu.side.model.data.DocumentList;
@@ -9,6 +11,7 @@ public class DocumentListTableModel extends AbstractTableModel
 {
 
 	private DocumentList docs;
+	private String[] annotationNames = new String[0];
 
 	public DocumentListTableModel(DocumentList docs)
 	{
@@ -29,10 +32,10 @@ public class DocumentListTableModel extends AbstractTableModel
 			return 0;
 		
 		if(docs.getTextColumns().isEmpty())
-			return docs.getAnnotationNames().length;
+			return annotationNames.length;
 		
 		else 
-			return docs.getAnnotationNames().length + 1;
+			return annotationNames.length + 1;
 	}
 
 	@Override
@@ -40,8 +43,9 @@ public class DocumentListTableModel extends AbstractTableModel
 	{
 		if(c == docs.getAnnotationNames().length)
 			return "text";
-		
-		return docs.getAnnotationNames()[c];
+		else if(c < annotationNames.length)
+			return annotationNames[c];
+		else return "?";
 	}
 
 	@Override
@@ -56,9 +60,13 @@ public class DocumentListTableModel extends AbstractTableModel
 	@Override
 	public Object getValueAt(int r, int c)
 	{
-		if(c == docs.getAnnotationNames().length)
+		if(c == annotationNames.length)
 			return docs.getPrintableTextAt(r);
-		return docs.getAnnotationArray(docs.getAnnotationNames()[c]).get(r);
+		List<String> annotationArray = docs.getAnnotationArray(annotationNames[c]);
+		if(annotationArray != null)
+			return annotationArray.get(r);
+		else
+			return "?";
 	}
 
 	@Override
@@ -80,7 +88,16 @@ public class DocumentListTableModel extends AbstractTableModel
 
 	public void setDocumentList(DocumentList docs)
 	{
+		if(docs != null)
+		{
+			annotationNames = (String[]) new TreeSet<String>(docs.allAnnotations().keySet()).toArray(annotationNames);
+		}
+		else
+		{
+			annotationNames = new String[0];
+		}
 		this.docs = docs;
+		
 		fireTableStructureChanged();
 	}
 

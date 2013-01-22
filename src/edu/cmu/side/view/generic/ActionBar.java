@@ -1,4 +1,4 @@
-package edu.cmu.side.view.util;
+package edu.cmu.side.view.generic;
 
 import java.awt.Color;
 import java.awt.Component;

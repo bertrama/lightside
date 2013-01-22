@@ -73,7 +73,13 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		}
 	}
 
-	public GenericLoadPanel(String l){
+
+	public GenericLoadPanel(String l)
+	{
+		this(l, true, true, true);
+	}
+	
+	public GenericLoadPanel(String l, boolean showLoad, boolean showDelete, boolean showSave){
 		this();
 		label = new JLabel(l);
 		buttons.setLayout(new RiverLayout());
@@ -95,10 +101,13 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		//buttons.add("left", load);
 		//buttons.add("left", save);
 		add("hfill", label);
-		add("right", load);
+		if(showLoad)
+			add("right", load);
 		add("br hfill", combo);
-		add("right", save);
-		add("right", delete);
+		if(showSave)
+			add("right", save);
+		if(showDelete)
+			add("right", delete);
 		describeScroll = new JScrollPane();
 		describePanel.add(BorderLayout.CENTER, describeScroll);
 		add("br hfill vfill", describePanel);

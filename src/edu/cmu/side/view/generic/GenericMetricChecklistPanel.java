@@ -20,6 +20,7 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.FeatureMetricPlugin;
+import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
@@ -58,6 +59,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 				Workbench.update();
 			}
 		});
+		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(15));
 		add("left", new JLabel("Evaluations to Display:"));
 		add("br left", new JLabel("Target:"));
 		add("hfill", combo);

@@ -310,10 +310,12 @@ public class DocumentList implements Serializable{
 		{
 			setTextColumn(s, false);
 		}
+		
 		for(String s : columns)
 		{
 			setTextColumn(s, true);
 		}
+		System.out.println(getTextColumns());
 	}
 	
 	public void setTextColumn(String name, boolean isText){

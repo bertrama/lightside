@@ -22,22 +22,19 @@ public class ExploreActionBar extends ActionBar{
 		setLayout(new RiverLayout());
 		setBackground(Color.white);
 		combo = new JComboBox();
+		Workbench.reloadComboBoxContent(combo, ExploreResultsControl.getModelAnalysisPlugins().keySet(), null);
 		if(combo.getItemCount()>0 && combo.getSelectedIndex()==-1){
 			combo.setSelectedIndex(0);
 		}
 		combo.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(combo.getSelectedIndex() + " selected EAB28");
 				ExploreResultsControl.setHighlightedModelAnalysisPlugin((EvaluateOneModelPlugin)combo.getSelectedItem());
-				Workbench.update();
+				Workbench.update(ExploreActionBar.this);
 			}
 		});
 		add("left", new JLabel("Comparison Plugin:"));
 		add("hfill", combo);
-		EvaluateOneModelPlugin plug = (ExploreResultsControl.getModelAnalysisPlugins().keySet().size()>0?
-				ExploreResultsControl.getModelAnalysisPlugins().keySet().toArray(new EvaluateOneModelPlugin[0])[0]:null);
-		Workbench.reloadComboBoxContent(combo, ExploreResultsControl.getModelAnalysisPlugins().keySet(), plug);
 	}
 
 	@Override

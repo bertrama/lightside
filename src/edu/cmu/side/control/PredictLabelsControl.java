@@ -39,7 +39,6 @@ public class PredictLabelsControl extends GenesisControl{
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		trainedModel = highlight;
-		Workbench.update();
 	}
 	
 	public static boolean hasHighlightedUnlabeledData(){
@@ -52,7 +51,6 @@ public class PredictLabelsControl extends GenesisControl{
 	
 	public static void setHighlightedUnlabeledData(Recipe r){
 		highlightedUnlabeledData = r;
-		Workbench.update();
 	}
 	
 	public static Collection<Recipe> getUnlabeledDataRecipes(){

@@ -19,15 +19,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import se.datadosen.component.RiverLayout;
+
 import com.yerihyo.yeritools.io.FileToolkit;
 
-import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
-import edu.cmu.side.view.build.TestSetLoadPanel;
 import edu.cmu.side.view.util.AbstractListPanel;
 
 public abstract class GenericLoadPanel extends AbstractListPanel{
@@ -36,9 +35,9 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 	protected JPanel describePanel = new JPanel(new BorderLayout());
 	protected JLabel label;
-	
+
 	protected JFileChooser chooser = new JFileChooser(new File("saved"));
-	
+
 	protected GenericLoadPanel(){
 		setLayout(new RiverLayout());
 		combo.addActionListener(new ActionListener(){
@@ -51,7 +50,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 					describePanel.add(BorderLayout.CENTER, describeScroll);
 					describePanel.revalidate();
 				}
-				Workbench.update();
+				Workbench.update(GenericLoadPanel.this);
 			}
 		});
 		delete.addActionListener(new DeleteFilesListener(combo, this));
@@ -68,8 +67,9 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			RecipeManager.deleteRecipe((Recipe)parentComponent.getSelectedItem());
+			Workbench.getRecipeManager().deleteRecipe((Recipe)parentComponent.getSelectedItem());
 			loadPanel.deleteHighlight();
+			Workbench.update(loadPanel);
 		}
 	}
 
@@ -78,7 +78,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 	{
 		this(l, true, true, true);
 	}
-	
+
 	public GenericLoadPanel(String l, boolean showLoad, boolean showDelete, boolean showSave){
 		this();
 		label = new JLabel(l);
@@ -112,7 +112,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		describePanel.add(BorderLayout.CENTER, describeScroll);
 		add("br hfill vfill", describePanel);
 		//add("br left hfill", buttons);
-		
+
 		connectButtonListeners();
 	}
 
@@ -122,7 +122,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 	public void deleteHighlight(){
 		describeScroll = new JScrollPane();
-		setHighlight(null);
+		setHighlight(null);			
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			Recipe r = (Recipe)combo.getItemAt(combo.getItemCount()-1);
 			setHighlight(r);
 		}
-		if(getHighlight() != null && !RecipeManager.containsRecipe(getHighlight())){
+		if(getHighlight() != null && !Workbench.getRecipeManager().containsRecipe(getHighlight())){
 			deleteHighlight();
 		}
 		if(getHighlight() != null){
@@ -154,7 +154,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			describePanel.add(BorderLayout.CENTER, describeScroll);
 		}
 	}
-	
+
 	/** load/save/delete button listeners*/
 	private void connectButtonListeners()
 	{
@@ -169,23 +169,23 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 					saveSelectedItem();
 				}
 			}
-			
+
 		});
-		
-//		delete.addActionListener(new ActionListener()
-//		{
-//
-//			@Override
-//			public void actionPerformed(ActionEvent arg0)
-//			{
-//				if(combo.getSelectedIndex() >= 0)
-//				{
-//					deleteSelectedItem();
-//				}
-//			}
-//			
-//		});
-		
+
+		//		delete.addActionListener(new ActionListener()
+		//		{
+		//
+		//			@Override
+		//			public void actionPerformed(ActionEvent arg0)
+		//			{
+		//				if(combo.getSelectedIndex() >= 0)
+		//				{
+		//					deleteSelectedItem();
+		//				}
+		//			}
+		//			
+		//		});
+
 
 		load.addActionListener(new ActionListener()
 		{
@@ -195,14 +195,14 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			{
 				loadNewItem();
 			}
-			
+
 		});
 	}
-	
+
 	public void saveSelectedItem()
 	{
 		Recipe recipe = (Recipe) combo.getSelectedItem();//TODO: should this be more generic?
-		
+
 		chooser.setSelectedFile(new File("saved/"+recipe.getRecipeName()));
 		int response = chooser.showSaveDialog(this);
 		if(response == JFileChooser.APPROVE_OPTION)
@@ -214,29 +214,32 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 				if(response != JOptionPane.YES_OPTION)
 					return;
 			}
-			
+
 			try
 			{
 				FileOutputStream fout = new FileOutputStream(target);
 				ObjectOutputStream oos = new ObjectOutputStream(fout);
 				oos.writeObject(recipe);
-				
+
 			}
 			catch(Exception e)
 			{
 				JOptionPane.showMessageDialog(this, "Error while saving:\n"+e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
-	
+
 	public void deleteSelectedItem()
 	{
+		System.out.println("Deleting selected item GLP237");
 		Recipe recipe = (Recipe) combo.getSelectedItem();//TODO: should this be more generic?
-		RecipeManager.removeRecipe(recipe);
+		Workbench.getRecipeManager().deleteRecipe(recipe);
+		System.out.println("Item deleted GLP240");
+		Workbench.update(this);
 	};
-	
+
 	public void loadNewItem()
 	{
 		int response = chooser.showOpenDialog(this);
@@ -247,23 +250,23 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 			{
 				JOptionPane.showMessageDialog(this, "There's not a file there!", "No Such File", JOptionPane.ERROR_MESSAGE);
 			}
-			
+
 			try
 			{
 				FileInputStream fout = new FileInputStream(target);
 				ObjectInputStream in = new ObjectInputStream(fout);
 				Recipe recipe = (Recipe) in.readObject(); //TODO: should this be more generic?
-				RecipeManager.addRecipe(recipe);
+				Workbench.getRecipeManager().addRecipe(recipe);
 			}
 			catch(Exception e)
 			{
 				JOptionPane.showMessageDialog(this, "Error while loading:\n"+e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
-			
+
 		}
 	}
-	
+
 	protected void loadNewDocumentsFromCSV()
 	{
 		chooser.setFileFilter(FileToolkit.createExtensionListFileFilter(new String[] { "csv" }, true));
@@ -280,9 +283,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		}
 
 		DocumentList testDocs = new DocumentList(docNames);
-		Recipe r = RecipeManager.fetchDocumentListRecipe(testDocs);
+		Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
 		setHighlight(r);
-
-		Workbench.update();
+		Workbench.update(this);
 	}
 }

@@ -31,7 +31,6 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 	public abstract void refreshPanel();
 
 	public void refreshPanel(Map<E, Boolean> plugins){
-
 		this.removeAll();
 		for(E plugin : plugins.keySet()){
 			if(plugins.get(plugin)){
@@ -44,5 +43,6 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 			}
 		}
 		this.revalidate();
+		this.repaint();
 	}
 }

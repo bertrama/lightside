@@ -39,12 +39,13 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	{
 		actionBar.update.reset();
 		actionBar.progressBar.setVisible(false);
+		actionBar.actionButton.setEnabled(true);
 		actionBar.cancel.setEnabled(false);
 		actionBar.cancel.removeActionListener(stopListener);
 		actionBar.cancel.setIcon(originalIcon);
 
 		actionBar.endedTask();
-		Workbench.update(); //this is the only SIDE-specific code in this class...
+		Workbench.update(actionBar); //this is the only SIDE-specific code in this class...
 	}
 	
 	@Override

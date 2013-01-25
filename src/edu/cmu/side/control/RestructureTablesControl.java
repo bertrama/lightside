@@ -24,6 +24,7 @@ import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
+import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
@@ -36,7 +37,6 @@ public class RestructureTablesControl extends GenesisControl{
 	private static Map<TableFeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	static Map<RestructurePlugin, Boolean> filterPlugins;
-	private static EvalCheckboxListener eval;
 	private static String targetAnnotation;
 	
 	static{
@@ -51,7 +51,6 @@ public class RestructureTablesControl extends GenesisControl{
 		for(SIDEPlugin fe : tableEvaluations){
 			tableEvaluationPlugins.put((TableFeatureMetricPlugin)fe, new TreeMap<String, Boolean>());
 		}
-		eval = new GenesisControl.EvalCheckboxListener(tableEvaluationPlugins);
 
 	}
 	
@@ -68,8 +67,8 @@ public class RestructureTablesControl extends GenesisControl{
 	}
 
 	
-	public static EvalCheckboxListener getEvalCheckboxListener(){
-		return eval;
+	public static EvalCheckboxListener getEvalCheckboxListener(AbstractListPanel source){
+		return new EvalCheckboxListener(source, tableEvaluationPlugins, RestructureTablesControl.getUpdater());
 	}
 	
 	public static void clearTableEvaluationPlugins(){
@@ -80,22 +79,6 @@ public class RestructureTablesControl extends GenesisControl{
 	
 	public static Map<RestructurePlugin, Boolean> getFilterPlugins(){
 		return filterPlugins;
-	}
-
-	public static class PluginCheckboxListener implements ItemListener{
-
-		@Override
-		public void itemStateChanged(ItemEvent ie) {
-			RestructurePlugin ft = (RestructurePlugin)((CheckBoxListEntry)ie.getSource()).getValue();
-			filterPlugins.put(ft, !filterPlugins.get(ft));
-			if(filterPlugins.get(ft)){
-				highlightedFilters.put(ft, ft.generateConfigurationSettings());				
-			}else{
-				highlightedFilters.remove(ft);
-			}
-
-			Workbench.update();
-		}
 	}
 	
 	public static class FilterTableListener implements ActionListener{
@@ -147,8 +130,7 @@ public class RestructureTablesControl extends GenesisControl{
 				current.setName(name);
 				plan.setFilteredTable(current);
 				setHighlightedFilterTableRecipe(plan);
-				RecipeManager.addRecipe(plan);
-				Workbench.update();
+				Workbench.getRecipeManager().addRecipe(plan);
 			}
 			catch (Exception e)
 			{
@@ -173,7 +155,6 @@ public class RestructureTablesControl extends GenesisControl{
 	
 	public static void setHighlightedFeatureTableRecipe(Recipe highlight){
 		highlightedFeatureTable = highlight;
-		Workbench.update();
 	}
 
 	public static OrderedPluginMap getSelectedFilters(){
@@ -199,6 +180,5 @@ public class RestructureTablesControl extends GenesisControl{
 	
 	public static void setHighlightedFilterTableRecipe(Recipe highlight){
 		highlightedFilterTable = highlight;
-		Workbench.update();
 	}
 }

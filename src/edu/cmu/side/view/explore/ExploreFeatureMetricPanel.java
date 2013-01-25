@@ -4,7 +4,10 @@ import javax.swing.ButtonGroup;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;
+import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
+import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.GenericFeatureMetricPanel;
 import edu.cmu.side.view.util.CheckboxTableCellRenderer;
 import edu.cmu.side.view.util.RadioButtonListEntry;
@@ -14,8 +17,10 @@ public class ExploreFeatureMetricPanel extends GenericFeatureMetricPanel{
 
 	ButtonGroup toggleButtons = new ButtonGroup();
 
-	public ExploreFeatureMetricPanel(){
+	ActionBar action;
+	public ExploreFeatureMetricPanel(ActionBar act){
 		super();
+		action = act;
 		featureTable.addMouseListener(new ToggleMouseAdapter(featureTable, true){
 
 			@Override
@@ -23,7 +28,7 @@ public class ExploreFeatureMetricPanel extends GenericFeatureMetricPanel{
 				if(row instanceof RadioButtonListEntry){
 					ExploreResultsControl.setHighlightedFeature((Feature)((RadioButtonListEntry)row).getValue());
 				}
-				Workbench.update();
+				Workbench.update(ExploreFeatureMetricPanel.this);
 			}
 		});
 		featureTable.setDefaultRenderer(Object.class, new CheckboxTableCellRenderer());
@@ -37,4 +42,22 @@ public class ExploreFeatureMetricPanel extends GenericFeatureMetricPanel{
 
 	@Override
 	public String getTargetAnnotation() { return null; }
+
+	@Override
+	public ActionBar getActionBar(){
+		return action;
+	}
+
+	@Override
+	public void refreshPanel(){
+		Recipe target = ExploreResultsControl.getHighlightedTrainedModelRecipe();
+		if(target != null){
+			FeatureTable table = target.getTrainingResult().getEvaluationTable();
+			boolean[] mask = new boolean[table.getDocumentList().getSize()];
+			for(int i = 0; i < mask.length; i++) mask[i] = true;
+			refreshPanel(target, ExploreResultsControl.getFeatureEvaluationPlugins(), mask);
+		}else{
+			refreshPanel(target, ExploreResultsControl.getFeatureEvaluationPlugins(), new boolean[0]);
+		}
+	}
 }

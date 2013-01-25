@@ -19,6 +19,7 @@ import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.CompareModelsControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.plugin.EvaluateTwoModelPlugin;
 import edu.cmu.side.plugin.LearningPlugin;
@@ -34,6 +35,7 @@ public class CompareModelsPane extends AbstractListPanel{
 		@Override
 		public void setHighlight(Recipe r) {
 			CompareModelsControl.setBaselineTrainedModelRecipe(r);
+			Workbench.update(this);
 		}
 
 		@Override
@@ -53,6 +55,7 @@ public class CompareModelsPane extends AbstractListPanel{
 		@Override
 		public void setHighlight(Recipe r) {
 			CompareModelsControl.setCompetingTrainedModelRecipe(r);
+			Workbench.update(this);
 		}
 
 		@Override
@@ -90,18 +93,23 @@ public class CompareModelsPane extends AbstractListPanel{
 		split.setTopComponent(top);
 		split.setBottomComponent(scroll);
 		add(BorderLayout.CENTER, split);
+		
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), loadBaseline);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), loadCompetitor);
+		GenesisControl.addListenerToMap(loadBaseline, this);
+		GenesisControl.addListenerToMap(loadCompetitor, this);
+		GenesisControl.addListenerToMap(dropdown, this);
 
 	}
 	
 	public void refreshPanel(){
-		loadBaseline.refreshPanel();
-		loadCompetitor.refreshPanel();
 		dropdown.refreshPanel();
 		if(CompareModelsControl.getHighlightedModelComparisonPlugin() != null){
 			middle.removeAll();
 			middle.add(BorderLayout.CENTER, CompareModelsControl.getHighlightedModelComparisonPlugin().getConfigurationUI());
 			CompareModelsControl.getHighlightedModelComparisonPlugin().refreshPanel();
 			middle.revalidate();
+			middle.repaint();
 		}
 	}
 }

@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.Workbench;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.control.RestructureTablesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.plugin.RestructurePlugin;
@@ -19,7 +21,7 @@ public class RestructureFeaturesPane extends JPanel{
 
 	private static GenericTripleFrame top;
 	private static RestructureActionPanel action = new RestructureActionPanel(RestructureTablesControl.getUpdater());
-	private static RestructureBottomPanel bottom = new RestructureBottomPanel();
+	private static RestructureBottomPanel bottom = new RestructureBottomPanel(action);
 
 	public RestructureFeaturesPane(){
 		setLayout(new BorderLayout());
@@ -28,6 +30,7 @@ public class RestructureFeaturesPane extends JPanel{
 			@Override
 			public void setHighlight(Recipe r) {
 				RestructureTablesControl.setHighlightedFeatureTableRecipe(r);
+				Workbench.update(this);
 			}
 
 			@Override
@@ -67,11 +70,13 @@ public class RestructureFeaturesPane extends JPanel{
 		top.setPreferredSize(new Dimension(950,450));
 		bottom.setPreferredSize(new Dimension(950,200));
 		add(BorderLayout.CENTER, pane);
-	}
-	
-	public void refreshPanel(){
-		top.refreshPanel();
-		action.refreshPanel();
-		bottom.refreshPanel();
+		
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), load);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), checklist);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), config);
+		GenesisControl.addListenerToMap(checklist, config);
+		GenesisControl.addListenerToMap(checklist, action);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), bottom);
+		
 	}
 }

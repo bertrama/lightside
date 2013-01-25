@@ -1,37 +1,78 @@
 package edu.cmu.side.control;
 
 import java.awt.Component;
-
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JTree;
-import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.MutableTreeNode;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.plugin.SIDEPlugin;
+import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.RecipeCellRenderer;
 
 public abstract class GenesisControl {
 
+	public static Map<Object, Collection<AbstractListPanel>> listenerMap;
+	public static Map<Object, Boolean> currentlyUpdatingMap;
+	
+	static{
+		listenerMap = new HashMap<Object, Collection<AbstractListPanel>>();
+		currentlyUpdatingMap = new HashMap<Object, Boolean>();
+	}
+	
+	public static void setCurrentlyUpdating(Object source, boolean val){
+		currentlyUpdatingMap.put(source, val);
+	}
+	
+	public static boolean isCurrentlyUpdating(Object source){
+		if(!listenerMap.containsKey(source)){
+			listenerMap.put(source, new ArrayList<AbstractListPanel>());
+			currentlyUpdatingMap.put(source, false);
+		}
+		return currentlyUpdatingMap.get(source);
+	}
 
+	public static void addListenerToMap(Object source, AbstractListPanel child){
+		if(!listenerMap.containsKey(source)){
+			listenerMap.put(source, new ArrayList<AbstractListPanel>());
+			currentlyUpdatingMap.put(source, false);
+		}
+		listenerMap.get(source).add(child);
+	}
+	
+	public static Collection<AbstractListPanel> getListeners(Object source){
+		if(!listenerMap.containsKey(source)){
+			listenerMap.put(source, new ArrayList<AbstractListPanel>());
+			currentlyUpdatingMap.put(source, false);
+		}
+		return listenerMap.get(source);
+	}
+	
 	public static class EvalCheckboxListener implements ItemListener{
 
 		Map<? extends SIDEPlugin, Map<String, Boolean>>  plugins;
-		public EvalCheckboxListener(Map<? extends SIDEPlugin, Map<String, Boolean>> p){
+		StatusUpdater updater;
+		AbstractListPanel source;
+		
+		public EvalCheckboxListener(AbstractListPanel s, Map<? extends SIDEPlugin, Map<String, Boolean>> p, StatusUpdater u){
+			source = s;
 			plugins = p;
+			updater = u;
 		}
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
@@ -40,7 +81,7 @@ public abstract class GenesisControl {
 				if(plugins.get(plug).containsKey(eval)){
 					boolean flip = !plugins.get(plug).get(eval);
 					plugins.get(plug).put(eval, flip);
-					Workbench.update();
+					Workbench.update(source);
 				}
 			}
 		}
@@ -48,8 +89,11 @@ public abstract class GenesisControl {
 
 	public static class PluginCheckboxListener<E> implements ItemListener{
 
+		AbstractListPanel source;
 		Map<E, Boolean> plugins;
-		public PluginCheckboxListener(Map<E, Boolean> p){
+
+		public PluginCheckboxListener(AbstractListPanel s, Map<E, Boolean> p){
+			source = s;
 			plugins = p;
 		}
 
@@ -58,7 +102,7 @@ public abstract class GenesisControl {
 			CheckBoxListEntry check = ((CheckBoxListEntry)ie.getSource());
 			E plug = (E)check.getValue();
 			plugins.put(plug, check.isSelected());
-			Workbench.update();
+			Workbench.update(source);
 		}
 	}
 

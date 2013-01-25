@@ -33,19 +33,7 @@ public class FeatureTable implements Serializable
 	 * @return
 	 */
 	public Feature.Type getClassValueType(){
-		Double num;
-		if(type == null){
-			for(String s : documents.getLabelArray()){
-				try{
-					num = Double.parseDouble(s);
-				}catch(Exception e){
-					type = Feature.Type.NOMINAL;
-					return type;
-				}
-			}
-			type = Feature.Type.NUMERIC;
-		}
-		return type;
+		return documents.getValueType(documents.getCurrentAnnotation());
 	}
 
 
@@ -171,17 +159,14 @@ public class FeatureTable implements Serializable
 	    	 hitsPerFeature.remove(fe);
     }
 	
-	public Double getClassValue(int i){
-		if (getClassValueType() == Feature.Type.NUMERIC)
-			return Double.parseDouble(documents.getAnnotationArray().get(i));
-		if (getClassValueType() == Feature.Type.BOOLEAN)
-			if (documents.getAnnotationArray().get(i).equalsIgnoreCase("true"))
-				return 1.0;
-			else return 0.0;
-		String[] possible = documents.getLabelArray();
-		for (int k=0; k<possible.length; k++)
-			if (documents.getAnnotationArray().get(i).equals(possible[k])) return (double) k;
-		return 0.0;
+	public Double getNumericConvertedClassValue(int i, String target){
+		if (getClassValueType() == Feature.Type.NUMERIC){
+			return Double.parseDouble(documents.getAnnotationArray().get(i));			
+		}else if (getClassValueType() == Feature.Type.BOOLEAN){
+			return (documents.getAnnotationArray().get(i).equals(Boolean.TRUE.toString()))?1.0:0.0;
+		}else {
+			return (documents.getAnnotationArray().get(i).equals(target))?1.0:0.0;
+		}
 	}
 	
 	//        

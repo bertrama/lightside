@@ -10,6 +10,15 @@
     </plugin>
     
     <plugin>
+        <name>Column Features</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Basic Metadata from Columns]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.features.ColumnFeatures</classname>
+    </plugin>
+    
+    <plugin>
         <name>Sequential Features</name>
         <author>David Adamson</author>
         <version>1.0</version>

@@ -7,6 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
@@ -42,6 +43,7 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 	@Override
 	public void setHighlight(Recipe r) {
 		ExtractFeaturesControl.setHighlightedDocumentListRecipe(r);
+		Workbench.update(this);
 	}
 
 	@Override

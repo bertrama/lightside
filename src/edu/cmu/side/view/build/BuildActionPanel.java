@@ -82,6 +82,6 @@ public class BuildActionPanel extends ActionBar {
 	@Override
 	public void endedTask()
 	{
-		trainingLabel.setVisible(false);	
+		trainingLabel.setVisible(false);
 	}
 }

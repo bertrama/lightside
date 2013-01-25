@@ -6,25 +6,30 @@ import java.awt.event.ItemListener;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.FeatureTable;
-import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
+import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.GenericFeatureMetricPanel;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMetricChecklistPanel;
+import edu.cmu.side.view.util.AbstractListPanel;
 
-public class ExtractBottomPanel extends JPanel{
+public class ExtractBottomPanel extends AbstractListPanel{
+
+	ActionBar action;
 
 	GenericLoadPanel control = new GenericLoadPanel("Feature Table:") {	
 		
 		@Override
 		public void setHighlight(Recipe r) {
 			ExtractFeaturesControl.setHighlightedFeatureTableRecipe(r);
+			Workbench.update(this);
 		}
 
 		@Override
@@ -37,33 +42,59 @@ public class ExtractBottomPanel extends JPanel{
 			return ExtractFeaturesControl.getHighlightedFeatureTableRecipe();
 		}
 	};
+	
+	public ExtractBottomPanel(ActionBar act){
+		action = act;
+		GenericMetricChecklistPanel checklist = new GenericMetricChecklistPanel<TableFeatureMetricPlugin>(){
+			@Override
+			public Map<TableFeatureMetricPlugin, Map<String, Boolean>> getEvaluationPlugins() {
+				return ExtractFeaturesControl.getTableEvaluationPlugins();
+			}
 
-	GenericMetricChecklistPanel checklist = new GenericMetricChecklistPanel<TableFeatureMetricPlugin>(){
-		@Override
-		public Map<TableFeatureMetricPlugin, Map<String, Boolean>> getEvaluationPlugins() {
-			return ExtractFeaturesControl.getTableEvaluationPlugins();
-		}
+			@Override
+			public ItemListener getCheckboxListener() {
+				return ExtractFeaturesControl.getEvalCheckboxListener(this);
+			}
 
-		@Override
-		public ItemListener getCheckboxListener() {
-			return ExtractFeaturesControl.getEvalCheckboxListener();
-		}
+			@Override
+			public void setTargetAnnotation(String s) {
+				ExtractFeaturesControl.setTargetAnnotation(s);
+			}
+			
+			@Override
+			public void refreshPanel(){
+				if(ExtractFeaturesControl.hasHighlightedFeatureTable()){     
+					FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
+					refreshPanel(table);
+				}else{
+					refreshPanel(null);
+				}
+			}
+		};
+		GenericFeatureMetricPanel display = new GenericFeatureMetricPanel(){
 
-		@Override
-		public void setTargetAnnotation(String s) {
-			ExtractFeaturesControl.setTargetAnnotation(s);
-		}
-	};
-	GenericFeatureMetricPanel display = new GenericFeatureMetricPanel(){
+			@Override
+			public String getTargetAnnotation() {
+				return ExtractFeaturesControl.getTargetAnnotation();
+			}
 
-		@Override
-		public String getTargetAnnotation() {
-			return ExtractFeaturesControl.getTargetAnnotation();
-		}
-		
-	};
-
-	public ExtractBottomPanel(){
+			@Override
+			public ActionBar getActionBar(){
+				return action;
+			}
+			
+			@Override
+			public void refreshPanel(){
+				if(ExtractFeaturesControl.hasHighlightedFeatureTable()){     
+					FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
+					boolean[] mask = new boolean[table.getDocumentList().getSize()];
+					for(int i = 0; i < mask.length; i++) mask[i] = true;
+					refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe(), ExtractFeaturesControl.getTableEvaluationPlugins(), mask);
+				}else{
+					refreshPanel(null, ExtractFeaturesControl.getTableEvaluationPlugins(), new boolean[0]);
+				}
+			}
+		};
 		setLayout(new BorderLayout());
 		JSplitPane split = new JSplitPane();
 		split.setLeftComponent(control);
@@ -78,19 +109,15 @@ public class ExtractBottomPanel extends JPanel{
 		split.setRightComponent(displaySplit);
 		control.setPreferredSize(new Dimension(275,200));
 		add(BorderLayout.CENTER, split);
+		
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), control);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), display);
+		GenesisControl.addListenerToMap(control, checklist);
+		GenesisControl.addListenerToMap(control, display);
+		GenesisControl.addListenerToMap(checklist, display);
 	}
 
 	public void refreshPanel(){
 		control.refreshPanel();
-		
-		if(ExtractFeaturesControl.hasHighlightedFeatureTable()){     
-			FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
-			checklist.refreshPanel(table);
-			boolean[] mask = new boolean[table.getDocumentList().getSize()];
-			for(int i = 0; i < mask.length; i++) mask[i] = true;
-			display.refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe(), ExtractFeaturesControl.getTableEvaluationPlugins(), mask);
-		}else{
-			display.refreshPanel(null, ExtractFeaturesControl.getTableEvaluationPlugins(), new boolean[0]);
-		}
 	}
 }

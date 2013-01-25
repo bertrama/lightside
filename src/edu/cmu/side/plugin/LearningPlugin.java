@@ -79,11 +79,14 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					foldsMap = BuildModelControl.getFoldsMapByFile(sdl, numFolds);
 				}
 				result = evaluateCrossValidation(table, foldsMap, progressIndicator);
+				progressIndicator.update("Training final model on all data");
 				trainWithMaskForSubclass(table, mask, progressIndicator);
 			}
 			else if (map.get("type").equals("SUPPLY"))
 			{
+				progressIndicator.update("Training model");
 				trainWithMaskForSubclass(table, mask, progressIndicator);
+				progressIndicator.update("Testing model");
 				result = evaluateTestSet(table, (FeatureTable) map.get("testFeatureTable"), progressIndicator);
 			}
 		}
@@ -132,7 +135,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				break;
 			}
 
-			progressIndicator.update("Testing fold", fold, folds.size());
+			progressIndicator.update("Testing fold", (fold+1), folds.size());
 			PredictionResult preds = predictWithMaskForSubclass(table, table, mask, updater);
 			int predictionIndex = 0;
 			for (Comparable pred : preds.getPredictions())
@@ -149,6 +152,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		}
 		if(!halt)
 		{
+			progressIndicator.update("Generating confusion matrix");
 			ArrayList<String> predictionsList = new ArrayList<String>();
 			for(String s : predictions) predictionsList.add(s);
 			return new TrainingResult(table, predictionsList);

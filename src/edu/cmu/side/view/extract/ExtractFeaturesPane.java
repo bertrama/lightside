@@ -8,7 +8,9 @@ import java.util.Map;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
@@ -19,7 +21,7 @@ public class ExtractFeaturesPane extends JPanel{
 
 	private static GenericTripleFrame top;
 	private static ExtractActionPanel action = new ExtractActionPanel(ExtractFeaturesControl.getUpdater());
-	private static ExtractBottomPanel bottom = new ExtractBottomPanel();
+	private static ExtractBottomPanel bottom = new ExtractBottomPanel(action);
 	
 	public ExtractFeaturesPane(){
 		setLayout(new BorderLayout());
@@ -40,7 +42,10 @@ public class ExtractFeaturesPane extends JPanel{
 			}
 		};
 		
-		top = new GenericTripleFrame(new ExtractCombinedLoadPanel("CSV Files:"), pluginChecklist, pluginConfig);
+		pluginConfig.refreshPanel();
+		
+		ExtractCombinedLoadPanel load = new ExtractCombinedLoadPanel("CSV Files:");
+		top = new GenericTripleFrame(load, pluginChecklist, pluginConfig);
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 
 		JPanel panel = new JPanel(new BorderLayout());
@@ -51,11 +56,13 @@ public class ExtractFeaturesPane extends JPanel{
 		top.setPreferredSize(new Dimension(950,400));
 		bottom.setPreferredSize(new Dimension(950,200));
 		add(BorderLayout.CENTER, pane);
+		
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), pluginChecklist);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), pluginConfig);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), action);
+		GenesisControl.addListenerToMap(pluginChecklist, pluginConfig);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), bottom);
+		
 	}
 
-	public void refreshPanel() {
-		top.refreshPanel();
-		action.refreshPanel();
-		bottom.refreshPanel();
-	}
 }

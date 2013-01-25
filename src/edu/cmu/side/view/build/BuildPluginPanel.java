@@ -66,7 +66,7 @@ public class BuildPluginPanel extends AbstractListPanel {
 			public void valueChanged(ListSelectionEvent arg0) {
 				RadioButtonListEntry rb = ((RadioButtonListEntry)pluginsModel.get(pluginsList.getSelectedIndex()));
 				highlight(rb);
-				Workbench.update();
+				Workbench.update(BuildPluginPanel.this);
 			}
 		});
 		if(pluginsToPass.size()>0){

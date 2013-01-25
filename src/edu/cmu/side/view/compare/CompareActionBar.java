@@ -30,7 +30,7 @@ public class CompareActionBar extends ActionBar {
 			public void actionPerformed(ActionEvent arg0) {
 				System.out.println(combo.getSelectedItem() + "CAB29");
 				CompareModelsControl.setHighlightedModelComparisonPlugin((EvaluateTwoModelPlugin)combo.getSelectedItem());
-				Workbench.update();
+				Workbench.update(CompareActionBar.this);
 			}
 		});
 		add("left", new JLabel("Comparison Plugin:"));

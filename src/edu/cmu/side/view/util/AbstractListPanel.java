@@ -1,26 +1,19 @@
 package edu.cmu.side.view.util;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import se.datadosen.component.RiverLayout;
-import edu.cmu.side.Workbench;
 
-public class AbstractListPanel extends JPanel implements ActionListener{
+public class AbstractListPanel extends JPanel{
 	private static final long serialVersionUID = -1090634417229954402L;
 
 	protected FastListModel listModel;
@@ -65,17 +58,7 @@ public class AbstractListPanel extends JPanel implements ActionListener{
 	public void refreshPanel(){
 		if(listModel.getSize()>0 && list.getSelectedIndex()==-1){
 			list.setSelectedIndex(0);
-			fireActionEvent();
 		}
-	}
-	
-	/**
-	 * Listener pattern stuff from here to the end of the file.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		fireActionEvent();
-		refreshPanel();
 	}
 
 	private List<ActionListener> actionListenerList = new ArrayList<ActionListener>();
@@ -86,8 +69,5 @@ public class AbstractListPanel extends JPanel implements ActionListener{
 	public void removeActionListener(ActionListener al){
 		this.actionListenerList.remove(al);
 	}
-
-	public void fireActionEvent(){
-		Workbench.update();
-	}
+	
 }

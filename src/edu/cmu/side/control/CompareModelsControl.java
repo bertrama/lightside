@@ -71,7 +71,6 @@ public class CompareModelsControl extends GenesisControl{
 
 	public static void setBaselineTrainedModelRecipe(Recipe highlight){
 		baselineModel = highlight;
-		Workbench.update();
 	}
 
 	public static boolean hasCompetingTrainedModelRecipe(){
@@ -84,6 +83,5 @@ public class CompareModelsControl extends GenesisControl{
 
 	public static void setCompetingTrainedModelRecipe(Recipe highlight){
 		competingModel = highlight;
-		Workbench.update();
 	}
 }

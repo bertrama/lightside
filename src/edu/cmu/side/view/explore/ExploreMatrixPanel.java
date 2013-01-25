@@ -25,9 +25,8 @@ public class ExploreMatrixPanel extends GenericMatrixPanel{
 
 			@Override
 			public void setHighlight(Object row, String col) {
-				System.out.println("Setting highlight EMP27 " + row + ", " + col);
 				ExploreResultsControl.setHighlightedCell(row.toString(), col);
-				Workbench.update();
+				Workbench.update(ExploreMatrixPanel.this);
 			}
 			
 		});

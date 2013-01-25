@@ -16,7 +16,7 @@ import edu.cmu.side.view.extract.ExtractFeaturesPane;
 import edu.cmu.side.view.predict.PredictLabelsPane;
 import edu.cmu.side.view.restructure.RestructureFeaturesPane;
 
-public class WorkbenchPanel extends JTabbedPane implements ActionListener{
+public class WorkbenchPanel extends JTabbedPane{
 	
 	ExtractFeaturesPane extractFeatures = new ExtractFeaturesPane();
 	RestructureFeaturesPane modifyFeatures = new RestructureFeaturesPane();
@@ -35,21 +35,5 @@ public class WorkbenchPanel extends JTabbedPane implements ActionListener{
 		addTab("Explore Results", exploreResults);
 		addTab("Compare Models", compareModels);
 		addTab("Predict Labels", predictLabels);
-	}
-
-	public static int refreshCount = 0;
-	@Override
-	public void actionPerformed(ActionEvent ae){
-		if(!updating){
-			refreshCount++;
-			updating = true;
-			extractFeatures.refreshPanel();
-			modifyFeatures.refreshPanel();
-			buildModel.refreshPanel();
-			exploreResults.refreshPanel();
-			compareModels.refreshPanel();
-			predictLabels.refreshPanel();
-			updating = false;			
-		}
 	}
 }

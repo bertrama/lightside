@@ -27,7 +27,7 @@ public abstract class GenericPluginChecklistPanel<E extends SIDEPlugin> extends 
 		Map<E, Boolean> plugins = getPlugins();
 		for(E plug : plugins.keySet()){
 			CheckBoxListEntry entry = new CheckBoxListEntry(plug, plugins.get(plug));
-			entry.addItemListener(new GenesisControl.PluginCheckboxListener<E>(plugins));
+			entry.addItemListener(new GenesisControl.PluginCheckboxListener<E>(this, plugins));
 			pluginsToPass.add(entry);
 		}
 		Collections.sort(pluginsToPass, new Comparator<CheckBoxListEntry>(){

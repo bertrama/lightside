@@ -1,5 +1,7 @@
 package edu.cmu.side.view.util;
 
+import java.util.Vector;
+
 import javax.swing.table.DefaultTableModel;
 
 public class FeatureTableModel extends DefaultTableModel{
@@ -11,5 +13,12 @@ public class FeatureTableModel extends DefaultTableModel{
 			return this.getValueAt(0, col).getClass();
 		}
 		else return Object.class;
+	}
+	public FeatureTableModel(){
+		this(new Vector(), new Vector());
+	}
+	
+	public FeatureTableModel(Vector data, Vector header){
+		super(data, header);
 	}
 }

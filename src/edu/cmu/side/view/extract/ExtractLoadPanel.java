@@ -2,6 +2,8 @@ package edu.cmu.side.view.extract;
 
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -38,6 +40,19 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		add("br hfill vfill", describePanel);
 		
 		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(40));
+
+		delete.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if(combo.getSelectedIndex() >= 0)
+				{
+					deleteSelectedItem();
+				}
+			}
+		});
 	}
 
 	@Override

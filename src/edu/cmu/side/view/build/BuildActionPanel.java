@@ -3,25 +3,20 @@ package edu.cmu.side.view.build;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+import java.util.Collection;
 
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.SIDEPlugin;
+import edu.cmu.side.plugin.WrapperPlugin;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.RadioButtonListEntry;
 
 public class BuildActionPanel extends ActionBar {
 
-	JCheckBox featureSelection = new JCheckBox("Feature Selection?");
-	JTextField numFeatures = new JTextField(5);
-	JLabel numLabel = new JLabel("#:");
 	JLabel trainingLabel = new JLabel();
 
 	public BuildActionPanel(StatusUpdater update){
@@ -31,9 +26,10 @@ public class BuildActionPanel extends ActionBar {
 		actionButton.setIconTextGap(10);
 		actionButton.addActionListener(new BuildModelControl.TrainModelListener(this, name));
 		
-		settings.add("left", featureSelection);
-		settings.add("left", numLabel);
-		settings.add("left", numFeatures);
+		Collection<WrapperPlugin> wrappers = BuildModelControl.getWrapperPlugins().keySet();
+		for(WrapperPlugin wrapper : wrappers){
+			settings.add("left", wrapper.getConfigurationUI());
+		}
 
 		trainingLabel.setIcon(new ImageIcon("toolkits/icons/training.gif"));
 		trainingLabel.setVisible(false);
@@ -43,15 +39,6 @@ public class BuildActionPanel extends ActionBar {
 		updaters.add("right", (Component) update);
 		updaters.add("right", trainingLabel);
 		
-		numLabel.setVisible(false);
-		numFeatures.setVisible(false);
-		featureSelection.addItemListener(new ItemListener() {
-			@Override
-			public void itemStateChanged(ItemEvent arg0) {
-				numFeatures.setVisible(featureSelection.isSelected());
-				numLabel.setVisible(featureSelection.isSelected());
-			}
-		});
 		name.setText("model");
 	}
 	

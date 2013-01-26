@@ -111,7 +111,7 @@ public class Chef
 	 */
 	protected static void broilModel(Recipe newRecipe) throws Exception
 	{
-		TrainingResult trainResult = newRecipe.getLearner().train(newRecipe.getTrainingTable(), newRecipe.getLearnerSettings(), newRecipe.getValidationSettings(), textUpdater);
+		TrainingResult trainResult = newRecipe.getLearner().train(newRecipe.getTrainingTable(), newRecipe.getLearnerSettings(), newRecipe.getValidationSettings(), newRecipe.getWrappers(), textUpdater);
 		newRecipe.setTrainingResult(trainResult);
 	}
 

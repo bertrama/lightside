@@ -15,6 +15,7 @@ import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
+import edu.cmu.side.plugin.WrapperPlugin;
 
 public class Recipe implements Serializable
 {
@@ -23,6 +24,7 @@ public class Recipe implements Serializable
 	private String recipeName = "";
 	OrderedPluginMap extractors;
 	OrderedPluginMap filters;
+	OrderedPluginMap wrappers;
 	LearningPlugin learner;
 	Map<String, String> learnerSettings;
 	Map<String, Serializable> validationSettings;
@@ -89,6 +91,8 @@ public class Recipe implements Serializable
 	
 	public OrderedPluginMap getFilters(){ return filters; }
 	
+	public OrderedPluginMap getWrappers(){ return wrappers; }
+	
 	public LearningPlugin getLearner(){ return learner; }
 
 	public void setDocumentList(DocumentList sdl){
@@ -130,6 +134,14 @@ public class Recipe implements Serializable
 		resetStage();
 	}
 	
+	public void addWrapper(WrapperPlugin plug, Map<String, String> settings){
+		System.out.println("Adding wrapper R138");
+		if(settings == null)
+			settings = plug.generateConfigurationSettings();
+		wrappers.put(plug, settings);
+		resetStage();
+	}
+	
 	public void setLearner(LearningPlugin plug){
 		learner = plug;
 		resetStage();
@@ -142,8 +154,6 @@ public class Recipe implements Serializable
 	public Map<String, String> getLearnerSettings(){
 		return learnerSettings;
 	}
-	
-
 	
 	public Map<String, Serializable> getValidationSettings()
 	{
@@ -159,6 +169,7 @@ public class Recipe implements Serializable
 	{
 		extractors = new OrderedPluginMap();
 		filters= new OrderedPluginMap();
+		wrappers = new OrderedPluginMap();
 		getStage();
 	}
 
@@ -189,6 +200,9 @@ public class Recipe implements Serializable
 			newRecipe.addFilter((RestructurePlugin)plugin, prior.getFilters().get(plugin));
 		}
 		newRecipe.setFilteredTable(prior.getFilteredTable());
+		for(SIDEPlugin plugin : prior.getWrappers().keySet()){
+			newRecipe.addWrapper((WrapperPlugin)plugin, prior.getWrappers().get(plugin));
+		}
 		newRecipe.setLearner(next);
 		newRecipe.setLearnerSettings(settings);
 		return newRecipe;
@@ -207,6 +221,10 @@ public class Recipe implements Serializable
 		for (SIDEPlugin plugin : prior.getFilters().keySet())
 		{
 			newRecipe.addFilter((RestructurePlugin) plugin, prior.getFilters().get(plugin));
+		}
+		
+		for (SIDEPlugin plugin : prior.getWrappers().keySet()){
+			newRecipe.addWrapper((WrapperPlugin) plugin, prior.getWrappers().get(plugin));
 		}
 //		newRecipe.setFilteredTable(prior.getFilteredTable());
 		newRecipe.setLearner(prior.getLearner());
@@ -268,6 +286,7 @@ public class Recipe implements Serializable
 		recipeName = (String) in.readObject();
 		extractors = (OrderedPluginMap) in.readObject();
 		filters = (OrderedPluginMap) in.readObject();
+		wrappers = (OrderedPluginMap) in.readObject();
 		learner = (LearningPlugin) SIDEPlugin.fromSerializable((Serializable) in.readObject()); //it's all for you!
 		learnerSettings = (Map<String, String>) in.readObject();
 		documentList = (DocumentList) in.readObject();
@@ -285,6 +304,7 @@ public class Recipe implements Serializable
 		out.writeObject(recipeName);
 		out.writeObject(extractors);
 		out.writeObject(filters);
+		out.writeObject(wrappers);
 		out.writeObject(learner==null?null:learner.toSerializable());
 		out.writeObject(learnerSettings);
 		out.writeObject(documentList);
@@ -294,6 +314,5 @@ public class Recipe implements Serializable
 		out.writeObject(predictionResult);
 		out.writeObject(validationSettings);
 	}
-
 
 }

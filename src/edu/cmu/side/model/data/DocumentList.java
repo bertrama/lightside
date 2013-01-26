@@ -276,16 +276,26 @@ public class DocumentList implements Serializable{
 
 	public String[] getLabelArray() {
 		if(labelArray == null){
-			List<String> labels = getAnnotationArray();
 			Set<String> labelSet = new TreeSet<String>();
-			if(labels != null)
-			{
-				for(String s : labels)
+			switch(getValueType(getCurrentAnnotation())){
+			case NOMINAL:
+			case BOOLEAN:
+				List<String> labels = getAnnotationArray();
+				if(labels != null)
 				{
-					labelSet.add(s);
+					for(String s : labels)
+					{
+						labelSet.add(s);
+					}
+				}		
+				break;
+			case NUMERIC:
+				for(int i = 0; i < 5; i++){
+					labelSet.add(((i*20)+1)+"st-"+((i+1)*20)+"th");
 				}
+				break;
 			}
-			labelArray = labelSet.toArray(new String[0]);			
+			labelArray = labelSet.toArray(new String[0]);
 		}
 		return labelArray;
 	}
@@ -331,6 +341,7 @@ public class DocumentList implements Serializable{
 		if (!allAnnotations.containsKey(annot))
 			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
 		labelArray = null;
+		type = null;
 		currentAnnotation = annot;
 		getLabelArray();
 	}

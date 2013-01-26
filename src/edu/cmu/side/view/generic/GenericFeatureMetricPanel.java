@@ -17,7 +17,9 @@ import javax.swing.JTextField;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.event.RowSorterEvent;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableColumnModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -37,6 +39,17 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 	FeatureTableModel display = new FeatureTableModel();
 	JTextField text = new JTextField(20);
 
+	protected static boolean evaluating = false;
+
+
+	public static void setEvaluating(boolean e){
+		evaluating = e;
+	}
+
+	public static boolean isEvaluating(){
+		return evaluating;
+	}
+
 	protected FeatureTable localTable;
 
 	public GenericFeatureMetricPanel(){
@@ -44,6 +57,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		JLabel label = new JLabel("Features in Table:");
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
+		featureTable.setAutoCreateColumnsFromModel(false);
 
 		JScrollPane tableScroll = new JScrollPane(featureTable);
 		text.addKeyListener(new KeyListener(){
@@ -80,29 +94,35 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 			}
 		}
 		FeatureTable newTable = (recipe == null ? null : recipe.getTrainingTable());
-		boolean changeInColumns = (countTrues+1 != model.getColumnCount() || newTable == null || model.getRowCount() != newTable.getFeatureSet().size());
-		if(newTable != localTable || changeInColumns){
-			EvaluateFeaturesTask task = new EvaluateFeaturesTask(getActionBar(), recipe, tableEvaluationPlugins, mask, getTargetAnnotation(), localTable != null || changeInColumns);
+		if(!isEvaluating()){
+			localTable = newTable;
+			EvaluateFeaturesTask task = new EvaluateFeaturesTask(getActionBar(), recipe, tableEvaluationPlugins, mask, getTargetAnnotation());
 			task.execute();
 		}
 	}
 
 	public FeatureTableModel filterTable(FeatureTableModel ftm, String t){
-		FeatureTableModel disp = new FeatureTableModel();
+		Vector<Object> header = new Vector<Object>();
+		Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
+
 		for(int i = 0; i < ftm.getColumnCount(); i++){
-			disp.addColumn(ftm.getColumnName(i));
+			header.add(ftm.getColumnName(i));
 		}
-		if(disp.getColumnCount() > 0){
+		if(header.size() > 0){
 			for(int i = 0; i < ftm.getRowCount(); i++){
-				if(ftm.getValueAt(i, 0) != null && ftm.getValueAt(i, 0).toString().contains(t)){
-					Vector<Object> row = new Vector<Object>();
-					for(int j = 0; j < ftm.getColumnCount(); j++){
-						row.add(ftm.getValueAt(i,j));
-					}
-					disp.addRow(row);
-				}
+				try{
+					if(ftm.getValueAt(i, 0) != null && ftm.getValueAt(i, 0).toString().contains(t)){
+						Vector<Object> row = new Vector<Object>();
+						for(int j = 0; j < ftm.getColumnCount(); j++){
+							row.add(ftm.getValueAt(i,j));
+						}
+						rows.add(row);
+					}					
+				}catch(Exception e){}
 			}			
 		}
+		FeatureTableModel disp = new FeatureTableModel(rows, header);
+
 		return disp;
 	}
 
@@ -112,58 +132,35 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		Recipe recipe;
 		Map<? extends FeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 		boolean[] mask;
-		boolean fill;
 		String target;
 
-		public EvaluateFeaturesTask(ActionBar action, Recipe r, Map<? extends FeatureMetricPlugin, Map<String, Boolean>> plugins, boolean[] m, String t, boolean f)
+		public EvaluateFeaturesTask(ActionBar action, Recipe r, Map<? extends FeatureMetricPlugin, Map<String, Boolean>> plugins, boolean[] m, String t)
 		{
 			super(action);
-			fill = f;
 			recipe = r;
 			target = t;
 			tableEvaluationPlugins = plugins;
 			mask = m;
+		}
+		
+		@Override
+		protected void beginTask(){
+			super.beginTask();
+			GenericFeatureMetricPanel.setEvaluating(true);
+			combo.setEnabled(false);
+		}
+		
+		@Override
+		protected void finishTask(){
+			super.finishTask();
+			GenericFeatureMetricPanel.setEvaluating(false);
+			combo.setEnabled(true);
 		}
 
 		@Override
 		protected void doTask(){
 			try
 			{
-				FeatureTable newTable = (recipe == null ? null : recipe.getTrainingTable());
-				model = new FeatureTableModel();
-				localTable = newTable;
-				if(fill){
-					model.addColumn("Feature");
-					int rowCount = 1;
-
-					Map<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>> evals = new HashMap<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>>();
-					for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
-						evals.put(plug, new TreeMap<String, Map<Feature, Comparable>>());
-						for(String s : tableEvaluationPlugins.get(plug).keySet()){
-							if(tableEvaluationPlugins.get(plug).get(s)){
-								model.addColumn(s);
-								rowCount++;
-								FeatureTable current = newTable;
-								Map<Feature, Comparable> values = plug.evaluateFeatures(recipe, mask, s, target, actionBar.update);
-								evals.get(plug).put(s, values);
-							}
-						}
-					}
-					if(localTable != null){
-						for(Feature f : localTable.getFeatureSet()){
-							Vector<Object> row = new Vector<Object>();
-							row.add(getCellObject(f));
-							for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
-								for(String s : tableEvaluationPlugins.get(plug).keySet()){
-									if(tableEvaluationPlugins.get(plug).get(s)){
-										row.add(evals.get(plug).get(s).get(f));
-									}
-								}
-							}
-							model.addRow(row);
-						}						
-					}
-				}
 
 				List<SortKey> sortKeysToPass = new ArrayList<SortKey>();
 				if(featureTable.getRowSorter() != null){
@@ -178,13 +175,61 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 						}
 					}
 				}
+				
+				Vector<Object> header = new Vector<Object>();
+				Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
+				header.add("Feature");
+				int rowCount = 1;
+
+				Map<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>> evals = new HashMap<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>>();
+
+				if(localTable != null){
+					for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
+						evals.put(plug, new TreeMap<String, Map<Feature, Comparable>>());
+						for(String s : tableEvaluationPlugins.get(plug).keySet()){
+							if(tableEvaluationPlugins.get(plug).get(s)){
+								header.add(s);
+								rowCount++;
+								Map<Feature, Comparable> values = plug.evaluateFeatures(recipe, mask, s, target, actionBar.update);
+								evals.get(plug).put(s, values);
+							}
+						}
+					}
+					for(Feature f : localTable.getFeatureSet()){
+						Vector<Object> row = new Vector<Object>();
+						row.add(getCellObject(f));
+						for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
+							for(String s : tableEvaluationPlugins.get(plug).keySet()){
+								if(tableEvaluationPlugins.get(plug).get(s)){
+									Object value = evals.get(plug).get(s).get(f);
+									if(value == null){
+										value = "";
+									}
+									row.add(value);
+								}
+							}
+						}
+						rows.add(row);
+					}						
+				}
+				model = new FeatureTableModel(rows, header);
+
 				display = filterTable(model, text.getText());
+				TableColumnModel columns = new DefaultTableColumnModel();
+				for(int i = 0; i < display.getColumnCount(); i++){
+					TableColumn col = new TableColumn(i);
+					col.setHeaderValue(display.getColumnName(i));
+					columns.addColumn(col);
+				}
+				featureTable.setColumnModel(columns);
 				featureTable.setModel(display);
 				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(display);
 				sorter.setSortKeys(sortKeysToPass);
 				sorter.setSortsOnUpdates(true);
 				featureTable.setRowSorter(sorter);
 				featureTable.sorterChanged(new RowSorterEvent(sorter));
+
+				GenericFeatureMetricPanel.setEvaluating(false);
 
 			}
 			catch (Exception e)

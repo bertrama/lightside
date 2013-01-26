@@ -53,26 +53,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 				Workbench.update(GenericLoadPanel.this);
 			}
 		});
-		delete.addActionListener(new DeleteFilesListener(combo, this));
 	}
-
-	public static class DeleteFilesListener implements ActionListener{
-		private JComboBox parentComponent;
-		private GenericLoadPanel loadPanel;
-
-		public DeleteFilesListener(JComboBox parentComponent, GenericLoadPanel load){
-			this.parentComponent = parentComponent;
-			loadPanel = load;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			Workbench.getRecipeManager().deleteRecipe((Recipe)parentComponent.getSelectedItem());
-			loadPanel.deleteHighlight();
-			Workbench.update(loadPanel);
-		}
-	}
-
 
 	public GenericLoadPanel(String l)
 	{
@@ -172,19 +153,18 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 		});
 
-		//		delete.addActionListener(new ActionListener()
-		//		{
-		//
-		//			@Override
-		//			public void actionPerformed(ActionEvent arg0)
-		//			{
-		//				if(combo.getSelectedIndex() >= 0)
-		//				{
-		//					deleteSelectedItem();
-		//				}
-		//			}
-		//			
-		//		});
+		delete.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if(combo.getSelectedIndex() >= 0)
+				{
+					deleteSelectedItem();
+				}
+			}
+		});
 
 
 		load.addActionListener(new ActionListener()
@@ -233,10 +213,9 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 
 	public void deleteSelectedItem()
 	{
-		System.out.println("Deleting selected item GLP237");
 		Recipe recipe = (Recipe) combo.getSelectedItem();//TODO: should this be more generic?
+		setHighlight(null);
 		Workbench.getRecipeManager().deleteRecipe(recipe);
-		System.out.println("Item deleted GLP240");
 		Workbench.update(this);
 	};
 

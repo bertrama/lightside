@@ -99,6 +99,15 @@
         <classname>plugins.restructure.GrowthModel</classname>
     </plugin>
     
+    <plugin>
+        <name>Feature Selection</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Chi squared feature selection]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.wrappers.FeatureSelection</classname>
+    </plugin>
+    
     
     <plugin>
         <name>Weka Logit</name>

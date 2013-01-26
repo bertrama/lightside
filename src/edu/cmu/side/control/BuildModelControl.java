@@ -18,7 +18,6 @@ import javax.swing.JTextField;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -29,6 +28,7 @@ import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.ModelMetricPlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
+import edu.cmu.side.plugin.WrapperPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
@@ -41,6 +41,7 @@ public class BuildModelControl extends GenesisControl{
 
 	private static Map<String, Serializable> validationSettings;
 	private static Map<LearningPlugin, Boolean> learningPlugins;
+	private static Map<WrapperPlugin, Boolean> wrapperPlugins;
 	private static LearningPlugin highlightedLearningPlugin;
 
 	private static Collection<ModelMetricPlugin> modelEvaluationPlugins;
@@ -54,12 +55,18 @@ public class BuildModelControl extends GenesisControl{
 		for(SIDEPlugin le : learners){
 			learningPlugins.put((LearningPlugin)le, true);
 		}
+		
 		modelEvaluationPlugins = new ArrayList<ModelMetricPlugin>();
 		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("model_evaluation");
 		for(SIDEPlugin fe : tableEvaluations){
 			modelEvaluationPlugins.add((ModelMetricPlugin)fe);
 		}
-
+		
+		wrapperPlugins = new HashMap<WrapperPlugin, Boolean>();
+		SIDEPlugin[] wrappers = PluginManager.getSIDEPluginArrayByType("learning_wrapper");
+		for(SIDEPlugin wr : wrappers){
+			wrapperPlugins.put((WrapperPlugin)wr, true);
+		}
 	}
 
 	public static Collection<ModelMetricPlugin> getModelEvaluationPlugins(){
@@ -179,9 +186,21 @@ public class BuildModelControl extends GenesisControl{
 						validationSettings.put("testFeatureTable", extractTestFeatures);
 					}
 				}
+				Recipe newRecipe = getHighlightedFeatureTableRecipe();
+				System.out.println("Starting to add wrappers BMC190");
+				for(WrapperPlugin wrap : wrapperPlugins.keySet()){
+					if(wrapperPlugins.get(wrap)){
+						System.out.println(wrap.getOutputName() + " added BMC193");
+						newRecipe.addWrapper(wrap, wrap.generateConfigurationSettings());						
+					}
+				}
 				LearningPlugin learner = getHighlightedLearningPlugin();
 				Map<String, String> settings = learner.generateConfigurationSettings();
-				Recipe newRecipe = Recipe.addLearnerToRecipe(getHighlightedFeatureTableRecipe(), learner, settings);
+				newRecipe = Recipe.addLearnerToRecipe(newRecipe, learner, settings);
+				System.out.println(newRecipe.getLearner().getOutputName() + " BMC200");
+				for(SIDEPlugin wrap : newRecipe.getWrappers().keySet()){
+					System.out.println(wrap.getOutputName() + " wrap BMC202");
+				}
 				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
 				task.execute();
 			}
@@ -234,7 +253,8 @@ public class BuildModelControl extends GenesisControl{
 				FeatureTable current = plan.getTrainingTable();
 				if (current != null)
 				{
-					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, BuildModelControl.getUpdater());
+					System.out.println(plan.getWrappers() + " BMC250");
+					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, plan.getWrappers(), BuildModelControl.getUpdater());
 
 					if(model != null)
 					{
@@ -279,6 +299,10 @@ public class BuildModelControl extends GenesisControl{
 		return learningPlugins;
 	}
 
+	public static Map<WrapperPlugin, Boolean> getWrapperPlugins(){
+		return wrapperPlugins;
+	}
+	
 	public static int numLearningPlugins(){
 		return learningPlugins.size();
 	}

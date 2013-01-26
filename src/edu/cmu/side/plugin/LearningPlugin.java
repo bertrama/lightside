@@ -3,7 +3,6 @@ package edu.cmu.side.plugin;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -12,12 +11,12 @@ import java.util.TreeSet;
 import com.yerihyo.yeritools.math.StatisticsToolkit;
 
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
-import edu.cmu.side.model.feature.FeatureHit;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	private static final long serialVersionUID = -7928450759075851993L;
@@ -30,8 +29,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return type;
 	}
 
-	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> map, StatusUpdater progressIndicator) throws Exception{
+	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> map, OrderedPluginMap wrappers, StatusUpdater progressIndicator) throws Exception{
 
+		System.out.println("Beginning training LP34");
 		halt = false;
 		if(table == null){
 			return null;
@@ -39,6 +39,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		updater = progressIndicator;
 
 		this.configureFromSettings(configuration);
+		for(SIDEPlugin wrapper : wrappers.keySet()){
+			((WrapperPlugin)wrapper).configureFromSettings(wrappers.get(wrapper));
+		}
 		boolean[] mask = new boolean[table.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		DocumentList sdl = (DocumentList)map.get("testSet");
@@ -78,22 +81,44 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					}
 					foldsMap = BuildModelControl.getFoldsMapByFile(sdl, numFolds);
 				}
-				result = evaluateCrossValidation(table, foldsMap, progressIndicator);
+				System.out.println("Beginning cross-validation LP81");
+				result = evaluateCrossValidation(table, foldsMap, wrappers, progressIndicator);
+				System.out.println("Finished cross-validation LP83");
 				progressIndicator.update("Training final model on all data");
-				trainWithMaskForSubclass(table, mask, progressIndicator);
+				for(SIDEPlugin wrapper : wrappers.keySet()){
+					((WrapperPlugin)wrapper).learnFromTrainingData(table, mask, progressIndicator);
+				}
+				FeatureTable pass = table;
+				for(SIDEPlugin wrapper : wrappers.keySet()){
+					pass = ((WrapperPlugin)wrapper).wrapTableBefore(pass, mask, progressIndicator);
+				}
+				System.out.println("Finished wrapping LP92");
+				trainWithMaskForSubclass(pass, mask, progressIndicator);
+				System.out.println("Finished training LP94");
 			}
 			else if (map.get("type").equals("SUPPLY"))
 			{
 				progressIndicator.update("Training model");
-				trainWithMaskForSubclass(table, mask, progressIndicator);
+				for(SIDEPlugin wrapper : wrappers.keySet()){
+					((WrapperPlugin)wrapper).learnFromTrainingData(table, mask, progressIndicator);
+				}
+				FeatureTable pass = table;
+				for(SIDEPlugin wrapper : wrappers.keySet()){
+					pass = ((WrapperPlugin)wrapper).wrapTableBefore(pass, mask, progressIndicator);
+				}
+				trainWithMaskForSubclass(pass, mask, progressIndicator);
 				progressIndicator.update("Testing model");
-				result = evaluateTestSet(table, (FeatureTable) map.get("testFeatureTable"), progressIndicator);
+				FeatureTable passTest = (FeatureTable) map.get("testFeatureTable");
+				for(SIDEPlugin wrapper : wrappers.keySet()){
+					passTest = ((WrapperPlugin)wrapper).wrapTableBefore(passTest, mask, progressIndicator);
+				}
+				result = evaluateTestSet(pass, passTest, wrappers, progressIndicator);
 			}
 		}
 		return result;
 	}
 
-	protected TrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator){
+	protected TrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, StatusUpdater progressIndicator){
 		boolean[] mask = new boolean[table.getDocumentList().getSize()];
 		String[] predictions = new String[table.getDocumentList().getSize()];
 		Set<Integer> folds = new TreeSet<Integer>();
@@ -115,11 +140,22 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			}
 			double average = StatisticsToolkit.getAverage(times);
 			double timeA = System.currentTimeMillis();
+			System.out.println("Starting wrapping LP138");
+			progressIndicator
+					.update((times.size() > 0 ? "Time per fold: " + print.format(average) + ", " : "") + "Training fold", (fold + 1), folds.size());
+			for(SIDEPlugin wrapper : wrappers.keySet()){
+				((WrapperPlugin)wrapper).learnFromTrainingData(table, mask, progressIndicator);
+			}
+			System.out.println("Wrappers learned LP144");
+			FeatureTable pass = table;
+			for(SIDEPlugin wrapper : wrappers.keySet()){
+				pass = ((WrapperPlugin)wrapper).wrapTableBefore(pass, mask, progressIndicator);
+			}
+			System.out.println("Wrappers wrapped LP149");
 			try
 			{
-				progressIndicator
-						.update((times.size() > 0 ? "Time per fold: " + print.format(average) + ", " : "") + "Training fold", (fold + 1), folds.size());
-				trainWithMaskForSubclass(table, mask, updater);
+				
+				trainWithMaskForSubclass(pass, mask, updater);
 			}
 			catch (Exception e)
 			{
@@ -136,7 +172,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			}
 
 			progressIndicator.update("Testing fold", (fold+1), folds.size());
-			PredictionResult preds = predictWithMaskForSubclass(table, table, mask, updater);
+			PredictionResult preds = predictWithMaskForSubclass(pass, pass, mask, updater);
+			
 			int predictionIndex = 0;
 			for (Comparable pred : preds.getPredictions())
 			{
@@ -160,10 +197,13 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		else return null;
 	}
 
-	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet,StatusUpdater updater){
+	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet, OrderedPluginMap wrappers, StatusUpdater updater){
 		boolean[] mask = new boolean[testSet.getDocumentList().getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		PredictionResult predictions = predictWithMaskForSubclass(train, testSet, mask, updater);
+		for(SIDEPlugin wrapper : wrappers.keySet()){
+			predictions = ((WrapperPlugin)wrapper).wrapResultAfter(predictions, mask, updater);
+		}
 		TrainingResult training = new TrainingResult(train, testSet, predictions.getPredictions());
 		return training;
 	}

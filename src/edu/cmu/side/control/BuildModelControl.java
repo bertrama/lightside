@@ -187,20 +187,14 @@ public class BuildModelControl extends GenesisControl{
 					}
 				}
 				Recipe newRecipe = getHighlightedFeatureTableRecipe();
-				System.out.println("Starting to add wrappers BMC190");
 				for(WrapperPlugin wrap : wrapperPlugins.keySet()){
 					if(wrapperPlugins.get(wrap)){
-						System.out.println(wrap.getOutputName() + " added BMC193");
 						newRecipe.addWrapper(wrap, wrap.generateConfigurationSettings());						
 					}
 				}
 				LearningPlugin learner = getHighlightedLearningPlugin();
 				Map<String, String> settings = learner.generateConfigurationSettings();
 				newRecipe = Recipe.addLearnerToRecipe(newRecipe, learner, settings);
-				System.out.println(newRecipe.getLearner().getOutputName() + " BMC200");
-				for(SIDEPlugin wrap : newRecipe.getWrappers().keySet()){
-					System.out.println(wrap.getOutputName() + " wrap BMC202");
-				}
 				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
 				task.execute();
 			}
@@ -253,7 +247,6 @@ public class BuildModelControl extends GenesisControl{
 				FeatureTable current = plan.getTrainingTable();
 				if (current != null)
 				{
-					System.out.println(plan.getWrappers() + " BMC250");
 					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, plan.getWrappers(), BuildModelControl.getUpdater());
 
 					if(model != null)

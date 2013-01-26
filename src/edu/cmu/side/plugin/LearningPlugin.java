@@ -30,8 +30,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	}
 
 	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> map, OrderedPluginMap wrappers, StatusUpdater progressIndicator) throws Exception{
-
-		System.out.println("Beginning training LP34");
 		halt = false;
 		if(table == null){
 			return null;
@@ -81,9 +79,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					}
 					foldsMap = BuildModelControl.getFoldsMapByFile(sdl, numFolds);
 				}
-				System.out.println("Beginning cross-validation LP81");
 				result = evaluateCrossValidation(table, foldsMap, wrappers, progressIndicator);
-				System.out.println("Finished cross-validation LP83");
 				progressIndicator.update("Training final model on all data");
 				for(SIDEPlugin wrapper : wrappers.keySet()){
 					((WrapperPlugin)wrapper).learnFromTrainingData(table, mask, progressIndicator);
@@ -92,9 +88,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				for(SIDEPlugin wrapper : wrappers.keySet()){
 					pass = ((WrapperPlugin)wrapper).wrapTableBefore(pass, mask, progressIndicator);
 				}
-				System.out.println("Finished wrapping LP92");
 				trainWithMaskForSubclass(pass, mask, progressIndicator);
-				System.out.println("Finished training LP94");
 			}
 			else if (map.get("type").equals("SUPPLY"))
 			{
@@ -141,21 +135,17 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			}
 			double average = StatisticsToolkit.getAverage(times);
 			double timeA = System.currentTimeMillis();
-			System.out.println("Starting wrapping LP138");
 			progressIndicator
 					.update((times.size() > 0 ? "Time per fold: " + print.format(average) + ", " : "") + "Training fold", (fold + 1), folds.size());
 			for(SIDEPlugin wrapper : wrappers.keySet()){
 				((WrapperPlugin)wrapper).learnFromTrainingData(table, mask, progressIndicator);
 			}
-			System.out.println("Wrappers learned LP144");
 			FeatureTable pass = table;
 			for(SIDEPlugin wrapper : wrappers.keySet()){
 				pass = ((WrapperPlugin)wrapper).wrapTableBefore(pass, mask, progressIndicator);
 			}
-			System.out.println("Wrappers wrapped LP149");
 			try
 			{
-				
 				trainWithMaskForSubclass(pass, mask, updater);
 			}
 			catch (Exception e)

@@ -12,6 +12,7 @@ import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
+import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class ExploreResultsControl extends GenesisControl{
@@ -24,7 +25,6 @@ public class ExploreResultsControl extends GenesisControl{
 	private static String highlightedRow; private static String highlightedColumn;
 	private static Feature highlightedFeature;
 	
-	private static EvalCheckboxListener eval;
 
 	static{
 		modelAnalysisPlugins = new HashMap<EvaluateOneModelPlugin, Boolean>();
@@ -42,14 +42,13 @@ public class ExploreResultsControl extends GenesisControl{
 				featureEvaluationPlugins.get(plugin).put(s.toString(), false);
 			}
 		}
-		eval = new EvalCheckboxListener(featureEvaluationPlugins);
 	}
 	
 	public static StatusUpdater getUpdater(){
 		return update;
 	}
-	public static EvalCheckboxListener getCheckboxListener(){
-		return eval;
+	public static EvalCheckboxListener getCheckboxListener(AbstractListPanel source){
+		return new EvalCheckboxListener(source, featureEvaluationPlugins, ExploreResultsControl.getUpdater());
 	}
 
 	public static void setHighlightedCell(String row, String col){
@@ -97,6 +96,5 @@ public class ExploreResultsControl extends GenesisControl{
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		highlightedTrainedModel = highlight;
-		Workbench.update();
 	}
 }

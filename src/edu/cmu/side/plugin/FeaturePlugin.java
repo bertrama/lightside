@@ -35,7 +35,5 @@ public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
 	 * @return Features for all documents.
 	 */
 	public abstract Collection<FeatureHit> extractFeatureHitsForSubclass(DocumentList documents, StatusUpdater update);
-	
-	public abstract void configureFromFile(String filename);
 
 }

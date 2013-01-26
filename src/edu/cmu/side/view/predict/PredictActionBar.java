@@ -50,7 +50,7 @@ public class PredictActionBar extends ActionBar
 	@Override
 	public void endedTask()
 	{
-		Workbench.update();
+		Workbench.update(this);
 	}
 	
 	@Override

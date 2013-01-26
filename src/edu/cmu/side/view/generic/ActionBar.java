@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -15,12 +14,11 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
-import com.yerihyo.yeritools.swing.SwingToolkit.OnPanelSwingTask;
-
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.model.StatusUpdater;
+import edu.cmu.side.view.util.AbstractListPanel;
 
-public abstract class ActionBar extends JPanel{
+public abstract class ActionBar extends AbstractListPanel{
 	
 	protected JButton actionButton = new JButton();
 	protected JButton cancel = new JButton();

@@ -20,7 +20,7 @@ public class ExploreMetricChecklistPanel extends GenericMetricChecklistPanel<Mod
 		
 		@Override
 		public ItemListener getCheckboxListener() {
-			return ExploreResultsControl.getCheckboxListener();
+			return ExploreResultsControl.getCheckboxListener(this);
 		}
 
 		@Override
@@ -31,6 +31,14 @@ public class ExploreMetricChecklistPanel extends GenericMetricChecklistPanel<Mod
 		@Override
 		public void setTargetAnnotation(String s) {}
 		
+		@Override
+		public void refreshPanel(){
+			if(ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
+				refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getFeatureTable());			
+			}else{
+				refreshPanel(null);
+			}
+		}
 	
 	
 }

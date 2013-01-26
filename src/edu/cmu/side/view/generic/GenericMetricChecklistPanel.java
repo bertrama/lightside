@@ -31,6 +31,8 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 	FastListModel pluginsModel = new FastListModel();
 	SelectPluginList pluginsList = new SelectPluginList();
 
+	FeatureTable localTable;
+	
 	public GenericMetricChecklistPanel(){
 		setLayout(new RiverLayout());
 		pluginsModel = new FastListModel();
@@ -56,7 +58,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 				if(combo.getSelectedItem() != null){
 					setTargetAnnotation(combo.getSelectedItem().toString());					
 				}
-				Workbench.update();
+				Workbench.update(GenericMetricChecklistPanel.this);
 			}
 		});
 		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(15));
@@ -68,22 +70,18 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 	}
 
 	public void refreshPanel(FeatureTable table){
-		
-		Set<String> keysLocal = new HashSet<String>();
-		Set<String> keysNew = new HashSet<String>();
-		if(table != null)
-		{
-			for(String s : table.getDocumentList().getLabelArray()){
-				keysNew.add(s);
+		if(table != localTable){
+			localTable = table;
+			Set<String> keysLocal = new HashSet<String>();
+			Set<String> keysNew = new HashSet<String>();
+			if(table != null)
+			{
+				for(String s : table.getDocumentList().getLabelArray()){
+					keysNew.add(s);
+				}
 			}
-		}
-		for(int i = 0; i < combo.getModel().getSize(); i++){
-			keysLocal.add(combo.getModel().getElementAt(i).toString());			
-		}
-		if(!keysNew.equals(keysLocal)){
 			Workbench.reloadComboBoxContent(combo, keysNew, (keysNew.size()>0?keysNew.toArray(new String[0])[0]:null));
 		}
-		
 	}
 	
 	public abstract ItemListener getCheckboxListener();

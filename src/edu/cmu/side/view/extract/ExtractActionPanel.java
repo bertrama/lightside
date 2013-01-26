@@ -41,14 +41,10 @@ public class ExtractActionPanel extends ActionBar{
 	@Override
 	public void startedTask()
 	{
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void endedTask()
 	{
-		// TODO Auto-generated method stub
-		
 	}
 }

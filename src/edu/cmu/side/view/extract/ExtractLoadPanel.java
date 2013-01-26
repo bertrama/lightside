@@ -2,11 +2,14 @@ package edu.cmu.side.view.extract;
 
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
@@ -35,11 +38,25 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		describeScroll = new JScrollPane();
 		describePanel.add(BorderLayout.CENTER, describeScroll);
 		add("br hfill vfill", describePanel);
+
+		delete.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				if(combo.getSelectedIndex() >= 0)
+				{
+					deleteSelectedItem();
+				}
+			}
+		});
 	}
 
 	@Override
 	public void setHighlight(Recipe r) {
 		ExtractFeaturesControl.setHighlightedDocumentListRecipe(r);
+		Workbench.update(this);
 	}
 
 	@Override

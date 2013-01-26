@@ -28,6 +28,7 @@ public class PredictNewDataPanel extends GenericLoadPanel
 	public void setHighlight(Recipe r)
 	{
 		PredictLabelsControl.setHighlightedUnlabeledData(r);
+		Workbench.update(this);
 	}
 
 	@Override

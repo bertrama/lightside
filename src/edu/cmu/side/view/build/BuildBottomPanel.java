@@ -7,22 +7,25 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
-import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMatrixPanel;
 import edu.cmu.side.view.generic.GenericModelMetricPanel;
+import edu.cmu.side.view.util.AbstractListPanel;
 
-public class BuildBottomPanel extends JPanel {
+public class BuildBottomPanel extends AbstractListPanel {
 
 	private GenericLoadPanel control = new GenericLoadPanel("Trained Models:"){
 
 		@Override
 		public void setHighlight(Recipe r) {
 			BuildModelControl.setHighlightedTrainedModelRecipe(r);
+			Workbench.update(this);
 		}
 
 		@Override
@@ -49,7 +52,11 @@ public class BuildBottomPanel extends JPanel {
 
 	};
 
-	private GenericModelMetricPanel result = new GenericModelMetricPanel();
+	private GenericModelMetricPanel result = new GenericModelMetricPanel(){
+		public void refreshPanel(){
+			refreshPanel(BuildModelControl.getHighlightedTrainedModelRecipe());
+		}
+	};
 
 	public BuildBottomPanel(){
 		setLayout(new BorderLayout());
@@ -66,13 +73,15 @@ public class BuildBottomPanel extends JPanel {
 		control.setPreferredSize(new Dimension(275,200));		
 		confusion.setPreferredSize(new Dimension(275,200));
 		result.setPreferredSize(new Dimension(350, 200));
-
 		add(BorderLayout.CENTER, pane);
+		
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), control);
+		GenesisControl.addListenerToMap(control, confusion);
+		GenesisControl.addListenerToMap(control, result);
+		
 	}
 
 	public void refreshPanel(){
 		control.refreshPanel();
-		confusion.refreshPanel();
-		result.refreshPanel(BuildModelControl.getHighlightedTrainedModelRecipe());	
 	}
 }

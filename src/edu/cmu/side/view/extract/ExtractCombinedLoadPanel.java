@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -24,8 +25,9 @@ import edu.cmu.side.view.util.FastListModel;
 
 public class ExtractCombinedLoadPanel extends AbstractListPanel{
 	
-	JComboBox annotationField = new JComboBox();
 	ExtractLoadPanel files = new ExtractLoadPanel("CSV Files:");
+
+	JComboBox annotationField = new JComboBox();
 	SelectPluginList textColumnsList = new SelectPluginList();
 	JScrollPane textColumnsScroll = new JScrollPane(textColumnsList);
 	
@@ -40,11 +42,13 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		pan.add("br left", new JLabel("Text Fields:"));
 		pan.add("br hfill", textColumnsScroll);
 		add(BorderLayout.SOUTH, pan);
+		
+		GenesisControl.addListenerToMap(files, files);
+		GenesisControl.addListenerToMap(files, this);
 	}
 	
 	@Override
 	public void refreshPanel(){
-		files.refreshPanel();
 		if(files.getHighlight() != null){
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 			Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
@@ -76,7 +80,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 					DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 					sdl.setTextColumn(((CheckBoxListEntry)ie.getItem()).getValue().toString(), ie.getStateChange()==ItemEvent.SELECTED);
 					Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
-					Workbench.update();						
+					Workbench.update(ExtractCombinedLoadPanel.this);						
 				}
 			});
 			i++;

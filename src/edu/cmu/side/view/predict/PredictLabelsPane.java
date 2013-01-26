@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.ActionBar;
@@ -21,6 +22,7 @@ public class PredictLabelsPane extends JPanel{
 		@Override
 		public void setHighlight(Recipe r) {
 			PredictLabelsControl.setHighlightedTrainedModelRecipe(r);
+			Workbench.update(this);
 		}
 
 		@Override

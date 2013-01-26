@@ -7,7 +7,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
@@ -22,6 +24,7 @@ public class ExploreResultsPane extends JPanel{
 		@Override
 		public void setHighlight(Recipe r) {
 			ExploreResultsControl.setHighlightedTrainedModelRecipe(r);
+			Workbench.update(this);
 		}
 
 		@Override
@@ -31,21 +34,20 @@ public class ExploreResultsPane extends JPanel{
 
 		@Override
 		public void refreshPanel() {
+			if(!ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
+				ExploreResultsControl.setHighlightedCell(null, null);
+			}
 			refreshPanel(ExploreResultsControl.getTrainedModels());
 		}
 		
 	};
 	
 	ExploreMatrixPanel matrix = new ExploreMatrixPanel();
-	
 	ExploreMetricChecklistPanel checklist = new ExploreMetricChecklistPanel();
-
-	ExploreFeaturePanel features = new ExploreFeaturePanel();
-	
+	ExploreActionBar middle = new ExploreActionBar(ExploreResultsControl.getUpdater());
+	ExploreFeatureMetricPanel features = new ExploreFeatureMetricPanel(middle);
 	GenericTripleFrame triple;
-	ExploreActionBar middle;
 
-	
 	GenericPluginConfigPanel<EvaluateOneModelPlugin> analysis = new GenericPluginConfigPanel<EvaluateOneModelPlugin>(false){
 		public void refreshPanel(){
 			refreshPanel(ExploreResultsControl.getModelAnalysisPlugins());
@@ -55,12 +57,9 @@ public class ExploreResultsPane extends JPanel{
 	
 	public ExploreResultsPane(){
 		setLayout(new BorderLayout());
-		
 		JSplitPane left = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
-
 		matrix.setPreferredSize(new Dimension(325, 150));
 		checklist.setPreferredSize(new Dimension(325, 150));
-
 		features.setPreferredSize(new Dimension(325, 250));
 
 		AbstractListPanel panel = new AbstractListPanel();
@@ -72,10 +71,8 @@ public class ExploreResultsPane extends JPanel{
 		
 		panel.add(BorderLayout.SOUTH, checklist);
 		triple = new GenericTripleFrame(load, panel, features);
-		middle = new ExploreActionBar(ExploreResultsControl.getUpdater());
 		
 		JScrollPane scroll = new JScrollPane(analysis);
-		
 		JPanel top = new JPanel(new BorderLayout());
 		
 
@@ -89,23 +86,21 @@ public class ExploreResultsPane extends JPanel{
 		left.setBottomComponent(scroll);
 		add(BorderLayout.CENTER, left);
 
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), load);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), matrix);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), checklist);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), features);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), analysis);
+
+		GenesisControl.addListenerToMap(load, matrix);
+		GenesisControl.addListenerToMap(load, checklist);
+		GenesisControl.addListenerToMap(load, features);
+		GenesisControl.addListenerToMap(load, analysis);
+		GenesisControl.addListenerToMap(checklist, features);
+		GenesisControl.addListenerToMap(matrix, analysis);
+		GenesisControl.addListenerToMap(features, analysis);
+		GenesisControl.addListenerToMap(middle, analysis);
+
 	}
 	
-	public void refreshPanel(){
-		if(!ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
-			ExploreResultsControl.setHighlightedCell(null, null);
-		}
-
-		load.refreshPanel();
-		matrix.refreshPanel();
-		features.refreshPanel();
-		if(ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
-			checklist.refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getFeatureTable());			
-		}else{
-			checklist.refreshPanel(null);
-		}
-		analysis.refreshPanel();
-		revalidate();
-		repaint();
-	}
 }

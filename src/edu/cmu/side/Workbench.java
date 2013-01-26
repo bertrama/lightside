@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -16,10 +17,12 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.WorkbenchPanel;
+import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.GlassPane;
 
 
@@ -37,6 +40,9 @@ public class Workbench{
 
 	public static PluginManager pluginManager = new PluginManager(PLUGIN_FOLDER);
 	public static RecipeManager recipeManager = new RecipeManager();
+
+	
+	
 	static WorkbenchPanel panel;
 	static GlassPane pane;
 
@@ -77,9 +83,6 @@ public class Workbench{
 		frame.pack();
 		frame.setVisible(true);
 		//		pane.setVisible(true);
-		
-		
-		update();
 	}
 
 	public List<? extends Image> getIcons(String... paths)
@@ -100,9 +103,18 @@ public class Workbench{
 		Workbench workbench = new Workbench();
 	}
 
-	public static void update(){
-		if(panel != null){
-			panel.actionPerformed(null);			
+	public static RecipeManager getRecipeManager(){
+		return recipeManager;
+	}
+	
+	public static void update(Object source){
+		if(!GenesisControl.isCurrentlyUpdating(source)){
+			GenesisControl.setCurrentlyUpdating(source, true);
+			Collection<AbstractListPanel> listeners = GenesisControl.getListeners(source);
+			for(AbstractListPanel listen : listeners){
+				listen.refreshPanel();
+			}	
+			GenesisControl.setCurrentlyUpdating(source, false);
 		}
 	}
 

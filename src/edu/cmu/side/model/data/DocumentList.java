@@ -15,6 +15,7 @@ import com.yerihyo.yeritools.csv.CSVReader;
 import com.yerihyo.yeritools.swing.AlertDialog;
 
 import edu.cmu.side.Workbench;
+import edu.cmu.side.model.feature.Feature;
 
 public class DocumentList implements Serializable{
 	private static final long serialVersionUID = -5433699826930815886L;
@@ -23,6 +24,7 @@ public class DocumentList implements Serializable{
 	Map<String, List<String>> allAnnotations = new HashMap<String, List<String>>();
 	Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
 	String currentAnnotation; 
+	Feature.Type type;
 	String currentDomain;
 	String name = "Default documents";
 	
@@ -34,6 +36,36 @@ public class DocumentList implements Serializable{
 	{
 		addAnnotation("text", instances);
 		setTextColumn("text", true);
+	}
+	
+
+	/**
+	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
+	 * @return
+	 */
+	public Feature.Type getValueType(String label){
+		Double num;
+		if(label.equals(currentAnnotation) && type != null){
+			return type;
+		}else{
+			Feature.Type localType;
+			for(String s : getPossibleAnn(label)){
+				try{
+					num = Double.parseDouble(s);
+				}catch(Exception e){
+					localType = Feature.Type.NOMINAL;
+					if(label.equals(currentAnnotation)){
+						type = localType;
+					}
+					return localType;
+				}
+			}
+			localType = Feature.Type.NUMERIC;
+			if(label.equals(currentAnnotation)){
+				type = localType;
+			}
+			return localType;
+		}
 	}
 	
 	public void setName(String n){
@@ -244,16 +276,26 @@ public class DocumentList implements Serializable{
 
 	public String[] getLabelArray() {
 		if(labelArray == null){
-			List<String> labels = getAnnotationArray();
 			Set<String> labelSet = new TreeSet<String>();
-			if(labels != null)
-			{
-				for(String s : labels)
+			switch(getValueType(getCurrentAnnotation())){
+			case NOMINAL:
+			case BOOLEAN:
+				List<String> labels = getAnnotationArray();
+				if(labels != null)
 				{
-					labelSet.add(s);
+					for(String s : labels)
+					{
+						labelSet.add(s);
+					}
+				}		
+				break;
+			case NUMERIC:
+				for(int i = 0; i < 5; i++){
+					labelSet.add(((i*20)+1)+"st-"+((i+1)*20)+"th");
 				}
+				break;
 			}
-			labelArray = labelSet.toArray(new String[0]);			
+			labelArray = labelSet.toArray(new String[0]);
 		}
 		return labelArray;
 	}
@@ -299,6 +341,7 @@ public class DocumentList implements Serializable{
 		if (!allAnnotations.containsKey(annot))
 			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
 		labelArray = null;
+		type = null;
 		currentAnnotation = annot;
 		getLabelArray();
 	}

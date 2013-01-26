@@ -18,7 +18,6 @@ import javax.swing.JTextField;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -29,6 +28,7 @@ import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.ModelMetricPlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
+import edu.cmu.side.plugin.WrapperPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
@@ -41,8 +41,9 @@ public class BuildModelControl extends GenesisControl{
 
 	private static Map<String, Serializable> validationSettings;
 	private static Map<LearningPlugin, Boolean> learningPlugins;
+	private static Map<WrapperPlugin, Boolean> wrapperPlugins;
 	private static LearningPlugin highlightedLearningPlugin;
-	
+
 	private static Collection<ModelMetricPlugin> modelEvaluationPlugins;
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	private static String newName = "model";
@@ -54,14 +55,20 @@ public class BuildModelControl extends GenesisControl{
 		for(SIDEPlugin le : learners){
 			learningPlugins.put((LearningPlugin)le, true);
 		}
+		
 		modelEvaluationPlugins = new ArrayList<ModelMetricPlugin>();
 		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("model_evaluation");
 		for(SIDEPlugin fe : tableEvaluations){
 			modelEvaluationPlugins.add((ModelMetricPlugin)fe);
 		}
-
+		
+		wrapperPlugins = new HashMap<WrapperPlugin, Boolean>();
+		SIDEPlugin[] wrappers = PluginManager.getSIDEPluginArrayByType("learning_wrapper");
+		for(SIDEPlugin wr : wrappers){
+			wrapperPlugins.put((WrapperPlugin)wr, true);
+		}
 	}
-	
+
 	public static Collection<ModelMetricPlugin> getModelEvaluationPlugins(){
 		return modelEvaluationPlugins;
 	}
@@ -118,7 +125,7 @@ public class BuildModelControl extends GenesisControl{
 
 	public static Map<Integer, Integer> getFoldsMapByAnnotation(DocumentList documents, String annotation, int num){
 		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
-		
+
 		int foldNum = 0;
 		Map<String, Integer> folds = new TreeMap<String, Integer>();
 		List<String> annotationValues = documents.getAnnotationArray(annotation);
@@ -131,7 +138,7 @@ public class BuildModelControl extends GenesisControl{
 			}
 			foldsMap.put(i, folds.get(annotationValue) % num);
 		}
-		
+
 		return foldsMap;
 	}
 
@@ -154,7 +161,7 @@ public class BuildModelControl extends GenesisControl{
 
 		ActionBar action;
 		JTextField name;
-		
+
 		public TrainModelListener(ActionBar action, JTextField n){
 			this.action = action;
 			name = n;
@@ -162,8 +169,8 @@ public class BuildModelControl extends GenesisControl{
 		@Override
 		public void actionPerformed(ActionEvent arg0) 
 		{
-			Workbench.update();
-			
+			Workbench.update(action);
+
 			try
 			{
 				if (validationSettings.get("test").equals(Boolean.TRUE.toString()))
@@ -179,9 +186,15 @@ public class BuildModelControl extends GenesisControl{
 						validationSettings.put("testFeatureTable", extractTestFeatures);
 					}
 				}
+				Recipe newRecipe = getHighlightedFeatureTableRecipe();
+				for(WrapperPlugin wrap : wrapperPlugins.keySet()){
+					if(wrapperPlugins.get(wrap)){
+						newRecipe.addWrapper(wrap, wrap.generateConfigurationSettings());						
+					}
+				}
 				LearningPlugin learner = getHighlightedLearningPlugin();
 				Map<String, String> settings = learner.generateConfigurationSettings();
-				Recipe newRecipe = Recipe.addLearnerToRecipe(getHighlightedFeatureTableRecipe(), learner, settings);
+				newRecipe = Recipe.addLearnerToRecipe(newRecipe, learner, settings);
 				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
 				task.execute();
 			}
@@ -192,7 +205,7 @@ public class BuildModelControl extends GenesisControl{
 		}
 
 	}
-	
+
 	protected static FeatureTable prepareTestFeatureTable(Recipe recipe, DocumentList test, StatusUpdater updater)
 	{
 		prepareDocuments(test); //assigns classes, annotations.
@@ -210,7 +223,7 @@ public class BuildModelControl extends GenesisControl{
 			ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), updater);
 		}
 		return ft;
-		
+
 	}
 
 	public static class BuildModelTask extends ActionBarTask
@@ -218,7 +231,7 @@ public class BuildModelControl extends GenesisControl{
 		Recipe plan;
 		String name;
 
-		
+
 		public BuildModelTask(ActionBar action, Recipe newRecipe, String n)
 		{
 			super(action);
@@ -226,7 +239,7 @@ public class BuildModelControl extends GenesisControl{
 			name = n;
 
 		}
-		
+
 		@Override
 		protected void doTask(){
 			try
@@ -234,18 +247,17 @@ public class BuildModelControl extends GenesisControl{
 				FeatureTable current = plan.getTrainingTable();
 				if (current != null)
 				{
-					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, BuildModelControl.getUpdater());
-					
+					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, plan.getWrappers(), BuildModelControl.getUpdater());
+
 					if(model != null)
 					{
 						plan.setTrainingResult(model);
 						model.setName(name);
-	
+
 						plan.setLearnerSettings(plan.getLearner().generateConfigurationSettings());
 						plan.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
-						RecipeManager.addRecipe(plan);
-	
 						BuildModelControl.setHighlightedTrainedModelRecipe(plan);
+						Workbench.getRecipeManager().addRecipe(plan);
 					}
 				}
 			}
@@ -264,22 +276,26 @@ public class BuildModelControl extends GenesisControl{
 	}
 
 	//TODO: learn from the changes made in chef.Predictor
-//	protected void prepareTestSet(Recipe train, DocumentList test){
-//		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-//		for(SIDEPlugin plug : train.getExtractors().keySet()){
-//			plug.configureFromSettings(train.getExtractors().get(plug));
-//			hits.addAll(((FeaturePlugin)plug).extractFeatureHits(test, train.getExtractors().get(plug), update));
-//		}
-//		FeatureTable ft = new FeatureTable(test, hits, train.getFeatureTable().getThreshold());
-//		for(SIDEPlugin plug : train.getFilters().keySet()){
-//			ft = ((RestructurePlugin)plug).filterTestSet(train.getTrainingTable(), ft, train.getFilters().get(plug), update);
-//		}
-//	}
+	//	protected void prepareTestSet(Recipe train, DocumentList test){
+	//		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
+	//		for(SIDEPlugin plug : train.getExtractors().keySet()){
+	//			plug.configureFromSettings(train.getExtractors().get(plug));
+	//			hits.addAll(((FeaturePlugin)plug).extractFeatureHits(test, train.getExtractors().get(plug), update));
+	//		}
+	//		FeatureTable ft = new FeatureTable(test, hits, train.getFeatureTable().getThreshold());
+	//		for(SIDEPlugin plug : train.getFilters().keySet()){
+	//			ft = ((RestructurePlugin)plug).filterTestSet(train.getTrainingTable(), ft, train.getFilters().get(plug), update);
+	//		}
+	//	}
 
 	public static Map<LearningPlugin, Boolean> getLearningPlugins(){
 		return learningPlugins;
 	}
 
+	public static Map<WrapperPlugin, Boolean> getWrapperPlugins(){
+		return wrapperPlugins;
+	}
+	
 	public static int numLearningPlugins(){
 		return learningPlugins.size();
 	}
@@ -313,25 +329,23 @@ public class BuildModelControl extends GenesisControl{
 
 	public static void setHighlightedFeatureTableRecipe(Recipe highlight){
 		highlightedFeatureTable = highlight;
-		Workbench.update();
 	}
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		highlightedTrainedModel = highlight;
-		Workbench.update();
 	}
 
 	public static void prepareDocuments(DocumentList test) throws IllegalStateException
 	{
 		Recipe recipe = getHighlightedFeatureTableRecipe();
 		DocumentList train = recipe.getDocumentList();
-		
+
 		try
 		{
 			test.setCurrentAnnotation(train.getCurrentAnnotation());
 			test.setTextColumns(new HashSet<String>(train.getTextColumns()));
 
-			
+
 			List<String> trainColumns = train.getAnnotationArray();
 			List<String> testColumns = test.getAnnotationArray();
 			if(!testColumns.containsAll(trainColumns))
@@ -347,7 +361,7 @@ public class BuildModelControl extends GenesisControl{
 		{
 			throw new java.lang.IllegalStateException("Test set annotations do not match training set.\nMissing ["+train.getCurrentAnnotation()+"] or "+train.getTextColumns()+" columns.");
 		}
-		
-		
+
+
 	}
 }

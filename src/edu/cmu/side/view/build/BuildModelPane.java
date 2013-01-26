@@ -8,8 +8,10 @@ import java.util.Collection;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.ExtractFeaturesControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
@@ -36,6 +38,7 @@ public class BuildModelPane extends JPanel{
 			@Override
 			public void setHighlight(Recipe r) {
 				BuildModelControl.setHighlightedFeatureTableRecipe(r);
+				Workbench.update(this);
 			}
 			
 			@Override
@@ -52,7 +55,8 @@ public class BuildModelPane extends JPanel{
 			}
 		};
 		
-		top = new GenericTripleFrame(load, new BuildPluginPanel(action.new NameListener()), config);
+		BuildPluginPanel checklist = new BuildPluginPanel(action.new NameListener());
+		top = new GenericTripleFrame(load, checklist, config);
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
 		JPanel panel = new JPanel(new BorderLayout());
@@ -64,12 +68,14 @@ public class BuildModelPane extends JPanel{
 		top.setPreferredSize(new Dimension(950,500));
 		pane.setDividerLocation(500);
 		add(BorderLayout.CENTER, pane);
-	}
-	
-	public void refreshPanel(){
+		
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), load);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), checklist);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), config);
 
-		top.refreshPanel();
-		action.refreshPanel();
-		bottom.refreshPanel();
+		GenesisControl.addListenerToMap(checklist, config);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), action);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), bottom);
+		
 	}
 }

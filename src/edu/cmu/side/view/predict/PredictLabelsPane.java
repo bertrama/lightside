@@ -8,6 +8,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 
 import edu.cmu.side.Workbench;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.generic.ActionBar;
@@ -59,12 +60,15 @@ public class PredictLabelsPane extends JPanel{
 		add(BorderLayout.CENTER, pane);
 		add(BorderLayout.SOUTH, actionBar);
 		
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), load);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), output);
+		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), actionBar);
+
+		GenesisControl.addListenerToMap(newData, newData);
+		GenesisControl.addListenerToMap(newData, actionBar);
+		GenesisControl.addListenerToMap(newData, output);
+		
+		GenesisControl.addListenerToMap(actionBar, output);
 	}
 	
-	public void refreshPanel(){
-		load.refreshPanel();
-		newData.refreshPanel();
-		output.refreshPanel(PredictLabelsControl.getHighlightedUnlabeledData());
-		actionBar.refreshPanel();
-	}
 }

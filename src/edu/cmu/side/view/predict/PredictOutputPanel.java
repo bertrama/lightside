@@ -14,6 +14,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import se.datadosen.component.RiverLayout;
+import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CSVExporter;
@@ -56,8 +57,9 @@ public class PredictOutputPanel extends AbstractListPanel
 		add("br hfill vfill", tableScroll);
 	}
 
-	public void refreshPanel(Recipe recipe)
+	public void refreshPanel()
 	{
+		Recipe recipe = PredictLabelsControl.getHighlightedUnlabeledData();
 		if(recipe == null)
 			model.setDocumentList(null);
 		else

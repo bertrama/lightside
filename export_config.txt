@@ -1,6 +1,0 @@
-unigrams
-bigrams
-trigrams
-binaryNgrams
-removeStop
-lineLength

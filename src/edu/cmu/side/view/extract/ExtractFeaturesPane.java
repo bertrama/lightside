@@ -27,18 +27,18 @@ public class ExtractFeaturesPane extends JPanel{
 		setLayout(new BorderLayout());
 
 		GenericPluginChecklistPanel<FeaturePlugin> pluginChecklist = new GenericPluginChecklistPanel<FeaturePlugin>("Feature Extractor Plugins:"){
-
 			@Override
 			public Map<FeaturePlugin, Boolean> getPlugins() {
 				return ExtractFeaturesControl.getFeaturePlugins();
 			}
-			
 		};
 		
 		GenericPluginConfigPanel<FeaturePlugin> pluginConfig = new GenericPluginConfigPanel<FeaturePlugin>(){
 			@Override
 			public void refreshPanel() {
 				refreshPanel(ExtractFeaturesControl.getFeaturePlugins());
+				revalidate();
+				repaint();
 			}
 		};
 		

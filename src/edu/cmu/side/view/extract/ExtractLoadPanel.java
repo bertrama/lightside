@@ -38,8 +38,6 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		describeScroll = new JScrollPane();
 		describePanel.add(BorderLayout.CENTER, describeScroll);
 		add("br hfill vfill", describePanel);
-		
-		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(40));
 
 		delete.addActionListener(new ActionListener()
 		{

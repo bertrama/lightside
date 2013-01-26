@@ -47,7 +47,7 @@ public class CSVExporter
 			File f = chooser.getSelectedFile();
 			if(f.exists())
 			{
-				int confirm = JOptionPane.showConfirmDialog(null, f+" already exists. Overwrite?");
+				int confirm = JOptionPane.showConfirmDialog(null, f.getName()+" already exists. Overwrite?");
 				if(confirm != JOptionPane.YES_OPTION)
 					return;
 			}

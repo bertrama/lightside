@@ -164,6 +164,7 @@ public class SelectPluginList extends JList {
  */
 class SelectPluginCellRenderer extends DefaultListCellRenderer {
 	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
+	private int cutoff = 25;
 
 	public Component getListCellRendererComponent(JList list, Object value, int index,
 			boolean isSelected, boolean cellHasFocus) {
@@ -175,6 +176,7 @@ class SelectPluginCellRenderer extends DefaultListCellRenderer {
 			checkbox.setEnabled(isEnabled());
 			checkbox.setFont(getFont());
 			checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
+			checkbox.setText(abbreviate(checkbox.getText()));
 			return checkbox;
 		} else if(value instanceof RadioButtonListEntry){
 			RadioButtonListEntry radioButton = (RadioButtonListEntry) value;
@@ -189,6 +191,15 @@ class SelectPluginCellRenderer extends DefaultListCellRenderer {
 			return super.getListCellRendererComponent(list, "", index,
 					isSelected, cellHasFocus);    	
 		}
+	}
+
+	private String abbreviate(String text)
+	{
+		if(text.length() > cutoff)
+		{
+			return text.substring(0, cutoff)+"...";
+		}
+		return text;
 	}
 }
 

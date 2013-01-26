@@ -9,6 +9,20 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class RecipeCellRenderer extends DefaultTreeCellRenderer {
+	
+	int cutoff;
+	
+	public RecipeCellRenderer()
+	{
+		this(40);
+	}
+	
+	public RecipeCellRenderer(int textCutoff)
+	{
+		super();
+		cutoff = textCutoff;
+	}
+
     public Component getTreeCellRendererComponent(JTree tree,
       Object value,boolean sel,boolean expanded,boolean leaf,
       int row,boolean hasFocus) {
@@ -33,6 +47,13 @@ public class RecipeCellRenderer extends DefaultTreeCellRenderer {
         }else{
         	setIcon(null);
         }
+        
+        if(this.getText().length() > cutoff)
+        {
+        	this.setText(this.getText().substring(0, cutoff)+"...");
+        	
+        }
+        
         return this;
     }
 }

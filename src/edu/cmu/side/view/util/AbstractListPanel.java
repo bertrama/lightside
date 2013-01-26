@@ -44,6 +44,7 @@ public class AbstractListPanel extends JPanel implements ActionListener{
 		list = new JList();
 		list.setModel(listModel);	
 		combo = new JComboBox();
+		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(25));
 
 		listScroll = new JScrollPane(list);
 		description = new JTextArea();

@@ -1,5 +1,6 @@
 package edu.cmu.side;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -12,12 +13,15 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.WorkbenchPanel;
 import edu.cmu.side.view.util.GlassPane;
+
 
 public class Workbench{
 
@@ -46,6 +50,21 @@ public class Workbench{
 		JFrame frame = new JFrame();
 		frame.setIconImages(getIcons("toolkits/icons/bulbs/bulb_128.png", "toolkits/icons/bulbs/simple_32.png", "toolkits/icons/bulbs/simple_16.png")); //for windows?
 		
+		//http://docs.oracle.com/javase/tutorial/uiswing/lookandfeel/_nimbusDefaults.html
+//		UIManager.put("nimbusBase", new Color(64,96,160)); //tabs, scrollbars, checkboxes, combos, disabled things 
+//		UIManager.put("nimbusBlueGrey", new Color(200,200,204)); //makes buttons tinty? also split pane bars
+//		UIManager.put("control", new Color(242,242,240)); //component background
+//
+//		try {
+//		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+//		        if ("Nimbus".equals(info.getName())) {
+//		            UIManager.setLookAndFeel(info.getClassName());
+//		            break;
+//		        }
+//		    }
+//		} catch (Exception e) {
+//		    // If Nimbus is not available, you can set the GUI to another look and feel.
+//		}
 		
 		panel = new WorkbenchPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder());

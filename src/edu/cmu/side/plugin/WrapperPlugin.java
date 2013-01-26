@@ -1,11 +1,22 @@
 package edu.cmu.side.plugin;
 
+import java.awt.Color;
+
+import javax.swing.JPanel;
+
+import se.datadosen.component.RiverLayout;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 
 public abstract class WrapperPlugin extends SIDEPlugin{
 
+
+	protected JPanel panel = new JPanel(new RiverLayout());
+	
+	public WrapperPlugin(){
+		panel.setBackground(Color.white);
+	}
 	@Override
 	public String getType() {
 		return "learning_wrapper";

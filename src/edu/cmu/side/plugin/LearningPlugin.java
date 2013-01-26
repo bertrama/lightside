@@ -115,6 +115,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				result = evaluateTestSet(pass, passTest, wrappers, progressIndicator);
 			}
 		}
+		result.setLongDescriptionString(getLongDescriptionString());
 		return result;
 	}
 
@@ -223,5 +224,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		halt = true;
 	}
 	
+	public abstract String getLongDescriptionString();
 	public abstract void loadClassifierFromSettings(Map<String, String> settings);
 }

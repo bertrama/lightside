@@ -18,6 +18,7 @@ import edu.cmu.side.model.feature.Feature;
 public class TrainingResult implements Serializable{
 
 	private String name;
+	private String longDescriptionString;
 	private FeatureTable train;
 	private FeatureTable test;
 	private List<? extends Comparable<?>> predictions;
@@ -50,6 +51,23 @@ public class TrainingResult implements Serializable{
 
 	public int numEvaluationInstances(){
 		return test.getDocumentList().getSize();
+	}
+	
+	public String getLongDescriptionString(){
+		return longDescriptionString;
+	}
+	
+	public void setLongDescriptionString(String l){
+		longDescriptionString = l;
+	}
+	public TrainingResult(FeatureTable tr, FeatureTable te, List<? extends Comparable<?>> pred, String longString){
+		this(tr, te, pred);
+		longDescriptionString = longString;
+	}
+
+	public TrainingResult(FeatureTable tr, List<? extends Comparable<?>> pred, String longString){
+		this(tr, pred);
+		longDescriptionString = longString;
 	}
 
 	public TrainingResult(FeatureTable tr, List<? extends Comparable<?>> pred){

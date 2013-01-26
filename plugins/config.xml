@@ -73,6 +73,15 @@
     </plugin>
     
     <plugin>
+        <name>Model Text Output</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Model text output (from weka right now)]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.analysis.one.text.ModelTextOutput</classname>
+    </plugin>
+    
+    <plugin>
         <name>Basic Model Comparison Plugins</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>

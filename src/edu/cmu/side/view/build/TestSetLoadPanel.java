@@ -30,7 +30,6 @@ public class TestSetLoadPanel extends GenericLoadPanel
 		chooser.setCurrentDirectory(new File("data"));
 
 		describePanel.setPreferredSize(new Dimension(120, 120));
-		this.setPreferredSize(new Dimension(200, 250));
 
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, this);
 		

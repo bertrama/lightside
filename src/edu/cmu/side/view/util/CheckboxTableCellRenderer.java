@@ -26,7 +26,7 @@ public class CheckboxTableCellRenderer extends DefaultTableCellRenderer{
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
-		AbstractButton rend = (AbstractButton) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
+		Component rend = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 		rend.setBackground(Color.white);
 
 		if(value instanceof RadioButtonListEntry){
@@ -35,6 +35,12 @@ public class CheckboxTableCellRenderer extends DefaultTableCellRenderer{
 			radioButton.setFont(getFont());
 			radioButton.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 			rend = radioButton;
+
+	        if(radioButton.getText().length() > cutoff )
+	        {
+	        	radioButton.setText(radioButton.getText().substring(0, cutoff)+"...");
+	        	
+	        }
 		}
 		if(value instanceof CheckBoxListEntry){
 			CheckBoxListEntry checkButton = (CheckBoxListEntry) value;
@@ -43,14 +49,15 @@ public class CheckboxTableCellRenderer extends DefaultTableCellRenderer{
 			checkButton.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 			rend = checkButton;
 			
+	        if(checkButton.getText().length() > cutoff )
+	        {
+	        	checkButton.setText(checkButton.getText().substring(0, cutoff)+"...");
+	        	
+	        }
+			
 		}
 		
 		
-        if(rend.getText().length() > cutoff )
-        {
-        	rend.setText(rend.getText().substring(0, cutoff)+"...");
-        	
-        }
         
 		return rend;
 	}

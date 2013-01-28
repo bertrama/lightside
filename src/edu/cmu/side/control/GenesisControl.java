@@ -3,9 +3,9 @@ package edu.cmu.side.control;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.JTree;
@@ -237,5 +237,6 @@ public abstract class GenesisControl {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Prediction: " + model.getName());
 		return node;
 	}
+
 }
 

@@ -37,7 +37,8 @@ public class RestructureActionPanel extends ActionBar{
 
 	public void refreshPanel(){
 		super.refreshPanel();
-		actionButton.setEnabled(RestructureTablesControl.getFilterPlugins().values().contains(Boolean.TRUE));
+		actionButton.setEnabled(RestructureTablesControl.getFilterPlugins().values().contains(Boolean.TRUE)
+								&& RestructureTablesControl.getHighlightedFeatureTableRecipe() != null);
 	}
 
 	@Override

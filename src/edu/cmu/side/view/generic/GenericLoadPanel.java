@@ -50,7 +50,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 					describePanel.add(BorderLayout.CENTER, describeScroll);
 					describePanel.revalidate();
 				}
-				Workbench.update(GenericLoadPanel.this);
+				//Workbench.update(GenericLoadPanel.this);
+				
 			}
 		});
 	}
@@ -95,6 +96,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		//add("br left hfill", buttons);
 
 		connectButtonListeners();
+		//GenesisControl.addListenerToMap(this, this);
 	}
 
 	public abstract void setHighlight(Recipe r);
@@ -236,6 +238,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 				ObjectInputStream in = new ObjectInputStream(fout);
 				Recipe recipe = (Recipe) in.readObject(); //TODO: should this be more generic?
 				Workbench.getRecipeManager().addRecipe(recipe);
+				setHighlight(recipe);
+				Workbench.update(this);
 			}
 			catch(Exception e)
 			{
@@ -264,6 +268,5 @@ public abstract class GenericLoadPanel extends AbstractListPanel{
 		DocumentList testDocs = new DocumentList(docNames);
 		Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
 		setHighlight(r);
-		Workbench.update(this);
 	}
 }

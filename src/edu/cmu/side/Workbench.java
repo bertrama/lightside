@@ -1,6 +1,5 @@
 package edu.cmu.side;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -9,19 +8,18 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
 
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.WorkbenchPanel;
+import edu.cmu.side.view.extract.ExtractCombinedLoadPanel;
+import edu.cmu.side.view.extract.ExtractLoadPanel;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.GlassPane;
 
@@ -107,14 +105,31 @@ public class Workbench{
 		return recipeManager;
 	}
 	
+	static long updateCount = 0;
 	public static void update(Object source){
 		if(!GenesisControl.isCurrentlyUpdating(source)){
-			GenesisControl.setCurrentlyUpdating(source, true);
+
 			Collection<AbstractListPanel> listeners = GenesisControl.getListeners(source);
-			for(AbstractListPanel listen : listeners){
-				listen.refreshPanel();
-			}	
-			GenesisControl.setCurrentlyUpdating(source, false);
+
+			if(!listeners.isEmpty())
+			{
+				updateCount++;
+				long update = updateCount;
+				GenesisControl.setCurrentlyUpdating(source, true);
+				System.out.println("Workbench.update begin update #"+update+" for source "+source.getClass().getName());
+				
+				for(AbstractListPanel listen : listeners)
+				{
+						System.out.println("Workbench.update #" + updateCount + ":\n\tsource  " + source.getClass().getName() + "\n\trefresh "
+								+ listen.getClass().getName());
+
+						listen.refreshPanel();
+						System.out.println("Workbench.update end refresh #"+update+" for "+listen.getClass().getName() );
+					
+				}	
+				System.out.println("Workbench.update end update #"+update);
+				GenesisControl.setCurrentlyUpdating(source, false);
+			}
 		}
 	}
 

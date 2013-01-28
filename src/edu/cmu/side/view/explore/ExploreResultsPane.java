@@ -11,6 +11,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
@@ -86,11 +87,12 @@ public class ExploreResultsPane extends JPanel{
 		left.setBottomComponent(scroll);
 		add(BorderLayout.CENTER, left);
 
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), load);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), matrix);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), checklist);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), features);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), analysis);
+
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, load);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, matrix);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, checklist);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, features);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, analysis);
 
 		GenesisControl.addListenerToMap(load, matrix);
 		GenesisControl.addListenerToMap(load, checklist);

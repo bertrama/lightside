@@ -21,6 +21,7 @@ import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.CompareModelsControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.EvaluateTwoModelPlugin;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
@@ -93,9 +94,9 @@ public class CompareModelsPane extends AbstractListPanel{
 		split.setTopComponent(top);
 		split.setBottomComponent(scroll);
 		add(BorderLayout.CENTER, split);
-		
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), loadBaseline);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), loadCompetitor);
+
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, loadBaseline);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, loadCompetitor);
 		GenesisControl.addListenerToMap(loadBaseline, this);
 		GenesisControl.addListenerToMap(loadCompetitor, this);
 		GenesisControl.addListenerToMap(dropdown, this);

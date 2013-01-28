@@ -16,6 +16,7 @@ import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.control.GenesisControl;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -43,12 +44,15 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		pan.add("br hfill", textColumnsScroll);
 		add(BorderLayout.SOUTH, pan);
 		
-		GenesisControl.addListenerToMap(files, files);
+		//GenesisControl.addListenerToMap(files, files); //you should never have to listen to yourself. 
+		//GenesisControl.addListenerToMap(this, files); //document lists update when "this" changes now
 		GenesisControl.addListenerToMap(files, this);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, files);
 	}
 	
 	@Override
 	public void refreshPanel(){
+		System.out.println("refresh ECLP 54");
 		if(files.getHighlight() != null){
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 			Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
@@ -75,12 +79,14 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		for(String key : labels.keySet()){
 			array[i] = new CheckBoxListEntry(key, labels.get(key));
 			array[i].addItemListener(new ItemListener(){
-				@Override
+				@Override 
 				public void itemStateChanged(ItemEvent ie) {
+					 //because this modifies a recipe, should it notify on the recipemanager? or on the individual recipe?
 					DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 					sdl.setTextColumn(((CheckBoxListEntry)ie.getItem()).getValue().toString(), ie.getStateChange()==ItemEvent.SELECTED);
-					Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
-					Workbench.update(ExtractCombinedLoadPanel.this);						
+					Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());			
+					Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
+					Workbench.update(ExtractCombinedLoadPanel.this);			
 				}
 			});
 			i++;

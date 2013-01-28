@@ -66,6 +66,8 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 
 	@Override
 	public void refreshPanel() {		
+
+		System.out.println("refresh ELP 70");
 		refreshPanel(ExtractFeaturesControl.getDocumentLists());
 	}
 	

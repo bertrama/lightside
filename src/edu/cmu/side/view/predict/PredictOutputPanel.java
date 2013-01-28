@@ -14,6 +14,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import se.datadosen.component.RiverLayout;
+import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CSVExporter;
@@ -27,6 +28,7 @@ public class PredictOutputPanel extends AbstractListPanel
 	DocumentListTableModel model = new DocumentListTableModel(null);
 	JLabel label = new JLabel("Selected Dataset");
 	JButton export = new JButton("");
+	JScrollPane tableScroll;
 
 	public void setLabel(String l)
 	{
@@ -52,16 +54,26 @@ public class PredictOutputPanel extends AbstractListPanel
 		docTable.setModel(model);
 		docTable.setBorder(BorderFactory.createLineBorder(Color.gray));
 		docTable.setRowSorter(new TableRowSorter<TableModel>(model));
-		JScrollPane tableScroll = new JScrollPane(docTable);
+		docTable.setAutoCreateColumnsFromModel(true);
+		tableScroll = new JScrollPane(docTable);
 		add("br hfill vfill", tableScroll);
+	}
+	
+	public void refreshPanel()
+	{
+		refreshPanel(PredictLabelsControl.getHighlightedUnlabeledData());
 	}
 
 	public void refreshPanel(Recipe recipe)
 	{
+		model.setDocumentList(null);
+		
 		if(recipe == null)
 			model.setDocumentList(null);
 		else
 			model.setDocumentList(recipe.getDocumentList());
+		
+		//docTable.setModel(new DocumentListTableModel(recipe.getDocumentList()));
 	}
 
 }

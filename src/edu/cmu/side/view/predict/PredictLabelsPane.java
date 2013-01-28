@@ -8,8 +8,10 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 
 import edu.cmu.side.Workbench;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.util.DocumentListTableModel;
@@ -58,6 +60,16 @@ public class PredictLabelsPane extends JPanel{
 		pane.setRightComponent(output);
 		add(BorderLayout.CENTER, pane);
 		add(BorderLayout.SOUTH, actionBar);
+		
+		 //TODO: why can't these each be (parameterized) in genericLoadPane?
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, load);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, newData);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, output);
+
+		GenesisControl.addListenerToMap(load, actionBar);
+		GenesisControl.addListenerToMap(newData, actionBar);
+		GenesisControl.addListenerToMap(newData, output);
+		GenesisControl.addListenerToMap(actionBar, output);
 		
 	}
 	

@@ -12,6 +12,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.control.RestructureTablesControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.view.generic.ActionBar;
@@ -112,7 +113,7 @@ public class RestructureBottomPanel extends AbstractListPanel{
 
 		add(BorderLayout.CENTER, pane);
 
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), control);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, control);
 		GenesisControl.addListenerToMap(control, checklist);
 		GenesisControl.addListenerToMap(control, display);
 		GenesisControl.addListenerToMap(checklist, display);

@@ -14,6 +14,7 @@ import com.yerihyo.yeritools.io.FileToolkit;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
@@ -29,6 +30,10 @@ public class TestSetLoadPanel extends GenericLoadPanel
 		chooser.setCurrentDirectory(new File("data"));
 
 		describePanel.setPreferredSize(new Dimension(120, 120));
+		this.setPreferredSize(new Dimension(200, 250));
+
+		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, this);
+		
 		remove(save);
 		revalidate();
 
@@ -58,7 +63,10 @@ public class TestSetLoadPanel extends GenericLoadPanel
 	@Override
 	public void refreshPanel()
 	{
+		System.out.println("refreshing TSLP 65");
 		refreshPanel(BuildModelControl.getDocumentLists());
+
+		revalidate();
 	}
 
 	@Override

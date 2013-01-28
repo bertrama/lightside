@@ -362,18 +362,29 @@ public class DocumentList implements Serializable{
 	}
 	
 	public void setTextColumn(String name, boolean isText){
-		if(isText){
-			if (!allAnnotations.containsKey(name)){
+		if (isText)
+		{
+			if (textColumns.containsKey(name))
+			{
+				return;
+			}
+			else if (!allAnnotations.containsKey(name))
+			{
 				throw new IllegalStateException("Can't find the text column named " + name + " in provided file");
-			}else{
+			}
+			else
+			{
 				textColumns.put(name, allAnnotations.get(name));
 				allAnnotations.remove(name);
-			}			
-		}else{
-			if(textColumns.containsKey(name)){
+			}
+		}
+		else
+		{
+			if (textColumns.containsKey(name))
+			{
 				allAnnotations.put(name, textColumns.get(name));
 				textColumns.remove(name);
-			}			
+			}
 		}
 	}
 

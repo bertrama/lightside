@@ -12,6 +12,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.view.generic.ActionBar;
@@ -109,9 +110,9 @@ public class ExtractBottomPanel extends AbstractListPanel{
 		split.setRightComponent(displaySplit);
 		control.setPreferredSize(new Dimension(275,200));
 		add(BorderLayout.CENTER, split);
-		
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), control);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), display);
+
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, control);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, display);
 		GenesisControl.addListenerToMap(control, checklist);
 		GenesisControl.addListenerToMap(control, display);
 		GenesisControl.addListenerToMap(checklist, display);

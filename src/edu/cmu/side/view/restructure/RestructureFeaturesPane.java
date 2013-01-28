@@ -11,6 +11,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.control.RestructureTablesControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
@@ -71,12 +72,16 @@ public class RestructureFeaturesPane extends JPanel{
 		bottom.setPreferredSize(new Dimension(950,200));
 		add(BorderLayout.CENTER, pane);
 		
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), load);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), checklist);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), config);
+
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, load);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, checklist);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, config);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, action);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, bottom);
+		GenesisControl.addListenerToMap(load, checklist);
+		GenesisControl.addListenerToMap(load, config);
 		GenesisControl.addListenerToMap(checklist, config);
 		GenesisControl.addListenerToMap(checklist, action);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), bottom);
 		
 	}
 }

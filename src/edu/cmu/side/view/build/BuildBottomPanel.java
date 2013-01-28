@@ -13,6 +13,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMatrixPanel;
 import edu.cmu.side.view.generic.GenericModelMetricPanel;
@@ -75,7 +76,7 @@ public class BuildBottomPanel extends AbstractListPanel {
 		result.setPreferredSize(new Dimension(350, 200));
 		add(BorderLayout.CENTER, pane);
 		
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), control);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, control);
 		GenesisControl.addListenerToMap(control, confusion);
 		GenesisControl.addListenerToMap(control, result);
 		

@@ -80,6 +80,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 			Recipe plan = generateDocumentListRecipe(chooser.getSelectedFiles());
 			plan.getDocumentList().guessTextAndAnnotationColumns();
+			
+			Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
 			setHighlightedDocumentListRecipe(plan);
 			Workbench.update(parentComponent);
 		}
@@ -148,7 +150,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				if(sdl.getTextColumns().contains(annot)){
 					sdl.setTextColumn(annot, false);					
 				}
-				sdl.setCurrentAnnotation(annot);
+				sdl.setCurrentAnnotation(annot);  //because this modifies a recipe, should it notify the recipemanager?
 				Map<String, Boolean> columns = new TreeMap<String, Boolean>();
 				for(String s : sdl.allAnnotations().keySet()){
 					if(!sdl.getCurrentAnnotation().equals(s)) columns.put(s,  false);
@@ -157,7 +159,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 					columns.put(s,  true);
 				}
 				parentComponent.reloadCheckBoxList(columns);
-				Workbench.update(parentComponent);				
+				Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
+				Workbench.update(parentComponent);			
 			}
 		}
 	}

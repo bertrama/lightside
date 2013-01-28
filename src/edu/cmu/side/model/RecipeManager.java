@@ -47,11 +47,13 @@ public class RecipeManager{
 	public void deleteRecipe(Recipe rec){
 		recipes.remove(rec);
 		Workbench.update(this);
+		Workbench.update(rec.getStage());
 	}
 	
 	public void addRecipe(Recipe rec){
 		recipes.add(rec);
 		Workbench.update(this);
+		Workbench.update(rec.getStage());
 	}
 	
 	
@@ -59,6 +61,10 @@ public class RecipeManager{
 		Recipe recipe = Recipe.fetchRecipe();
 		recipe.setDocumentList(documents);
 		recipes.add(recipe);
+
+		Workbench.update(this);
+		Workbench.update(Stage.DOCUMENT_LIST);
+		
 		return recipe;
 	}
 	

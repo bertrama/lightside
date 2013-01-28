@@ -11,6 +11,7 @@ import javax.swing.JSplitPane;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.control.GenesisControl;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
@@ -56,12 +57,12 @@ public class ExtractFeaturesPane extends JPanel{
 		top.setPreferredSize(new Dimension(950,400));
 		bottom.setPreferredSize(new Dimension(950,200));
 		add(BorderLayout.CENTER, pane);
-		
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), pluginChecklist);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), pluginConfig);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), action);
+
+		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, pluginChecklist);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, pluginConfig);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, action);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, bottom);
 		GenesisControl.addListenerToMap(pluginChecklist, pluginConfig);
-		GenesisControl.addListenerToMap(Workbench.getRecipeManager(), bottom);
 		
 	}
 

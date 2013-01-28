@@ -33,7 +33,7 @@ public class ExploreActionBar extends ActionBar{
 				Workbench.update(ExploreActionBar.this);
 			}
 		});
-		add("left", new JLabel("Comparison Plugin:"));
+		add("left", new JLabel("Exploration Plugin:"));
 		add("hfill", combo);
 	}
 

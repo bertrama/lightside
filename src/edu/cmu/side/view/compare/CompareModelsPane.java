@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -20,8 +21,10 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.CompareModelsControl;
 import edu.cmu.side.control.GenesisControl;
+import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.plugin.EvaluateTwoModelPlugin;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
@@ -37,6 +40,7 @@ public class CompareModelsPane extends AbstractListPanel{
 		public void setHighlight(Recipe r) {
 			CompareModelsControl.setBaselineTrainedModelRecipe(r);
 			Workbench.update(this);
+			verifyModels();
 		}
 
 		@Override
@@ -57,6 +61,7 @@ public class CompareModelsPane extends AbstractListPanel{
 		public void setHighlight(Recipe r) {
 			CompareModelsControl.setCompetingTrainedModelRecipe(r);
 			Workbench.update(this);
+			verifyModels();
 		}
 
 		@Override
@@ -112,6 +117,35 @@ public class CompareModelsPane extends AbstractListPanel{
 			CompareModelsControl.getHighlightedModelComparisonPlugin().refreshPanel();
 			middle.revalidate();
 			middle.repaint();
+		}
+		verifyModels();
+	}
+	
+	protected void verifyModels()
+	{
+		Recipe baseline = CompareModelsControl.getBaselineTrainedModelRecipe();
+		Recipe competitor = CompareModelsControl.getCompetingTrainedModelRecipe();
+		
+		if(baseline != null && competitor != null)
+		{
+			DocumentList baseList = baseline.getDocumentList();
+			DocumentList competeList = competitor.getDocumentList();
+			if(baseline.equals(competitor))
+			{
+				loadCompetitor.setWarning("You're comparing a model to itself.");
+			}
+			else if(!baseList.getAnnotationArray().equals(competeList.getAnnotationArray()))
+			{
+				loadCompetitor.setWarning("Class labels are not directly comparable.");
+			}
+			else
+			{
+				loadCompetitor.clearWarning();
+			}
+		}
+		else
+		{
+			loadCompetitor.clearWarning();
 		}
 	}
 }

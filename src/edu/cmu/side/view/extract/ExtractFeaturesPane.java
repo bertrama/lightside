@@ -54,8 +54,9 @@ public class ExtractFeaturesPane extends JPanel{
 		panel.add(BorderLayout.SOUTH, action);
 		pane.setTopComponent(panel);
 		pane.setBottomComponent(bottom);
-		top.setPreferredSize(new Dimension(950,400));
-		bottom.setPreferredSize(new Dimension(950,200));
+//		top.setPreferredSize(new Dimension(950,400));
+//		bottom.setPreferredSize(new Dimension(950,200));
+		pane.setDividerLocation(450);
 		add(BorderLayout.CENTER, pane);
 
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, pluginChecklist);

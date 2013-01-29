@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Collections;
 import java.util.HashSet;
 
 import javax.swing.ImageIcon;
@@ -29,9 +30,15 @@ public class TestSetLoadPanel extends GenericLoadPanel
 		load.setToolTipText("Load Test Set");
 		chooser.setCurrentDirectory(new File("data"));
 
-		describePanel.setPreferredSize(new Dimension(120, 120));
+//		Dimension v = combo.getPreferredSize();
+//		v.width = 100;
+//		combo.setPreferredSize(v);
+		describePanel.setMinimumSize(new Dimension(120, 120));
+//		describePanel.setPreferredSize(new Dimension(150, 150));
 
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, this);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, this);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, this);
 		
 		remove(save);
 		revalidate();
@@ -51,6 +58,7 @@ public class TestSetLoadPanel extends GenericLoadPanel
 			BuildModelControl.updateValidationSetting("testRecipe", null);
 			BuildModelControl.updateValidationSetting("testSet", null);
 		}
+		verifyTestSet();
 	}
 
 	@Override
@@ -64,8 +72,36 @@ public class TestSetLoadPanel extends GenericLoadPanel
 	{
 		System.out.println("refreshing TSLP 65");
 		refreshPanel(BuildModelControl.getDocumentLists());
-
+		
 		revalidate();
+	}
+
+	/**
+	 * 
+	 */
+	protected void verifyTestSet()
+	{
+		Recipe trainRecipe = BuildModelControl.getHighlightedFeatureTableRecipe();
+		DocumentList testList= (DocumentList) BuildModelControl.getValidationSettings().get("testSet");
+		
+		System.out.println(trainRecipe + " vs "+BuildModelControl.getValidationSettings().get("testRecipe"));
+		
+		if(trainRecipe != null && testList != null)
+		{
+			DocumentList trainList = trainRecipe.getDocumentList();
+			if(!Collections.disjoint(trainList.getFilenames(), testList.getFilenames()))
+			{
+				setWarning("Test set overlaps with training set.");
+			}
+			else
+			{
+				clearWarning();
+			}
+		}
+		else
+		{
+			clearWarning();
+		}
 	}
 
 	@Override

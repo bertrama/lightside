@@ -37,10 +37,16 @@ public class GenericTripleFrame extends JPanel{
 		choosePlugin.setPreferredSize(new Dimension(300, 450));
 		scroll.setPreferredSize(new Dimension(325,450));
 
+		Dimension minimumSize = new Dimension(50, 200);
+		chooseData.setMinimumSize(minimumSize);
+		choosePlugin.setMinimumSize(minimumSize);
+		chooseSettings.setMinimumSize(minimumSize);
+		
 		panels.add(chooseData);
 		panels.add(choosePlugin);
 		panels.add(chooseSettings);
 		setLayout(new BorderLayout());
+		
 		add(BorderLayout.CENTER, bigSplit);
 	}
 	public GenericTripleFrame(AbstractListPanel chooseData, AbstractListPanel choosePlugin, AbstractListPanel chooseSettings){

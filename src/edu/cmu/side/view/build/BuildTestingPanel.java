@@ -61,9 +61,9 @@ public class BuildTestingPanel extends AbstractListPanel {
 	TestSetLoadPanel testSetLoadPanel = new TestSetLoadPanel("Select Test Set");
 	
 	JPanel cvControlPanel = new JPanel(new RiverLayout(0, 3));
-	JPanel testSetControlPanel = new JPanel(new BorderLayout());
+//	JPanel testSetControlPanel = new JPanel(new RiverLayout(0,3));
 	
-	JPanel controlPanel = new JPanel(new RiverLayout(0,0));
+	JPanel controlPanel = new JPanel(new BorderLayout(0,0));
 	JPanel selectPanel = new JPanel(new RiverLayout(10, 3));
 	
 	Map<JRadioButton, Component> configPanels = new HashMap<JRadioButton, Component>();
@@ -91,7 +91,8 @@ public class BuildTestingPanel extends AbstractListPanel {
 
 		addConfigPanelRadioListeners();
 		
-		this.setLayout(new RiverLayout(10,0));
+		setLayout(new BorderLayout(10, 0));
+//		this.setLayout(new RiverLayout(10,0));
 		this.setBorder(new EmptyBorder(0,0,0,0));
 		selectPanel.setBorder(new EmptyBorder(0,0,0,0));
 		controlPanel.setBorder(new EmptyBorder(0,0,0,0));
@@ -99,13 +100,15 @@ public class BuildTestingPanel extends AbstractListPanel {
 		selectPanel.add("br vtop", radioTestSet);
 		selectPanel.add("br vtop", radioNone);
 		
-		this.add("vtop left", selectPanel);
+//		this.add("vtop left", selectPanel);
+		this.add(selectPanel, BorderLayout.WEST);
 
 		buildCVControlPanel();
-		buildTestSetControlPanel();
+//		buildTestSetControlPanel();
 
 		controlPanel.add(cvControlPanel);
-		this.add("hfill", controlPanel);
+//		this.add("hfill", controlPanel);
+		this.add(controlPanel, BorderLayout.CENTER);
 	}
 
 	/**
@@ -114,7 +117,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 	protected void addConfigPanelRadioListeners()
 	{
 		configPanels.put(radioCV, cvControlPanel);
-		configPanels.put(radioTestSet, testSetControlPanel);
+		configPanels.put(radioTestSet, testSetLoadPanel);
 		configPanels.put(radioNone, new JPanel());
 		ActionListener testRadioListener = new ActionListener()
 		{
@@ -128,7 +131,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 					{
 						Component config = e.getValue();
 						controlPanel.removeAll();
-						controlPanel.add(config);
+						controlPanel.add(config, BorderLayout.CENTER);
 						revalidate();
 						repaint();
 						return;
@@ -219,65 +222,13 @@ public class BuildTestingPanel extends AbstractListPanel {
 		cvControlPanel.add("left", txtNumFolds);
 	}
 
-	/**
-	 * 
-	 */
-	protected void buildTestSetControlPanel()
-	{
-
-		testSetControlPanel.add(testSetLoadPanel, BorderLayout.CENTER);
-//		add.setText("");
-//		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
-//		add.setToolTipText("Load Test Set...");
-//		add.setIcon(iconLoad);
-//		
-////		testSetSummary.setPreferredSize(new Dimension(120, 80));
-//		testSetSummary.setText("Load Test Set...");
-//		testSetSummary.setEditable(false);
-//		JScrollPane summaryScroll = new JScrollPane(testSetSummary);
-//		
-//		summaryScroll.setPreferredSize(new Dimension(120, 100));
-		
-//		testSetControlPanel.setBorder(new EmptyBorder(0,0,0,0));
-//		testSetControlPanel.add("left", add);
-//		testSetControlPanel.add("left", new JLabel("Load Test Files"));
-//		testSetControlPanel.add("br hfill vfill", summaryScroll);
-
-		
-//		add.addActionListener(new ActionListener() 
-//		{
-//			private JFileChooser chooser = new JFileChooser(Workbench.csvFolder);
-//			
-//
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				chooser.setFileFilter(FileToolkit
-//						.createExtensionListFileFilter(new String[] { "csv" }, true));
-//				chooser.setMultiSelectionEnabled(true);
-//				int result = chooser.showOpenDialog(BuildTestingPanel.this);
-//				if (result != JFileChooser.APPROVE_OPTION) {
-//					return;
-//				}
-//				
-//				File[] selectedFiles = chooser.getSelectedFiles();
-//				HashSet<String> docNames = new HashSet<String>();
-//				
-//				String description = "";
-//				for(File f : selectedFiles)
-//				{
-//					docNames.add(f.getPath());
-//					description += f.getName()+"\n";
-//				}	
-//				
-//				DocumentList testDocs = new DocumentList(docNames);
-//				BuildModelControl.updateValidationSetting("testSet", testDocs);
-//				testSetSummary.setText(description);
-//				
-//				Workbench.update();
-//			}
-//			
-//		});
-	}
+//	/**
+//	 * 
+//	 */
+//	protected void buildTestSetControlPanel()
+//	{
+//		testSetControlPanel.add("hfill vfill", testSetLoadPanel);
+//	}
 	
 	public void refreshPanel()
 	{

@@ -77,14 +77,18 @@ public class ExploreResultsPane extends JPanel{
 		JPanel top = new JPanel(new BorderLayout());
 		
 
-		triple.setPreferredSize(new Dimension(950,400));
-		top.setPreferredSize(new Dimension(950,400));
+//		triple.setPreferredSize(new Dimension(950,350));
+		//top.setPreferredSize(new Dimension(950,400));
+		
 
 		top.add(BorderLayout.CENTER, triple);
 		top.add(BorderLayout.SOUTH, middle);
 
 		left.setTopComponent(top);
 		left.setBottomComponent(scroll);
+		
+		left.setDividerLocation(400);
+		
 		add(BorderLayout.CENTER, left);
 
 

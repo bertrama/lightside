@@ -89,10 +89,11 @@ public class CompareModelsPane extends AbstractListPanel{
 		}
 		JScrollPane scroll = new JScrollPane(middle);
 		grid.setPreferredSize(new Dimension(950,200));
-		top.setPreferredSize(new Dimension(950,250));
-		scroll.setPreferredSize(new Dimension(950,400));
+		//top.setPreferredSize(new Dimension(950,250));
+		//scroll.setPreferredSize(new Dimension(950,400));
 		split.setTopComponent(top);
 		split.setBottomComponent(scroll);
+		split.setDividerLocation(400);
 		add(BorderLayout.CENTER, split);
 
 		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, loadBaseline);

@@ -1,6 +1,7 @@
 package edu.cmu.side.view.extract;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
+import edu.cmu.side.view.util.SelectPluginList;
 
 public class ExtractCombinedLoadPanel extends AbstractListPanel{
 	
@@ -38,6 +39,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		JPanel pan = new JPanel(new RiverLayout());
 		annotationField.addActionListener(new ExtractFeaturesControl.AnnotationComboListener(this));
 		annotationField.setRenderer(new AbbreviatedComboBoxCellRenderer(25));
+		
 		pan.add("left", new JLabel("Class:"));
 		pan.add("hfill", annotationField);
 		pan.add("br left", new JLabel("Text Fields:"));

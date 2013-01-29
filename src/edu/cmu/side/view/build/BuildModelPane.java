@@ -65,8 +65,8 @@ public class BuildModelPane extends JPanel{
 		panel.add(BorderLayout.SOUTH, action);
 		pane.setTopComponent(panel);
 		pane.setBottomComponent(bottom);
-		bottom.setPreferredSize(new Dimension(950,200));
-		top.setPreferredSize(new Dimension(950,500));
+//		bottom.setPreferredSize(new Dimension(950,200));
+//		top.setPreferredSize(new Dimension(950,450));
 		pane.setDividerLocation(500);
 		add(BorderLayout.CENTER, pane);
 

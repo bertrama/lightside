@@ -1,5 +1,6 @@
 package edu.cmu.side.control;
 
+import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -24,6 +25,8 @@ import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.RecipeCellRenderer;
+import edu.cmu.side.view.util.ScrollablePanel;
+import edu.cmu.side.view.util.ScrollablePanel.ScrollableSizeHint;
 
 public abstract class GenesisControl {
 
@@ -178,6 +181,12 @@ public abstract class GenesisControl {
 
 		JTree recipeComponent = new JTree(top);
 		recipeComponent.setCellRenderer(new RecipeCellRenderer());
+		
+//		ScrollablePanel panel = new ScrollablePanel(new BorderLayout());
+//		panel.add(recipeComponent, BorderLayout.CENTER);
+//		panel.setScrollableWidth(ScrollableSizeHint.STRETCH);
+//		panel.setScrollableHeight(ScrollableSizeHint.STRETCH);
+		
 		return recipeComponent;
 	}
 

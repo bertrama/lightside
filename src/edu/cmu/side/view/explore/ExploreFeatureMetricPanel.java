@@ -1,23 +1,20 @@
 package edu.cmu.side.view.explore;
 
-import javax.swing.ButtonGroup;
-
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.view.generic.ActionBar;
-import edu.cmu.side.view.generic.GenericFeatureMetricPanel;
+import edu.cmu.side.view.generic.ToggleFeatureMetricPanel;
 import edu.cmu.side.view.util.CheckboxTableCellRenderer;
 import edu.cmu.side.view.util.RadioButtonListEntry;
 import edu.cmu.side.view.util.ToggleMouseAdapter;
 
-public class ExploreFeatureMetricPanel extends GenericFeatureMetricPanel{
-
-	ButtonGroup toggleButtons = new ButtonGroup();
+public class ExploreFeatureMetricPanel extends ToggleFeatureMetricPanel{
 
 	ActionBar action;
+	
 	public ExploreFeatureMetricPanel(ActionBar act){
 		super();
 		action = act;
@@ -33,12 +30,6 @@ public class ExploreFeatureMetricPanel extends GenericFeatureMetricPanel{
 		});
 		featureTable.setDefaultRenderer(Object.class, new CheckboxTableCellRenderer());
 	}
-	@Override
-	public Object getCellObject(Object o){
-		RadioButtonListEntry tb = new RadioButtonListEntry(o, false);
-		toggleButtons.add(tb);
-		return tb;
-	}
 
 	@Override
 	public String getTargetAnnotation() { return null; }
@@ -50,6 +41,7 @@ public class ExploreFeatureMetricPanel extends GenericFeatureMetricPanel{
 
 	@Override
 	public void refreshPanel(){
+		super.refreshPanel();
 		Recipe target = ExploreResultsControl.getHighlightedTrainedModelRecipe();
 		if(target != null){
 			FeatureTable table = target.getTrainingResult().getEvaluationTable();

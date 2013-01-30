@@ -92,15 +92,15 @@ public class TrainingResult implements Serializable{
 		case NOMINAL:
 		case STRING:
 		case BOOLEAN:
+			for(String p : test.getLabelArray()){
+				confusionMatrix.put(p, new TreeMap<String, List<Integer>>());
+				for(String a : test.getLabelArray()){
+					confusionMatrix.get(p).put(a, new ArrayList<Integer>());
+				}
+			}
 			for(int i = 0; i < actual.size(); i++){
 				String pred = predicted.get(i).toString();
 				String act = actual.get(i);
-				if(!confusionMatrix.containsKey(pred)){
-					confusionMatrix.put(pred, new TreeMap<String, List<Integer>>());
-				}
-				if(!confusionMatrix.get(pred).containsKey(act)){
-					confusionMatrix.get(pred).put(act, new ArrayList<Integer>());
-				}
 				confusionMatrix.get(pred).get(act).add(i);
 			}
 			break;
@@ -136,122 +136,10 @@ public class TrainingResult implements Serializable{
 			}
 			break;
 		}
+		
 	}
 
 
-	//        private GenesisRecipe trainrecipe;
-	//        private GenesisRecipe testrecipe;
-	//        private double uniqueID = -1;
-	//        /** first label is predicted label, second label is actual label. */
-	//
-	//        public SimpleTrainingResult(String modelname, GenesisRecipe gr){
-	//                name = modelname;
-	//                trainrecipe = gr;
-	//                uniqueID = Math.random();
-	//                gr.getLearningPlugin().toFile(uniqueID);
-	//        }
-	//        
-	//        public void serialize(File f){
-	//                try{
-	//                        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(f));                               
-	//                        out.writeObject(name);
-	//                        trainrecipe.writeSerializedTable(out);
-	//                        out.writeObject(predictions);
-	//                        out.writeObject(evaluation);
-	//                        out.writeObject(confusionMatrix);
-	//                        out.close();
-	//                }catch(Exception e){
-	//                        e.printStackTrace();
-	//                }
-	//        }
-	//        
-	//        public SimpleTrainingResult(File f) throws Exception{
-	//                ObjectInputStream in = new ObjectInputStream(new FileInputStream(f));
-	//                name = (String)in.readObject();
-	//                trainrecipe = new GenesisRecipe(in);            
-	//                predictions = (List<Comparable>)in.readObject();
-	//                evaluation = (Map<String, String>)in.readObject();
-	//                confusionMatrix = (Map<String, Map<String, ArrayList<Integer>>>)in.readObject();
-	//                in.close();
-	//        }
-	//        
-	//        public GenesisRecipe predictLabels(String newName, SimpleDocumentList newData)
-	//        {
-	//                GenesisRecipe topredict = new GenesisRecipe(trainrecipe, newData, true);
-	//                topredict.modify(trainrecipe.getOriginalTable());
-	//                trainrecipe.getLearningPlugin().predict(newName, topredict, trainrecipe.getModifiedTable().getPossibleLabels());
-	//                return topredict;
-	//        }
-	//
-	//        public GenesisRecipe getEvaluationRecipe(){
-	//                return (testrecipe == null) ? trainrecipe : testrecipe;
-	//        }
-	//
-	//        public void setEvaluationRecipe(GenesisRecipe gr){
-	//                testrecipe = gr;
-	//        }
-	//
-	//        public String getSubtypeName() {
-	//                return null;
-	//        }
-	//
-	//
-	//        public SimpleDocumentList getDocumentList() {
-	//                return trainrecipe.getDocumentList();
-	//        }
-	//
-	//        public FeatureTable getorgFeatureTable(){
-	//                return trainrecipe.getOriginalTable();
-	//        }
-	//        
-	//        public FeatureTable getmodifyFeatureTable(){
-	//                return trainrecipe.getModifiedTable();
-	//        }
-	//
-	//        
-	//        
-	//        
-	//        
-	//        
-	//        public Map<String, String> getEvaluation(){
-	//                return evaluation;
-	//        }
-	//
-	//        public void addEvaluation(Map<String, String> ev){
-	//                if(ev == null) return;
-	//
-	//                try{
-	//                        for(String eval : ev.keySet()){
-	//                                if(eval.equals("cv-fold-predictions")){
-	//                                        String[] labels = ev.get(eval).split("\n");
-	//                                        switch(trainrecipe.getModifiedTable().getClassValueType()){
-	//                                        case NUMERIC:
-	//                                                for(int i = 0; i < labels.length; i++)
-	//                                                        if(labels[i].length() > 0)
-	//                                                                predictions.add(Double.parseDouble(labels[i]));                                                         
-	//                                                break;
-	//                                        case BOOLEAN:
-	//                                        case STRING:
-	//                                        case NOMINAL:
-	//                                                for(int i = 0; i < labels.length; i++)
-	//                                                        predictions.add(labels[i]);
-	//                                                break;
-	//                                        }
-	//                                        if(testrecipe != null)
-	//                                                generateConfusionMatrix(testrecipe.getModifiedTable().getClassValueType(), testrecipe.getDocumentList().getAnnotationArray(), predictions);                                             
-	//                                        else
-	//                                                generateConfusionMatrix(trainrecipe.getModifiedTable().getClassValueType(), trainrecipe.getDocumentList().getAnnotationArray(), predictions);   
-	//                                }
-	//                        }
-	//                        if(evaluation == null){
-	//                                evaluation = ev;                                
-	//                        }else{
-	//                                evaluation.putAll(ev);
-	//                        }
-	//                }catch(Exception e){
-	//                        e.printStackTrace();
-	//                }
-	//        }
 	//
 	//        private void calculateQuadraticKappa(Feature.Type type, List<String> actual, List<Comparable> predicted) {
 	//                boolean quad = false;
@@ -360,15 +248,6 @@ public class TrainingResult implements Serializable{
 	//                String weightedEvaluation = "Z: " + Z + "\nk: " + k + "\nNumerator: " + num + "\nDenominator: " + denom + "\n" + probString + "\n" + histString;
 	//                return weightedEvaluation;
 	//        }
-	//
-	//        public List<Integer> getConfusionMatrixCell(String pred, String act){
-	//                if(confusionMatrix.containsKey(pred)){
-	//                        if(confusionMatrix.get(pred).containsKey(act)){
-	//                                return confusionMatrix.get(pred).get(act);
-	//                        }
-	//                }
-	//                return new ArrayList<Integer>();
-	//        }
 	//        
 
 	        
@@ -435,10 +314,6 @@ public class TrainingResult implements Serializable{
 	//                }
 	//                Double value = accumulator/docIndices.size();
 	//                return value;
-	//        }
-	//
-	//        public List<Comparable> getPredictions(){
-	//                return predictions;
 	//        }
 	//
 }

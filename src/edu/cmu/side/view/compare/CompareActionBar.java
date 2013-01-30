@@ -28,7 +28,6 @@ public class CompareActionBar extends ActionBar {
 		combo.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println(combo.getSelectedItem() + "CAB29");
 				CompareModelsControl.setHighlightedModelComparisonPlugin((EvaluateTwoModelPlugin)combo.getSelectedItem());
 				Workbench.update(CompareActionBar.this);
 			}

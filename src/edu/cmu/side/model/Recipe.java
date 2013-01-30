@@ -135,7 +135,6 @@ public class Recipe implements Serializable
 	}
 	
 	public void addWrapper(WrapperPlugin plug, Map<String, String> settings){
-		System.out.println("Adding wrapper R138");
 		if(settings == null)
 			settings = plug.generateConfigurationSettings();
 		wrappers.put(plug, settings);

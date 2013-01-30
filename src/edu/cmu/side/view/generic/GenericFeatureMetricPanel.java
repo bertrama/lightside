@@ -1,6 +1,8 @@
 package edu.cmu.side.view.generic;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -29,6 +33,7 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.CSVExporter;
 import edu.cmu.side.view.util.FeatureTableModel;
 import edu.cmu.side.view.util.SIDETable;
 
@@ -38,6 +43,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 	FeatureTableModel model = new FeatureTableModel();
 	FeatureTableModel display = new FeatureTableModel();
 	JTextField text = new JTextField(20);
+	JButton export = new JButton("");
 
 	protected static boolean evaluating = false;
 
@@ -58,6 +64,18 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
 		featureTable.setAutoCreateColumnsFromModel(false);
+		
+
+		export.setIcon(new ImageIcon("toolkits/icons/note_go.png"));
+		export.setToolTipText("Export to CSV...");
+		export.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				CSVExporter.exportToCSV(model);
+			}});
+		export.setEnabled(false);
 
 		JScrollPane tableScroll = new JScrollPane(featureTable);
 		text.addKeyListener(new KeyListener(){
@@ -78,7 +96,8 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 			public void keyTyped(KeyEvent arg0) {}
 
 		});
-		add("left", label);
+		add("hfill", label);
+		add("right", export);
 		add("br left", new JLabel("Search:"));
 		add("hfill", text);
 		add("br hfill vfill", tableScroll);
@@ -99,6 +118,8 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 			EvaluateFeaturesTask task = new EvaluateFeaturesTask(getActionBar(), recipe, tableEvaluationPlugins, mask, getTargetAnnotation());
 			task.execute();
 		}
+		
+		export.setEnabled(recipe != null);
 	}
 
 	public FeatureTableModel filterTable(FeatureTableModel ftm, String t){

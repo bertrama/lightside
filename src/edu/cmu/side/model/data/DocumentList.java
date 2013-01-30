@@ -172,40 +172,62 @@ public class DocumentList implements Serializable{
 	public Map<String, List<String>> allAnnotations() {
 		return allAnnotations;
 	}
-	
+
+	private static String[] classGuesses = {"class", "label", "value", "annotation"};
+	private static String[] textGuesses = {"text", "sentence", "turn", "posting", "instance"};
+
 	public void guessTextAndAnnotationColumns()
 	{
-		
-		if(currentAnnotation == null && allAnnotations.containsKey("class"))
+		if(currentAnnotation == null)
 		{
-			setCurrentAnnotation("class");
-		}
-		if(getTextColumns().isEmpty() && allAnnotations.containsKey("text"))
-		{
-			setTextColumn("text", true);
+			String className = guessAnnotation(classGuesses);
+			if(className != null)
+				setCurrentAnnotation(className);
 		}
 		
-		for (String s : this.getAnnotationNames())
+		if(textColumns.isEmpty())
 		{
-			Set<String> values = new TreeSet<String>();
-			double length = 0;
-			for (String t : this.getAnnotationArray(s))
-			{
-				values.add(t);
-				length += t.length();
-			}
-			length = length/getSize();
-			
-			if(currentAnnotation == null && values.size() < (this.getSize() / 10.0))
-			{
-				this.setCurrentAnnotation(s);
-			}
-			
-			if (getTextColumns().isEmpty() && length > 10 && values.size() >= (this.getSize() / 2.0))
-			{
-				this.setTextColumn(s, true);
-			}
+			String textName = guessAnnotation(textGuesses);
+			if(textName != null)
+				setTextColumn(textName, true);
 		}
+		
+		if(currentAnnotation == null || textColumns.isEmpty())
+			for (String s : this.getAnnotationNames())
+			{
+				Set<String> values = new TreeSet<String>();
+				double length = 0;
+				for (String t : this.getAnnotationArray(s))
+				{
+					values.add(t);
+					length += t.length();
+				}
+				length = length/getSize();
+				
+				if(currentAnnotation == null && values.size() < (this.getSize() / 10.0))
+				{
+					this.setCurrentAnnotation(s);
+				}
+				
+				if (getTextColumns().isEmpty() && length > 10 && values.size() >= (this.getSize() / 2.0))
+				{
+					this.setTextColumn(s, true);
+				}
+			}
+	}
+
+
+	/**
+	 * @param guesses
+	 */
+	protected String guessAnnotation(String[] guesses)
+	{
+		for (String guess : guesses)
+			for (String a : allAnnotations.keySet())
+				if (a.equalsIgnoreCase(guess)) 
+					return a;
+
+		return null;
 	}
 
 	/**

@@ -27,8 +27,8 @@ public class PredictOutputPanel extends AbstractListPanel
 	SIDETable docTable = new SIDETable();
 	DocumentListTableModel model = new DocumentListTableModel(null);
 	JLabel label = new JLabel("Selected Dataset");
-	JButton export = new JButton("");
 	JScrollPane tableScroll;
+	JButton export = new JButton("");
 
 	public void setLabel(String l)
 	{
@@ -46,6 +46,7 @@ public class PredictOutputPanel extends AbstractListPanel
 			{
 				CSVExporter.exportToCSV(model);
 			}});
+		export.setEnabled(false);
 		
 		setLayout(new RiverLayout());
 		add("left", label);
@@ -72,6 +73,8 @@ public class PredictOutputPanel extends AbstractListPanel
 			model.setDocumentList(null);
 		else
 			model.setDocumentList(recipe.getDocumentList());
+		
+		export.setEnabled(recipe != null);
 		
 		//docTable.setModel(new DocumentListTableModel(recipe.getDocumentList()));
 	}

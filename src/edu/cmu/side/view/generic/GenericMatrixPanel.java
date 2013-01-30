@@ -1,6 +1,8 @@
 package edu.cmu.side.view.generic;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
@@ -18,6 +22,7 @@ import javax.swing.table.DefaultTableModel;
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.CSVExporter;
 import edu.cmu.side.view.util.ConfusionCellRenderer;
 import edu.cmu.side.view.util.SIDETable;
 
@@ -31,6 +36,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 	protected String setting;
 
 	protected Double[] sum = new Double[]{0.0,0.0};
+	protected JButton export = new JButton("");
 
 	public Double[] getSum(){
 		return sum;
@@ -52,9 +58,23 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 	}
 
 	public GenericMatrixPanel(){
+		
+
+		export.setIcon(new ImageIcon("toolkits/icons/note_go.png"));
+		export.setToolTipText("Export to CSV...");
+		export.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				CSVExporter.exportToCSV(matrixModel);
+			}});
+		export.setEnabled(false);
+		
 		setLayout(new RiverLayout());
 		label = new JLabel("Model Confusion Matrix:");
-		add("left", label);
+		add("hfill", label);
+		add("right", export);
 		matrixDisplay.setModel(matrixModel);
 		matrixDisplay.setBorder(BorderFactory.createLineBorder(Color.gray));
 		matrixDisplay.addMouseListener(new MouseAdapter() {
@@ -93,6 +113,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 		
 		matrixModel = new DefaultTableModel(data, header);
 		matrixDisplay.setModel(matrixModel);
+		export.setEnabled(confusion != null && !confusion.isEmpty());
 
 	}
 

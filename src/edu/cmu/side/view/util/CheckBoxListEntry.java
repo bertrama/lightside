@@ -31,5 +31,11 @@ public class CheckBoxListEntry extends JCheckBox{
   public void setValue(Object value) {
     this.value = value;
   }
+  
+  public String toString()
+  {
+	  if(value == null) return "NULL";
+	  return value.toString();
+  }
 
 }

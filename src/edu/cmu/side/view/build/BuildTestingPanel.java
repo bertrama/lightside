@@ -31,6 +31,7 @@ import com.yerihyo.yeritools.io.FileToolkit;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
@@ -107,7 +108,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 //		buildTestSetControlPanel();
 
 		controlPanel.add(cvControlPanel);
-//		this.add("hfill", controlPanel);
+		GenesisControl.addListenerToMap(testSetLoadPanel, this);
 		this.add(controlPanel, BorderLayout.CENTER);
 	}
 

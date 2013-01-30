@@ -34,7 +34,12 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 		if(vColIndex > 0){
 			Integer intensity = 0;
 			try{
-				double numberValue =(Double.parseDouble(((SIDETable)table).getDeepValue(rowIndex, vColIndex).toString()));
+				String contents = ((SIDETable)table).getDeepValue(rowIndex, vColIndex).toString();
+				double numberValue = 0.0;
+				try{
+					numberValue = (Double.parseDouble(contents));
+				}catch(Exception e){}
+
 				if(numberValue > 0){
 					Double outValue = ((Double)(255.0*numberValue)) / sum[1];
 					intensity = outValue.intValue();

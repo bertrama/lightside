@@ -103,6 +103,9 @@ public class ExploreResultsPane extends JPanel{
 		GenesisControl.addListenerToMap(load, features);
 		GenesisControl.addListenerToMap(load, analysis);
 		GenesisControl.addListenerToMap(checklist, features);
+		GenesisControl.addListenerToMap(matrix, features);
+		
+		GenesisControl.addListenerToMap(checklist, analysis);
 		GenesisControl.addListenerToMap(matrix, analysis);
 		GenesisControl.addListenerToMap(features, analysis);
 		GenesisControl.addListenerToMap(middle, analysis);

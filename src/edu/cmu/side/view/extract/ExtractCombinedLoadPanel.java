@@ -54,7 +54,6 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 	
 	@Override
 	public void refreshPanel(){
-		System.out.println("refresh ECLP 54");
 		if(files.getHighlight() != null){
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 			Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());

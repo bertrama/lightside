@@ -1,12 +1,10 @@
 package edu.cmu.side.view.util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.Reader;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -17,9 +15,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import plugins.learning.WekaTools;
-
 import weka.core.Instances;
-
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
@@ -35,7 +31,7 @@ public class FeatureTableExporter
 	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
 	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "table.side");
 
-	static void setUpChooser()
+	public static void setUpChooser()
 	{
 		if (chooser == null)
 		{
@@ -76,7 +72,17 @@ public class FeatureTableExporter
 			};
 			chooser.addChoosableFileFilter(sideFilter);
 			chooser.addChoosableFileFilter(csvFilter);
-			chooser.addChoosableFileFilter(arffFilter);
+			
+			try
+			{
+				Class.forName("plugins.learning.WekaTools");
+				chooser.addChoosableFileFilter(arffFilter);
+			}
+			catch(ClassNotFoundException cnf)
+			{
+				System.err.println("WekaTools not found - disabling ARFF exporter");
+			}
+			
 			chooser.setAcceptAllFileFilterUsed(false);
 			chooser.setFileFilter(sideFilter);
 		}

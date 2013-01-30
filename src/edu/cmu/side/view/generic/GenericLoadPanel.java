@@ -27,8 +27,10 @@ import com.yerihyo.yeritools.io.FileToolkit;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.FeatureTableExporter;
 
 public abstract class GenericLoadPanel extends AbstractListPanel
 {
@@ -210,33 +212,39 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	public void saveSelectedItem()
 	{
-		Recipe recipe = (Recipe) combo.getSelectedItem();// TODO: should this be
-															// more generic?
+		Recipe recipe = (Recipe) combo.getSelectedItem();
 
-		chooser.setSelectedFile(new File("saved/" + recipe.getRecipeName()));
-		int response = chooser.showSaveDialog(this);
-		if (response == JFileChooser.APPROVE_OPTION)
+		if(recipe.getStage() == Stage.FEATURE_TABLE || recipe.getStage() == Stage.MODIFIED_TABLE)
 		{
-			File target = chooser.getSelectedFile();
-			if (target.exists())
+			FeatureTableExporter.exportFeatures(recipe);
+		}
+		else
+		{
+			chooser.setSelectedFile(new File("saved/" + recipe.getRecipeName()));
+			int response = chooser.showSaveDialog(this);
+			if (response == JFileChooser.APPROVE_OPTION)
 			{
-				response = JOptionPane.showConfirmDialog(this, "Do you want to overwrite " + target + "?");
-				if (response != JOptionPane.YES_OPTION) return;
-			}
+				File target = chooser.getSelectedFile();
+				if (target.exists())
+				{
+					response = JOptionPane.showConfirmDialog(this, target + "already exists. Do you want to overwrite it?");
+					if (response != JOptionPane.YES_OPTION) return;
+				}
 
-			try
-			{
-				FileOutputStream fout = new FileOutputStream(target);
-				ObjectOutputStream oos = new ObjectOutputStream(fout);
-				oos.writeObject(recipe);
+				try
+				{
+					FileOutputStream fout = new FileOutputStream(target);
+					ObjectOutputStream oos = new ObjectOutputStream(fout);
+					oos.writeObject(recipe);
+
+				}
+				catch (Exception e)
+				{
+					JOptionPane.showMessageDialog(this, "Error while saving:\n" + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+					e.printStackTrace();
+				}
 
 			}
-			catch (Exception e)
-			{
-				JOptionPane.showMessageDialog(this, "Error while saving:\n" + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
-				e.printStackTrace();
-			}
-
 		}
 	}
 

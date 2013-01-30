@@ -126,7 +126,7 @@ public class Shell {
 				
 					
 //                
-//                ARFFExporter.export(recipe.getOriginalTable(), new File("original.arff"));
+//                FeatureTableExporter.export(recipe.getOriginalTable(), new File("original.arff"));
 //                System.out.println("export done");
 //                
 //                

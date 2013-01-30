@@ -14,7 +14,6 @@ import javax.swing.table.TableModel;
 public class CSVExporter
 {
 
-	// Older (newer?) version of this method scavenged from David
 	static JFileChooser chooser = new JFileChooser(new File("data"));
 	
 	{
@@ -109,34 +108,7 @@ public class CSVExporter
 		}
 	}
 	
-	// public static void exportToCSV(FeatureTable ft, File file){
-	// try {
-	// if (!file.getName().endsWith(".csv"))
-	// file = new File(file.getAbsolutePath() + ".csv");
-	// //Instances data = ft.getInstances();
-	// FileWriter outf = new FileWriter(file);
-	// outf.write("#Instance");
-	// for (Feature f : ft.getFeatureSet())
-	// outf.write("," + f.getFeatureName().replaceAll(",","_"));
-	// outf.write("\n");
-	// for (int i=0; i< ft.getDocumentList().getSize(); i++){
-	// outf.write((""+(i+1)));
-	// Collection<FeatureHit> hits = ft.getHitsForDocument(i);
-	// for (Feature f : ft.getFeatureSet())
-	// {
-	// if()
-	// if (f.getFeatureType() == Type.NUMERIC)
-	// outf.write("," + data.instance(i).value(j));
-	// else
-	// outf.write("," + data.instance(i).stringValue(j));
-	// }
-	// outf.write("\n");
-	// }
-	// outf.close();
-	// } catch(Exception x) {
-	// JOptionPane.showMessageDialog(null, x.getMessage());
-	// }
-	// }
+
 
 //	public static void exportToCSV(TableModel model, File file)
 //	{

@@ -84,8 +84,6 @@ public class TestSetLoadPanel extends GenericLoadPanel
 		Recipe trainRecipe = BuildModelControl.getHighlightedFeatureTableRecipe();
 		DocumentList testList= (DocumentList) BuildModelControl.getValidationSettings().get("testSet");
 		
-		System.out.println(trainRecipe + " vs "+BuildModelControl.getValidationSettings().get("testRecipe"));
-		
 		if(trainRecipe != null && testList != null)
 		{
 			DocumentList trainList = trainRecipe.getDocumentList();

@@ -114,20 +114,20 @@ public class Workbench{
 			if(!listeners.isEmpty())
 			{
 				updateCount++;
-				long update = updateCount;
+//				long update = updateCount;
 				GenesisControl.setCurrentlyUpdating(source, true);
-				System.out.println("Workbench.update begin update #"+update+" for source "+source.getClass().getName());
+//				System.out.println("Workbench.update begin update #"+update+" for source "+source.getClass().getName());
 				
 				for(AbstractListPanel listen : listeners)
 				{
-						System.out.println("Workbench.update #" + updateCount + ":\n\tsource  " + source.getClass().getName() + "\n\trefresh "
-								+ listen.getClass().getName());
+//						System.out.println("Workbench.update #" + updateCount + ":\n\tsource  " + source.getClass().getName() + "\n\trefresh "
+//								+ listen.getClass().getName());
 
 						listen.refreshPanel();
-						System.out.println("Workbench.update end refresh #"+update+" for "+listen.getClass().getName() );
+//						System.out.println("Workbench.update end refresh #"+update+" for "+listen.getClass().getName() );
 					
 				}	
-				System.out.println("Workbench.update end update #"+update);
+//				System.out.println("Workbench.update end update #"+update);
 				GenesisControl.setCurrentlyUpdating(source, false);
 			}
 		}

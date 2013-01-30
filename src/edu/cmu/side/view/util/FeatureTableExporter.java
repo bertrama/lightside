@@ -33,7 +33,7 @@ public class FeatureTableExporter
 
 	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV (Excel)", "csv", "CSV");
 	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
-	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "features.side");
+	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "table.side");
 
 	static void setUpChooser()
 	{

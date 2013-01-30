@@ -25,6 +25,7 @@ public class ExtractLoadPanel extends GenericLoadPanel{
 		delete.setIcon(iconDelete);
 		delete.setToolTipText("Delete");
 		delete.setBorderPainted(true);
+		delete.setEnabled(false);
 		load.setText("");
 		load.setToolTipText("Open");
 		load.setIcon(iconLoad);

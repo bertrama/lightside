@@ -97,10 +97,12 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		delete.setIcon(iconDelete);
 		delete.setToolTipText("Delete");
 		delete.setBorderPainted(true);
+		delete.setEnabled(false);
 		save.setText("");
 		save.setIcon(iconSave);
 		save.setToolTipText("Save");
 		save.setBorderPainted(true);
+		save.setEnabled(false);
 		load.setText("");
 		load.setIcon(iconLoad);
 		load.setToolTipText("Load");

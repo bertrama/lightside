@@ -16,6 +16,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import plugins.learning.WekaTools;
+
 import weka.core.Instances;
 
 import edu.cmu.side.model.Recipe;
@@ -74,7 +76,7 @@ public class FeatureTableExporter
 			};
 			chooser.addChoosableFileFilter(sideFilter);
 			chooser.addChoosableFileFilter(csvFilter);
-			//chooser.addChoosableFileFilter(arffFilter);
+			chooser.addChoosableFileFilter(arffFilter);
 			chooser.setAcceptAllFileFilterUsed(false);
 			chooser.setFileFilter(sideFilter);
 		}
@@ -125,18 +127,26 @@ public class FeatureTableExporter
 
 	}
 
-	// TODO: this doesn't look like proper ARFF to me. No headers, class labels?
 	public static void exportToARFF(FeatureTable ft, File out) throws IOException
 	{
 		FileWriter outf = new FileWriter(out);
 		
-		for (int i = 0; i < ft.getDocumentList().getSize(); i++)
+		boolean[] mask = new boolean[ft.getDocumentList().getSize()];
+		for(int i = 0; i < mask.length; i++)
 		{
-			Collection<FeatureHit> hits = ft.getHitsForDocument(i);
-			for (FeatureHit hit : hits)
-				outf.write(hit.getFeature().toString() + ": " + hit.getValue().toString() + "\t");
-			outf.write("\n");
+			mask[i]=true;
 		}
+		
+		Instances instances = WekaTools.getInstances(ft, mask);
+		outf.write(instances.toString());
+		
+//		for (int i = 0; i < ft.getDocumentList().getSize(); i++)
+//		{
+//			Collection<FeatureHit> hits = ft.getHitsForDocument(i);
+//			for (FeatureHit hit : hits)
+//				outf.write(hit.getFeature().toString() + ": " + hit.getValue().toString() + "\t");
+//			outf.write("\n");
+//		}
 		outf.close();
 		System.out.println("moof!");
 	}

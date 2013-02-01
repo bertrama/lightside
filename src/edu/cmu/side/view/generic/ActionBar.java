@@ -43,6 +43,7 @@ public abstract class ActionBar extends AbstractListPanel{
 		
 		setLayout(new RiverLayout());
 		actionButton.setFont(font);
+		actionButton.setEnabled(false);
 		setBackground(Color.white);
 		setBorder(BorderFactory.createLineBorder(Color.gray));
 		settings.setBackground(Color.white);

@@ -1,17 +1,16 @@
 package edu.cmu.side.view.generic;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import se.datadosen.component.RiverLayout;
-
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.TrainingResult;
@@ -45,8 +44,10 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 
 	public void refreshPanel(Recipe recipe){
 		model = new FeatureTableModel();
-		model.addColumn("Metric");
-		model.addColumn("Value");
+		Vector<Vector<Object>> data = new Vector<Vector<Object>>();
+		Vector<Object> header = new Vector<Object>();
+		header.add("Metric");
+		header.add("Value");
 		if(recipe != null && recipe.getTrainingResult() != null){
 			allKeys.clear();
 			TrainingResult result = recipe.getTrainingResult();
@@ -54,14 +55,20 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 			for(ModelMetricPlugin plugin : plugins){
 				Map<String, String> keys = plugin.evaluateModel(result, plugin.generateConfigurationSettings());
 				for(String s : keys.keySet()){
-					Object[] row = new Object[2];
-					row[0] = s;
-					row[1] = keys.get(s);
-					model.addRow(row);
+					Vector<Object> row = new Vector<Object>();
+					row.add(s);
+					try{
+						Double d = Double.parseDouble(keys.get(s));
+						row.add(d);
+					}catch(Exception e){
+						row.add(keys.get(s));
+					}
+					data.add(row);
 				}
 				allKeys.putAll(keys);
 			}			
 		}
+		model = new FeatureTableModel(data, header);
 		featureTable.setModel(model);
 	}
 

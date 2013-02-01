@@ -107,25 +107,15 @@ public class TrainingResult implements Serializable{
 		case NUMERIC:
 			ArrayList<Double> values = new ArrayList<Double>();
 			for(int i = 0; i < actual.size(); i++){
-				values.add(Double.parseDouble(actual.get(i)));
-			}
-			Collections.sort(values);
-			double[] quarts = new double[4];
-			for(double i = 1; i <= 4; i++){
-				quarts[((Double)i).intValue()-1] = values.get(((Double)(values.size()*(i/5.0))).intValue()-1);
-			}
-			for(int i = 0; i < actual.size(); i++){
 				Double predDbl = Double.parseDouble(predicted.get(i).toString());
-				Double actDbl = Double.parseDouble(actual.get(i).toString());
-				int Qact = -1; int Qpred = -1;
+				ArrayList<Double> breakpoints = getEvaluationTable().getNumericBreakpoints();
+				int Qpred = -1;
 				int j = 0;
-				while(j < 4 && predDbl > quarts[j]) j++;
+				while(j < 4 && predDbl > breakpoints.get(j)) j++;
 				Qpred = j;
 				j = 0;
-				while(j < 4 && actDbl > quarts[j]) j++;
-				Qact = j;
 				String pred = "Q"+(Qpred+1);
-				String act = "Q"+(Qact+1);
+				String act = getEvaluationTable().getNominalClassValues().get(i);
 				if(!confusionMatrix.containsKey(pred)){
 					confusionMatrix.put(pred, new TreeMap<String, List<Integer>>());
 				}

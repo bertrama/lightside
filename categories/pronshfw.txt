@@ -1,5 +1,0 @@
-[[acc-pron]]
-[[conj]]
-[[female-pron]]
-[[male-pron]]
-[[nom-pron]]

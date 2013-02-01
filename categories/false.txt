@@ -1,7 +1,0 @@
-false
-incorrect
-incorrectly
-doubtful
-doubtfully
-wrong
-wrongly

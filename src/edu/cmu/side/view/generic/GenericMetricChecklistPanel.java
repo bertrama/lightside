@@ -4,27 +4,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
-import edu.cmu.side.control.ExtractFeaturesControl;
-import edu.cmu.side.control.GenesisControl;
-import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.FeatureTable;
+import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.plugin.FeatureMetricPlugin;
 import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.SelectPluginList;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
+import edu.cmu.side.view.util.SelectPluginList;
 
 public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin> extends AbstractListPanel{
 
@@ -41,7 +40,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 		for(E plug : evalPlugins.keySet()){
 			pluginsToPass.add(plug);
 			Map<String, Boolean> opts = new TreeMap<String, Boolean>();
-			for(Object s : plug.getAvailableEvaluations()){
+			for(Object s : plug.getAvailableEvaluations().keySet()){
 				opts.put(s.toString(), false);
 				CheckBoxListEntry entry = new CheckBoxListEntry(s, false);
 				entry.addItemListener(getCheckboxListener());
@@ -80,7 +79,33 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 					keysNew.add(s);
 				}
 			}
+			Feature.Type activeType = (localTable == null?null: localTable.getClassValueType());
 			Workbench.reloadComboBoxContent(combo, keysNew, (keysNew.size()>0?keysNew.toArray(new String[0])[0]:null));
+			for(int i = 0; i < pluginsModel.getSize(); i++){
+				if(pluginsModel.get(i) instanceof CheckBoxListEntry){
+					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
+					String label = check.getValue().toString();
+					Map<E, Map<String, Boolean>> evalPlugins = getEvaluationPlugins();
+					for(E plug : evalPlugins.keySet()){
+						Collection<Feature.Type> types = (Collection<Feature.Type>)plug.getAvailableEvaluations().get(label);
+						if(types.contains(activeType)){
+							check.setEnabled(true);
+						}else{
+							check.setSelected(false);
+							check.setEnabled(false);
+						}
+						
+					}
+				}
+			}
+			for(int i = 0; i < pluginsModel.getSize(); i++){
+				if(pluginsModel.get(i) instanceof CheckBoxListEntry){
+					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
+				}
+			}
+			pluginsList.setModel(pluginsModel);
+			revalidate();
+			repaint();
 		}
 	}
 	

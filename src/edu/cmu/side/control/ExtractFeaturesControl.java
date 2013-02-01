@@ -70,7 +70,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Loading files EFC73");
 			chooser.setFileFilter(FileToolkit
 					.createExtensionListFileFilter(new String[] { "csv" }, true));
 			chooser.setMultiSelectionEnabled(true);

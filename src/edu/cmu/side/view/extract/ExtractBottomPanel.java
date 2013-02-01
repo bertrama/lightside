@@ -113,6 +113,7 @@ public class ExtractBottomPanel extends AbstractListPanel{
 		add(BorderLayout.CENTER, split);
 
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, control);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, checklist);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, display);
 		GenesisControl.addListenerToMap(control, checklist);
 		GenesisControl.addListenerToMap(control, display);

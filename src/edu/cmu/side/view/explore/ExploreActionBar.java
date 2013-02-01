@@ -22,10 +22,6 @@ public class ExploreActionBar extends ActionBar{
 		setLayout(new RiverLayout());
 		setBackground(Color.white);
 		combo = new JComboBox();
-		Workbench.reloadComboBoxContent(combo, ExploreResultsControl.getModelAnalysisPlugins().keySet(), null);
-		if(combo.getItemCount()>0 && combo.getSelectedIndex()==-1){
-			combo.setSelectedIndex(0);
-		}
 		combo.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -33,6 +29,10 @@ public class ExploreActionBar extends ActionBar{
 				Workbench.update(ExploreActionBar.this);
 			}
 		});
+		Workbench.reloadComboBoxContent(combo, ExploreResultsControl.getModelAnalysisPlugins().keySet(), null);
+		if(combo.getItemCount()>0 && combo.getSelectedIndex()==-1){
+			combo.setSelectedIndex(0);
+		}
 		add("left", new JLabel("Exploration Plugin:"));
 		add("hfill", combo);
 	}

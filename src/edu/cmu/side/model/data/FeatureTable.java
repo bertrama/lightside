@@ -3,6 +3,7 @@ package edu.cmu.side.model.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,9 @@ public class FeatureTable implements Serializable
 	
 	private Map<String, double[]> numericConvertedClassValues = new HashMap<String, double[]>();
 	private List<String> nominalConvertedClassValues = new ArrayList<String>();
+	
+	//For numeric class values to convert to quintiles
+	ArrayList<Double> numericBreakpoints = new ArrayList<Double>();
 	
 	private Feature.Type type = null;
 	private Integer threshold = 5;
@@ -101,8 +105,31 @@ public class FeatureTable implements Serializable
 				toSort.add(convertedClassValues[i]);
 			}
 			numericConvertedClassValues.put(target, convertedClassValues);
+
+			ArrayList<Double> values = new ArrayList<Double>();
+			for(int i = 0; i < convertedClassValues.length; i++){
+				values.add(convertedClassValues[i]);
+			}
+			Collections.sort(values);
+			for(double i = 1; i <= 4; i++){
+				numericBreakpoints.add(values.get(((Double)(values.size()*(i/5.0))).intValue()-1));
+			}
+			ArrayList<String> nominalConvert = new ArrayList<String>();
+			for(int i = 0; i < convertedClassValues.length; i++){
+				Double actDbl = convertedClassValues[i];
+				int Qact = -1; 
+				int j = 0;
+				while(j < 4 && actDbl > numericBreakpoints.get(j)) j++;
+				Qact = j;
+				nominalConvert.add("Q"+(Qact+1));
+			}
+			nominalConvertedClassValues = nominalConvert;
 			break;
 		}
+	}
+	
+	public ArrayList<Double> getNumericBreakpoints(){
+		return numericBreakpoints;
 	}
 	
 	public double[] getNumericClassValues(String target){
@@ -117,6 +144,10 @@ public class FeatureTable implements Serializable
 			break;
 		}
 		return out;	
+	}
+	
+	public List<String> getNominalClassValues(){
+		return nominalConvertedClassValues;
 	}
 
 	public void setName(String n){

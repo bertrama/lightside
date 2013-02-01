@@ -24,7 +24,6 @@ public class CompareActionBar extends ActionBar {
 		combo = new JComboBox();
 		EvaluateTwoModelPlugin plug = (CompareModelsControl.getModelComparisonPlugins().keySet().size()>0?
 				CompareModelsControl.getModelComparisonPlugins().keySet().toArray(new EvaluateTwoModelPlugin[0])[0]:null);
-		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins().keySet(), plug);
 		combo.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -32,6 +31,7 @@ public class CompareActionBar extends ActionBar {
 				Workbench.update(CompareActionBar.this);
 			}
 		});
+		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins().keySet(), plug);
 		add("left", new JLabel("Comparison Plugin:"));
 		add("hfill", combo);
 		

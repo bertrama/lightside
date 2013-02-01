@@ -222,9 +222,12 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 						for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
 							for(String s : tableEvaluationPlugins.get(plug).keySet()){
 								if(tableEvaluationPlugins.get(plug).get(s)){
-									Object value = evals.get(plug).get(s).get(f);
-									if(value == null){
-										value = "";
+									Object value = "";
+									if(evals.get(plug).containsKey(s) && evals.get(plug).get(s) != null){
+										Object tryVal = evals.get(plug).get(s).get(f);
+										if(tryVal != null){
+											value = tryVal;
+										}
 									}
 									row.add(value);
 								}

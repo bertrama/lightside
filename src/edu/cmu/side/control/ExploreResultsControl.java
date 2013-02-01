@@ -38,7 +38,7 @@ public class ExploreResultsControl extends GenesisControl{
 		for(SIDEPlugin fe : tableEvaluations){
 			ModelFeatureMetricPlugin plugin = (ModelFeatureMetricPlugin)fe;
 			featureEvaluationPlugins.put(plugin, new TreeMap<String, Boolean>());
-			for(Object s : plugin.getAvailableEvaluations()){
+			for(Object s : plugin.getAvailableEvaluations().keySet()){
 				featureEvaluationPlugins.get(plugin).put(s.toString(), false);
 			}
 		}

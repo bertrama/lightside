@@ -1,9 +1,0 @@
-after
-before
-during
-since
-when
-while
-a long time ago
-many days ago
-dinner time

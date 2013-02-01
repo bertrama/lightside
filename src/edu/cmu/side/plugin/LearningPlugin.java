@@ -3,6 +3,7 @@ package edu.cmu.side.plugin;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -115,7 +116,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 
 	protected TrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, StatusUpdater progressIndicator){
 		boolean[] mask = new boolean[table.getDocumentList().getSize()];
-		String[] predictions = new String[table.getDocumentList().getSize()];
+		Comparable[] predictions = new Comparable[table.getDocumentList().getSize()];
 		Set<Integer> folds = new TreeSet<Integer>();
 		for(Integer key : foldsMap.keySet()){
 			folds.add(foldsMap.get(key));
@@ -172,7 +173,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				{
 					predictionIndex++;
 				}
-				predictions[predictionIndex] = pred.toString();
+				predictions[predictionIndex] = pred;
 				predictionIndex++;
 			}
 			double timeB = System.currentTimeMillis();
@@ -181,8 +182,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		if(!halt)
 		{
 			progressIndicator.update("Generating confusion matrix");
-			ArrayList<String> predictionsList = new ArrayList<String>();
-			for(String s : predictions) predictionsList.add(s);
+			List<Comparable<Comparable>> predictionsList = new ArrayList<Comparable<Comparable>>();
+			for(Comparable s : predictions) predictionsList.add(s);
 			return new TrainingResult(table, predictionsList);
 		}
 		else return null;

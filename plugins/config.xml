@@ -100,6 +100,15 @@
     </plugin>
     
     <plugin>
+        <name>GrowthModel</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Growth Model filter]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.restructure.GrowthModel</classname>
+    </plugin>
+    
+    <plugin>
         <name>Feature Selection</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>

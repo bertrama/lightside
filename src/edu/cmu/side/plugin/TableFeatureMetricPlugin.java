@@ -1,5 +1,6 @@
 package edu.cmu.side.plugin;
 
+import java.util.Collection;
 import java.util.Map;
 
 import edu.cmu.side.model.Recipe;

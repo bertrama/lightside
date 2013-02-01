@@ -70,7 +70,6 @@ public class TestSetLoadPanel extends GenericLoadPanel
 	@Override
 	public void refreshPanel()
 	{
-		System.out.println("refreshing TSLP 65");
 		refreshPanel(BuildModelControl.getDocumentLists());
 		
 		revalidate();

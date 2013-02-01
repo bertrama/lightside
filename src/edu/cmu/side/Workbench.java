@@ -53,23 +53,7 @@ public class Workbench{
 		
 		JFrame frame = new JFrame();
 		frame.setIconImages(getIcons("toolkits/icons/bulbs/bulb_128.png", "toolkits/icons/bulbs/simple_32.png", "toolkits/icons/bulbs/simple_16.png")); //for windows?
-		
-		//http://docs.oracle.com/javase/tutorial/uiswing/lookandfeel/_nimbusDefaults.html
-//		UIManager.put("nimbusBase", new Color(64,96,160)); //tabs, scrollbars, checkboxes, combos, disabled things 
-//		UIManager.put("nimbusBlueGrey", new Color(200,200,204)); //makes buttons tinty? also split pane bars
-//		UIManager.put("control", new Color(242,242,240)); //component background
-//
-//		try {
-//		    for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-//		        if ("Nimbus".equals(info.getName())) {
-//		            UIManager.setLookAndFeel(info.getClassName());
-//		            break;
-//		        }
-//		    }
-//		} catch (Exception e) {
-//		    // If Nimbus is not available, you can set the GUI to another look and feel.
-//		}
-		
+
 		panel = new WorkbenchPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder());
 		frame.setContentPane(panel);

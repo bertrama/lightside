@@ -7,8 +7,8 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ToggleFeatureMetricPanel;
-import edu.cmu.side.view.util.CheckboxTableCellRenderer;
 import edu.cmu.side.view.util.RadioButtonListEntry;
+import edu.cmu.side.view.util.SIDETableCellRenderer;
 import edu.cmu.side.view.util.ToggleMouseAdapter;
 
 public class ExploreFeatureMetricPanel extends ToggleFeatureMetricPanel{
@@ -28,7 +28,7 @@ public class ExploreFeatureMetricPanel extends ToggleFeatureMetricPanel{
 				Workbench.update(ExploreFeatureMetricPanel.this);
 			}
 		});
-		featureTable.setDefaultRenderer(Object.class, new CheckboxTableCellRenderer());
+		featureTable.setDefaultRenderer(Object.class, new SIDETableCellRenderer());
 	}
 
 	@Override

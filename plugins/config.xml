@@ -100,15 +100,6 @@
     </plugin>
     
     <plugin>
-        <name>GrowthModel</name>
-        <author>Zeyu Zheng</author>
-        <version>1.0</version>
-        <description><![CDATA[Growth Model filter]]></description>
-        <jarfile>genesis.jar</jarfile>
-        <classname>plugins.restructure.GrowthModel</classname>
-    </plugin>
-    
-    <plugin>
         <name>Feature Selection</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
@@ -152,6 +143,15 @@
         <description><![CDATA[Decision tree classification]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.learning.WekaTrees</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Weka Regression</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Linear regression]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.learning.WekaRegression</classname>
     </plugin>
 
     <plugin>

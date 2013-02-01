@@ -9,6 +9,10 @@ import javax.swing.JTable;
  */
 public class SIDETable extends JTable{
 
+	public SIDETable(){
+		setDefaultRenderer(Object.class, new SIDETableCellRenderer());
+	}
+	
 	@Override
 	public boolean isCellEditable(int row, int col){
 		return false;

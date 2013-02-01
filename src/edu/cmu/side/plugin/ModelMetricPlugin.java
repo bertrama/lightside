@@ -23,8 +23,6 @@ public abstract class ModelMetricPlugin extends SIDEPlugin{
 	 */
 	public abstract String getOutputName();
 
-	public abstract Collection<String> getAvailableEvaluations();
-	
 	/**
 	 * 
 	 */

@@ -2,23 +2,25 @@ package edu.cmu.side.view.util;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.text.DecimalFormat;
 
-import javax.swing.AbstractButton;
+import javax.swing.JLabel;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class CheckboxTableCellRenderer extends DefaultTableCellRenderer{
+public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 
+	DecimalFormat n = new DecimalFormat("#.####");
 	private int cutoff = 25;
 
-	public CheckboxTableCellRenderer(int cutoff)
+	public SIDETableCellRenderer(int cutoff)
 	{
 		super();
 		this.cutoff = cutoff;
 	}
 	
-	public CheckboxTableCellRenderer()
+	public SIDETableCellRenderer()
 	{
 		super();
 	}
@@ -55,6 +57,9 @@ public class CheckboxTableCellRenderer extends DefaultTableCellRenderer{
 	        	
 	        }
 			
+		}
+		if(value instanceof Double){
+			rend = new JLabel(n.format((Double)value));
 		}
 		
 		

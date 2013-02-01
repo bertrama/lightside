@@ -4,13 +4,12 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
-import edu.cmu.side.model.FreqMap;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.FeatureHit;
 
@@ -31,6 +30,7 @@ public class FeatureTable implements Serializable
 	
 	private Feature.Type type = null;
 	private Integer threshold = 5;
+	private String annotation;
 	private String name = "no name set";
 
 	/**
@@ -38,7 +38,7 @@ public class FeatureTable implements Serializable
 	 * @return
 	 */
 	public Feature.Type getClassValueType(){
-		return documents.getValueType(documents.getCurrentAnnotation());
+		return getDocumentList().getValueType(getDocumentList().getCurrentAnnotation());
 	}
 
 
@@ -52,7 +52,7 @@ public class FeatureTable implements Serializable
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
 		this.threshold = thresh;
 		this.documents = sdl;
-		
+		annotation = sdl.getCurrentAnnotation();
 		generateConvertedClassValues();
 		
 		
@@ -140,11 +140,8 @@ public class FeatureTable implements Serializable
 	}
 
 	public DocumentList getDocumentList(){
+		documents.setCurrentAnnotation(annotation);
 		return documents;
-	}
-	
-	public String getDomainName(int indx){
-		return documents.getInstanceDomain(indx);
 	}
 	
 	/**
@@ -195,7 +192,7 @@ public class FeatureTable implements Serializable
 	}
 	
 	public int numInstances(){
-		return documents.getSize();
+		return getDocumentList().getSize();
 	}
 	
 	
@@ -212,11 +209,11 @@ public class FeatureTable implements Serializable
 	
 	public Double getNumericConvertedClassValue(int i, String target){
 		if (getClassValueType() == Feature.Type.NUMERIC){
-			return Double.parseDouble(documents.getAnnotationArray().get(i));			
+			return Double.parseDouble(getDocumentList().getAnnotationArray().get(i));			
 		}else if (getClassValueType() == Feature.Type.BOOLEAN){
-			return (documents.getAnnotationArray().get(i).equals(Boolean.TRUE.toString()))?1.0:0.0;
+			return (getDocumentList().getAnnotationArray().get(i).equals(Boolean.TRUE.toString()))?1.0:0.0;
 		}else {
-			return (documents.getAnnotationArray().get(i).equals(target))?1.0:0.0;
+			return (getDocumentList().getAnnotationArray().get(i).equals(target))?1.0:0.0;
 		}
 	}      
 	

@@ -313,7 +313,7 @@ public class DocumentList implements Serializable{
 				break;
 			case NUMERIC:
 				for(int i = 0; i < 5; i++){
-					labelSet.add(((i*20)+1)+"st-"+((i+1)*20)+"th");
+					labelSet.add("Q"+(i+1));
 				}
 				break;
 			}

@@ -31,7 +31,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	public abstract void requestCancel();
 	public void forceCancel()
 	{
-		cancel(true);
+		boolean cancelled = this.cancel(true);
 		finishTask();
 	}
 	
@@ -52,7 +52,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	public Void doInBackground()
 	{	
 		beginTask();
-		
+
 		doTask();
 		
 		finishTask();

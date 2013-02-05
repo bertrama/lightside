@@ -42,7 +42,7 @@ public class FeatureTable implements Serializable
 	 * @return
 	 */
 	public Feature.Type getClassValueType(){
-		return getDocumentList().getValueType(getDocumentList().getCurrentAnnotation());
+		return documents.getValueType(annotation);
 	}
 
 
@@ -57,8 +57,8 @@ public class FeatureTable implements Serializable
 		this.threshold = thresh;
 		this.documents = sdl;
 		annotation = sdl.getCurrentAnnotation();
+		System.out.println(sdl.getCurrentAnnotation() + " annotation FT60");
 		generateConvertedClassValues();
-		
 		
 		for(int i = 0; i < sdl.getSize(); i++){
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
@@ -70,6 +70,7 @@ public class FeatureTable implements Serializable
 			}
 			localFeatures.get(f).add(hit.getDocumentIndex());
 		}
+
 		for(FeatureHit hit : hits){
 			if(localFeatures.get(hit.getFeature()).size() >= threshold){
 				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
@@ -84,23 +85,24 @@ public class FeatureTable implements Serializable
 	public void generateConvertedClassValues(){
 		numericConvertedClassValues.clear();
 		nominalConvertedClassValues.clear();
+		DocumentList localDocuments = getDocumentList();
 		switch(getClassValueType()){
 		case NOMINAL:
 		case BOOLEAN:
-			for(String s : getDocumentList().getLabelArray()){
-				double[] convertedClassValues = new double[getDocumentList().getSize()];
-				for(int i = 0; i < getDocumentList().getSize(); i++){
+			for(String s : localDocuments.getLabelArray()){
+				double[] convertedClassValues = new double[localDocuments.getSize()];
+				for(int i = 0; i < localDocuments.getSize(); i++){
 					convertedClassValues[i] = getNumericConvertedClassValue(i, s);
 				}
 				numericConvertedClassValues.put(s, convertedClassValues);
 			}
-			nominalConvertedClassValues = getDocumentList().getAnnotationArray();
+			nominalConvertedClassValues = localDocuments.getAnnotationArray();
 			break;
 		case NUMERIC:
 			String target = "numeric";
-			double[] convertedClassValues = new double[getDocumentList().getSize()];
+			double[] convertedClassValues = new double[localDocuments.getSize()];
 			ArrayList<Double> toSort = new ArrayList<Double>();
-			for(int i = 0; i < getDocumentList().getSize(); i++){
+			for(int i = 0; i < localDocuments.getSize(); i++){
 				convertedClassValues[i] = getNumericConvertedClassValue(i, target);
 				toSort.add(convertedClassValues[i]);
 			}
@@ -150,6 +152,10 @@ public class FeatureTable implements Serializable
 		return nominalConvertedClassValues;
 	}
 
+	public int getSize(){
+		return documents.getSize();
+	}
+	
 	public void setName(String n){
 		name = n;
 	}
@@ -222,11 +228,6 @@ public class FeatureTable implements Serializable
 	    return ft;
 	}
 	
-	public int numInstances(){
-		return getDocumentList().getSize();
-	}
-	
-	
     public void deleteFeatureSet(Set<Feature> f){
     	for(int i = 0; i < hitsPerDocument.size(); i++){
     		Collection<FeatureHit> tmphits = new ArrayList<FeatureHit>();
@@ -240,11 +241,11 @@ public class FeatureTable implements Serializable
 	
 	public Double getNumericConvertedClassValue(int i, String target){
 		if (getClassValueType() == Feature.Type.NUMERIC){
-			return Double.parseDouble(getDocumentList().getAnnotationArray().get(i));			
+			return Double.parseDouble(documents.getAnnotationArray().get(i));			
 		}else if (getClassValueType() == Feature.Type.BOOLEAN){
-			return (getDocumentList().getAnnotationArray().get(i).equals(Boolean.TRUE.toString()))?1.0:0.0;
+			return (documents.getAnnotationArray().get(i).equals(Boolean.TRUE.toString()))?1.0:0.0;
 		}else {
-			return (getDocumentList().getAnnotationArray().get(i).equals(target))?1.0:0.0;
+			return (documents.getAnnotationArray().get(i).equals(target))?1.0:0.0;
 		}
 	}      
 	

@@ -44,7 +44,7 @@ public class TrainingResult implements Serializable{
 	public FeatureTable getEvaluationTable(){
 		return test;
 	}
-	
+
 	public List<? extends Comparable<?>> getPredictions(){
 		return predictions;
 	}
@@ -52,11 +52,11 @@ public class TrainingResult implements Serializable{
 	public int numEvaluationInstances(){
 		return test.getDocumentList().getSize();
 	}
-	
+
 	public String getLongDescriptionString(){
 		return longDescriptionString;
 	}
-	
+
 	public void setLongDescriptionString(String l){
 		longDescriptionString = l;
 	}
@@ -126,184 +126,46 @@ public class TrainingResult implements Serializable{
 			}
 			break;
 		}
-		
+
 	}
 
 
-	//
-	//        private void calculateQuadraticKappa(Feature.Type type, List<String> actual, List<Comparable> predicted) {
-	//                boolean quad = false;
-	//                if(type==Feature.Type.NUMERIC){
-	//                        quad = true;
-	//                }
-	//                List<Integer> realActuals = new ArrayList<Integer>();
-	//                List<Integer> realPredicted = new ArrayList<Integer>();
-	//                if(type==Feature.Type.NOMINAL){
-	//                        boolean reallyNumeric = true;
-	//                        try{
-	//                                for(String s : actual){
-	//                                        Integer i = Integer.parseInt(s.substring(1));
-	//                                        realActuals.add(i);
-	//                                }
-	//                                for(Comparable s : predicted){
-	//                                        Integer i = Integer.parseInt(s.toString().substring(1));
-	//                                        realPredicted.add(i);
-	//                                }
-	//                        }catch(Exception e){
-	//                                reallyNumeric = false;
-	//                        }
-	//                        if(reallyNumeric){
-	//                                quad = true;
-	//                        }
-	//                }else if(type == Feature.Type.NUMERIC){
-	//                        for(String s : actual){
-	//                                realActuals.add(Integer.parseInt(s));
-	//                        }
-	//                        for(Comparable s : predicted){
-	//                                realPredicted.add((new Double(Math.ceil(Double.parseDouble(s.toString())))).intValue());
-	//                        }
-	//                }
-	//                quad = quad&&trainrecipe.getDocumentList().allAnnotations().containsKey("score1")&&trainrecipe.getDocumentList().allAnnotations().containsKey("score2");
-	//                if(quad){
-	//                        System.out.println("quad");
-	//                        String weightedEvaluation = getWeightedKappa(realActuals, realPredicted);
-	//                        List<Integer> scorer1 = new ArrayList<Integer>();
-	//                        List<Integer> scorer2 = new ArrayList<Integer>();
-	//                        for(int i = 0; i < trainrecipe.getDocumentList().getSize(); i++){
-	////                              scorer1.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score1").get(i)));
-	////                              scorer2.add(Integer.parseInt(table.getDocumentList().allAnnotations().get("score2").get(i)));
-	//                                scorer1.add(Integer.parseInt(trainrecipe.getDocumentList().allAnnotations().get("score1").get(i).substring(1)));
-	//                                scorer2.add(Integer.parseInt(trainrecipe.getDocumentList().allAnnotations().get("score2").get(i).substring(1)));
-	//                        }
-	//                        weightedEvaluation += "Gold Standard:\n" + getWeightedKappa(scorer1, scorer2);
-	//                        if(evaluation == null){
-	//                                evaluation = new TreeMap<String, String>();
-	//                        }
-	//                        evaluation.put("Weighted Kappa", weightedEvaluation);
-	//                }
-	//        }
-	//        
-	//        public String getWeightedKappa(List<Integer> realActuals, List<Integer> realPredicted){
-	//                Map<Integer, FreqMap<Integer>> histO = new TreeMap<Integer, FreqMap<Integer>>();
-	//                FreqMap<Integer> e1 = new FreqMap<Integer>();
-	//                FreqMap<Integer> e2 = new FreqMap<Integer>();
-	//                Integer N = 0;
-	//                for(int i = 0; i < trainrecipe.getDocumentList().getSize(); i++){
-	//                        e1.count(realActuals.get(i));
-	//                        e2.count(realPredicted.get(i));
-	//                        if(!histO.containsKey(realActuals.get(i))){
-	//                                histO.put(realActuals.get(i), new FreqMap<Integer>());
-	//                        }
-	//                        N = Math.max(N,realActuals.get(i));
-	//                        histO.get(realActuals.get(i)).count(realPredicted.get(i));
-	//                }
-	//                String histString = "";
-	//                Map<Integer, Map<Integer, Double>> probE = new TreeMap<Integer, Map<Integer, Double>>();
-	//                for(Integer x : e1.keySet()){
-	//                        probE.put(x, new TreeMap<Integer, Double>());
-	//                        for(Integer y : e2.keySet()){
-	//                                histString += "E,"+x+","+y+": "+e1.get(x) + "," + e2.get(y) + "\n";
-	//                                double p1 = (0.0+e1.get(x))/trainrecipe.getDocumentList().getSize();
-	//                                double p2 = (0.0+e2.get(y))/trainrecipe.getDocumentList().getSize();
-	//                                probE.get(x).put(y, p1*p2);
-	//                        }
-	//                }
-	//                Map<Integer, Map<Integer, Double>> probO = new TreeMap<Integer, Map<Integer, Double>>();
-	//                for(Integer x : histO.keySet()){
-	//                        probO.put(x, new TreeMap<Integer, Double>());
-	//                        for(Integer y : histO.get(x).keySet()){
-	//                                histString += "O,"+x+","+y+": "+histO.get(x).get(y) + "\n";
-	//                                probO.get(x).put(y, (0.0+histO.get(x).get(y))/(0.0+trainrecipe.getDocumentList().getSize()));
-	//                        }
-	//                }
-	//                double num = 0.0;
-	//                double denom = 0.0;
-	//                String probString = "";
-	//                for(Integer x : probE.keySet()){
-	//                        for(Integer y : probE.get(x).keySet()){
-	//                                double w = Math.pow((0.0+(x-y)), 2.0)/(0.0+Math.pow(0.0+(N-1), 2.0));
-	//                                denom += w*probE.get(x).get(y);
-	//                                probString += "E,"+x+","+y+": " + w + " * " + probE.get(x).get(y) + "\n";
-	//                        }
-	//                }
-	//                for(Integer x : probO.keySet()){
-	//                        for(Integer y : probO.get(x).keySet()){
-	//                                double w = Math.pow((0.0+(x-y)), 2.0)/(0.0+Math.pow(0.0+(N-1), 2.0));
-	//                                num += w*probO.get(x).get(y);
-	//                                probString += "O,"+x+","+y+": " + w + " * " + probO.get(x).get(y) + "\n";
-	//                        }
-	//                }
-	//                double k = 1.0-(num/denom);
-	//                double Z = 0.5*Math.log((1.0+k)/(1.0-k));
-	//                String weightedEvaluation = "Z: " + Z + "\nk: " + k + "\nNumerator: " + num + "\nDenominator: " + denom + "\n" + probString + "\n" + histString;
-	//                return weightedEvaluation;
-	//        }
-	//        
 
-	        
-	        public String getTextConfusionMatrix(){
-	                return getTextConfusionMatrix(confusionMatrix.keySet().toArray(new String[0]), confusionMatrix);
-	        }
-	        
-	        protected static String getTextConfusionMatrix(String[] labelArray, Map<String, Map<String, List<Integer>>> confusion){
-	                StringBuilder sb = new StringBuilder();
-	                int max = 4;
-	                for(String p : labelArray){
-	                        for(String a : labelArray){
-	                                max = Math.max(max, Math.max(p.length(), a.length()));
-	                                int numDigits = 1;
-	                                int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
-	                                while(numHits>=10){
-	                                        numHits /= 10;
-	                                        numDigits++;
-	                                }
-	                                max =  Math.max(max, numDigits);
-	                        }
-	                }
-	                for(int i = 0; i < max; i++){
-	                        sb.append(" ");
-	                }
-	                String format = "%"+max+"s";
-	                for(String p : labelArray){
-	                        sb.append(String.format(format,p));
-	                }
-	                sb.append("\n");
-	                for(String a : labelArray){
-	                        sb.append(String.format(format,a));
-	                        for(String p : labelArray){
-	                                int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
-	                                sb.append(String.format(format,(""+numHits)));                  
-	                        }
-	                        sb.append("\n");
-	                }
-	                return sb.toString();
-	        }
-	
-	//        public Double getAverageValue(List<Integer> docIndices, Feature f){
-	//                Double accumulator = 0.0;
-	//                if(docIndices.size()==0) return 0.0;
-	//                for(Integer doc : docIndices){
-	//                        Collection<FeatureHit> hits = trainrecipe.getModifiedTable().getHitsForFeature(f);
-	//                        if(hits == null) continue;
-	//                        switch(f.getFeatureType()){
-	//                        case NUMERIC:
-	//                                for(FeatureHit hit : hits){
-	//                                        if(hit.getDocumentIndex()==doc) accumulator += ((Number)hit.getValue()).doubleValue();
-	//                                }
-	//                                break;
-	//                        case BOOLEAN:
-	//                                for(FeatureHit hit : hits){
-	//                                        if(hit.getDocumentIndex()==doc && Boolean.TRUE.equals(hit.getValue())) accumulator++;
-	//                                }
-	//                                break;
-	//                        case NOMINAL:
-	//                                break;
-	//                        case STRING:
-	//                                break;
-	//                        }                       
-	//                }
-	//                Double value = accumulator/docIndices.size();
-	//                return value;
-	//        }
-	//
+	public String getTextConfusionMatrix(){
+		return getTextConfusionMatrix(confusionMatrix.keySet().toArray(new String[0]), confusionMatrix);
+	}
+
+	protected static String getTextConfusionMatrix(String[] labelArray, Map<String, Map<String, List<Integer>>> confusion){
+		StringBuilder sb = new StringBuilder();
+		int max = 4;
+		for(String p : labelArray){
+			for(String a : labelArray){
+				max = Math.max(max, Math.max(p.length(), a.length()));
+				int numDigits = 1;
+				int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
+				while(numHits>=10){
+					numHits /= 10;
+					numDigits++;
+				}
+				max =  Math.max(max, numDigits);
+			}
+		}
+		for(int i = 0; i < max; i++){
+			sb.append(" ");
+		}
+		String format = "%"+max+"s";
+		for(String p : labelArray){
+			sb.append(String.format(format,p));
+		}
+		sb.append("\n");
+		for(String a : labelArray){
+			sb.append(String.format(format,a));
+			for(String p : labelArray){
+				int numHits = confusion.containsKey(p)?(confusion.get(p).containsKey(a)?confusion.get(p).get(a).size():0):0;
+				sb.append(String.format(format,(""+numHits)));                  
+			}
+			sb.append("\n");
+		}
+		return sb.toString();
+	}
 }

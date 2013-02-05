@@ -24,7 +24,7 @@ public abstract class RestructurePlugin extends SIDEPlugin implements Serializab
 	
 	public FeatureTable restructure(FeatureTable original, Map<String, String> configuration, StatusUpdater progressIndicator){
 		this.configureFromSettings(configuration);
-		boolean[] allTrue = new boolean[original.getDocumentList().getSize()];
+		boolean[] allTrue = new boolean[original.getSize()];
 		for(int i = 0; i < allTrue.length; i++){ allTrue[i] = true; }
 		return restructureWithMaskForSubclass(original, allTrue, progressIndicator);
 	}

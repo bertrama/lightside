@@ -76,7 +76,7 @@ public class DocumentList implements Serializable{
 		return name;
 	}
 
-	public DocumentList(List<String> text, Map<String, ArrayList<String>> annotations){
+	public DocumentList(List<String> text, Map<String, List<String>> annotations){
 		this(text);
 		for(String ann : annotations.keySet()){
 			addAnnotation(ann, annotations.get(ann));

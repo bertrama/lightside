@@ -225,8 +225,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 			try
 			{
 				
-				Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-				double timeA = System.currentTimeMillis();
+				Collection<FeatureHit> hits = new HashSet<FeatureHit>();
 				for (SIDEPlugin plug : plan.getExtractors().keySet())
 				{
 					if(!halt)
@@ -235,7 +234,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 						hits.addAll(activeExtractor.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
 					}
 				}
-				double timeB = System.currentTimeMillis();
 				if(!halt)
 				{
 					FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold);

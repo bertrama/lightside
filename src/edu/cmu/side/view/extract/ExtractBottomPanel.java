@@ -89,7 +89,7 @@ public class ExtractBottomPanel extends AbstractListPanel{
 			public void refreshPanel(){
 				if(ExtractFeaturesControl.hasHighlightedFeatureTable()){     
 					FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
-					boolean[] mask = new boolean[table.getDocumentList().getSize()];
+					boolean[] mask = new boolean[table.getSize()];
 					for(int i = 0; i < mask.length; i++) mask[i] = true;
 					refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe(), ExtractFeaturesControl.getTableEvaluationPlugins(), mask);
 				}else{

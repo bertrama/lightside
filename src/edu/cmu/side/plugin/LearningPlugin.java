@@ -41,7 +41,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		for(SIDEPlugin wrapper : wrappers.keySet()){
 			((WrapperPlugin)wrapper).configureFromSettings(wrappers.get(wrapper));
 		}
-		boolean[] mask = new boolean[table.getDocumentList().getSize()];
+		boolean[] mask = new boolean[table.getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		DocumentList sdl = (DocumentList)map.get("testSet");
 		TrainingResult result = null;
@@ -115,8 +115,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	}
 
 	protected TrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, StatusUpdater progressIndicator){
-		boolean[] mask = new boolean[table.getDocumentList().getSize()];
-		Comparable[] predictions = new Comparable[table.getDocumentList().getSize()];
+		DocumentList localDocuments = table.getDocumentList();
+		boolean[] mask = new boolean[localDocuments.getSize()];
+		Comparable[] predictions = new Comparable[localDocuments.getSize()];
 		Set<Integer> folds = new TreeSet<Integer>();
 		for(Integer key : foldsMap.keySet()){
 			folds.add(foldsMap.get(key));
@@ -190,7 +191,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	}
 
 	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet, OrderedPluginMap wrappers, StatusUpdater updater){
-		boolean[] mask = new boolean[testSet.getDocumentList().getSize()];
+		boolean[] mask = new boolean[testSet.getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		PredictionResult predictions = predictWithMaskForSubclass(train, testSet, mask, updater);
 		for(SIDEPlugin wrapper : wrappers.keySet()){
@@ -204,7 +205,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 
 	public PredictionResult predict(FeatureTable originalData, FeatureTable newData, Map<String, String> configuration, StatusUpdater progressIndicator){
 		this.loadClassifierFromSettings(configuration);
-		boolean[] mask = new boolean[newData.getDocumentList().getSize()];
+		boolean[] mask = new boolean[newData.getSize()];
 		for(int i = 0; i < mask.length; i++) mask[i] = true;
 		return predictWithMaskForSubclass(originalData, newData, mask, progressIndicator);
 	}

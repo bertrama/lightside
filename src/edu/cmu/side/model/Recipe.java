@@ -73,7 +73,10 @@ public class Recipe implements Serializable
 		return out;
 	}
 
-	public DocumentList getDocumentList(){ return documentList; }
+	//Filtered tables may alter the document list being worked with.
+	public DocumentList getDocumentList(){ 
+		return filteredTable == null ? documentList : filteredTable.getDocumentList();
+	}
 
 	public FeatureTable getFeatureTable(){ return featureTable; }
 	

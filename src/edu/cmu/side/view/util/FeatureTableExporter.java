@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import plugins.learning.WekaTools;
 import weka.core.Instances;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
@@ -137,7 +138,7 @@ public class FeatureTableExporter
 	{
 		FileWriter outf = new FileWriter(out);
 		
-		boolean[] mask = new boolean[ft.getDocumentList().getSize()];
+		boolean[] mask = new boolean[ft.getSize()];
 		for(int i = 0; i < mask.length; i++)
 		{
 			mask[i]=true;
@@ -164,15 +165,16 @@ public class FeatureTableExporter
 		// Instances data = ft.getInstances();
 		FileWriter outf = new FileWriter(file);
 		outf.write("Instance");
-		outf.write("," + ft.getDocumentList().getCurrentAnnotation());
+		DocumentList localDocuments = ft.getDocumentList();
+		outf.write("," + localDocuments.getCurrentAnnotation());
 
 		for (Feature f : ft.getFeatureSet())
 			outf.write("," + f.getFeatureName().replaceAll(",", "_"));
 		outf.write("\n");
 
-		List<String> annotations = ft.getDocumentList().getAnnotationArray();
+		List<String> annotations =	 localDocuments.getAnnotationArray();
 
-		for (int i = 0; i < ft.getDocumentList().getSize(); i++)
+		for (int i = 0; i < localDocuments.getSize(); i++)
 		{
 			outf.write(("" + (i + 1)));
 

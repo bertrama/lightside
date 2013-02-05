@@ -248,7 +248,6 @@ public class BuildModelControl extends GenesisControl{
 				if (current != null)
 				{
 					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, plan.getWrappers(), BuildModelControl.getUpdater());
-
 					if(model != null)
 					{
 						plan.setTrainingResult(model);

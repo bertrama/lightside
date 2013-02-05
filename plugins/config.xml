@@ -28,6 +28,24 @@
     </plugin>
     
     <plugin>
+        <name>GrowthModel</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Growth Model filter]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.restructure.GrowthModel</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Regroup Features</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Regroup instances by column]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.restructure.RegroupPlugin</classname>
+    </plugin>
+    
+    <plugin>
         <name>Basic Feature Evaluations</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
@@ -97,15 +115,6 @@
         <description><![CDATA[Difference matrix comparisons]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.analysis.two.matrix.DifferenceMatrixPlugin</classname>
-    </plugin>
-    
-    <plugin>
-        <name>GrowthModel</name>
-        <author>Elijah Mayfield</author>
-        <version>1.0</version>
-        <description><![CDATA[Growth Model filter]]></description>
-        <jarfile>genesis.jar</jarfile>
-        <classname>plugins.restructure.GrowthModel</classname>
     </plugin>
     
     <plugin>

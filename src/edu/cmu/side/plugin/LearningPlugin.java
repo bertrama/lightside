@@ -3,6 +3,7 @@ package edu.cmu.side.plugin;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -54,6 +55,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				try
 				{
 					numFolds = Integer.parseInt(map.get("numFolds").toString());
+					System.out.println("LP 57: user wants "+numFolds+" folds");
 				}
 				catch (Exception e)
 				{
@@ -62,15 +64,20 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				progressIndicator.update("Generating Folds Map", 0, 0);
 				if (map.get("source").equals("RANDOM"))
 				{
+					if(map.get("foldMethod").equals("AUTO"))
+					{
+						numFolds = Math.min(10, sdl.getSize());
+					}
 					foldsMap = BuildModelControl.getFoldsMapRandom(sdl, numFolds);
 				}
 				else if (map.get("source").equals("ANNOTATIONS"))
 				{
+					String annotation = map.get("annotation").toString();
 					if(map.get("foldMethod").equals("AUTO"))
 					{
-						numFolds = sdl.getPossibleAnn(sdl.getCurrentAnnotation()).size();
+						numFolds = sdl.getPossibleAnn(annotation).size();
 					}
-					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, map.get("annotation").toString(), numFolds);
+					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, annotation, numFolds);
 				}
 				else if (map.get("source").equals("FILES"))
 				{
@@ -122,6 +129,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		for(Integer key : foldsMap.keySet()){
 			folds.add(foldsMap.get(key));
 		}
+		System.out.println("LP 128: Number of folds = "+folds.size());
+
 		ArrayList<Double> times = new ArrayList<Double>();
 		DecimalFormat print = new DecimalFormat("#.###");
 		for(Integer fold : folds)

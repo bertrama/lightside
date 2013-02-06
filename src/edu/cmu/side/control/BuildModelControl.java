@@ -127,16 +127,20 @@ public class BuildModelControl extends GenesisControl{
 		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 
 		int foldNum = 0;
-		Map<String, Integer> folds = new TreeMap<String, Integer>();
+
+		System.out.println("BMC 131: fold by annotation using up to "+num+" folds");
+		
+		Map<String, Integer> foldsByLabel = new TreeMap<String, Integer>();
 		List<String> annotationValues = documents.getAnnotationArray(annotation);
 		for (int i = 0; i < documents.getSize(); i++)
 		{
 			String annotationValue = annotationValues.get(i);
-			if (!folds.containsKey(annotationValue))
+			if (!foldsByLabel.containsKey(annotationValue))
 			{
-				folds.put(annotationValue, foldNum++);
+				foldsByLabel.put(annotationValue, foldNum++);
+				System.out.println("BMC 141: "+annotationValue+" is assigned to fold #"+foldsByLabel.get(annotationValue) % num);
 			}
-			foldsMap.put(i, folds.get(annotationValue) % num);
+			foldsMap.put(i, foldsByLabel.get(annotationValue) % num);
 		}
 
 		return foldsMap;

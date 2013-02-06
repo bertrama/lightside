@@ -89,6 +89,6 @@ public class BuildPluginPanel extends AbstractListPanel {
 	public void refreshPanel(){
 
 		repaint();
-		//test.refreshPanel();
+		test.refreshPanel();
 	}
 }

@@ -2,34 +2,28 @@ package edu.cmu.side.view.build;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
+import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.ButtonGroup;
+import javax.swing.DefaultBoundedRangeModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
+import javax.swing.JSlider;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import se.datadosen.component.RiverLayout;
-
-import com.yerihyo.yeritools.io.FileToolkit;
-
-import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
@@ -39,6 +33,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 
 public class BuildTestingPanel extends AbstractListPanel {
 
+	static final int SOFT_MINIMUM = 20;
 	ButtonGroup highOptions = new ButtonGroup();
 	JRadioButton radioCV = new JRadioButton("Cross-Validation");
 	JRadioButton radioTestSet = new JRadioButton("Supplied Test Set");
@@ -52,22 +47,23 @@ public class BuildTestingPanel extends AbstractListPanel {
 	JRadioButton radioByFile = new JRadioButton("By File");
 
 	
-	JTextField txtNumFolds = new JTextField(3);
+	JSlider numFoldSlider = new JSlider();
+	JLabel numFoldsLabel = new JLabel("10");
 	ButtonGroup foldNums = new ButtonGroup();
 	JRadioButton radioAuto = new JRadioButton("Auto");
 	JRadioButton radioManual = new JRadioButton("Manual:");
 	
 	JComboBox annotations = new JComboBox();
-//	JTextArea testSetSummary = new JTextArea();
 	TestSetLoadPanel testSetLoadPanel = new TestSetLoadPanel("Select Test Set");
 	
 	JPanel cvControlPanel = new JPanel(new RiverLayout(0, 3));
-//	JPanel testSetControlPanel = new JPanel(new RiverLayout(0,3));
 	
 	JPanel controlPanel = new JPanel(new BorderLayout(0,0));
 	JPanel selectPanel = new JPanel(new RiverLayout(10, 3));
 	
 	Map<JRadioButton, Component> configPanels = new HashMap<JRadioButton, Component>();
+	private int maxFolds = 10;
+	private Dictionary<Integer, JLabel> sliderLabels;
 	
 	static BuildModelControl.ValidationButtonListener numFoldsListener = new BuildModelControl.ValidationButtonListener("numFolds","10");
 
@@ -93,7 +89,6 @@ public class BuildTestingPanel extends AbstractListPanel {
 		addConfigPanelRadioListeners();
 		
 		setLayout(new BorderLayout(10, 0));
-//		this.setLayout(new RiverLayout(10,0));
 		this.setBorder(new EmptyBorder(0,0,0,0));
 		selectPanel.setBorder(new EmptyBorder(0,0,0,0));
 		controlPanel.setBorder(new EmptyBorder(0,0,0,0));
@@ -101,11 +96,9 @@ public class BuildTestingPanel extends AbstractListPanel {
 		selectPanel.add("br vtop", radioTestSet);
 		selectPanel.add("br vtop", radioNone);
 		
-//		this.add("vtop left", selectPanel);
 		this.add(selectPanel, BorderLayout.WEST);
 
 		buildCVControlPanel();
-//		buildTestSetControlPanel();
 
 		controlPanel.add(cvControlPanel);
 		GenesisControl.addListenerToMap(testSetLoadPanel, this);
@@ -168,24 +161,48 @@ public class BuildTestingPanel extends AbstractListPanel {
 		foldNums.add(radioAuto);
 		foldNums.add(radioManual);
 		radioAuto.setSelected(true);
-		
-		txtNumFolds.setText("10");
-		txtNumFolds.setEnabled(false);
+	
+		numFoldSlider.setMinorTickSpacing(1);
+		numFoldSlider.setMinimum(2);
+		numFoldSlider.setMaximum(15);
+		numFoldSlider.setValue(10);
+		numFoldSlider.setEnabled(false);
+		numFoldSlider.setPaintLabels(true);
+		numFoldSlider.setPaintTicks(false);
+		numFoldSlider.setSnapToTicks(true);
 		numFoldsListener.actionPerformed(null);
-		final ActionListener foldsActionListener = new ActionListener(){
+		
+		
+		final ActionListener cvRadioActionListener = new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				updateNumFolds();
+
+				numFoldSlider.setEnabled(radioManual.isSelected());
+
+				refreshPanel();
+				
+//				if(!radioManual.isSelected())
+//					numFoldsListener.setValue("10");
+				numFoldsListener.actionPerformed(null);
+				
+				
 			}
 		};
-		//how to catch the setting without an enter-press?
-		txtNumFolds.addActionListener(foldsActionListener);
+		
+		numFoldSlider.addChangeListener(new ChangeListener(){
+
+			@Override
+			public void stateChanged(ChangeEvent arg0)
+			{
+				updateNumFolds();
+			}});
 		
 		radioByAnnotation.addActionListener(new ActionListener(){
 
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				
 				annotations.setEnabled(radioByAnnotation.isSelected());	
 				refreshPanel();
 			}});
@@ -196,10 +213,15 @@ public class BuildTestingPanel extends AbstractListPanel {
 			{
 				String annotation = (String) annotations.getSelectedItem();
 				BuildModelControl.updateValidationSetting("annotation", annotation);
+				updateSlider(BuildModelControl.getHighlightedFeatureTableRecipe());
 			}});
 		
-		radioManual.addActionListener(foldsActionListener);
-		radioAuto.addActionListener(foldsActionListener);
+		annotations.setEnabled(false);
+		radioManual.addActionListener(cvRadioActionListener);
+		radioAuto.addActionListener(cvRadioActionListener);
+		radioByAnnotation.addActionListener(cvRadioActionListener);
+		radioByFile.addActionListener(cvRadioActionListener);
+		radioRandom.addActionListener(cvRadioActionListener);
 		
 		cvControlPanel.setBorder(new EmptyBorder(0,0,0,0));
 		annotations.setBorder(new EmptyBorder(0,20,0,20));
@@ -212,57 +234,191 @@ public class BuildTestingPanel extends AbstractListPanel {
 		cvControlPanel.add("br hfill",annotations);
 		cvControlPanel.add("br left", radioByFile);
 
-//		radioManual.setBorder(new EmptyBorder(0,20,0,0));
-//		radioAuto.setBorder(new EmptyBorder(0,20,0,0));
 		
 		JLabel foldLabel = new JLabel("Number of Folds:");
 		cvControlPanel.add("br left", foldLabel);
 		cvControlPanel.add("br left", radioAuto);
-//		manualCVControlPanel.add("left", new JLabel("or"));
 		cvControlPanel.add("br left", radioManual);
-		cvControlPanel.add("left", txtNumFolds);
+		cvControlPanel.add("left", numFoldsLabel);
+		cvControlPanel.add("br hfill", numFoldSlider);
 	}
-
-//	/**
-//	 * 
-//	 */
-//	protected void buildTestSetControlPanel()
-//	{
-//		testSetControlPanel.add("hfill vfill", testSetLoadPanel);
-//	}
 	
 	public void refreshPanel()
 	{
-		reloadAnnotationList();
-		updateNumFolds();
+		updateCVByAnnotationSettings();
+		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
+		updateSlider(recipe);
+		updateCVByFileSettings(recipe);
 		testSetLoadPanel.refreshPanel();
 	}
 
 	/**
-	 * 
+	 * @param recipe
 	 */
-	protected void reloadAnnotationList()
+	protected void updateCVByFileSettings(Recipe recipe)
 	{
-		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
 		if(recipe != null)
 		{
-			annotations.setModel(new DefaultComboBoxModel(recipe.getDocumentList().getAnnotationNames()));
+			if(recipe.getDocumentList().getFilenames().size() < 2)
+			{
+				radioByFile.setEnabled(false);
+				if(radioByFile.isSelected())
+					radioRandom.setSelected(true);
+			}
+			else
+			{
+				radioByFile.setEnabled(true);
+			}
 		}
 	}
 
-	/**
-	 * 
-	 */
-	protected void updateNumFolds()
+	protected void updateCVByAnnotationSettings()
 	{
-		if(radioManual.isSelected())
-			numFoldsListener.setValue(txtNumFolds.getText());
-		else
-			numFoldsListener.setValue("10");
-		txtNumFolds.setEnabled(radioManual.isSelected());
-		
-		numFoldsListener.actionPerformed(null);
+		int i = annotations.getSelectedIndex();
+		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
+		if(recipe != null)
+		{
+			DocumentList documentList = recipe.getDocumentList();
+			String[] annotationNames = documentList.getAnnotationNames();
+			DefaultComboBoxModel model = new DefaultComboBoxModel(annotationNames);
+			model.removeElement(documentList.getCurrentAnnotation());
+			annotations.setModel(model);
+			int items = annotations.getItemCount();
+			if(items > 0)
+			{
+				annotations.setSelectedIndex(Math.min(Math.max(i,0), items));
+
+				radioByAnnotation.setEnabled(true);
+				annotations.setEnabled(true);
+				return;
+			}	
+			else
+			{
+				if(radioByAnnotation.isSelected())
+					radioRandom.setSelected(true);
+			}
+		}
+		//if we've made it here, either the recipe is null or there are no spare annotations
+		radioByAnnotation.setEnabled(false);
+		annotations.setEnabled(false);
 	}
 
+	protected void updateSlider(Recipe recipe)
+	{
+
+		System.out.println("BTP 282: updating slider for "+recipe);
+		if(recipe != null)
+		{
+			DocumentList documentList = recipe.getDocumentList();
+			if(radioRandom.isSelected())
+			{
+				maxFolds = documentList.getSize();
+			}
+			else if(radioByAnnotation.isSelected() && annotations.getSelectedItem() != null)
+			{
+				maxFolds = documentList.getPossibleAnn(annotations.getSelectedItem().toString()).size();
+			}
+			else if(radioByFile.isSelected())
+			{
+				maxFolds = documentList.getFilenames().size();
+			}
+		}
+
+		if(maxFolds < SOFT_MINIMUM)
+		{
+			numFoldSlider.setMaximum(maxFolds);
+			numFoldSlider.setLabelTable(numFoldSlider.createStandardLabels(Math.max(1, maxFolds/4)));
+		}
+		else
+		{
+
+			sliderLabels = new Hashtable<Integer, JLabel>();
+			sliderLabels.put(2, new JLabel(""+2));
+			sliderLabels.put(5, new JLabel(""+5));
+			sliderLabels.put(10, new JLabel(""+10));
+//			sliderLabels.put(11, new JLabel(""+(SOFT_MINIMUM-5)));
+//			sliderLabels.put(12,new JLabel(""+SOFT_MINIMUM));
+//			sliderLabels.put(13,new JLabel(""+maxFolds/2));
+			sliderLabels.put(15,new JLabel("Max"));
+			numFoldSlider.setLabelTable(sliderLabels);
+			numFoldSlider.setMaximum(15);
+		}
+		updateNumFolds();
+		
+	}
+	
+	protected int updateNumFolds()
+	{
+		final int max = numFoldSlider.getMaximum();
+		int value = numFoldSlider.getValue();
+		
+		if(maxFolds >= SOFT_MINIMUM)
+		{
+			if(value == max)
+				value = maxFolds;
+			else if(value == max - 1)
+				value = maxFolds/2;
+			else if(value == max - 2)
+				value = maxFolds/10;
+			else if(value == max - 3)
+				value = SOFT_MINIMUM;
+			else if(value == max - 4)
+				value = SOFT_MINIMUM - 5;
+		}
+		
+		if(value > maxFolds)
+			value = maxFolds;
+		
+		//hate to lose this divisibility hack
+//		value = Math.max(2, value);
+//		int max = numFoldSlider.getMaximum();
+//		//for(value=Math.min(value,max); max % value != 0; value++); //increment until divisible (or == max)
+
+//		if(value > SOFT_MINIMUM)
+//		{
+//			for (int i = 0; i + value <= max && value - i >= SOFT_MINIMUM; i++)
+//			{
+//				int remainderUp = max % (i + value);
+//				int remainderDown = max % (value - i);
+//				if (remainderUp == 0)// < maxFolds / 100)
+//				{
+//					value = i + value;
+//					break;
+//				}
+//				else if (remainderDown == 0 || value - i == SOFT_MINIMUM)// < maxFolds / 100)
+//				{
+//					value = value - i;
+//					break;
+//				}
+//
+//			}
+//		}
+		
+
+		numFoldsLabel.setText(value+"");
+		
+		if(!numFoldSlider.getValueIsAdjusting())
+		{	
+
+			String text;
+			String itemName = radioRandom.isSelected()? "instance" : radioByAnnotation.isSelected() ? "annotation" : "file";
+			System.out.println("updating fold value to "+value);
+			if(maxFolds % value != 0)
+			{
+				text = "Leave out approximately "+(maxFolds/value)+" "+itemName+"s per fold ("+(maxFolds % value)+" folds will have an extra "+itemName+")";
+			}
+			else
+			{
+				text = "Leave out "+(maxFolds/value)+" "+itemName+(maxFolds == value?"":"s")+" per fold.";
+			}
+
+			numFoldSlider.setToolTipText(text);
+			
+			numFoldsListener.setValue(value+"");
+			numFoldsListener.actionPerformed(null);
+		}
+		return value;
+		
+	}
 
 }

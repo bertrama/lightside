@@ -224,7 +224,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 		protected void doTask(){
 			try
 			{
-				
 				Collection<FeatureHit> hits = new HashSet<FeatureHit>();
 				for (SIDEPlugin plug : plan.getExtractors().keySet())
 				{
@@ -253,7 +252,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				// JScrollPane(text), "Feature Extraction Failed",
 				// JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
-			}				
+			}
 		}
 
 		@Override

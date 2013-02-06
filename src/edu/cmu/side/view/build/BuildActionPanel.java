@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.WrapperPlugin;
@@ -20,7 +21,7 @@ public class BuildActionPanel extends ActionBar {
 	JLabel trainingLabel = new JLabel();
 
 	public BuildActionPanel(StatusUpdater update){
-		super(update);
+		super("model", Stage.TRAINED_MODEL, update);
 		actionButton.setText("Train");
 		actionButton.setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));
 		actionButton.setIconTextGap(10);
@@ -38,8 +39,7 @@ public class BuildActionPanel extends ActionBar {
 		updaters.removeAll();
 		updaters.add("right", (Component) update);
 		updaters.add("right", trainingLabel);
-		
-		name.setText("model");
+		name.setText(getDefaultName());
 	}
 	
 	public class NameListener implements ActionListener{
@@ -49,11 +49,10 @@ public class BuildActionPanel extends ActionBar {
 			if(ae.getSource() instanceof RadioButtonListEntry){
 				Object o = ((RadioButtonListEntry)ae.getSource()).getValue();
 				if(o instanceof SIDEPlugin){
-					name.setText(((SIDEPlugin)o).getOutputName());
+					setDefaultName(((SIDEPlugin)o).getOutputName());
 				}
 			}
 		}
-		
 	}
 
 	public void refreshPanel(){
@@ -71,4 +70,5 @@ public class BuildActionPanel extends ActionBar {
 	{
 		trainingLabel.setVisible(false);
 	}
+
 }

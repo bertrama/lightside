@@ -78,6 +78,7 @@ public class RestructureFeaturesPane extends JPanel{
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, checklist);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, config);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, action);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, action);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, bottom);
 		GenesisControl.addListenerToMap(load, checklist);
 		GenesisControl.addListenerToMap(load, config);

@@ -65,6 +65,7 @@ public class PredictLabelsPane extends JPanel{
 		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, load);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, newData);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, output);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.PREDICTION_RESULT, actionBar);
 
 		GenesisControl.addListenerToMap(load, actionBar);
 		GenesisControl.addListenerToMap(newData, actionBar);

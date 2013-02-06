@@ -15,6 +15,8 @@ import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
 import se.datadosen.component.RiverLayout;
+import edu.cmu.side.Workbench;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.util.AbstractListPanel;
 
@@ -29,6 +31,10 @@ public abstract class ActionBar extends AbstractListPanel{
 	protected JPanel settings = new JPanel(new RiverLayout());
 	protected JComboBox combo;
 	protected JPanel updaters = new JPanel(new RiverLayout());
+	
+	protected String defaultName;
+	protected Stage recipeStage;
+	
 	Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
 
 	JPanel left = new JPanel(new RiverLayout());
@@ -37,6 +43,11 @@ public abstract class ActionBar extends AbstractListPanel{
 	
 	protected StatusUpdater update;
 
+	public ActionBar(String def, Stage stage, StatusUpdater update){
+		this(update);
+		defaultName = def;
+		recipeStage = stage;
+	}
 	public ActionBar(StatusUpdater update)
 	{
 		this.update = update;
@@ -67,9 +78,30 @@ public abstract class ActionBar extends AbstractListPanel{
 		add("left", right);
 	}
 
+	
+
 	public void refreshPanel(){
+		if(getDefaultName() != null){
+			name.setText(Workbench.getRecipeManager().getAvailableRecipeName(getDefaultName(), getRecipeStage()));			
+		}
 	}
 
+	public void setDefaultName(String def){
+		defaultName = def;
+	}
+	
+	public void setRecipeStage(Stage stage){
+		recipeStage = stage;
+	}
+	
+	public String getDefaultName(){
+		return defaultName;
+	}
+	
+	public Stage getRecipeStage(){
+		return recipeStage;
+	}
+	
 	public abstract void startedTask();
 
 	public abstract void endedTask();

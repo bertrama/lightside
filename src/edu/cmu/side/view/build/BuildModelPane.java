@@ -80,6 +80,7 @@ public class BuildModelPane extends JPanel{
 		GenesisControl.addListenerToMap(checklist, config);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, action);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, action);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, action);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, bottom);
 		
 	}

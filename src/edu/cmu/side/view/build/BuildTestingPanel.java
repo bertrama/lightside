@@ -306,7 +306,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 	protected void updateSlider(Recipe recipe)
 	{
 
-		System.out.println("BTP 282: updating slider for "+recipe);
+		//System.out.println("BTP 282: updating slider for "+recipe);
 		if(recipe != null)
 		{
 			DocumentList documentList = recipe.getDocumentList();
@@ -402,7 +402,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 
 			String text;
 			String itemName = radioRandom.isSelected()? "instance" : radioByAnnotation.isSelected() ? "annotation" : "file";
-			System.out.println("updating fold value to "+value);
+			//System.out.println("BTP 405: updating fold value to "+value);
 			if(maxFolds % value != 0)
 			{
 				text = "Leave out approximately "+(maxFolds/value)+" "+itemName+"s per fold ("+(maxFolds % value)+" folds will have an extra "+itemName+")";

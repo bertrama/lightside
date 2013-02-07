@@ -17,15 +17,24 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.features.ColumnFeatures</classname>
     </plugin>
-    
+
     <plugin>
+        <name>Predicted Annotation Feature</name>
+        <author>David Adamson</author>
+        <version>1.0</version>
+        <description><![CDATA[Extraction of (Predicted) Class Label from Previous Turns (for sequential data)]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.features.PredictedAnnotationFeatures</classname>
+    </plugin>
+    
+   <!--  <plugin>
         <name>Sequential Features</name>
         <author>David Adamson</author>
         <version>1.0</version>
         <description><![CDATA[Extraction of Features from Previous Turns (for sequential data)]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.features.SequentialFeatures</classname>
-    </plugin>
+    </plugin> -->
     
     <plugin>
         <name>GrowthModel</name>

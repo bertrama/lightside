@@ -1,6 +1,7 @@
 package edu.cmu.side.plugin;
 
 import java.awt.Color;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -22,17 +23,17 @@ public abstract class WrapperPlugin extends SIDEPlugin{
 		return "learning_wrapper";
 	}
 	
-	public abstract void learnFromTrainingData(FeatureTable train, boolean[] mask, StatusUpdater update);
+	public abstract void learnFromTrainingData(FeatureTable train, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update);
 
-	public FeatureTable wrapTableBefore(FeatureTable table, boolean[] mask, StatusUpdater update){
-		return wrapTableForSubclass(table, mask, update);
+	public FeatureTable wrapTableBefore(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
+		return wrapTableForSubclass(table, fold, foldsMap, update);
 	}
 	
-	public PredictionResult wrapResultAfter(PredictionResult predict, boolean[] mask, StatusUpdater update){
-		return wrapResultForSubclass(predict, mask, update);
+	public PredictionResult wrapResultAfter(PredictionResult predict, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
+		return wrapResultForSubclass(predict, fold, foldsMap, update);
 	}
 	
-	public abstract FeatureTable wrapTableForSubclass(FeatureTable table, boolean[] mask, StatusUpdater update);
+	public abstract FeatureTable wrapTableForSubclass(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update);
 	
-	public abstract PredictionResult wrapResultForSubclass(PredictionResult result, boolean[] mask, StatusUpdater update);
+	public abstract PredictionResult wrapResultForSubclass(PredictionResult result, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update);
 }

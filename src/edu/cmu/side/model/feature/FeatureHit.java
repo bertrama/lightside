@@ -1,6 +1,10 @@
 package edu.cmu.side.model.feature;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+import edu.cmu.side.model.data.FeatureTable;
 
 /**
  * 
@@ -55,6 +59,8 @@ public class FeatureHit implements Comparable<FeatureHit>, Serializable
 
 	public Object getValue()
 	{
+		if(!isValid())
+			System.out.println("warning: feature hit "+this+" is not currently valid");
 		return value;
 	}
 
@@ -101,5 +107,26 @@ public class FeatureHit implements Comparable<FeatureHit>, Serializable
 		}else{
 			return feature.toString().compareTo(o.feature.toString());
 		}
+	}
+
+	/**
+	 * subclasses can override this method to do special things before training.
+	 * @param fold
+	 * @param foldsMap
+	 * @param table
+	 */
+	public void prepareForTraining(int fold, Map<Integer, Integer> foldsMap, FeatureTable table)
+	{
+//		System.out.println("preparing doc "+this.documentIndex + " to train on fold "+fold);
+	}
+
+	public void prepareToPredict(int fold, Map<Integer, Integer> foldsMap, FeatureTable newData, List<? extends Object> predictions)
+	{
+//		System.out.println("preparing "+this.feature+", doc "+this.documentIndex + " to predict for fold "+fold);	
+	}
+	
+	public boolean isValid()
+	{
+		return true;
 	}
 }

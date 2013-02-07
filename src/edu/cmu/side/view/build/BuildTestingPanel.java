@@ -247,8 +247,8 @@ public class BuildTestingPanel extends AbstractListPanel {
 	{
 		updateCVByAnnotationSettings();
 		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
-		updateSlider(recipe);
 		updateCVByFileSettings(recipe);
+		updateSlider(recipe);
 		testSetLoadPanel.refreshPanel();
 	}
 
@@ -263,7 +263,10 @@ public class BuildTestingPanel extends AbstractListPanel {
 			{
 				radioByFile.setEnabled(false);
 				if(radioByFile.isSelected())
+				{
 					radioRandom.setSelected(true);
+					BuildModelControl.updateValidationSetting("foldMethod", "AUTO");
+				}
 			}
 			else
 			{
@@ -295,7 +298,10 @@ public class BuildTestingPanel extends AbstractListPanel {
 			else
 			{
 				if(radioByAnnotation.isSelected())
+				{
 					radioRandom.setSelected(true);
+					BuildModelControl.updateValidationSetting("foldMethod", "AUTO");
+				}
 			}
 		}
 		//if we've made it here, either the recipe is null or there are no spare annotations
@@ -327,6 +333,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 		if(maxFolds < SOFT_MINIMUM)
 		{
 			numFoldSlider.setMaximum(maxFolds);
+			numFoldSlider.setMinimum(2);
 			numFoldSlider.setLabelTable(numFoldSlider.createStandardLabels(Math.max(1, maxFolds/4)));
 		}
 		else
@@ -341,6 +348,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 //			sliderLabels.put(13,new JLabel(""+maxFolds/2));
 			sliderLabels.put(15,new JLabel("Max"));
 			numFoldSlider.setLabelTable(sliderLabels);
+			numFoldSlider.setMinimum(2);
 			numFoldSlider.setMaximum(15);
 		}
 		updateNumFolds();

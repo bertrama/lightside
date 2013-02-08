@@ -12,7 +12,7 @@ import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
-import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class ExploreResultsControl extends GenesisControl{
@@ -47,7 +47,7 @@ public class ExploreResultsControl extends GenesisControl{
 	public static StatusUpdater getUpdater(){
 		return update;
 	}
-	public static EvalCheckboxListener getCheckboxListener(AbstractListPanel source){
+	public static EvalCheckboxListener getCheckboxListener(Refreshable source){
 		return new EvalCheckboxListener(source, featureEvaluationPlugins, ExploreResultsControl.getUpdater());
 	}
 

@@ -39,6 +39,12 @@ public class DocumentList implements Serializable{
 	}
 	
 
+	public void setClassValueType(Feature.Type t)
+	{
+		System.out.println("DL 44: Manually assigning feature type to "+t);
+		type = t;
+	}
+	
 	/**
 	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
 	 * @return
@@ -359,7 +365,11 @@ public class DocumentList implements Serializable{
 		return 0;
 	}
 
-	public void setCurrentAnnotation(String annot){
+	public void setCurrentAnnotation(String annot)
+	{
+		if(annot == currentAnnotation)  //TODO: make sure this shortcut doesn't break anything expecting labelArray to be populated
+			return;
+		
 		if (!allAnnotations.containsKey(annot))
 			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
 		labelArray = null;

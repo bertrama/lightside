@@ -22,19 +22,20 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.plugin.SIDEPlugin;
-import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.RecipeCellRenderer;
+import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.ScrollablePanel;
 import edu.cmu.side.view.util.ScrollablePanel.ScrollableSizeHint;
 
 public abstract class GenesisControl {
 
-	public static Map<Object, Collection<AbstractListPanel>> listenerMap;
+	public static Map<Object, Collection<Refreshable>> listenerMap;
 	public static Map<Object, Boolean> currentlyUpdatingMap;
 	
 	static{
-		listenerMap = new HashMap<Object, Collection<AbstractListPanel>>();
+		listenerMap = new HashMap<Object, Collection<Refreshable>>();
 		currentlyUpdatingMap = new HashMap<Object, Boolean>();
 	}
 	
@@ -44,23 +45,23 @@ public abstract class GenesisControl {
 	
 	public static boolean isCurrentlyUpdating(Object source){
 		if(!listenerMap.containsKey(source)){
-			listenerMap.put(source, new ArrayList<AbstractListPanel>());
+			listenerMap.put(source, new ArrayList<Refreshable>());
 			currentlyUpdatingMap.put(source, false);
 		}
 		return currentlyUpdatingMap.get(source);
 	}
 
-	public static void addListenerToMap(Object source, AbstractListPanel child){
+	public static void addListenerToMap(Object source, Refreshable child){
 		if(!listenerMap.containsKey(source)){
-			listenerMap.put(source, new ArrayList<AbstractListPanel>());
+			listenerMap.put(source, new ArrayList<Refreshable>());
 			currentlyUpdatingMap.put(source, false);
 		}
 		listenerMap.get(source).add(child);
 	}
 	
-	public static Collection<AbstractListPanel> getListeners(Object source){
+	public static Collection<Refreshable> getListeners(Object source){
 		if(!listenerMap.containsKey(source)){
-			listenerMap.put(source, new ArrayList<AbstractListPanel>());
+			listenerMap.put(source, new ArrayList<Refreshable>());
 			currentlyUpdatingMap.put(source, false);
 		}
 		return listenerMap.get(source);
@@ -70,9 +71,9 @@ public abstract class GenesisControl {
 
 		Map<? extends SIDEPlugin, Map<String, Boolean>>  plugins;
 		StatusUpdater updater;
-		AbstractListPanel source;
+		Refreshable source;
 		
-		public EvalCheckboxListener(AbstractListPanel s, Map<? extends SIDEPlugin, Map<String, Boolean>> p, StatusUpdater u){
+		public EvalCheckboxListener(Refreshable s, Map<? extends SIDEPlugin, Map<String, Boolean>> p, StatusUpdater u){
 			source = s;
 			plugins = p;
 			updater = u;
@@ -92,10 +93,10 @@ public abstract class GenesisControl {
 
 	public static class PluginCheckboxListener<E> implements ItemListener{
 
-		AbstractListPanel source;
+		Refreshable source;
 		Map<E, Boolean> plugins;
 
-		public PluginCheckboxListener(AbstractListPanel s, Map<E, Boolean> p){
+		public PluginCheckboxListener(Refreshable s, Map<E, Boolean> p){
 			source = s;
 			plugins = p;
 		}

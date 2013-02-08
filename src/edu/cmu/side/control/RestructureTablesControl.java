@@ -24,8 +24,8 @@ import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
-import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
+import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class RestructureTablesControl extends GenesisControl{
@@ -67,7 +67,7 @@ public class RestructureTablesControl extends GenesisControl{
 	}
 
 	
-	public static EvalCheckboxListener getEvalCheckboxListener(AbstractListPanel source){
+	public static EvalCheckboxListener getEvalCheckboxListener(Refreshable source){
 		return new EvalCheckboxListener(source, tableEvaluationPlugins, RestructureTablesControl.getUpdater());
 	}
 	

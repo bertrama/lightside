@@ -13,7 +13,7 @@ import javax.swing.JTextArea;
 
 import se.datadosen.component.RiverLayout;
 
-public class AbstractListPanel extends JPanel{
+public class AbstractListPanel extends JPanel implements Refreshable{
 	private static final long serialVersionUID = -1090634417229954402L;
 
 	protected FastListModel listModel;
@@ -55,7 +55,10 @@ public class AbstractListPanel extends JPanel{
 		init();
 	}
 
-	/** What needs to be updated in this panel when something changes in the backend model? */
+	/* (non-Javadoc)
+	 * @see edu.cmu.side.view.util.Refreshable#refreshPanel()
+	 */
+	@Override
 	public void refreshPanel(){
 		if(listModel.getSize()>0 && list.getSelectedIndex()==-1){
 			list.setSelectedIndex(0);

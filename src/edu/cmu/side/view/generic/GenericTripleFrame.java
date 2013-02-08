@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
 import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.Refreshable;
 
 public class GenericTripleFrame extends JPanel{
 
@@ -54,7 +55,7 @@ public class GenericTripleFrame extends JPanel{
 	}
 	
 	public void refreshPanel(){
-		for(AbstractListPanel panel : panels){
+		for(Refreshable panel : panels){
 			panel.refreshPanel();
 		}
 		scroll.repaint();

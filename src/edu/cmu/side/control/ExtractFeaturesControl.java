@@ -33,6 +33,7 @@ import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.FastListModel;
+import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class ExtractFeaturesControl extends GenesisControl{
@@ -111,7 +112,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		return featurePlugins;
 	}
 	
-	public static EvalCheckboxListener getEvalCheckboxListener(AbstractListPanel source){
+	public static EvalCheckboxListener getEvalCheckboxListener(Refreshable source){
 		return new EvalCheckboxListener(source, tableEvaluationPlugins, ExtractFeaturesControl.getUpdater());
 	}
 	

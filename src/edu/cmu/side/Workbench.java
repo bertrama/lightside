@@ -20,8 +20,9 @@ import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.WorkbenchPanel;
 import edu.cmu.side.view.extract.ExtractCombinedLoadPanel;
 import edu.cmu.side.view.extract.ExtractLoadPanel;
-import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.GlassPane;
+import edu.cmu.side.view.util.Refreshable;
 
 
 public class Workbench{
@@ -93,7 +94,7 @@ public class Workbench{
 	public static void update(Object source){
 		if(!GenesisControl.isCurrentlyUpdating(source)){
 
-			Collection<AbstractListPanel> listeners = GenesisControl.getListeners(source);
+			Collection<Refreshable> listeners = GenesisControl.getListeners(source);
 
 			if(!listeners.isEmpty())
 			{
@@ -102,7 +103,7 @@ public class Workbench{
 				GenesisControl.setCurrentlyUpdating(source, true);
 //				System.out.println("Workbench.update begin update #"+update+" for source "+source.getClass().getName());
 				
-				for(AbstractListPanel listen : listeners)
+				for(Refreshable listen : listeners)
 				{
 //						System.out.println("Workbench.update #" + updateCount + ":\n\tsource  " + source.getClass().getName() + "\n\trefresh "
 //								+ listen.getClass().getName());

@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -13,12 +15,12 @@ import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.TrainingResult;
+import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
@@ -59,7 +61,7 @@ public class Chef
 	};
 
 
-	protected static void simmerFeatures(Recipe recipe, int threshold)
+	protected static void simmerFeatures(Recipe recipe, int threshold, String annotation, Type type)
 	{		
 		DocumentList corpus = recipe.getDocumentList();
 		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
@@ -71,7 +73,7 @@ public class Chef
 			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
 			hits.addAll(extractorHits);
 		}
-		FeatureTable ft = new FeatureTable(corpus, hits, threshold);
+		FeatureTable ft = new FeatureTable(corpus, hits, threshold, annotation, type);
 		recipe.setFeatureTable(ft);
 		
 		if(recipe.getStage().compareTo(Stage.MODIFIED_TABLE) >= 0) //recipe includes filtering
@@ -95,7 +97,8 @@ public class Chef
 		if(finalStage == Stage.DOCUMENT_LIST)
 			return newRecipe;
 		
-		simmerFeatures(newRecipe, originalRecipe.getFeatureTable().getThreshold());
+		FeatureTable originalFeatures = originalRecipe.getFeatureTable();
+		simmerFeatures(newRecipe, originalFeatures.getThreshold(), originalFeatures.getAnnotation(), originalFeatures.getClassValueType());
 		
 		if(finalStage.compareTo(Stage.TRAINED_MODEL) < 0)
 			return newRecipe;
@@ -122,7 +125,6 @@ public class Chef
 	protected static void prepareDocumentList(Recipe originalRecipe, DocumentList corpus)
 	{
 		DocumentList original = originalRecipe.getDocumentList();
-		corpus.setLabelArray(original.getLabelArray());
 		String currentAnnotation = original.getCurrentAnnotation();
 		if(corpus.allAnnotations().containsKey(currentAnnotation))
 		{
@@ -132,6 +134,7 @@ public class Chef
 		{
 			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
 		}
+		corpus.setLabelArray(original.getLabelArray());
 		corpus.setTextColumns(new HashSet<String>(original.getTextColumns()));
 	}
 

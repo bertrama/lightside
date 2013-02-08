@@ -1,4 +1,4 @@
-2013-01-24 09:47:50 weka.gui.explorer.Explorer main
+2013-02-06 14:27:52 weka.gui.explorer.Explorer main
 INFO: Logging started
 URL file:/Users/emayfiel/Documents/workspace/lightside/wekafiles/packages/bayesianLogisticRegression/bayesianLogisticRegression.jar is already in the CLASSPATH
 URL file:/Users/emayfiel/Documents/workspace/lightside/wekafiles/packages/chiSquaredAttributeEval/chiSquaredAttributeEval.jar is already in the CLASSPATH
@@ -9,35 +9,22 @@ URL file:/Users/emayfiel/Documents/workspace/lightside/wekafiles/packages/LibSVM
 Refreshing GOE props...
 [KnowledgeFlow] Loading properties and plugins...
 [KnowledgeFlow] Initializing KF...
-2013-01-24 09:47:52 weka.gui.explorer.Explorer <init>
+2013-02-06 14:27:53 weka.gui.explorer.Explorer <init>
 INFO: Weka Explorer
-2013-01-24 09:47:52 weka.gui.explorer.Explorer <init>
+2013-02-06 14:27:53 weka.gui.explorer.Explorer <init>
 INFO: (c) 1999-2011 The University of Waikato, Hamilton, New Zealand
-2013-01-24 09:47:52 weka.gui.explorer.Explorer <init>
+2013-02-06 14:27:53 weka.gui.explorer.Explorer <init>
 INFO: web: http://www.cs.waikato.ac.nz/~ml/weka/
-2013-01-24 09:47:52 weka.gui.explorer.Explorer <init>
-INFO: Started on Thursday, 24 January 2013
-2013-01-24 09:49:24 weka.gui.explorer.PreprocessPanel$14 run
-INFO: Base relation is now titanic (2201 instances)
-2013-01-24 09:49:32 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Started weka.classifiers.trees.J48
-2013-01-24 09:49:32 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Command: weka.classifiers.trees.J48 -C 0.25 -M 2
-2013-01-24 09:49:33 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Finished weka.classifiers.trees.J48
-2013-01-24 09:50:03 weka.gui.explorer.PreprocessPanel$14 run
-INFO: Base relation is now titanic_noise (2201 instances)
-2013-01-24 09:50:06 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Started weka.classifiers.trees.J48
-2013-01-24 09:50:06 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Command: weka.classifiers.trees.J48 -C 0.25 -M 2
-2013-01-24 09:50:06 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Finished weka.classifiers.trees.J48
-2013-01-24 09:50:31 weka.gui.explorer.PreprocessPanel$14 run
-INFO: Base relation is now titanic (2201 instances)
-2013-01-24 09:50:33 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Started weka.classifiers.trees.J48
-2013-01-24 09:50:33 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Command: weka.classifiers.trees.J48 -C 0.25 -M 2
-2013-01-24 09:50:33 weka.gui.explorer.ClassifierPanel$18 run
-INFO: Finished weka.classifiers.trees.J48
+2013-02-06 14:27:53 weka.gui.explorer.Explorer <init>
+INFO: Started on Wednesday, 6 February 2013
+2013-02-06 14:28:07 weka.gui.explorer.PreprocessPanel$14 run
+INFO: Base relation is now features (9356 instances)
+2013-02-06 14:28:15 weka.gui.explorer.ClassifierPanel$18 run
+INFO: Started weka.classifiers.functions.SMO
+2013-02-06 14:28:15 weka.gui.explorer.ClassifierPanel$18 run
+INFO: Command: weka.classifiers.functions.SMO -C 1.0 -L 0.0010 -P 1.0E-12 -N 0 -V -1 -W 1 -K "weka.classifiers.functions.supportVector.PolyKernel -C 250007 -E 1.0"
+2013-02-06 14:35:49 weka.gui.explorer.ClassifierPanel$18 run
+INFO: Finished weka.classifiers.functions.SMO
+Warning : data contains more attributes than can be displayed as attribute bars.
+2013-02-06 14:35:49 weka.gui.visualize.VisualizePanel$PlotPanel addPlot
+INFO: Warning : data contains more attributes than can be displayed as attribute bars.

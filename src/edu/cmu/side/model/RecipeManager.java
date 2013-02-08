@@ -3,7 +3,8 @@ package edu.cmu.side.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Observable;
+import java.util.Set;
+import java.util.TreeSet;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.data.DocumentList;
@@ -54,6 +55,20 @@ public class RecipeManager{
 		recipes.add(rec);
 		Workbench.update(this);
 		Workbench.update(rec.getStage());
+	}
+	
+	public String getAvailableRecipeName(String base, Stage type){
+		Set<String> unavailable = new TreeSet<String>();
+		Collection<Recipe> recipes = getRecipeCollectionByType(type);
+		for(Recipe r : recipes){
+			unavailable.add(r.toString());
+		}
+		String key = base;
+		int counter = 1;
+		while(unavailable.contains(key)){
+			key = base + counter++;
+		}
+		return key;
 	}
 	
 	

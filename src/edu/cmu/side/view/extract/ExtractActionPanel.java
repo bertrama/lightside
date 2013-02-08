@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.StatusUpdater;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
@@ -22,8 +23,8 @@ public class ExtractActionPanel extends ActionBar{
 	static JTextField threshold = new JTextField(2);
 
 	public ExtractActionPanel(StatusUpdater update){
-		super(update);
-		name.setText("features");
+		super("features", Stage.FEATURE_TABLE, update);
+		name.setText(getDefaultName());
 		actionButton.setText("Extract");
 		actionButton.setIcon(new ImageIcon("toolkits/icons/application_view_columns.png"));
 		//Doesn't update the backend when the threshold changes!!

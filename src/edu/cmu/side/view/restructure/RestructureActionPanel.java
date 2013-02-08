@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.RestructureTablesControl;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
@@ -23,7 +24,7 @@ public class RestructureActionPanel extends ActionBar{
 	static JTextField threshold = new JTextField(2);
 
 	public RestructureActionPanel(StatusUpdater update){
-		super(update);
+		super("restructure",Stage.MODIFIED_TABLE, update);
 		actionButton.setText("Restructure");
 		actionButton.setIcon(new ImageIcon("toolkits/icons/application_side_expand.png"));
 		actionButton.setIconTextGap(10);
@@ -32,7 +33,7 @@ public class RestructureActionPanel extends ActionBar{
 		threshold.setText("5");
 		settings.add("left", new JLabel("Rare Threshold:"));
 		settings.add("left", threshold);
-		name.setText("restructured");
+		name.setText(getDefaultName());
 	}
 
 	public void refreshPanel(){

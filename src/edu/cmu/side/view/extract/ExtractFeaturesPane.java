@@ -62,6 +62,7 @@ public class ExtractFeaturesPane extends JPanel{
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, pluginChecklist);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, pluginConfig);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, action);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, action);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, bottom);
 		GenesisControl.addListenerToMap(pluginChecklist, pluginConfig);
 		

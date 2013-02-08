@@ -88,13 +88,14 @@ public class TrainingResult implements Serializable{
 	}
 
 	private void generateConfusionMatrix(Feature.Type type, List<String> actual, List<? extends Comparable<?>> predicted){
+		String[] poss = test.getLabelArray();
 		switch(type){
 		case NOMINAL:
 		case STRING:
 		case BOOLEAN:
-			for(String p : test.getLabelArray()){
+			for(String p : poss){
 				confusionMatrix.put(p, new TreeMap<String, List<Integer>>());
-				for(String a : test.getLabelArray()){
+				for(String a : poss){
 					confusionMatrix.get(p).put(a, new ArrayList<Integer>());
 				}
 			}

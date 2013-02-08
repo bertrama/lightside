@@ -8,6 +8,7 @@ import javax.swing.JCheckBox;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.PredictLabelsControl;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.generic.ActionBar;
 
@@ -18,7 +19,7 @@ public class PredictActionBar extends ActionBar
 
 	public PredictActionBar(StatusUpdater update)
 	{
-		super(update);
+		super("predicted",Stage.PREDICTION_RESULT, update);
 		actionButton.setIcon(new ImageIcon("toolkits/icons/application_form_edit.png"));
 		actionButton.setText("Predict");
 		actionButton.setEnabled(false);

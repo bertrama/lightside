@@ -98,7 +98,6 @@ public class FeatureTable implements Serializable
 		this.threshold = thresh;
 		this.documents = sdl;
 		annotation = sdl.getCurrentAnnotation();
-		System.out.println(sdl.getCurrentAnnotation() + " annotation FT94");
 		generateConvertedClassValues();
 		
 		for(int i = 0; i < sdl.getSize(); i++){

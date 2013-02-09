@@ -51,7 +51,7 @@
 				<key>ActionParameters</key>
 				<dict>
 					<key>source</key>
-					<string>on run {input, parameters}	tell application "Finder"		set currentDir to POSIX path of ((container of (path to me)) as text)	end tell	do shell script "cd " &amp; currentDir &amp; "; ./run.sh &amp;"	end run</string>
+					<string>on run {input, parameters}	tell application "Finder"		set currentDir to POSIX path of ((container of (path to me)) as text)	end tell	do shell script "cd " &amp; currentDir &amp; "; ./run.sh &gt; ./run.log 2&gt;&amp;1 &amp;"	end run</string>
 				</dict>
 				<key>BundleIdentifier</key>
 				<string>com.apple.Automator.RunScript</string>
@@ -102,8 +102,6 @@ end run</string>
 						<string>0</string>
 					</dict>
 				</dict>
-				<key>conversionLabel</key>
-				<integer>0</integer>
 				<key>isViewVisible</key>
 				<true/>
 				<key>location</key>

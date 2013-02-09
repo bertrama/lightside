@@ -30,7 +30,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Application Stub</string>
 	<key>CFBundleIconFile</key>
-	<string>bulb_128</string>
+	<string>AutomatorApplet</string>
 	<key>CFBundleIdentifier</key>
 	<string>com.apple.automator.LightSIDE</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -42,7 +42,7 @@
 	<key>CFBundleShortVersionString</key>
 	<string>1.1.1</string>
 	<key>CFBundleSignature</key>
-	<string>SIDE</string>
+	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array/>
 	<key>CFBundleVersion</key>

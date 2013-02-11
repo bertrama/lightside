@@ -7,6 +7,7 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.Feature;
+import edu.cmu.side.view.generic.ActionBarTask;
 
 public abstract class ModelFeatureMetricPlugin<E extends Comparable<E>> extends FeatureMetricPlugin{
 
@@ -18,15 +19,20 @@ public abstract class ModelFeatureMetricPlugin<E extends Comparable<E>> extends 
 	}
 
 	public Map<Feature, E> evaluateModelFeatures(TrainingResult model, boolean[] mask, String eval, StatusUpdater update) {
-		String act = ExploreResultsControl.getHighlightedRow();
-		String pred = ExploreResultsControl.getHighlightedColumn();
+		String act = getHighlightedRow();
+		String pred = getHighlightedColumn();
 		return evaluateModelFeatures(model, mask, eval, pred, act, update);
 	}
+	
+	public abstract String getHighlightedRow();
+	
+	public abstract String getHighlightedColumn();
 	
 	public Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target, StatusUpdater update){
 		return evaluateModelFeatures(recipe.getTrainingResult(), mask, eval, update);
 	}
-	
+
 	public abstract Map<Feature, E> evaluateModelFeatures(TrainingResult model, boolean[] mask, String eval, String pred, String act, StatusUpdater update);
 
+	public abstract E targetedFeatureEvaluation(TrainingResult model, boolean[] mask, String eval, String pred, String act, Feature f, StatusUpdater update);
 }

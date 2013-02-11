@@ -121,6 +121,27 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				}
 				result = evaluateTestSet(pass, passTest, wrappers, progressIndicator);
 			}
+		}else{
+			for(SIDEPlugin wrapper : wrappers.keySet()){
+				((WrapperPlugin)wrapper).learnFromTrainingData(table, 1, defaultFoldMapZero, progressIndicator);
+			}
+			FeatureTable wrappedTable = table;
+			for(SIDEPlugin wrapper : wrappers.keySet()){
+				wrappedTable = ((WrapperPlugin)wrapper).wrapTableBefore(wrappedTable, 1, defaultFoldMapZero, progressIndicator);
+			}
+			prepareAndTrainAgainstFold(wrappedTable, 1, defaultFoldMapZero, progressIndicator);
+			List<Comparable<Comparable>> blankPredictions = new ArrayList<Comparable<Comparable>>();
+			switch(wrappedTable.getClassValueType()){
+			case NOMINAL:
+			case BOOLEAN:
+			case STRING:
+				for(int i = 0; i < wrappedTable.getSize(); i++){ blankPredictions.add((Comparable)wrappedTable.getDocumentList().getLabelArray()[0]); }
+				break;
+			case NUMERIC:
+				for(int i = 0; i < wrappedTable.getSize(); i++){ blankPredictions.add((Comparable)new Double(0.0)); }
+				break;
+			}
+			result = new TrainingResult(wrappedTable, blankPredictions);
 		}
 		result.setLongDescriptionString(getLongDescriptionString());
 		return result;
@@ -147,7 +168,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			double average = StatisticsToolkit.getAverage(times);
 			double timeA = System.currentTimeMillis();
 			progressIndicator.update(
-					(times.size() > 0 ? print.format(average) + "sec per fold,\t" : "") 
+					(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") 
 					+ "Training fold", (fold + 1), folds.size());
 			
 			for(SIDEPlugin wrapper : wrappers.keySet())
@@ -204,7 +225,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	}
 
 	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet, OrderedPluginMap wrappers, StatusUpdater updater){
-		boolean[] mask = new boolean[testSet.getSize()];
 		DefaultMap<Integer, Integer> defaultFoldMap = new DefaultMap<Integer, Integer>(0);
 		PredictionResult predictions = predictOnFold(train, testSet, 0, defaultFoldMap, updater);
 		for(SIDEPlugin wrapper : wrappers.keySet()){

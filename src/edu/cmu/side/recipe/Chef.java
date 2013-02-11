@@ -3,13 +3,17 @@ package edu.cmu.side.recipe;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.swing.JOptionPane;
 
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
@@ -141,6 +145,7 @@ public class Chef
 
 	protected static Recipe loadRecipe(String recipePath) throws DeserializationException, FileNotFoundException
 	{
+		System.out.println("loading recipe from "+recipePath);
 		File recipeFile = new File(recipePath);
 		if (!recipeFile.exists())
 		{
@@ -163,6 +168,21 @@ public class Chef
 		}
 	}
 
+	
+	protected static void saveRecipe(Recipe newRecipe, File target)
+	{
+		try
+		{
+			FileOutputStream fout = new FileOutputStream(target);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(newRecipe);
+			oos.close();
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
 
 	public static void main(String[] args) throws Exception
 	{

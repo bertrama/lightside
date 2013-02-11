@@ -2,6 +2,9 @@ package edu.cmu.side.control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -199,6 +202,11 @@ public class BuildModelControl extends GenesisControl{
 				LearningPlugin learner = getHighlightedLearningPlugin();
 				Map<String, String> settings = learner.generateConfigurationSettings();
 				newRecipe = Recipe.addLearnerToRecipe(newRecipe, learner, settings);
+				newRecipe.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
+				
+//				File target = new File("saved/self-model.side");
+//				saveBuildModelRecipe(newRecipe, target);
+				
 				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
 				task.execute();
 			}
@@ -367,5 +375,26 @@ public class BuildModelControl extends GenesisControl{
 		}
 
 
+	}
+
+	/**
+	 * @param newRecipe
+	 * @param target
+	 */
+	protected static void saveBuildModelRecipe(Recipe newRecipe, File target)
+	{
+		try
+		{
+			FileOutputStream fout = new FileOutputStream(target);
+			ObjectOutputStream oos = new ObjectOutputStream(fout);
+			oos.writeObject(newRecipe);
+			oos.close();
+
+		}
+		catch (Exception e)
+		{
+			JOptionPane.showMessageDialog(null, "Error while saving:\n" + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 	}
 }

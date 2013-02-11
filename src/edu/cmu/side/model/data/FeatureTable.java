@@ -260,7 +260,7 @@ public class FeatureTable implements Serializable
 
 	public DocumentList getDocumentList()
 	{
-		if(documents.allAnnotations.keySet().contains(annotation))
+		if(documents != null && documents.allAnnotations.keySet().contains(annotation))
 			documents.setCurrentAnnotation(annotation);
 		return documents;
 	}
@@ -303,12 +303,21 @@ public class FeatureTable implements Serializable
 	    }
 	}
 	
-	public FeatureTable clone(){
+	public FeatureTable clone()
+	{
 		FeatureTable ft = new FeatureTable();
 	    ft.setName(getName()+" (clone)");
+
+	    ft.documents = documents;
+		ft.type = type;
+		ft.threshold = threshold;
+		ft.annotation = annotation;
+	    
 	    ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
 	    ft.threshold = threshold;
 	    fillHitsPerDocument(ft);
+	    
+	    
 	    return ft;
 	}
 	
@@ -360,5 +369,38 @@ public class FeatureTable implements Serializable
 			break;
 		}
 		return result;
+	}
+
+	public void setHits(Collection<FeatureHit> hits)
+	{
+		//documents = sdl;
+		//		annotation = sdl.getCurrentAnnotation();
+		//		generateConvertedClassValues();
+		
+		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(10000);
+		
+		hitsPerDocument.clear();
+		hitsPerFeature.clear();
+		
+		for(int i = 0; i < documents.getSize(); i++){
+			hitsPerDocument.add(new TreeSet<FeatureHit>());
+		}
+		for(FeatureHit hit : hits){
+			Feature f = hit.getFeature();
+			if(!localFeatures.containsKey(f)){
+				localFeatures.put(f, new TreeSet<Integer>());
+			}
+			localFeatures.get(f).add(hit.getDocumentIndex());
+		}
+
+		for(FeatureHit hit : hits){
+			if(localFeatures.get(hit.getFeature()).size() >= threshold){
+				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
+				if(!hitsPerFeature.containsKey(hit.getFeature())){
+					hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
+				}
+				hitsPerFeature.get(hit.getFeature()).add(hit);
+			}
+		}
 	}
 }

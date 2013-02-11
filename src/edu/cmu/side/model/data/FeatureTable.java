@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -12,6 +13,7 @@ import java.util.TreeSet;
 
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.model.feature.RegroupFeatureHit;
 
 /**
  * A many-directional mapping of Features, FeatureHits and indexes into the DocumentList.
@@ -120,6 +122,45 @@ public class FeatureTable implements Serializable
 				hitsPerFeature.get(hit.getFeature()).add(hit);
 			}
 		}
+	}
+	
+	
+	public FeatureTable cloneTrainingFold(Map<Integer, Integer> foldMap, int fold, boolean train){
+		List<Integer> indices = getFoldIndices(foldMap, fold, train);
+		List<String> newFilenames = new ArrayList<String>();
+		Map<String, List<String>> newText = new HashMap<String, List<String>>();
+		Map<String, List<String>> newAnnots = new HashMap<String, List<String>>();
+		DocumentList origDocs = getDocumentList();
+		for(String lab : origDocs.allAnnotations().keySet()){
+			newAnnots.put(lab, new ArrayList<String>());
+			for(int index : indices){
+				newAnnots.get(lab).add(origDocs.getAnnotationArray(lab).get(index));
+			}
+		}
+		for(String lab : origDocs.getCoveredTextList().keySet()){
+			newText.put(lab, new ArrayList<String>());
+			for(int index : indices){
+				newText.get(lab).add(origDocs.getCoveredTextList().get(lab).get(index));
+			}
+		}
+		Map<Integer, Integer> newInstanceMap = new HashMap<Integer, Integer>();
+		int i = 0;
+		for(int index : indices){
+			newInstanceMap.put(index, i++);
+			newFilenames.add(origDocs.getFilename(index));
+		}
+		DocumentList docs = new DocumentList(newFilenames, newText, newAnnots, origDocs.getCurrentAnnotation());
+		Collection<FeatureHit> newHits = new HashSet<FeatureHit>();
+		for(int index : indices){
+			for(FeatureHit hit : getHitsForDocument(index)){
+				if(hit instanceof RegroupFeatureHit){
+					newHits.add(new RegroupFeatureHit(hit, newInstanceMap, ((RegroupFeatureHit)hit).getOriginalIndex()));
+				}else{
+					newHits.add(new FeatureHit(hit.getFeature(), hit.getValue(), newInstanceMap.get(index)));					
+				}
+			}
+		}
+		return new FeatureTable(docs, newHits, 1);
 	}
 	
 	public void generateConvertedClassValues(){
@@ -291,6 +332,16 @@ public class FeatureTable implements Serializable
 			return (documents.getAnnotationArray().get(i).equals(target))?1.0:0.0;
 		}
 	}      
+	
+	public List<Integer> getFoldIndices(Map<Integer, Integer> foldMap, int fold, boolean train){
+		ArrayList<Integer> indices = new ArrayList<Integer>();
+		for(int i = 0; i < getSize(); i++){
+			if((train && foldMap.get(i) != fold) || (!train && foldMap.get(i) == fold)){
+				indices.add(i);
+			}
+		}
+		return indices;
+	}
 	
 	public String[] getNominalLabelArray(){
 		return getDocumentList().getLabelArray();

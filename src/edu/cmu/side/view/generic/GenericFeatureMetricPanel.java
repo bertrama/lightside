@@ -184,6 +184,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 			try
 			{
 
+				// Store the way that the table was sorted prior to refreshing
 				List<SortKey> sortKeysToPass = new ArrayList<SortKey>();
 				if(featureTable.getRowSorter() != null){
 					List<? extends SortKey> sortKeys = featureTable.getRowSorter().getSortKeys();
@@ -206,6 +207,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 				Map<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>> evals = new HashMap<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>>();
 
 				if(localTable != null){
+					// Generate evaluations for each selected option within a plugin
 					for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
 						plugin = plug;
 						evals.put(plug, new TreeMap<String, Map<Feature, Comparable>>());
@@ -218,6 +220,8 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 							}
 						}
 					}
+					
+					//Fill the table's row with the evaluations we just generated
 					for(Feature f : localTable.getFeatureSet()){
 						Vector<Object> row = new Vector<Object>();
 						row.add(getCellObject(f));
@@ -238,6 +242,8 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 						rows.add(row);
 					}						
 				}
+				
+				//Filter the table based on searching and re-sort the display.
 				if(!halt)
 				{
 					model = new FeatureTableModel(rows, header);

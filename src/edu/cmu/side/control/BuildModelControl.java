@@ -204,6 +204,7 @@ public class BuildModelControl extends GenesisControl{
 			}
 			catch(Exception e)
 			{
+				e.printStackTrace();
 				JOptionPane.showMessageDialog(null, e.getMessage(), "Build Model", JOptionPane.ERROR_MESSAGE);
 			}
 		}

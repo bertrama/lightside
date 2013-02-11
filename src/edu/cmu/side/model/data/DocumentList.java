@@ -20,12 +20,11 @@ import edu.cmu.side.model.feature.Feature;
 public class DocumentList implements Serializable{
 	private static final long serialVersionUID = -5433699826930815886L;
 
-	ArrayList<String> filenameList = new ArrayList<String>();
+	List<String> filenameList = new ArrayList<String>();
 	Map<String, List<String>> allAnnotations = new HashMap<String, List<String>>();
 	Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
 	String currentAnnotation; 
 	Feature.Type type;
-	String currentDomain;
 	String name = "Default documents";
 	
 	String[] annotationNames = null;
@@ -80,6 +79,13 @@ public class DocumentList implements Serializable{
 	
 	public String getName(){
 		return name;
+	}
+	
+	public DocumentList(List<String> filenames, Map<String, List<String>> texts, Map<String, List<String>> annotations, String currentAnnot){
+		filenameList = filenames;
+		textColumns = texts;
+		allAnnotations = annotations;
+		currentAnnotation = currentAnnot;
 	}
 
 	public DocumentList(List<String> text, Map<String, List<String>> annotations){
@@ -281,14 +287,6 @@ public class DocumentList implements Serializable{
 		return textColumns.keySet();
 	}
 	
-	public void setDomainColumn(String s){
-		currentDomain = s;
-	}
-
-	public String getInstanceDomain(int indx){
-		return allAnnotations.get(currentDomain).get(indx);
-	}
-	
 	/**
 	 * Used for cross-validating by file.
 	 */
@@ -419,30 +417,7 @@ public class DocumentList implements Serializable{
 		}
 	}
 
-	public void setFilenames(ArrayList<String> f){
+	public void setFilenames(List<String> f){
 		filenameList = f;
 	}
-	
-	//	        public String toCSVString(){
-	//	                StringBuilder header = new StringBuilder();
-	//	                for(String s : allAnnotations.keySet()){
-	//	                        header.append(s+",");
-	//	                }
-	//	                if(!textColumn.equals("[No Text]")){
-	//	                        header.append("text");
-	//	                }
-	//	                StringBuilder body = new StringBuilder();
-	//	                for(int i = 0 ; i < text.size(); i++){
-	//	                        for(String s : allAnnotations.keySet()){
-	//	                                body.append(allAnnotations.get(s).get(i)+",");
-	//	                        }
-	//	                        if(!textColumn.equals("[No Text]")){
-	//	                                body.append(text.get(i));
-	//	                        }
-	//	                        body.append("\n");
-	//	                }
-	//	                return header.toString()+"\n"+body.toString();
-	//	        }
-	//        */
-
 }

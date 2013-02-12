@@ -1,7 +1,0 @@
-Rule Ignore History	Feature at	Improvement 0.04314281664604735
-Rule Suppress Local	Feature me	Improvement 0.028334304398727805
-Rule Suppress Local	Feature <EXCLAMATIONMARK>	Improvement 0.023296872100701017
-Rule Ignore History	Feature n't	Improvement 0.021968971648380412
-Rule Suppress Local	Feature feel	Improvement 0.028484062802268447
-Rule Ignore History	Feature is	Improvement 0.013832474346804362
-Rule Ignore History	Feature or	Improvement 0.016661015143064933

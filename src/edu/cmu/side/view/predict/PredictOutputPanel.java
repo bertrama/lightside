@@ -76,7 +76,7 @@ public class PredictOutputPanel extends AbstractListPanel
 		
 		export.setEnabled(recipe != null);
 		
-		//docTable.setModel(new DocumentListTableModel(recipe.getDocumentList()));
+		//table.setModel(new DocumentListTableModel(recipe.getDocumentList()));
 	}
 
 }

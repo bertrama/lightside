@@ -1,4 +1,0 @@
-Rule Ignore History	Feature out	Improvement 0.02849535587084019
-Rule Ignore History	Feature cancer	Improvement 0.017622354350446998
-Rule Suppress Local	Feature too	Improvement 0.016089512678023145
-Rule Suppress Local	Feature so	Improvement 0.01654457204678644

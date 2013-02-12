@@ -17,4 +17,5 @@ toolkits/englishPCFG_old.ser.gz
 *.DS_Store
 data/*
 saved/*
+fold*.txt
 *.log

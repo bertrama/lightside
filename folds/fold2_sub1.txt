@@ -1,9 +1,0 @@
-Rule Suppress Local	Feature it	Improvement 0.03559699966184265
-Rule Suppress Local	Feature cancer	Improvement 0.032114013354849466
-Rule Suppress Local	Feature we	Improvement 0.025568061984769477
-Rule Suppress Local	Feature and	Improvement 0.01430026260305674
-Rule Suppress Local	Feature well	Improvement 0.02515084355061905
-Rule Ignore History	Feature one	Improvement 0.02291993729188048
-Rule Suppress Local	Feature have	Improvement 0.017314656702491094
-Rule Suppress Local	Feature sorry	Improvement 0.013572285650678445
-Rule Suppress Local	Feature this	Improvement 0.010955775439114586

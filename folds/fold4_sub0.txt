@@ -1,5 +1,0 @@
-Rule Ignore History	Feature do	Improvement 0.028039050252899125
-Rule Suppress Local	Feature me	Improvement 0.03385863361646974
-Rule Suppress Local	Feature <DASH>	Improvement 0.023523011324655285
-Rule Suppress Local	Feature too	Improvement 0.015046141350028849
-Rule Suppress Local	Feature has	Improvement 0.011474099440566684

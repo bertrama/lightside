@@ -146,6 +146,15 @@
         <classname>learning.EnsembleLearner</classname>
     </plugin>
     
+     <plugin>
+        <name>Label Distributions</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>analysis.one.ExploreModelDistributions</classname>
+    </plugin>
+    
     <plugin>
         <name>Cue Wrapper</name>
         <author>Elijah Mayfield</author>

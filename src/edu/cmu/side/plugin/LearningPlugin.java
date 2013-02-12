@@ -159,6 +159,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	{
 		DocumentList localDocuments = table.getDocumentList();
 		Comparable[] predictions = new Comparable[localDocuments.getSize()];
+		String[] labelArray = localDocuments.getLabelArray();
+		Map<String, List<Double>> distributions = null;
+		
 		Set<Integer> folds = new TreeSet<Integer>();
 		for(Integer key : foldsMap.keySet()){
 			folds.add(foldsMap.get(key));
@@ -203,19 +206,28 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			
 			List<? extends Comparable<?>> predictionsList = predictionResult.getPredictions();
 
-			int predictionIndex = 0;
+			//int predictionIndex = 0;
 			double correct = 0;
 			double total = 0;
+			
+			if(distributions == null) distributions = new HashMap<String, List<Double>>(predictionResult.getDistributions());
+			
 			for (int i = 0; i < predictionsList.size(); i++)
 			{
 				if(foldsMap.get(i).equals(fold))
 				{
-					predictions[predictionIndex] = predictionsList.get(i);
-					if(predictions[predictionIndex].equals(localDocuments.getAnnotationArray().get(i)))
+					for(String label : labelArray)
+					{
+						distributions.get(label).set(i, predictionResult.getDistributions().get(label).get(i));
+					}
+					
+					predictions[i] = predictionsList.get(i);
+					
+					if(predictions[i].equals(localDocuments.getAnnotationArray().get(i)))
 						correct++;
 					total++;
 				}
-				predictionIndex++;
+				//predictionIndex++;
 			}
 			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
 			double timeB = System.currentTimeMillis();
@@ -225,8 +237,10 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		{
 			progressIndicator.update("Generating confusion matrix");
 			List<Comparable<Comparable>> predictionsList = new ArrayList<Comparable<Comparable>>();
+
+			PredictionResult pred = new PredictionResult(predictionsList, distributions);
 			for(Comparable s : predictions) predictionsList.add(s);
-			return new TrainingResult(table, predictionsList);
+			return new TrainingResult(table, pred);
 		}
 		else 
 		{
@@ -241,7 +255,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet, OrderedPluginMap wrappers, StatusUpdater updater){
 		DefaultMap<Integer, Integer> defaultFoldMap = new DefaultMap<Integer, Integer>(0);
 		PredictionResult predictions = predictOnFold(train, testSet, 0, defaultFoldMap, updater, wrappers);
-		TrainingResult training = new TrainingResult(train, testSet, predictions.getPredictions());
+		TrainingResult training = new TrainingResult(train, testSet, predictions);
 		return training;
 	}
 
@@ -411,7 +425,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
-			System.out.println("wrapper " + fold + ": " + wrappers.get(wrapper));
+			//System.out.println("wrapper " + fold + ": " + wrappers.get(wrapper));
 			wrapper.configureFromSettings(wrappers.get(wrapper));
 			if(learn)
 				((WrapperPlugin) wrapper).learnFromTrainingData(newData, fold, foldsMap, progressIndicator);

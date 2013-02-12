@@ -1,9 +1,0 @@
-Rule Ignore History	Feature -lrb-	Improvement 0.0393029450925527
-Rule Suppress Local	Feature the	Improvement 0.028959076946934916
-Rule Suppress Local	Feature i	Improvement 0.06530446935630832
-Rule Suppress Local	Feature a	Improvement 0.03398203190096613
-Rule Ignore History	Feature from	Improvement 0.015306990291569794
-Rule Ignore History	Feature take	Improvement 0.011314047705278024
-Rule Ignore Future	Feature here	Improvement 0.012982118088259737
-Rule Suppress Local	Feature things	Improvement 0.011594028820108782
-Rule Suppress Local	Feature yes	Improvement 0.012632359584132674

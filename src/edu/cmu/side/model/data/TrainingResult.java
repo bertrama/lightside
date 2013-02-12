@@ -3,6 +3,7 @@ package edu.cmu.side.model.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -23,6 +24,7 @@ public class TrainingResult implements Serializable{
 	private FeatureTable test;
 	private List<? extends Comparable<?>> predictions;
 	private Map<String, Map<String, List<Integer>>> confusionMatrix = new TreeMap<String, Map<String, List<Integer>>>();
+	private Map<String, List<Double>> distributions;
 
 	public String toString(){
 		return name;
@@ -85,6 +87,42 @@ public class TrainingResult implements Serializable{
 		test = te;
 		predictions = pred;
 		generateConfusionMatrix(te.getClassValueType(), te.getDocumentList().getAnnotationArray(), predictions);
+	}
+
+	public TrainingResult(FeatureTable table, PredictionResult pred)
+	{
+		this(table, pred.getPredictions());
+		distributions = pred.getDistributions();
+	}
+
+	public TrainingResult(FeatureTable trainSet, FeatureTable testSet, PredictionResult pred)
+	{
+		this(trainSet, testSet, pred.getPredictions());
+		distributions = pred.getDistributions();
+		
+	}
+
+	public Map<String, List<Double>> getDistributions()
+	{
+		return distributions;
+	}
+
+	public void setDistributions(Map<String, List<Double>> distributions)
+	{
+		this.distributions = distributions;
+	}
+	
+	public Map<String, Double> getDistributionForDocument(int i)
+	{
+		Map<String, Double> distro = new HashMap<String, Double>();
+		
+		if(distributions != null)
+			for(String k : distributions.keySet())
+			{
+				distro.put(k, distributions.get(k).get(i));
+			}
+		
+		return distro;
 	}
 
 	private void generateConfusionMatrix(Feature.Type type, List<String> actual, List<? extends Comparable<?>> predicted){

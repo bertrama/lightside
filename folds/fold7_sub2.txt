@@ -1,5 +1,0 @@
-Rule Ignore History	Feature n't	Improvement 0.056976640806300625
-Rule Highlight Local	Feature being	Improvement 0.023037374043293146
-Rule Ignore History	Feature will	Improvement 0.028996989444320085
-Rule Ignore History	Feature do	Improvement 0.013598189681720605
-Rule Suppress Local	Feature our	Improvement 0.011162274963470758

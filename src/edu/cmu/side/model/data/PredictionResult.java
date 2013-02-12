@@ -32,7 +32,7 @@ public class PredictionResult implements Serializable
 		predictions = pred;
 	}
 
-	public PredictionResult(List<String> pred, Map<String, List<Double>> dist)
+	public PredictionResult(List<? extends Comparable<?>> pred, Map<String, List<Double>> dist)
 	{
 		this(pred);
 		distributions = dist;

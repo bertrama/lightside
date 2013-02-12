@@ -126,12 +126,5 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 		this.progressBarList.add(progressBar);
 	}
 
-	public JProgressBar createProgressBar()
-	{
-		JProgressBar progressBar = new JProgressBar();
-		this.progressBarList.add(progressBar);
-		return progressBar;
-	}
-
 
 }

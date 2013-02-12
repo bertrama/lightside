@@ -1,0 +1,9 @@
+Rule Suppress Local	Feature a	Improvement 0.039288567744571436
+Rule Ignore Future	Feature chemo	Improvement 0.030827666774543617
+Rule Ignore History	Feature if	Improvement 0.03152697058818945
+Rule Suppress Local	Feature our	Improvement 0.029565302812380935
+Rule Suppress Local	Feature so	Improvement 0.018074732032647697
+Rule Suppress Local	Feature will	Improvement 0.010794221683389118
+Rule Suppress Local	Feature things	Improvement 0.01244537110066954
+Rule Ignore History	Feature those	Improvement 0.01012438935169695
+Rule Suppress Local	Feature but	Improvement 0.014486484089935334

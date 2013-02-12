@@ -1,0 +1,5 @@
+Rule Suppress Local	Feature that	Improvement 0.0371020270921007
+Rule Ignore History	Feature going	Improvement 0.0325940026585325
+Rule Suppress Local	Feature have	Improvement 0.029692693537982973
+Rule Ignore History	Feature feel	Improvement 0.022959553312925252
+Rule Suppress Local	Feature ok	Improvement 0.012218108212622045

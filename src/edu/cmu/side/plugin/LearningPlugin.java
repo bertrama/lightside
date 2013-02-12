@@ -34,7 +34,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return type;
 	}
 
-	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> map, OrderedPluginMap wrappers, StatusUpdater progressIndicator) throws Exception{
+	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> validationSettings, OrderedPluginMap wrappers, StatusUpdater progressIndicator) throws Exception{
 		halt = false;
 		if(table == null){
 			return null;
@@ -48,43 +48,43 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		}
 		
 		
-		DocumentList sdl = (DocumentList)map.get("testSet");
+		DocumentList sdl = (DocumentList)validationSettings.get("testSet");
 		TrainingResult result = null;
-		if (Boolean.TRUE.toString().equals(map.get("test")))
+		if (Boolean.TRUE.toString().equals(validationSettings.get("test")))
 		{
-			if (map.get("type").equals("CV"))
+			if (validationSettings.get("type").equals("CV"))
 			{
 				Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 				int numFolds = -1;
 				try
 				{
-					numFolds = Integer.parseInt(map.get("numFolds").toString());
+					numFolds = Integer.parseInt(validationSettings.get("numFolds").toString());
 				}
 				catch (Exception e)
 				{
 					e.printStackTrace();
 				}
 				progressIndicator.update("Generating Folds Map", 0, 0);
-				if (map.get("source").equals("RANDOM"))
+				if (validationSettings.get("source").equals("RANDOM"))
 				{
-					if(map.get("foldMethod").equals("AUTO"))
+					if(validationSettings.get("foldMethod").equals("AUTO"))
 					{
 						numFolds = Math.min(10, sdl.getSize());
 					}
 					foldsMap = BuildModelControl.getFoldsMapRandom(sdl, numFolds);
 				}
-				else if (map.get("source").equals("ANNOTATIONS"))
+				else if (validationSettings.get("source").equals("ANNOTATIONS"))
 				{
-					String annotation = map.get("annotation").toString();
-					if(map.get("foldMethod").equals("AUTO"))
+					String annotation = validationSettings.get("annotation").toString();
+					if(validationSettings.get("foldMethod").equals("AUTO"))
 					{
 						numFolds = sdl.getPossibleAnn(annotation).size();
 					}
 					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, annotation, numFolds);
 				}
-				else if (map.get("source").equals("FILES"))
+				else if (validationSettings.get("source").equals("FILES"))
 				{
-					if(map.get("foldMethod").equals("AUTO"))
+					if(validationSettings.get("foldMethod").equals("AUTO"))
 					{
 						numFolds = sdl.getFilenames().size();
 					}
@@ -94,42 +94,18 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				result = evaluateCrossValidation(table, foldsMap, wrappers, progressIndicator);
 				
 				progressIndicator.update("Training final model on all data");
-				for(SIDEPlugin wrapper : wrappers.keySet()){
-					((WrapperPlugin)wrapper).learnFromTrainingData(table, 1, defaultFoldMapZero, progressIndicator);
-				}
-				FeatureTable wrappedTable = table;
-				for(SIDEPlugin wrapper : wrappers.keySet()){
-					wrappedTable = ((WrapperPlugin)wrapper).wrapTableBefore(wrappedTable, 1, defaultFoldMapZero, progressIndicator);
-				}
-				prepareAndTrainAgainstFold(wrappedTable, 1, defaultFoldMapZero, progressIndicator);
+				FeatureTable wrappedTable = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
 			}
-			else if (map.get("type").equals("SUPPLY"))
+			else if (validationSettings.get("type").equals("SUPPLY"))
 			{
 				progressIndicator.update("Training model");
-				for(SIDEPlugin wrapper : wrappers.keySet()){
-					((WrapperPlugin)wrapper).learnFromTrainingData(table, 1, defaultFoldMapZero, progressIndicator);
-				}
-				FeatureTable pass = table;
-				for(SIDEPlugin wrapper : wrappers.keySet()){
-					pass = ((WrapperPlugin)wrapper).wrapTableBefore(pass, 1, defaultFoldMapZero, progressIndicator);
-				}
-				prepareAndTrainAgainstFold(pass, 1, defaultFoldMapZero, progressIndicator);
+				FeatureTable pass = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
 				progressIndicator.update("Testing model");
-				FeatureTable passTest = (FeatureTable) map.get("testFeatureTable");
-				for(SIDEPlugin wrapper : wrappers.keySet()){
-					passTest = ((WrapperPlugin)wrapper).wrapTableBefore(passTest, 0, defaultFoldMapZero, progressIndicator);
-				}
+				FeatureTable passTest = (FeatureTable) validationSettings.get("testFeatureTable");
 				result = evaluateTestSet(pass, passTest, wrappers, progressIndicator);
 			}
 		}else{
-			for(SIDEPlugin wrapper : wrappers.keySet()){
-				((WrapperPlugin)wrapper).learnFromTrainingData(table, 1, defaultFoldMapZero, progressIndicator);
-			}
-			FeatureTable wrappedTable = table;
-			for(SIDEPlugin wrapper : wrappers.keySet()){
-				wrappedTable = ((WrapperPlugin)wrapper).wrapTableBefore(wrappedTable, 1, defaultFoldMapZero, progressIndicator);
-			}
-			prepareAndTrainAgainstFold(wrappedTable, 1, defaultFoldMapZero, progressIndicator);
+			FeatureTable wrappedTable = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
 			List<Comparable<Comparable>> blankPredictions = new ArrayList<Comparable<Comparable>>();
 			switch(wrappedTable.getClassValueType()){
 			case NOMINAL:
@@ -147,7 +123,39 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return result;
 	}
 
-	protected TrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, StatusUpdater progressIndicator)
+	/**
+	 * @param wrappers
+	 * @param progressIndicator
+	 * @param defaultFoldMapZero
+	 * @param pass
+	 * @param passTest
+	 * @return
+	 */
+//	protected TrainingResult wrapAndTest(OrderedPluginMap wrappers, StatusUpdater progressIndicator, Map<Integer, Integer> defaultFoldMapZero,
+//			FeatureTable pass, FeatureTable passTest)
+//	{
+//		TrainingResult result = evaluateTestSet(pass, passTest, wrappers, progressIndicator);
+//		return result;
+//	}
+
+	/**
+	 * @param table
+	 * @param wrappers
+	 * @param progressIndicator
+	 * @param foldMap
+	 * @return
+	 * @throws Exception
+	 */
+	public FeatureTable
+			wrapAndTrain(FeatureTable table, OrderedPluginMap wrappers, StatusUpdater progressIndicator, Map<Integer, Integer> foldMap, int fold)
+					throws Exception
+	{
+		FeatureTable wrapped = wrapTableBefore(table, fold, foldMap, progressIndicator, wrappers, true);
+		prepareAndTrainAgainstFold(wrapped, fold, foldMap, progressIndicator);
+		return wrapped;
+	}
+
+	public TrainingResult evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, StatusUpdater progressIndicator)
 	{
 		DocumentList localDocuments = table.getDocumentList();
 		Comparable[] predictions = new Comparable[localDocuments.getSize()];
@@ -171,19 +179,11 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") 
 					+ "Training fold", (fold + 1), folds.size());
 			
-			for(SIDEPlugin wrapper : wrappers.keySet())
-			{
-				((WrapperPlugin)wrapper).learnFromTrainingData(table, fold, foldsMap, progressIndicator);
-			}
 			FeatureTable pass = table;
-			for(SIDEPlugin wrapper : wrappers.keySet())
-			{
-				pass = ((WrapperPlugin)wrapper).wrapTableBefore(pass, fold, foldsMap, progressIndicator);
-			}
 			
 			try
 			{
-				prepareAndTrainAgainstFold(pass, fold, foldsMap, updater);
+				pass = wrapAndTrain(table, wrappers, progressIndicator, foldsMap, fold);
 			}
 			catch (Exception e)
 			{
@@ -198,19 +198,26 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			progressIndicator.update(
 					(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") 
 					+ "Testing fold", (fold+1), folds.size());
-			PredictionResult predictionResult = predictOnFold(pass, pass, fold, foldsMap, updater);
+			
+			PredictionResult predictionResult = predictOnFold(pass, pass, fold, foldsMap, updater, wrappers);
 			
 			List<? extends Comparable<?>> predictionsList = predictionResult.getPredictions();
 
 			int predictionIndex = 0;
+			double correct = 0;
+			double total = 0;
 			for (int i = 0; i < predictionsList.size(); i++)
 			{
 				if(foldsMap.get(i).equals(fold))
 				{
 					predictions[predictionIndex] = predictionsList.get(i);
+					if(predictions[predictionIndex].equals(localDocuments.getAnnotationArray().get(i)))
+						correct++;
+					total++;
 				}
 				predictionIndex++;
 			}
+			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
 			double timeB = System.currentTimeMillis();
 			times.add((timeB - timeA) / 1000.0);
 		}
@@ -221,15 +228,19 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			for(Comparable s : predictions) predictionsList.add(s);
 			return new TrainingResult(table, predictionsList);
 		}
-		else return null;
+		else 
+		{
+			for(SIDEPlugin wrapper : wrappers.keySet())
+			{
+				wrapper.stopWhenPossible();
+			}
+			return null;
+		}
 	}
 
 	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet, OrderedPluginMap wrappers, StatusUpdater updater){
 		DefaultMap<Integer, Integer> defaultFoldMap = new DefaultMap<Integer, Integer>(0);
-		PredictionResult predictions = predictOnFold(train, testSet, 0, defaultFoldMap, updater);
-		for(SIDEPlugin wrapper : wrappers.keySet()){
-			predictions = ((WrapperPlugin)wrapper).wrapResultAfter(predictions, 0, defaultFoldMap, updater);
-		}
+		PredictionResult predictions = predictOnFold(train, testSet, 0, defaultFoldMap, updater, wrappers);
 		TrainingResult training = new TrainingResult(train, testSet, predictions.getPredictions());
 		return training;
 	}
@@ -250,17 +261,54 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	}
 	protected abstract void trainAgainstFold(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator) throws Exception;
 
-	public PredictionResult predict(FeatureTable originalData, FeatureTable newData, Map<String, String> configuration, StatusUpdater progressIndicator){
+	public PredictionResult predict(FeatureTable originalData, FeatureTable newData, Map<String, String> configuration, StatusUpdater progressIndicator, OrderedPluginMap wrappers){
 		this.loadClassifierFromSettings(configuration);
-		return predictOnFold(originalData, newData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator);
+		return predictOnFold(originalData, newData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers);
 	}
 
-	protected  PredictionResult predictOnFold(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator)
+	protected  PredictionResult predictOnFold(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator, OrderedPluginMap wrappers)
 	{
+		newData = wrapTableBefore(newData, fold, foldsMap, progressIndicator, wrappers, false);
+		
 		Object predictionContext = prepareToPredict(originalData, newData, fold, foldsMap);
-		//Instances inst = WekaTools.getInstances(originalData, newData, mask);
-		PredictionResult prediction = null;
+		
+		PredictionResult prediction = actuallyPredict(originalData, newData, fold, foldsMap, predictionContext);
+		
+		prediction = wrapTableAfter(fold, foldsMap, wrappers, prediction);
 
+		return prediction;
+
+	}
+
+	/**
+	 * @param fold
+	 * @param foldsMap
+	 * @param wrappers
+	 * @param prediction
+	 * @return
+	 */
+	protected PredictionResult wrapTableAfter(int fold, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, PredictionResult prediction)
+	{
+		for (SIDEPlugin wrapper : wrappers.keySet())
+		{
+			prediction = ((WrapperPlugin) wrapper).wrapResultAfter(prediction, fold, foldsMap, updater);
+		}
+		return prediction;
+	}
+
+	/**
+	 * @param originalData
+	 * @param newData
+	 * @param fold
+	 * @param foldsMap
+	 * @param predictionContext
+	 * @param prediction
+	 * @return
+	 */
+	protected PredictionResult actuallyPredict(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap,
+			Object predictionContext)
+	{
+		PredictionResult prediction = null;
 		switch (originalData.getClassValueType())
 		{
 			case NUMERIC:
@@ -340,10 +388,37 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				{
 					e.printStackTrace();
 				}
+				
 				prediction = new PredictionResult(predictions, distributions);
+				
+			
 		}
 		return prediction;
+	}
+
+	/**
+	 * @param newData
+	 * @param fold
+	 * @param foldsMap
+	 * @param progressIndicator
+	 * @param wrappers
+	 * @return
+	 */
+	protected FeatureTable wrapTableBefore(FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator,
+			OrderedPluginMap wrappers, boolean learn)
+	{
+
 		
+		for (SIDEPlugin wrapper : wrappers.keySet())
+		{
+			System.out.println("wrapper " + fold + ": " + wrappers.get(wrapper));
+			wrapper.configureFromSettings(wrappers.get(wrapper));
+			if(learn)
+				((WrapperPlugin) wrapper).learnFromTrainingData(newData, fold, foldsMap, progressIndicator);
+		
+			newData = ((WrapperPlugin) wrapper).wrapTableBefore(newData, fold, foldsMap, progressIndicator);
+		}
+		return newData;
 	}
 
 	/**
@@ -355,7 +430,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 * @param predictionContext
 	 * @return a label distribution
 	 */
-	protected abstract double[] predictLabel(int i, FeatureTable originalData, FeatureTable newData, Object predictionContext) throws Exception;
+	public abstract double[] predictLabel(int i, FeatureTable originalData, FeatureTable newData, Object predictionContext) throws Exception;
 
 	/**
 	 * predict the numeric value of instance i in newData
@@ -366,7 +441,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 * @param predictionContext
 	 * @return the predicted value for this instance
 	 */
-	protected abstract double predictNumeric(int i, FeatureTable originalData, FeatureTable newData, Object predictionContext)  throws Exception;
+	public abstract double predictNumeric(int i, FeatureTable originalData, FeatureTable newData, Object predictionContext)  throws Exception;
 	
 	/**
 	 * do any setup before prediction, and keep the context of that setup in the returned object
@@ -376,7 +451,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 * @param progressIndicator
 	 * @return a context object that the subclass may use to inform its per-document predictions
 	 */
-	protected abstract Object prepareToPredict(FeatureTable originalData, FeatureTable newData, int i, Map<Integer, Integer> foldsMap);
+	public abstract Object prepareToPredict(FeatureTable originalData, FeatureTable newData, int i, Map<Integer, Integer> foldsMap);
 
 	public void stopWhenPossible(){
 		halt = true;

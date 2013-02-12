@@ -180,7 +180,7 @@ public class BuildModelControl extends GenesisControl{
 
 			try
 			{
-				if (validationSettings.get("test").equals(Boolean.TRUE.toString()))
+				if (Boolean.TRUE.toString().equals(validationSettings.get("test")))
 				{
 					if (validationSettings.get("type").equals("CV"))
 					{
@@ -203,7 +203,7 @@ public class BuildModelControl extends GenesisControl{
 				Map<String, String> settings = learner.generateConfigurationSettings();
 				newRecipe = Recipe.addLearnerToRecipe(newRecipe, learner, settings);
 				newRecipe.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
-				
+//				System.out.println(settings);
 //				File target = new File("saved/self-model.side");
 //				saveBuildModelRecipe(newRecipe, target);
 				

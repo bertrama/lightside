@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.TreeSet;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -27,7 +28,7 @@ public class BuildActionPanel extends ActionBar {
 		actionButton.setIconTextGap(10);
 		actionButton.addActionListener(new BuildModelControl.TrainModelListener(this, name));
 		
-		Collection<WrapperPlugin> wrappers = BuildModelControl.getWrapperPlugins().keySet();
+		Collection<WrapperPlugin> wrappers = new TreeSet<WrapperPlugin>(BuildModelControl.getWrapperPlugins().keySet());
 		for(WrapperPlugin wrapper : wrappers){
 			settings.add("left", wrapper.getConfigurationUI());
 		}

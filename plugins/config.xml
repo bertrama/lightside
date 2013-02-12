@@ -126,7 +126,7 @@
         <classname>plugins.analysis.two.matrix.DifferenceMatrixPlugin</classname>
     </plugin>
         
-    <!-- 
+    
     
     <plugin>
         <name>Feature Selection</name>
@@ -136,12 +136,20 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.wrappers.FeatureSelection</classname>
     </plugin> 
-        -->
+       
+   <plugin>
+        <name>Ensemble Learner</name>
+        <author>David Adamson</author>
+        <version>0.2</version>
+        <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>learning.EnsembleLearner</classname>
+    </plugin>
     
     <plugin>
         <name>Cue Wrapper</name>
         <author>Elijah Mayfield</author>
-        <version>1.0</version>
+        <version>0.3</version>
         <description><![CDATA[Cue wrapping for ACL 2013]]></description>
         <jarfile>cues.jar</jarfile>
         <classname>wrapper.CueWrapper</classname>

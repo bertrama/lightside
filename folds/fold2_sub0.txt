@@ -1,0 +1,7 @@
+Rule Ignore History	Feature n't	Improvement 0.03741341916901284
+Rule Highlight Local	Feature want	Improvement 0.022798619407793798
+Rule Suppress Local	Feature an	Improvement 0.016885995046030954
+Rule Ignore History	Feature think	Improvement 0.014500248816855507
+Rule Suppress Local	Feature about	Improvement 0.014717239060404936
+Rule Suppress Local	Feature that	Improvement 0.016281783129716672
+Rule Ignore History	Feature after	Improvement 0.011820652303543197

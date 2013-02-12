@@ -1,0 +1,5 @@
+Rule Ignore History	Feature of	Improvement 0.03206381696411523
+Rule Highlight Local	Feature <COLON>	Improvement 0.03209214980614685
+Rule Suppress Local	Feature we	Improvement 0.028665075967168285
+Rule Suppress Local	Feature go	Improvement 0.021218132528517085
+Rule Ignore History	Feature your	Improvement 0.018602406007336484

@@ -10,7 +10,8 @@ import java.util.Map;
 
 import edu.cmu.side.Workbench;
 
-public abstract class SIDEPlugin implements Cloneable{
+public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
+{
 	private transient File rootFolder;
 
 	protected boolean halt;
@@ -130,5 +131,11 @@ public abstract class SIDEPlugin implements Cloneable{
 	public boolean isStopped()
 	{
 		return halt;
+	}
+	
+	@Override
+	public int compareTo(SIDEPlugin p)
+	{
+		return this.getOutputName().compareTo(p.getOutputName());
 	}
 }

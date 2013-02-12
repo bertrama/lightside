@@ -11,6 +11,7 @@ public class ModelTrainingChef extends Chef
 	public static void main(String[] args) throws Exception
 	{
 		String recipePath = "saved/self-model.side";
+		String outPath  = "saved/self-output.side";
 		if (args.length < 2)
 		{
 			System.err.println("usage: modelchef.sh path/to/my.recipe.side path/to/output.model.side");
@@ -18,17 +19,21 @@ public class ModelTrainingChef extends Chef
 		else
 		{
 			recipePath = args[0];
-			String outPath = args[1];
+			outPath= args[1];
+		}
+			
 			
 			Recipe recipe = loadRecipe(recipePath);
-		    broilModel(recipe);
-	
-			if(recipe.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
-				System.out.println(recipe.getTrainingResult().getTextConfusionMatrix());
+			System.out.println(recipe.getLearnerSettings());
+			
+//		    broilModel(recipe);
+//	
+//			if(recipe.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
+//				System.out.println(recipe.getTrainingResult().getTextConfusionMatrix());
 
-			System.out.println("Saving trained model to "+outPath);
-			saveRecipe(recipe, new File(outPath));
-		}
+//			System.out.println("Saving trained model to "+outPath);
+//			saveRecipe(recipe, new File(outPath));
+		
 		
 	}
 }

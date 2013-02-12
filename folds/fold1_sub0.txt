@@ -1,0 +1,7 @@
+Rule Ignore History	Feature get	Improvement 0.034843260721797255
+Rule Suppress Local	Feature this	Improvement 0.023972354623524938
+Rule Suppress Local	Feature was	Improvement 0.020361365305654192
+Rule Suppress Local	Feature our	Improvement 0.014440117475772014
+Rule Suppress Local	Feature -rrb-	Improvement 0.010532798375178275
+Rule Suppress Local	Feature of	Improvement 0.018407929964990046
+Rule Ignore History	Feature sounds	Improvement 0.01537058474125622

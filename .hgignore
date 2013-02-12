@@ -15,3 +15,6 @@ plugins/config.xml.orig
 toolkits/en-sent.bin
 toolkits/englishPCFG_old.ser.gz
 *.DS_Store
+data/*
+saved/*
+*.log

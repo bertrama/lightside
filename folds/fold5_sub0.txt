@@ -1,0 +1,7 @@
+Rule Ignore History	Feature with	Improvement 0.030215529806355373
+Rule Suppress Local	Feature she	Improvement 0.02086379889883791
+Rule Suppress Local	Feature from	Improvement 0.01998151790136072
+Rule Ignore History	Feature would	Improvement 0.015727638195140597
+Rule Ignore History	Feature had	Improvement 0.01477005986586782
+Rule Ignore History	Feature way	Improvement 0.013441063651277571
+Rule Ignore History	Feature if	Improvement 0.011575426982353452

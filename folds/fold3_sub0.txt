@@ -1,0 +1,5 @@
+Rule Suppress Local	Feature but	Improvement 0.03487791424464412
+Rule Ignore History	Feature would	Improvement 0.02661722752645932
+Rule Ignore Future	Feature how	Improvement 0.03111259196387258
+Rule Suppress Local	Feature when	Improvement 0.030780478145667436
+Rule Suppress Local	Feature <EXCLAMATIONMARK>	Improvement 0.019293540284429256

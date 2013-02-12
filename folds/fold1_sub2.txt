@@ -1,0 +1,6 @@
+Rule Suppress Local	Feature <COMMA>	Improvement 0.07591592234016002
+Rule Suppress Local	Feature ca	Improvement 0.027807647011452292
+Rule Ignore History	Feature great	Improvement 0.021505646676685086
+Rule Ignore History	Feature next	Improvement 0.013138934153836256
+Rule Suppress Local	Feature or	Improvement 0.014593992293825513
+Rule Suppress Local	Feature doing	Improvement 0.010471386224581412

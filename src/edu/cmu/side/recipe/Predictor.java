@@ -147,7 +147,7 @@ public class Predictor
 			Recipe newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE);
 			FeatureTable ft = newRecipe.getTrainingTable();
 			//FeatureTable ft = prepareTestSet(corpus);
-			result = recipe.getLearner().predict(recipe.getFeatureTable(), ft, recipe.getLearnerSettings(), textUpdater);
+			result = recipe.getLearner().predict(recipe.getFeatureTable(), ft, recipe.getLearnerSettings(), textUpdater, newRecipe.getWrappers());
 		}
 		catch (Exception e)
 		{

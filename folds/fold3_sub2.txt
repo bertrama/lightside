@@ -1,0 +1,6 @@
+Rule Suppress Local	Feature a	Improvement 0.02886966216432494
+Rule Ignore History	Feature -lrb-	Improvement 0.03355467146948214
+Rule Suppress Local	Feature have	Improvement 0.02268675707536107
+Rule Suppress Local	Feature had	Improvement 0.018715013381614024
+Rule Ignore History	Feature us	Improvement 0.011060412588752238
+Rule Suppress Local	Feature very	Improvement 0.01127224276183865

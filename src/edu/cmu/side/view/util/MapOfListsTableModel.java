@@ -1,18 +1,17 @@
 package edu.cmu.side.view.util;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
 import javax.swing.table.AbstractTableModel;
 
-import edu.cmu.side.model.data.DocumentList;
-
 public class MapOfListsTableModel extends AbstractTableModel
 {
 
 	private Map<String, List> map;
-	private String[] columns = new String[0];
+	private String[] columnLabels = new String[0];
 
 	public MapOfListsTableModel(Map<String, List> map)
 	{
@@ -20,16 +19,16 @@ public class MapOfListsTableModel extends AbstractTableModel
 		this.map = map;
 		if (map != null)
 		{
-			columns = map.keySet().toArray(columns);
+			columnLabels = map.keySet().toArray(columnLabels);
 		}
 	}
 
 	@Override
 	public Class<?> getColumnClass(int c)
 	{
-		if(map != null && !map.get(columns[c]).isEmpty())
+		if(map != null && !map.get(columnLabels[c]).isEmpty())
 		{
-			return map.get(columns[c]).get(0).getClass();
+			return map.get(columnLabels[c]).get(0).getClass();
 		}
 		else return Object.class;
 	}
@@ -39,14 +38,14 @@ public class MapOfListsTableModel extends AbstractTableModel
 	{
 		if (map == null) return 0;
 
-		return columns.length;
+		return columnLabels.length;
 	}
 
 	@Override
 	public String getColumnName(int c)
 	{
-		if (c < columns.length)
-			return columns[c];
+		if (c < columnLabels.length)
+			return columnLabels[c];
 		else
 			return "?";
 	}
@@ -56,13 +55,13 @@ public class MapOfListsTableModel extends AbstractTableModel
 	{
 		if (map == null) return 0;
 
-		return map.get(columns[0]).size();
+		return map.get(columnLabels[0]).size();
 	}
 
 	@Override
 	public Object getValueAt(int r, int c)
 	{
-		if (c < columns.length && r < map.get(columns[c]).size()) return map.get(columns[c]).get(r);
+		if (c < columnLabels.length && r < map.get(columnLabels[c]).size()) return map.get(columnLabels[c]).get(r);
 		return "?";
 	}
 
@@ -82,11 +81,11 @@ public class MapOfListsTableModel extends AbstractTableModel
 	{
 		if (map != null)
 		{
-			columns = (String[]) new TreeSet<String>(map.keySet()).toArray(columns);
+			columnLabels = (String[]) new TreeSet<String>(map.keySet()).toArray(columnLabels);
 		}
 		else
 		{
-			columns = new String[0];
+			columnLabels = new String[0];
 		}
 		this.map = map;
 
@@ -94,4 +93,22 @@ public class MapOfListsTableModel extends AbstractTableModel
 		this.fireTableDataChanged();
 	}
 
+	public void setColumnLabels(List<String> labels)
+	{
+		if(map != null)
+		if(labels.size() == map.size())
+		{
+			columnLabels= labels.toArray(columnLabels);
+		}
+		else System.err.println("Incorrect number of labels: given "+labels.size()+", expected "+map.size());
+	}
+
+	public void setMap(HashMap<String, List> map, List<String> labels)
+	{
+		this.map = map;
+		setColumnLabels(labels);
+
+		this.fireTableStructureChanged();
+		this.fireTableDataChanged();
+	}
 }

@@ -128,14 +128,14 @@
         
     
     
-    <plugin>
+<!--     <plugin>
         <name>Feature Selection</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
         <description><![CDATA[Chi squared feature selection]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.wrappers.FeatureSelection</classname>
-    </plugin> 
+    </plugin>  -->
        
    <plugin>
         <name>Ensemble Learner</name>
@@ -163,6 +163,15 @@
         <jarfile>cues.jar</jarfile>
         <classname>wrapper.CueWrapper</classname>
     </plugin>
+    
+        <plugin>
+        <name>Excuse Me Wrapper</name>
+        <author>David Adamson</author>
+        <version>1.0</version>
+        <description><![CDATA[Default instances without First Person Pronouns]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>wrapper.ExcuseMeWrapper</classname>
+    </plugin> 
     
     <plugin>
         <name>Weka Logit</name>

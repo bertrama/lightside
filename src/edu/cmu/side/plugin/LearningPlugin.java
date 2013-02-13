@@ -288,7 +288,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		
 		PredictionResult prediction = actuallyPredict(originalData, newData, fold, foldsMap, predictionContext);
 		
-		prediction = wrapTableAfter(fold, foldsMap, wrappers, prediction);
+		prediction = wrapTableAfter(fold, foldsMap, wrappers, newData, prediction);
 
 		return prediction;
 
@@ -301,11 +301,11 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 * @param prediction
 	 * @return
 	 */
-	protected PredictionResult wrapTableAfter(int fold, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, PredictionResult prediction)
+	protected PredictionResult wrapTableAfter(int fold, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, FeatureTable table, PredictionResult prediction)
 	{
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
-			prediction = ((WrapperPlugin) wrapper).wrapResultAfter(prediction, fold, foldsMap, updater);
+			prediction = ((WrapperPlugin) wrapper).wrapResultAfter(prediction, table, fold, foldsMap, updater);
 		}
 		return prediction;
 	}

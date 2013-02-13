@@ -29,11 +29,12 @@ public abstract class WrapperPlugin extends SIDEPlugin{
 		return wrapTableForSubclass(table, fold, foldsMap, update);
 	}
 	
-	public PredictionResult wrapResultAfter(PredictionResult predict, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
+	public PredictionResult wrapResultAfter(PredictionResult predict, FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
 		return wrapResultForSubclass(predict, fold, foldsMap, update);
 	}
 	
 	public abstract FeatureTable wrapTableForSubclass(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update);
 	
 	public abstract PredictionResult wrapResultForSubclass(PredictionResult result, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update);
+
 }

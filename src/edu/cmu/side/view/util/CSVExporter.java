@@ -87,8 +87,8 @@ public class CSVExporter
 						Object obj = model.getValueAt(i, j);
 						if (obj != null)
 						{
-
 							s = obj.toString();
+							s = s.replaceAll("[\n\r]+", " ");
 							if (s.contains(","))
 							{
 								s = "\"" + s.replaceAll("\"", "\\\"") + "\"";

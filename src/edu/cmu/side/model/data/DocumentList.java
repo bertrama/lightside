@@ -40,7 +40,7 @@ public class DocumentList implements Serializable{
 
 	public void setClassValueType(Feature.Type t)
 	{
-		System.out.println("DL 44: Manually assigning feature type to "+t);
+		System.out.println("DL 44: Manually assigning annotation type to "+t);
 		type = t;
 	}
 	

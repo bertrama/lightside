@@ -150,6 +150,7 @@ public class FeatureTable implements Serializable
 			newFilenames.add(origDocs.getFilename(index));
 		}
 		DocumentList docs = new DocumentList(newFilenames, newText, newAnnots, origDocs.getCurrentAnnotation());
+		docs.setClassValueType(origDocs.type); //TODO: figure out why the second cloneTraining on the final pass of wrapperthingy is empty/numeric, and why it wasn't before
 		Collection<FeatureHit> newHits = new HashSet<FeatureHit>();
 		for(int index : indices){
 			for(FeatureHit hit : getHitsForDocument(index)){
@@ -385,6 +386,29 @@ public class FeatureTable implements Serializable
 		for(int i = 0; i < documents.getSize(); i++){
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
 		}
+		for(FeatureHit hit : hits){
+			Feature f = hit.getFeature();
+			if(!localFeatures.containsKey(f)){
+				localFeatures.put(f, new TreeSet<Integer>());
+			}
+			localFeatures.get(f).add(hit.getDocumentIndex());
+		}
+
+		for(FeatureHit hit : hits){
+			if(localFeatures.get(hit.getFeature()).size() >= threshold){
+				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
+				if(!hitsPerFeature.containsKey(hit.getFeature())){
+					hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
+				}
+				hitsPerFeature.get(hit.getFeature()).add(hit);
+			}
+		}
+	}
+
+	public void addFeatureHits(Collection<FeatureHit> hits)
+	{
+		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(10000);
+		
 		for(FeatureHit hit : hits){
 			Feature f = hit.getFeature();
 			if(!localFeatures.containsKey(f)){

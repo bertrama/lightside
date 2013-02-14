@@ -93,6 +93,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				
 				result = evaluateCrossValidation(table, foldsMap, wrappers, progressIndicator);
 				
+				System.out.println("LP 96: class value type is "+table.getClassValueType());
 				progressIndicator.update("Training final model on all data");
 				FeatureTable wrappedTable = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
 			}

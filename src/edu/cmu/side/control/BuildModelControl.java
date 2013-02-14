@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
@@ -203,9 +204,16 @@ public class BuildModelControl extends GenesisControl{
 				Map<String, String> settings = learner.generateConfigurationSettings();
 				newRecipe = Recipe.addLearnerToRecipe(newRecipe, learner, settings);
 				newRecipe.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
+				
 //				System.out.println(settings);
-//				File target = new File("saved/self-model.side");
-//				saveBuildModelRecipe(newRecipe, target);
+				
+				JFileChooser chooser = new JFileChooser(new File("saved"));
+				int result = chooser.showDialog(null, "Save Model Chef Recipe");
+				if(result == JFileChooser.APPROVE_OPTION)
+				{
+					File target = chooser.getSelectedFile();//new File("saved/self-model.side");
+					saveBuildModelRecipe(newRecipe, target);
+				}
 				
 				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
 				task.execute();

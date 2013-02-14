@@ -155,19 +155,37 @@
         <classname>analysis.one.ExploreModelDistributions</classname>
     </plugin>
     
-    <plugin>
+<!--     <plugin>
         <name>Cue Wrapper</name>
         <author>Elijah Mayfield</author>
         <version>0.3</version>
         <description><![CDATA[Cue wrapping for ACL 2013]]></description>
         <jarfile>cues.jar</jarfile>
         <classname>wrapper.CueWrapper</classname>
-    </plugin>
+    </plugin> -->
+   
+   <!-- <plugin>
+        <name>Forwards Cue Wrapper</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Build Cues From Nothing]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>wrapper.ForwardCueWrapper</classname>
+    </plugin>  -->
+    
+   <plugin>
+        <name>Backwards Cue Wrapper</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Build Cues By Substracting]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>wrapper.BackwardCueWrapper</classname>
+    </plugin> 
     
         <plugin>
         <name>Excuse Me Wrapper</name>
         <author>David Adamson</author>
-        <version>1.0</version>
+        <version>0.1</version>
         <description><![CDATA[Default instances without First Person Pronouns]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>wrapper.ExcuseMeWrapper</classname>

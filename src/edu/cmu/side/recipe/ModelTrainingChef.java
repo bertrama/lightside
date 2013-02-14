@@ -12,7 +12,7 @@ public class ModelTrainingChef extends Chef
 	{
 		String recipePath = "saved/self-model.side";
 		String outPath  = "saved/self-output.side";
-		if (args.length < 2)
+		if (args.length < 1)
 		{
 			System.err.println("usage: modelchef.sh path/to/my.recipe.side path/to/output.model.side");
 		}
@@ -24,15 +24,15 @@ public class ModelTrainingChef extends Chef
 			
 			
 			Recipe recipe = loadRecipe(recipePath);
-			System.out.println(recipe.getLearnerSettings());
+//			System.out.println(recipe.getLearnerSettings());
 			
-//		    broilModel(recipe);
-//	
-//			if(recipe.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
-//				System.out.println(recipe.getTrainingResult().getTextConfusionMatrix());
+		    broilModel(recipe);
+	
+			if(recipe.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
+				System.out.println(recipe.getTrainingResult().getTextConfusionMatrix());
 
-//			System.out.println("Saving trained model to "+outPath);
-//			saveRecipe(recipe, new File(outPath));
+			System.out.println("Saving trained model to "+outPath);
+			saveRecipe(recipe, new File(outPath));
 		
 		
 	}

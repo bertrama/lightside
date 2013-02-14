@@ -50,7 +50,6 @@ public class BuildActionPanel extends ActionBar {
 			if(ae.getSource() instanceof RadioButtonListEntry){
 				Object o = ((RadioButtonListEntry)ae.getSource()).getValue();
 				if(o instanceof SIDEPlugin){
-					System.out.println("Setting name to " + ((SIDEPlugin)o).getOutputName() + " BAP52");
 					setDefaultName(((SIDEPlugin)o).getOutputName());
 					refreshPanel();
 				}

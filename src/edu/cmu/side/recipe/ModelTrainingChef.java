@@ -2,8 +2,11 @@ package edu.cmu.side.recipe;
 
 import java.io.File;
 
+import plugins.metrics.models.BasicModelEvaluations;
+
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
+import edu.cmu.side.model.data.TrainingResult;
 
 public class ModelTrainingChef extends Chef
 {
@@ -12,7 +15,7 @@ public class ModelTrainingChef extends Chef
 	{
 		String recipePath = "saved/self-model.side";
 		String outPath  = "saved/self-output.side";
-		if (args.length < 1)
+		if (args.length < 2)
 		{
 			System.err.println("usage: modelchef.sh path/to/my.recipe.side path/to/output.model.side");
 		}
@@ -28,12 +31,26 @@ public class ModelTrainingChef extends Chef
 			
 		    broilModel(recipe);
 	
-			if(recipe.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
-				System.out.println(recipe.getTrainingResult().getTextConfusionMatrix());
+			displayTrainingResults(recipe);
 
 			System.out.println("Saving trained model to "+outPath);
 			saveRecipe(recipe, new File(outPath));
 		
 		
+	}
+
+	/**
+	 * @param recipe
+	 */
+	protected static void displayTrainingResults(Recipe recipe)
+	{
+		if(recipe.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
+		{
+			TrainingResult trainingResult = recipe.getTrainingResult();
+			System.out.println(trainingResult.getTextConfusionMatrix());
+			BasicModelEvaluations eval = new BasicModelEvaluations();
+			System.out.println("Accuracy\t"+eval.getAccuracy(trainingResult));
+			System.out.println("Kappa\t"+eval.getKappa(trainingResult));
+		}
 	}
 }

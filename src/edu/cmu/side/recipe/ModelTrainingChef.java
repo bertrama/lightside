@@ -27,7 +27,7 @@ public class ModelTrainingChef extends Chef
 			
 			
 			Recipe recipe = loadRecipe(recipePath);
-//			System.out.println(recipe.getLearnerSettings());
+			System.out.println(recipe.getValidationSettings());
 			
 		    broilModel(recipe);
 	

@@ -137,8 +137,18 @@ public class TrainingResult implements Serializable{
 					confusionMatrix.get(p).put(a, new ArrayList<Integer>());
 				}
 			}
-			for(int i = 0; i < actual.size(); i++){
-				String pred = predicted.get(i).toString();
+			for(int i = 0; i < actual.size(); i++)
+			{
+				String pred;
+				if(predicted.get(i) == null)
+				{
+					System.out.println("TR 143 WRONG: "+i+" is null in the predictions list!");
+					pred = "NA";
+				}
+				else
+				{
+					pred = predicted.get(i).toString();
+				}
 				String act = actual.get(i);
 				confusionMatrix.get(pred).get(act).add(i);
 			}

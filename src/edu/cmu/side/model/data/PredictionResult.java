@@ -52,4 +52,17 @@ public class PredictionResult implements Serializable
 	{
 		return predictions;
 	}
+
+	public double[] getDistributionForInstance(int i, String[] labels)
+	{
+		double[] distro = new double[labels.length];
+		
+		
+		for(int j = 0; j < labels.length; j++)
+		{
+			distro[j] = distributions.get(labels[j]).get(i);
+		}
+		
+		return distro;
+	}
 }

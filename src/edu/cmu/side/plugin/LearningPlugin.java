@@ -173,6 +173,11 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		DecimalFormat print = new DecimalFormat("#.###");
 		for(Integer fold : folds)
 		{
+			if(fold < 0)
+			{
+				System.err.println("LP 178: negative fold: "+fold+"!");
+				continue;
+			}
 			if(halt)
 			{
 				break;
@@ -282,7 +287,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return predictOnFold(originalData, newData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers);
 	}
 
-	protected  PredictionResult predictOnFold(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator, OrderedPluginMap wrappers)
+	public  PredictionResult predictOnFold(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator, OrderedPluginMap wrappers)
 	{
 		newData = wrapTableBefore(newData, fold, foldsMap, progressIndicator, wrappers, false);
 		
@@ -303,10 +308,11 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 * @param prediction
 	 * @return
 	 */
-	protected PredictionResult wrapTableAfter(int fold, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, FeatureTable table, PredictionResult prediction)
+	public PredictionResult wrapTableAfter(int fold, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, FeatureTable table, PredictionResult prediction)
 	{
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
+			System.out.println(this+" wrapping after predicting fold "+fold+": "+wrapper);
 			prediction = ((WrapperPlugin) wrapper).wrapResultAfter(prediction, table, fold, foldsMap, updater);
 		}
 		return prediction;
@@ -321,7 +327,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 * @param prediction
 	 * @return
 	 */
-	protected PredictionResult actuallyPredict(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap,
+	public PredictionResult actuallyPredict(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap,
 			Object predictionContext)
 	{
 		PredictionResult prediction = null;
@@ -420,14 +426,14 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	 * @param wrappers
 	 * @return
 	 */
-	protected FeatureTable wrapTableBefore(FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator,
+	public FeatureTable wrapTableBefore(FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator,
 			OrderedPluginMap wrappers, boolean learn)
 	{
 
 		
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
-			//System.out.println("wrapper " + fold + ": " + wrappers.get(wrapper));
+			System.out.println(this+" wrapping before "+(learn?"learning":"")+" fold "+fold+": "+wrapper);
 			wrapper.configureFromSettings(wrappers.get(wrapper));
 			if(learn)
 				((WrapperPlugin) wrapper).learnFromTrainingData(newData, fold, foldsMap, progressIndicator);

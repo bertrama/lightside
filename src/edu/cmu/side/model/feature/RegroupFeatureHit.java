@@ -28,4 +28,9 @@ public class RegroupFeatureHit extends FeatureHit{
 			return super.compareTo(o);
 		}
 	}
+	
+	public String toString()
+	{
+		return this.feature+"@"+this.documentIndex+"/"+this.getOriginalIndex();
+	}
 }

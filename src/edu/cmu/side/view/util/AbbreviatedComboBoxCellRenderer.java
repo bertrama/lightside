@@ -22,6 +22,9 @@ public class AbbreviatedComboBoxCellRenderer extends DefaultListCellRenderer
 			text = "";
 		else text = value.toString();
 		
+		if(text == null)
+			text = "WTF";
+		
 		if(text.length() > cutoff )
 			text = text.substring(0, cutoff)+"...";
 		Component cell = super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);

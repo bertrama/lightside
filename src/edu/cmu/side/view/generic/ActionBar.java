@@ -80,8 +80,10 @@ public abstract class ActionBar extends AbstractListPanel{
 
 	
 
-	public void refreshPanel(){
-		if(getDefaultName() != null){
+	public void refreshPanel()
+	{
+		if(getDefaultName() != null)
+		{
 			name.setText(Workbench.getRecipeManager().getAvailableRecipeName(getDefaultName(), getRecipeStage()));			
 		}
 	}

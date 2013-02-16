@@ -93,7 +93,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				
 				result = evaluateCrossValidation(table, foldsMap, wrappers, progressIndicator);
 				
-				System.out.println("LP 96: class value type is "+table.getClassValueType());
 				//FIXME: commented out for speed and non-predicting
 //				progressIndicator.update("Training final model on all data");
 //				FeatureTable wrappedTable = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
@@ -312,7 +311,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	{
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
-			System.out.println(this+" wrapping after predicting fold "+fold+": "+wrapper);
 			prediction = ((WrapperPlugin) wrapper).wrapResultAfter(prediction, table, fold, foldsMap, updater);
 		}
 		return prediction;
@@ -433,7 +431,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
-			System.out.println(this+" wrapping before "+(learn?"learning":"")+" fold "+fold+": "+wrapper);
 			wrapper.configureFromSettings(wrappers.get(wrapper));
 			if(learn)
 				((WrapperPlugin) wrapper).learnFromTrainingData(newData, fold, foldsMap, progressIndicator);

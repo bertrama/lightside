@@ -146,6 +146,15 @@
         <classname>learning.EnsembleLearner</classname>
     </plugin>
     
+   <plugin>
+        <name>LinesSplitLearner</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Split learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>learning.LinesSplitLearner</classname>
+    </plugin>
+    
      <plugin>
         <name>Label Distributions</name>
         <author>David Adamson</author>

@@ -142,7 +142,8 @@ public class TrainingResult implements Serializable{
 				String pred;
 				if(predicted.get(i) == null)
 				{
-					System.out.println("TR 143 WRONG: "+i+" is null in the predictions list!");
+					//TODO: Remember that this only applies to CSC data
+//					System.out.println("TR 143 WRONG: "+i+" is null in the predictions list!");
 					pred = "NA";
 				}
 				else

@@ -266,6 +266,13 @@ public class FeatureTable implements Serializable
 		return documents;
 	}
 	
+	// Does not ensure that the class value has been updated - 
+	// should only be used inside a loop and only when, as a precondition, 
+	// getDocumentList() has been called at least once.
+	public DocumentList getDocumentListQuickly(){
+		return documents;
+	}
+	
 	/**
 	 * @return the set of features extracted from the documents.
 	 */

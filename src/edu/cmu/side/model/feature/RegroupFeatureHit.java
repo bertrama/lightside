@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class RegroupFeatureHit extends FeatureHit{
 
-	protected Integer originalIndex;
+	protected int originalIndex;
 	public RegroupFeatureHit(FeatureHit original, Map<Integer, Integer> indexMap) {
 		super(original.getFeature(), original.getValue(), indexMap.get(original.getDocumentIndex()));
 		originalIndex = original.getDocumentIndex();
@@ -21,11 +21,16 @@ public class RegroupFeatureHit extends FeatureHit{
 	}
 	
 	@Override
-	public int compareTo(FeatureHit o){
-		if(o instanceof RegroupFeatureHit && super.compareTo(o)==0){
-			return originalIndex.compareTo(((RegroupFeatureHit)o).originalIndex);
-		}else{
-			return super.compareTo(o);
+	public int compareTo(FeatureHit o)
+	{
+		int featureCompare = super.compareTo(o);
+		if (o instanceof RegroupFeatureHit && featureCompare == 0)
+		{
+			return originalIndex - (((RegroupFeatureHit) o).originalIndex);
+		}
+		else
+		{
+			return featureCompare;
 		}
 	}
 	

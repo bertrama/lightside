@@ -416,6 +416,28 @@ public class FeatureTable implements Serializable
 			}
 		}
 	}
+	
+	public void setHitsIgnoreThreshold(Collection<FeatureHit> hits)
+	{
+		this.hitsPerFeature.clear();
+		this.hitsPerDocument.clear();
+
+		for (int i = 0; i < documents.getSize(); i++)
+		{
+			hitsPerDocument.add(new TreeSet<FeatureHit>());
+		}
+
+		for (FeatureHit hit : hits)
+		{
+			hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
+			if (!hitsPerFeature.containsKey(hit.getFeature()))
+			{
+				hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
+			}
+			hitsPerFeature.get(hit.getFeature()).add(hit);
+
+		}
+	}
 
 	public void addFeatureHits(Collection<FeatureHit> hits)
 	{

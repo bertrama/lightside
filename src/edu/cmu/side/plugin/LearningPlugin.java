@@ -266,7 +266,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		return training;
 	}
 
-	protected void prepareAndTrainAgainstFold(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator) throws Exception
+	public void prepareAndTrainAgainstFold(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator) throws Exception
 	{
 		for(int i = 0; i < table.getSize(); i++)
 		{

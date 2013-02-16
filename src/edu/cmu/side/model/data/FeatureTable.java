@@ -298,8 +298,9 @@ public class FeatureTable implements Serializable
 	    	ft.hitsPerDocument.add(new ArrayList<FeatureHit>());
 	    
 	    for(Feature f : hitsPerFeature.keySet()){
-	    	ft.hitsPerFeature.put(f, hitsPerFeature.get(f));
-	        for(FeatureHit fh : ft.hitsPerFeature.get(f))
+	    	Collection<FeatureHit> hitsPerF = hitsPerFeature.get(f);
+			ft.hitsPerFeature.put(f, new TreeSet<FeatureHit>(hitsPerF));
+	        for(FeatureHit fh : hitsPerF)
 	        	ft.hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
 	    }
 	}
@@ -378,7 +379,11 @@ public class FeatureTable implements Serializable
 		//		annotation = sdl.getCurrentAnnotation();
 		//		generateConvertedClassValues();
 		
-		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(10000);
+
+		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(2000); //Rough guess at capacity requirement.
+		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
+		
+		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(2000);
 		
 		hitsPerDocument.clear();
 		hitsPerFeature.clear();

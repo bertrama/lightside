@@ -207,13 +207,13 @@ public class BuildModelControl extends GenesisControl{
 				
 //				System.out.println(settings);
 				
-				JFileChooser chooser = new JFileChooser(new File("saved"));
-				int result = chooser.showDialog(null, "Save Model Chef Recipe");
-				if(result == JFileChooser.APPROVE_OPTION)
-				{
-					File target = chooser.getSelectedFile();//new File("saved/self-model.side");
-					saveBuildModelRecipe(newRecipe, target);
-				}
+//				JFileChooser chooser = new JFileChooser(new File("saved"));
+//				int result = chooser.showDialog(null, "Save Model Chef Recipe");
+//				if(result == JFileChooser.APPROVE_OPTION)
+//				{
+//					File target = chooser.getSelectedFile();//new File("saved/self-model.side");
+//					saveBuildModelRecipe(newRecipe, target);
+//				}
 				
 				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
 				task.execute();

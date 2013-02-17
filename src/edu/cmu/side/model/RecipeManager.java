@@ -63,7 +63,11 @@ public class RecipeManager{
 		for(Recipe r : recipes){
 			unavailable.add(r.toString());
 		}
+		
 		String key = base;
+		if(key == null)
+			key = "recipe";
+		
 		int counter = 1;
 		while(unavailable.contains(key)){
 			key = base + counter++;

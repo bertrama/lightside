@@ -146,6 +146,26 @@
         <classname>learning.EnsembleLearner</classname>
     </plugin>
     
+    
+   <plugin>
+        <name>Ensemble Minority Voter</name>
+        <author>David Adamson</author>
+        <version>0.2</version>
+        <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>learning.EnsembleMinorityVoter</classname>
+    </plugin>
+    
+    
+   <plugin>
+        <name>MeSplitLearner</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Split learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>learning.MeSplitLearner</classname>
+    </plugin>
+    
    <plugin>
         <name>LinesSplitLearner</name>
         <author>Elijah Mayfield</author>

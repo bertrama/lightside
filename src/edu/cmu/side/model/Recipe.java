@@ -70,6 +70,8 @@ public class Recipe implements Serializable
 		}else{
 			out = "Default: " + stage;
 		}
+		if(out == null)
+			out = stage.toString();
 		return out;
 	}
 

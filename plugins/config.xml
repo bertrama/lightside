@@ -175,6 +175,16 @@
         <classname>learning.LinesSplitLearner</classname>
     </plugin>
     
+        
+   <plugin>
+        <name>LIWCSplitLearner</name>
+        <author>David Adamson</author>
+        <version>0.235</version>
+        <description><![CDATA[Split learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>learning.LIWCSplitLearner</classname>
+    </plugin>
+    
      <plugin>
         <name>Label Distributions</name>
         <author>David Adamson</author>
@@ -211,14 +221,14 @@
         <classname>wrapper.BackwardCueWrapper</classname>
     </plugin> 
     
-        <plugin>
+<!--         <plugin>
         <name>Excuse Me Wrapper</name>
         <author>David Adamson</author>
         <version>0.1</version>
         <description><![CDATA[Default instances without First Person Pronouns]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>wrapper.ExcuseMeWrapper</classname>
-    </plugin> 
+    </plugin>  -->
     
     <plugin>
         <name>Weka Logit</name>

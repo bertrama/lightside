@@ -1,9 +1,11 @@
 package edu.cmu.side.plugin;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +23,7 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.util.EvaluationUtils;
 import edu.cmu.side.view.util.DefaultMap;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
@@ -170,6 +173,18 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 
 		ArrayList<Double> times = new ArrayList<Double>();
 		DecimalFormat print = new DecimalFormat("#.###");
+		PrintWriter out = null ;
+		try
+		{
+			out = new PrintWriter(new FileWriter("folds/"+BuildModelControl.getNewName()+".folds.eval.txt"));
+		}
+		catch (IOException e1)
+		{
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		out.println(EvaluationUtils.getHeader());
+		
 		for(Integer fold : folds)
 		{
 			if(fold < 0)
@@ -212,6 +227,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			
 			List<? extends Comparable<?>> predictionsList = predictionResult.getPredictions();
 
+			List<Comparable<?>> foldPredicted = new ArrayList<Comparable<?>>(500);
+			List<String> foldActual = new ArrayList<String>(500);
+			
 			//int predictionIndex = 0;
 			double correct = 0;
 			double total = 0;
@@ -228,6 +246,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					}
 					
 					predictions[i] = predictionsList.get(i);
+					foldPredicted.add(predictions[i]);
+					foldActual.add(localDocuments.getAnnotationArray().get(i));
+					
 					
 					if(predictions[i].equals(localDocuments.getAnnotationArray().get(i)))
 						correct++;
@@ -236,9 +257,15 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				//predictionIndex++;
 			}
 			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
+			String evaluation = EvaluationUtils.evaluate(foldActual, foldPredicted, labelArray, getOutputName()+".fold"+fold+".eval");
+			System.out.println(evaluation);
+			out.println(evaluation);
 			double timeB = System.currentTimeMillis();
 			times.add((timeB - timeA) / 1000.0);
 		}
+
+		out.close();
+		
 		if(!halt)
 		{
 			progressIndicator.update("Generating confusion matrix");

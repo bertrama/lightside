@@ -106,7 +106,7 @@ public class EvaluationUtils
 	public static String evaluate(List<String> actual, List<? extends Comparable<?>> predicted, String[] poss, String name)
 	{
 		generateConfusionMatrix(actual, predicted, poss);
-		String evaluation = getKappa(confusionMatrix, poss, predicted.size())+"\t"+getAccuracy(confusionMatrix, poss, predicted.size())+"\t"+name;
+		String evaluation = getAccuracy(confusionMatrix, poss, predicted.size())+"\t"+getKappa(confusionMatrix, poss, predicted.size())+"\t"+name;
 		
 		return evaluation;
 	}

@@ -257,7 +257,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				//predictionIndex++;
 			}
 			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
-			String evaluation = EvaluationUtils.evaluate(foldActual, foldPredicted, labelArray, getOutputName()+".fold"+fold+".eval");
+			String evaluation = EvaluationUtils.evaluate(foldActual, foldPredicted, labelArray, BuildModelControl.getNewName()+".fold"+fold+".eval");
 			System.out.println(evaluation);
 			out.println(evaluation);
 			double timeB = System.currentTimeMillis();

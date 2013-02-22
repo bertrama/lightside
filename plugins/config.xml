@@ -108,6 +108,17 @@
         <classname>plugins.analysis.one.display.DocumentsDisplay</classname>
     </plugin>
     
+    
+    
+     <plugin>
+        <name>Label Distributions</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.analysis.one.metric.ExploreModelDistributions</classname>
+    </plugin>
+    
     <plugin>
         <name>Model Text Output</name>
         <author>Elijah Mayfield</author>
@@ -204,23 +215,14 @@
     </plugin>
     
         
- -->   <plugin>
+ -->  <!--  <plugin>
         <name>LIWCSplitLearner</name>
         <author>David Adamson</author>
         <version>0.235</version>
         <description><![CDATA[Split learning for ACL 2013]]></description>
         <jarfile>cues.jar</jarfile>
         <classname>learning.LIWCSplitLearner</classname>
-    </plugin>
-    
-     <plugin>
-        <name>Label Distributions</name>
-        <author>David Adamson</author>
-        <version>0.1</version>
-        <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
-        <jarfile>cues.jar</jarfile>
-        <classname>analysis.one.ExploreModelDistributions</classname>
-    </plugin>
+    </plugin> -->
     
 <!--     <plugin>
         <name>Cue Wrapper</name>
@@ -229,7 +231,7 @@
         <description><![CDATA[Cue wrapping for ACL 2013]]></description>
         <jarfile>cues.jar</jarfile>
         <classname>wrapper.CueWrapper</classname>
-    </plugin> -->
+    </plugin> 
    
    <plugin>
         <name>Forwards Cue Wrapper</name>
@@ -249,7 +251,7 @@
         <classname>wrapper.BackwardCueWrapper</classname>
     </plugin> 
     
-<!--         <plugin>
+         <plugin>
         <name>Excuse Me Wrapper</name>
         <author>David Adamson</author>
         <version>0.1</version>

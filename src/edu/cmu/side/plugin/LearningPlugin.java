@@ -1,5 +1,6 @@
 package edu.cmu.side.plugin;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,6 +28,8 @@ import edu.cmu.side.util.EvaluationUtils;
 import edu.cmu.side.view.util.DefaultMap;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
+	private static final File foldsFile = new File("folds");
+
 	private static final long serialVersionUID = -7928450759075851993L;
 
 	public static String type = "model_builder";
@@ -96,9 +99,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				
 				result = evaluateCrossValidation(table, foldsMap, wrappers, progressIndicator);
 				
-				//FIXME: commented out for speed and non-predicting
-//				progressIndicator.update("Training final model on all data");
-//				FeatureTable wrappedTable = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
+				progressIndicator.update("Training final model on all data");
+				FeatureTable wrappedTable = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
 			}
 			else if (validationSettings.get("type").equals("SUPPLY"))
 			{
@@ -173,17 +175,20 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 
 		ArrayList<Double> times = new ArrayList<Double>();
 		DecimalFormat print = new DecimalFormat("#.###");
+
 		PrintWriter out = null ;
-		try
+		if(foldsFile.exists() && foldsFile.isDirectory())
 		{
-			out = new PrintWriter(new FileWriter("folds/"+BuildModelControl.getNewName()+".folds.eval.txt"));
-		}
-		catch (IOException e1)
-		{
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		out.println(EvaluationUtils.getHeader());
+			try
+			{
+				out = new PrintWriter(new FileWriter("folds/"+BuildModelControl.getNewName()+".folds.eval.txt"));
+			}
+			catch (IOException e1)
+			{
+				e1.printStackTrace();
+			}
+			out.println(EvaluationUtils.getHeader());
+			}
 		
 		for(Integer fold : folds)
 		{
@@ -259,7 +264,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
 			String evaluation = EvaluationUtils.evaluate(foldActual, foldPredicted, labelArray, BuildModelControl.getNewName()+".fold"+fold+".eval");
 			System.out.println(evaluation);
-			out.println(evaluation);
+			if(out != null) out.println(evaluation);
 			double timeB = System.currentTimeMillis();
 			times.add((timeB - timeA) / 1000.0);
 		}

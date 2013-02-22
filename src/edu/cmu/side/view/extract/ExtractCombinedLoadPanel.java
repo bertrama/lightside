@@ -38,7 +38,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		add(BorderLayout.CENTER, files);
 		JPanel pan = new JPanel(new RiverLayout());
 		annotationField.addActionListener(new ExtractFeaturesControl.AnnotationComboListener(this));
-		annotationField.setRenderer(new AbbreviatedComboBoxCellRenderer(25));
+		//annotationField.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
 		
 		pan.add("left", new JLabel("Class:"));
 		pan.add("hfill", annotationField);

@@ -23,8 +23,10 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 			boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
 		Double[] sum = parent.getSum();
 		Component rend = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
-		rend.setBackground(Color.white);
+		
 		rend.setFocusable(false);
+		rend.setBackground(Color.white);
+		rend.setForeground(Color.black);
 
 		if(value instanceof RadioButtonListEntry){
 			RadioButtonListEntry radioButton = (RadioButtonListEntry) value;
@@ -61,6 +63,7 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 					}else if(numberValue < 0){
 						Double outValue = -((Double)(255.0*numberValue)) / sum[1];
 						intensity = outValue.intValue();
+						
 						rend.setBackground(new Color(255, (new Double(255-(intensity/2.0))).intValue(),255-intensity));
 						rend.setForeground(intensity<128?Color.black:Color.white);
 					}					

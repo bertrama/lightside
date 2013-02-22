@@ -225,7 +225,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 		
 		cvControlPanel.setBorder(new EmptyBorder(0,0,0,0));
 		annotations.setBorder(new EmptyBorder(0,20,0,20));
-		annotations.setRenderer(new AbbreviatedComboBoxCellRenderer(15));
+		//annotations.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
 
 		JLabel howToFoldLabel = new JLabel("Fold Assignment:");
 		cvControlPanel.add("br left", howToFoldLabel);

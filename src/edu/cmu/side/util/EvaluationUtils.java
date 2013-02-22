@@ -100,7 +100,7 @@ public class EvaluationUtils
 	
 	public static String getHeader()
 	{
-		return "kappa\tacc\tmodelname";
+		return "acc\tkappa\tmodelname";
 	}
 	
 	public static String evaluate(List<String> actual, List<? extends Comparable<?>> predicted, String[] poss, String name)

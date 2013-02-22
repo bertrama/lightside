@@ -1,6 +1,7 @@
 package edu.cmu.side.view.predict;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
@@ -58,6 +59,10 @@ public class PredictLabelsPane extends JPanel{
 		left.add(newData);
 		pane.setLeftComponent(left);
 		pane.setRightComponent(output);
+		Dimension minimumSize = new Dimension(50, 200);
+		left.setMinimumSize(minimumSize);
+		output.setMinimumSize(minimumSize);
+		pane.setDividerLocation(300);
 		add(BorderLayout.CENTER, pane);
 		add(BorderLayout.SOUTH, actionBar);
 		

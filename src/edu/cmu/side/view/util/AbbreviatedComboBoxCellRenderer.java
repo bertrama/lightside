@@ -7,7 +7,7 @@ import javax.swing.JList;
 
 public class AbbreviatedComboBoxCellRenderer extends DefaultListCellRenderer
 {
-	private int cutoff = 15;
+	private int cutoff = 20;
 
 	public AbbreviatedComboBoxCellRenderer(int cutoff)
 	{

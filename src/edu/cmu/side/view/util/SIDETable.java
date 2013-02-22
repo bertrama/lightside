@@ -8,9 +8,14 @@ import javax.swing.JTable;
  *
  */
 public class SIDETable extends JTable{
-
+	static SIDETableCellRenderer renderer = new SIDETableCellRenderer();
 	public SIDETable(){
-		setDefaultRenderer(Object.class, new SIDETableCellRenderer());
+		setDefaultRenderer(Object.class, renderer);
+//		setDefaultRenderer(String.class, renderer);
+//		setDefaultRenderer(Integer.class, renderer);
+//		setDefaultRenderer(Double.class, renderer);
+//		setDefaultRenderer(RadioButtonListEntry.class, renderer);
+//		setDefaultRenderer(CheckBoxListEntry.class, renderer);
 	}
 	
 	@Override

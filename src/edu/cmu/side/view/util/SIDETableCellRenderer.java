@@ -29,7 +29,9 @@ public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
 		Component rend = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
-		rend.setBackground(Color.white);
+		
+		if(!isSelected)
+			rend.setBackground(Color.white);
 
 		if(value instanceof RadioButtonListEntry){
 			RadioButtonListEntry radioButton = (RadioButtonListEntry) value;
@@ -58,8 +60,9 @@ public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 	        }
 			
 		}
-		if(value instanceof Double){
-			rend = new JLabel(n.format((Double)value));
+		if(value instanceof Double && rend instanceof JLabel)
+		{
+			((JLabel) rend).setText(n.format((Double)value));
 		}
 		
 		

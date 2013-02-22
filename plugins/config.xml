@@ -19,6 +19,16 @@
     </plugin>
     
     <plugin>
+        <name>Stretchy Patterns</name>
+        <author>David Adamson</author>
+        <version>1.0</version>
+        <description><![CDATA[Stretchy Pattern Features]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.features.StretchPatterns</classname>
+    </plugin>
+    
+    
+    <plugin>
         <name>Regular Expression Features</name>
         <author>David Adamson</author>
         <version>1.0</version>

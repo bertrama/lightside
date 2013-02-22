@@ -60,7 +60,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 				Workbench.update(GenericMetricChecklistPanel.this);
 			}
 		});
-		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(15));
+		//combo.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
 		add("left", new JLabel("Evaluations to Display:"));
 		add("br left", new JLabel("Target:"));
 		add("hfill", combo);

@@ -9,13 +9,22 @@
         <classname>plugins.features.BasicFeatures</classname>
     </plugin>
     
-    <plugin>
+       <plugin>
         <name>Column Features</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
         <description><![CDATA[Basic Metadata from Columns]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.features.ColumnFeatures</classname>
+    </plugin>
+    
+    <plugin>
+        <name>Regular Expression Features</name>
+        <author>David Adamson</author>
+        <version>1.0</version>
+        <description><![CDATA[Regular Expressions From Text]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.features.RegexFeatures</classname>
     </plugin>
 
     <plugin>
@@ -136,6 +145,16 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.wrappers.FeatureSelection</classname>
     </plugin>  -->
+      
+            
+ <!--   <plugin>
+        <name>LIWC Features</name>
+        <author>David Adamson</author>
+        <version>0.2</version>
+        <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>features.LIWCFeatures</classname>
+    </plugin>
        
    <plugin>
         <name>Ensemble Learner</name>
@@ -154,6 +173,15 @@
         <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
         <jarfile>cues.jar</jarfile>
         <classname>learning.EnsembleMinorityVoter</classname>
+    </plugin>
+    
+      <plugin>
+        <name>Pandemonium Voter</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Ensemble Learning for ACL 2013]]></description>
+        <jarfile>cues.jar</jarfile>
+        <classname>learning.PandemoniumVoter</classname>
     </plugin>
     
     
@@ -176,7 +204,7 @@
     </plugin>
     
         
-   <plugin>
+ -->   <plugin>
         <name>LIWCSplitLearner</name>
         <author>David Adamson</author>
         <version>0.235</version>

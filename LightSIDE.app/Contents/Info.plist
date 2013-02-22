@@ -2,85 +2,45 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AMIsApplet</key>
+	<key>CFBundleAllowMixedLocalizations</key>
 	<true/>
-	<key>AMStayOpen</key>
-	<false/>
-	<key>BuildMachineOSBuild</key>
-	<string>12C32</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
-	<key>CFBundleDocumentTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>*</string>
-			</array>
-			<key>CFBundleTypeName</key>
-			<string>Automator workflow file</string>
-			<key>CFBundleTypeOSTypes</key>
-			<array>
-				<string>****</string>
-			</array>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-		</dict>
-	</array>
 	<key>CFBundleExecutable</key>
-	<string>Application Stub</string>
+	<string>applet</string>
 	<key>CFBundleIconFile</key>
-	<string>AutomatorApplet</string>
+	<string>applet</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.apple.automator.LightSIDE</string>
+	<string>com.apple.ScriptEditor.id.06A41431-ED34-407F-A387-C4B9631BD106</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>LightSIDE</string>
+	<string>LightSIDE Script</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>1.1.1</string>
 	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleURLTypes</key>
-	<array/>
-	<key>CFBundleVersion</key>
-	<string>346</string>
-	<key>DTCompiler</key>
-	<string>com.apple.compilers.llvm.clang.1_0</string>
-	<key>DTPlatformBuild</key>
-	<string>4F250</string>
-	<key>DTPlatformVersion</key>
-	<string>GM</string>
-	<key>DTSDKBuild</key>
-	<string>12C32</string>
-	<key>DTSDKName</key>
-	<string></string>
-	<key>DTXcode</key>
-	<string>0440</string>
-	<key>DTXcodeBuild</key>
-	<string>4F250</string>
-	<key>LSMinimumSystemVersion</key>
-	<string>10.5</string>
+	<string>aplt</string>
 	<key>LSMinimumSystemVersionByArchitecture</key>
 	<dict>
 		<key>x86_64</key>
 		<string>10.6</string>
 	</dict>
-	<key>LSUIElement</key>
+	<key>LSRequiresCarbon</key>
 	<true/>
-	<key>NSAppleScriptEnabled</key>
-	<string>YES</string>
-	<key>NSMainNibFile</key>
-	<string>ApplicationStub</string>
-	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
-	<key>NSServices</key>
-	<array/>
-	<key>UTExportedTypeDeclarations</key>
-	<array/>
-	<key>UTImportedTypeDeclarations</key>
-	<array/>
+	<key>WindowState</key>
+	<dict>
+		<key>dividerCollapsed</key>
+		<false/>
+		<key>eventLogLevel</key>
+		<integer>-1</integer>
+		<key>name</key>
+		<string>ScriptWindowState</string>
+		<key>positionOfDivider</key>
+		<real>333</real>
+		<key>savedFrame</key>
+		<string>93 151 860 582 0 0 1280 778 </string>
+		<key>selectedTabView</key>
+		<string>event log</string>
+	</dict>
 </dict>
 </plist>

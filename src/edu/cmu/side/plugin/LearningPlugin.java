@@ -23,6 +23,7 @@ import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
+import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.util.EvaluationUtils;
 import edu.cmu.side.view.util.DefaultMap;
@@ -176,20 +177,20 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		ArrayList<Double> times = new ArrayList<Double>();
 		DecimalFormat print = new DecimalFormat("#.###");
 
-		PrintWriter out = null ;
-		if(foldsFile.exists() && foldsFile.isDirectory())
-		{
-			try
-			{
-				out = new PrintWriter(new FileWriter("folds/"+BuildModelControl.getNewName()+".folds.eval.txt"));
-			}
-			catch (IOException e1)
-			{
-				e1.printStackTrace();
-			}
-			out.println(EvaluationUtils.getHeader());
-			}
-		
+//		PrintWriter out = null ;
+//		if(foldsFile.exists() && foldsFile.isDirectory())
+//		{
+//			try
+//			{
+//				out = new PrintWriter(new FileWriter("folds/"+BuildModelControl.getNewName()+".folds.eval.txt"));
+//			}
+//			catch (IOException e1)
+//			{
+//				e1.printStackTrace();
+//			}
+//			out.println(EvaluationUtils.getHeader());
+//		}
+//		
 		for(Integer fold : folds)
 		{
 			if(fold < 0)
@@ -239,15 +240,17 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			double correct = 0;
 			double total = 0;
 			
-			if(distributions == null) distributions = new HashMap<String, List<Double>>(predictionResult.getDistributions());
+			Map<String, List<Double>> predictedDistros = predictionResult.getDistributions();
+			if(distributions == null && predictedDistros != null) distributions = new HashMap<String, List<Double>>(predictedDistros);
 			
 			for (int i = 0; i < predictionsList.size(); i++)
 			{
 				if(foldsMap.get(i).equals(fold))
 				{
+					if(predictedDistros != null) //numeric classifiers don't produce distributions
 					for(String label : labelArray)
 					{
-						distributions.get(label).set(i, predictionResult.getDistributions().get(label).get(i));
+						distributions.get(label).set(i, predictedDistros.get(label).get(i));
 					}
 					
 					predictions[i] = predictionsList.get(i);
@@ -262,14 +265,17 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				//predictionIndex++;
 			}
 			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
-			String evaluation = EvaluationUtils.evaluate(foldActual, foldPredicted, labelArray, BuildModelControl.getNewName()+".fold"+fold+".eval");
-			System.out.println(evaluation);
-			if(out != null) out.println(evaluation);
+//			if(table.getClassValueType() != Type.NUMERIC)
+//			{
+//				String evaluation = EvaluationUtils.evaluate(foldActual, foldPredicted, labelArray, BuildModelControl.getNewName()+".fold"+fold+".eval");
+//				System.out.println(evaluation);
+//				if(out != null) out.println(evaluation);
+//			}
 			double timeB = System.currentTimeMillis();
 			times.add((timeB - timeA) / 1000.0);
 		}
 
-		out.close();
+		//out.close();
 		
 		if(!halt)
 		{

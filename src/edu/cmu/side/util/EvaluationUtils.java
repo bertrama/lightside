@@ -11,11 +11,11 @@ import edu.cmu.side.model.feature.Feature;
 public class EvaluationUtils
 {
 
-	private static Map<String, Map<String, List<Integer>>> confusionMatrix = new TreeMap<String, Map<String, List<Integer>>>();
+	private static Map<String, Map<String, List<Integer>>> confusionMatrix;
 
 	public static Map<String, Map<String, List<Integer>>> generateConfusionMatrix(List<String> actual, List<? extends Comparable<?>> predicted, String[] poss)
 	{
-
+		confusionMatrix = new TreeMap<String, Map<String, List<Integer>>>();
 		for (String p : poss)
 		{
 			confusionMatrix.put(p, new TreeMap<String, List<Integer>>());

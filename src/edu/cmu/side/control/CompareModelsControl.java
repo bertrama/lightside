@@ -1,11 +1,8 @@
 package edu.cmu.side.control;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.TreeMap;
 
-import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.plugin.EvaluateTwoModelPlugin;
@@ -26,7 +23,7 @@ public class CompareModelsControl extends GenesisControl{
 
 
 	static{
-		modelComparisonPlugins = new HashMap<EvaluateTwoModelPlugin, Boolean>();
+		modelComparisonPlugins = new TreeMap<EvaluateTwoModelPlugin, Boolean>();
 		SIDEPlugin[] modelComparisons = PluginManager.getSIDEPluginArrayByType("model_comparison");
 		for(SIDEPlugin fe : modelComparisons){
 			modelComparisonPlugins.put((EvaluateTwoModelPlugin)fe, false);

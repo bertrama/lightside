@@ -54,6 +54,15 @@ public class GenericTripleFrame extends JPanel{
 		this(chooseData, choosePlugin, chooseSettings, true);
 	}
 	
+	public void setBigSplitPosition(int bigPosition)
+	{
+		bigSplit.setDividerLocation(bigPosition);
+	}
+	public void setSmallSplitPosition(int smallPosition)
+	{
+		smallSplit.setDividerLocation(smallPosition);
+	}
+	
 	public void refreshPanel(){
 		for(Refreshable panel : panels){
 			panel.refreshPanel();

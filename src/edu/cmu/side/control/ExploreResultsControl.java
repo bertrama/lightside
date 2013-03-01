@@ -1,10 +1,8 @@
 package edu.cmu.side.control;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.feature.Feature;
@@ -27,13 +25,13 @@ public class ExploreResultsControl extends GenesisControl{
 	
 
 	static{
-		modelAnalysisPlugins = new HashMap<EvaluateOneModelPlugin, Boolean>();
+		modelAnalysisPlugins = new TreeMap<EvaluateOneModelPlugin, Boolean>();
 		SIDEPlugin[] modelEvaluations = PluginManager.getSIDEPluginArrayByType("model_analysis");
 		for(SIDEPlugin fe : modelEvaluations){
 			modelAnalysisPlugins.put((EvaluateOneModelPlugin)fe, false);
 		}
 
-		featureEvaluationPlugins = new HashMap<ModelFeatureMetricPlugin, Map<String, Boolean>>();
+		featureEvaluationPlugins = new TreeMap<ModelFeatureMetricPlugin, Map<String, Boolean>>();
 		SIDEPlugin[] tableEvaluations = PluginManager.getSIDEPluginArrayByType("model_feature_evaluation");
 		for(SIDEPlugin fe : tableEvaluations){
 			ModelFeatureMetricPlugin plugin = (ModelFeatureMetricPlugin)fe;

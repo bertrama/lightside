@@ -60,6 +60,8 @@ public class BuildModelPane extends JPanel{
 		top = new GenericTripleFrame(load, checklist, config);
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
 		
+		top.setSmallSplitPosition(400);
+		
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.add(BorderLayout.CENTER, top);
 		panel.add(BorderLayout.SOUTH, action);

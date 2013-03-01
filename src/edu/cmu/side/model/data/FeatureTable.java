@@ -462,21 +462,32 @@ public class FeatureTable implements Serializable
 		}
 	}
 
-	public void reconcile(FeatureTable train)
+	public void reconcileFeatures(FeatureTable train)
 	{
-		//TODO: decide if this removal step is neccessary.
-//		for(Feature f : this.hitsPerFeature.keySet())
-//		{
-//			if(!train.hitsPerFeature.containsKey(f))
-//			{
-//				Collection<FeatureHit> hits = this.hitsPerFeature.remove(f);
-//				for(FeatureHit h : hits)
-//				{
-//					hitsPerDocument.get(h.getDocumentIndex()).remove(h);
-//				}
-//			}
-//		}
+		//TODO: decide if this removal step is neccessary - it may be un-needful, but could save space.
+		Collection<Feature> toRemove = new ArrayList<Feature>();
 		
+		for(Feature f : this.hitsPerFeature.keySet())
+		{
+			if(!train.hitsPerFeature.containsKey(f))
+			{
+				Collection<FeatureHit> hits = this.hitsPerFeature.get(f);
+				toRemove.add(f);
+				
+				for(FeatureHit h : hits)
+				{
+					hitsPerDocument.get(h.getDocumentIndex()).remove(h);
+				}
+			}
+		}
+		for(Feature f : toRemove)
+		{
+			this.hitsPerFeature.remove(f);
+		}
+		System.out.println("FT 487: removed "+toRemove.size() + " features.");
+		
+		
+		//add empty feature map entries so all training features are accounted for in this new feature table.
 		for(Feature f : train.hitsPerFeature.keySet())
 		{
 			if(!this.hitsPerFeature.containsKey(f))

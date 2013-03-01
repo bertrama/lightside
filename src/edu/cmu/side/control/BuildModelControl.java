@@ -187,12 +187,12 @@ public class BuildModelControl extends GenesisControl{
 					{
 						validationSettings.put("testSet", getHighlightedFeatureTableRecipe().getDocumentList());
 					}
-					if (validationSettings.get("type").equals("SUPPLY"))
-					{
-						DocumentList test = (DocumentList) validationSettings.get("testSet");
-						FeatureTable extractTestFeatures = prepareTestFeatureTable(getHighlightedFeatureTableRecipe(), test, update);
-						validationSettings.put("testFeatureTable", extractTestFeatures);
-					}
+//					if (validationSettings.get("type").equals("SUPPLY"))
+//					{
+//						DocumentList test = (DocumentList) validationSettings.get("testSet");
+//						FeatureTable extractTestFeatures = prepareTestFeatureTable(getHighlightedFeatureTableRecipe(), test, update);
+//						validationSettings.put("testFeatureTable", extractTestFeatures);
+//					}
 				}
 				Recipe newRecipe = getHighlightedFeatureTableRecipe();
 				for(WrapperPlugin wrap : wrapperPlugins.keySet()){
@@ -243,6 +243,9 @@ public class BuildModelControl extends GenesisControl{
 		{
 			ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), updater);
 		}
+		
+		ft.reconcileFeatures(recipe.getTrainingTable());
+		
 		return ft;
 
 	}
@@ -268,6 +271,14 @@ public class BuildModelControl extends GenesisControl{
 				FeatureTable current = plan.getTrainingTable();
 				if (current != null)
 				{
+
+					if (validationSettings.get("type").equals("SUPPLY"))
+					{
+						DocumentList test = (DocumentList) validationSettings.get("testSet");
+						FeatureTable extractTestFeatures = prepareTestFeatureTable(plan, test, update);
+						validationSettings.put("testFeatureTable", extractTestFeatures);
+					}
+					
 					TrainingResult model = plan.getLearner().train(current, plan.getLearnerSettings(), validationSettings, plan.getWrappers(), BuildModelControl.getUpdater());
 					if(model != null)
 					{

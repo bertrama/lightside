@@ -145,9 +145,10 @@ public class Predictor
 		{
 			Chef.quiet = quiet;
 			Recipe newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE);
-			FeatureTable ft = newRecipe.getTrainingTable();
-			//FeatureTable ft = prepareTestSet(corpus);
-			result = recipe.getLearner().predict(recipe.getFeatureTable(), ft, recipe.getLearnerSettings(), textUpdater, newRecipe.getWrappers());
+			FeatureTable predictTable = newRecipe.getTrainingTable();
+			FeatureTable trainingTable = recipe.getTrainingTable();
+			predictTable.reconcileFeatures(trainingTable);
+			result = recipe.getLearner().predict(trainingTable, predictTable, recipe.getLearnerSettings(), textUpdater, newRecipe.getWrappers());
 		}
 		catch (Exception e)
 		{

@@ -47,6 +47,10 @@ public class TrainingResult implements Serializable{
 		return test;
 	}
 
+	public FeatureTable getTrainingTable(){
+		return train;
+	}
+
 	public List<? extends Comparable<?>> getPredictions(){
 		return predictions;
 	}

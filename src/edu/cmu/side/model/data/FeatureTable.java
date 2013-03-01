@@ -461,4 +461,28 @@ public class FeatureTable implements Serializable
 			}
 		}
 	}
+
+	public void reconcile(FeatureTable train)
+	{
+		//TODO: decide if this removal step is neccessary.
+//		for(Feature f : this.hitsPerFeature.keySet())
+//		{
+//			if(!train.hitsPerFeature.containsKey(f))
+//			{
+//				Collection<FeatureHit> hits = this.hitsPerFeature.remove(f);
+//				for(FeatureHit h : hits)
+//				{
+//					hitsPerDocument.get(h.getDocumentIndex()).remove(h);
+//				}
+//			}
+//		}
+		
+		for(Feature f : train.hitsPerFeature.keySet())
+		{
+			if(!this.hitsPerFeature.containsKey(f))
+			{
+				this.hitsPerFeature.put(f, new ArrayList<FeatureHit>());
+			}
+		}
+	}
 }

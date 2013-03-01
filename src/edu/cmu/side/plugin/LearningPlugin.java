@@ -299,6 +299,9 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet, OrderedPluginMap wrappers, StatusUpdater updater){
 		DefaultMap<Integer, Integer> defaultFoldMap = new DefaultMap<Integer, Integer>(0);
 		PredictionResult predictions = predictOnFold(train, testSet, 0, defaultFoldMap, updater, wrappers);
+		
+		testSet.reconcile(train);
+		
 		TrainingResult training = new TrainingResult(train, testSet, predictions);
 		return training;
 	}

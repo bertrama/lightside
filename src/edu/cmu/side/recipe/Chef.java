@@ -76,6 +76,7 @@ public class Chef
 			System.out.println("Extractor Settings: "+extractors.get(plug));
 			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
 			hits.addAll(extractorHits);
+			System.out.println(extractorHits.size()+" hits for "+plug);
 		}
 		FeatureTable ft = new FeatureTable(corpus, hits, threshold, annotation, type);
 		recipe.setFeatureTable(ft);
@@ -91,7 +92,7 @@ public class Chef
 	}
 	
 	//TODO: be more consistent in parameters to recipe stages
-	public static Recipe followRecipe(Recipe originalRecipe, DocumentList corpus, Stage finalStage) throws Exception
+	public static Recipe followRecipe(Recipe originalRecipe, DocumentList corpus, Stage finalStage, int newThreshold) throws Exception
 	{
 		Recipe newRecipe = Recipe.copyEmptyRecipe(originalRecipe);
 		
@@ -102,7 +103,7 @@ public class Chef
 			return newRecipe;
 		
 		FeatureTable originalFeatures = originalRecipe.getFeatureTable();
-		simmerFeatures(newRecipe, originalFeatures.getThreshold(), originalFeatures.getAnnotation(), originalFeatures.getClassValueType());
+		simmerFeatures(newRecipe, newThreshold, originalFeatures.getAnnotation(), originalFeatures.getClassValueType());
 		
 		if(finalStage.compareTo(Stage.TRAINED_MODEL) < 0)
 			return newRecipe;
@@ -204,7 +205,7 @@ public class Chef
 		}
 
 		Recipe recipe = loadRecipe(recipePath);
-		Recipe result = followRecipe(recipe, new DocumentList(corpusFiles), recipe.getStage());
+		Recipe result = followRecipe(recipe, new DocumentList(corpusFiles), recipe.getStage(), recipe.getFeatureTable().getThreshold());
 
 		System.out.println("extracted "+result.getFeatureTable().getFeatureSet().size()+" features.");
 		if(result.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)

@@ -70,30 +70,39 @@ public class FeatureTable implements Serializable
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
 		this.threshold = thresh;
 		this.documents = sdl;
-		System.out.println(sdl.getCurrentAnnotation() + " annotation FT63");
-		
-		for(int i = 0; i < sdl.getSize(); i++){
+
+		System.out.println("FT 74: " + hits.size() + "total incoming hits");
+
+		for (int i = 0; i < sdl.getSize(); i++)
+		{
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
 		}
-		for(FeatureHit hit : hits){
+		for (FeatureHit hit : hits)
+		{
 			Feature f = hit.getFeature();
-			if(!localFeatures.containsKey(f)){
+			if (!localFeatures.containsKey(f))
+			{
 				localFeatures.put(f, new TreeSet<Integer>());
 			}
 			localFeatures.get(f).add(hit.getDocumentIndex());
 		}
 
-		for(FeatureHit hit : hits){
-			if(localFeatures.get(hit.getFeature()).size() >= threshold){
+		for (FeatureHit hit : hits)
+		{
+			if (localFeatures.get(hit.getFeature()).size() >= threshold)
+			{
 				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
-				if(!hitsPerFeature.containsKey(hit.getFeature())){
+				if (!hitsPerFeature.containsKey(hit.getFeature()))
+				{
 					hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
 				}
 				hitsPerFeature.get(hit.getFeature()).add(hit);
 			}
 		}
+
+		System.out.println("FT 74: "+hitsPerDocument.get(0).size()+" thresholded hits for doc 0");
 	}
-	
+
 	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh){
 		this();
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);

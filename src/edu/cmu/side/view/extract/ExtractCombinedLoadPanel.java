@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.ImageIcon;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,69 +26,87 @@ import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
 import edu.cmu.side.view.util.SelectPluginList;
 
-public class ExtractCombinedLoadPanel extends AbstractListPanel{
-	
+public class ExtractCombinedLoadPanel extends AbstractListPanel
+{
+
 	ExtractLoadPanel files = new ExtractLoadPanel("CSV Files:");
 
 	JComboBox annotationField = new JComboBox();
 	SelectPluginList textColumnsList = new SelectPluginList();
 	JScrollPane textColumnsScroll = new JScrollPane(textColumnsList);
-	
-	public ExtractCombinedLoadPanel(String s){
+
+	public ExtractCombinedLoadPanel(String s)
+	{	
 		setLayout(new BorderLayout());
 		add(BorderLayout.CENTER, files);
 		JPanel pan = new JPanel(new RiverLayout());
 		annotationField.addActionListener(new ExtractFeaturesControl.AnnotationComboListener(this));
-		//annotationField.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
-		
+		// annotationField.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
+
 		pan.add("left", new JLabel("Class:"));
 		pan.add("hfill", annotationField);
 		pan.add("br left", new JLabel("Text Fields:"));
 		pan.add("br hfill", textColumnsScroll);
 		add(BorderLayout.SOUTH, pan);
-		
-		//GenesisControl.addListenerToMap(files, files); //you should never have to listen to yourself. 
-		//GenesisControl.addListenerToMap(this, files); //document lists update when "this" changes now
+
+		// GenesisControl.addListenerToMap(files, files); //you should never
+		// have to listen to yourself.
+		// GenesisControl.addListenerToMap(this, files); //document lists update
+		// when "this" changes now
 		GenesisControl.addListenerToMap(files, this);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, files);
+		
+		ImageIcon iconLoad = new ImageIcon("toolkits/icons/csv_note.png");
+		load.setIcon(iconLoad);
 	}
-	
+
 	@Override
-	public void refreshPanel(){
-		if(files.getHighlight() != null){
+	public void refreshPanel()
+	{
+		if (files.getHighlight() != null)
+		{
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 			Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
 			Map<String, Boolean> columns = new TreeMap<String, Boolean>();
-			for(String s : sdl.allAnnotations().keySet()){
-				if(sdl.getCurrentAnnotation() == null || !sdl.getCurrentAnnotation().equals(s)) columns.put(s, false);
+			for (String s : sdl.allAnnotations().keySet())
+			{
+				if (sdl.getCurrentAnnotation() == null || !sdl.getCurrentAnnotation().equals(s)) columns.put(s, false);
 			}
-			for(String s : sdl.getTextColumns()){
-				columns.put(s,  true);
+			for (String s : sdl.getTextColumns())
+			{
+				columns.put(s, true);
 			}
 			reloadCheckBoxList(columns);
-		}else{
+		}
+		else
+		{
 			Workbench.reloadComboBoxContent(annotationField, new ArrayList<Object>(), null);
 			reloadCheckBoxList(new TreeMap<String, Boolean>());
 		}
 		annotationField.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
-		
+
 	}
 
-	public void reloadCheckBoxList(Map<String, Boolean> labels){
+	public void reloadCheckBoxList(Map<String, Boolean> labels)
+	{
 		FastListModel model = new FastListModel();
 		CheckBoxListEntry[] array = new CheckBoxListEntry[labels.size()];
 		int i = 0;
-		for(String key : labels.keySet()){
+		for (String key : labels.keySet())
+		{
 			array[i] = new CheckBoxListEntry(key, labels.get(key));
-			array[i].addItemListener(new ItemListener(){
-				@Override 
-				public void itemStateChanged(ItemEvent ie) {
-					 //because this modifies a recipe, should it notify on the recipemanager? or on the individual recipe?
+			array[i].addItemListener(new ItemListener()
+			{
+				@Override
+				public void itemStateChanged(ItemEvent ie)
+				{
+					// because this modifies a recipe, should it notify on the
+					// recipemanager? or on the individual recipe?
 					DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
-					sdl.setTextColumn(((CheckBoxListEntry)ie.getItem()).getValue().toString(), ie.getStateChange()==ItemEvent.SELECTED);
-					Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());			
+					sdl.setTextColumn(((CheckBoxListEntry) ie.getItem()).getValue().toString(), ie.getStateChange() == ItemEvent.SELECTED);
+					Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
 					Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
-					Workbench.update(ExtractCombinedLoadPanel.this);			
+					Workbench.update(ExtractCombinedLoadPanel.this);
 				}
 			});
 			i++;
@@ -96,8 +115,8 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel{
 		textColumnsList.setModel(model);
 	}
 
-	
-	public JComboBox getAnnotationField(){
+	public JComboBox getAnnotationField()
+	{
 		return annotationField;
 	}
 }

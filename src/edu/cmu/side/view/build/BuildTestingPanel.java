@@ -54,7 +54,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 	JRadioButton radioManual = new JRadioButton("Manual:");
 	
 	JComboBox annotations = new JComboBox();
-	TestSetLoadPanel testSetLoadPanel = new TestSetLoadPanel("Select Test Set");
+	TestSetLoadPanel testSetLoadPanel = new TestSetLoadPanel("Test Set (CSV):");
 	
 	JPanel cvControlPanel = new JPanel(new RiverLayout(0, 3));
 	

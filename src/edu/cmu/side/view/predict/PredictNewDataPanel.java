@@ -1,22 +1,20 @@
 package edu.cmu.side.view.predict;
 
-import java.io.File;
 import java.util.Collections;
 
 import javax.swing.JScrollPane;
 
 import edu.cmu.side.Workbench;
-import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
-import edu.cmu.side.view.generic.GenericLoadPanel;
+import edu.cmu.side.view.generic.GenericLoadCSVPanel;
 import edu.cmu.side.view.util.SelectPluginList;
 
-public class PredictNewDataPanel extends GenericLoadPanel
+public class PredictNewDataPanel extends GenericLoadCSVPanel
 {
 
 	SelectPluginList textColumnsList = new SelectPluginList();
@@ -24,9 +22,7 @@ public class PredictNewDataPanel extends GenericLoadPanel
 
 	public PredictNewDataPanel()
 	{
-		super("Unlabeled Data:");
-		this.remove(save);
-		chooser.setCurrentDirectory(new File("data"));
+		super("Unlabeled Data (CSV):");
 		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, this);
 	}
 

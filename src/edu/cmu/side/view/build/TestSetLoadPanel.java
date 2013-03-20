@@ -1,33 +1,25 @@
 package edu.cmu.side.view.build;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Collections;
-import java.util.HashSet;
 
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 
-import com.yerihyo.yeritools.io.FileToolkit;
-
-import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
-import edu.cmu.side.view.generic.GenericLoadPanel;
+import edu.cmu.side.view.generic.GenericLoadCSVPanel;
 
-public class TestSetLoadPanel extends GenericLoadPanel
+public class TestSetLoadPanel extends GenericLoadCSVPanel
 {
 
 	public TestSetLoadPanel(String s)
 	{
-		super(s, true, true, false);
-		load.setToolTipText("Load Test Set");
+		super(s);
+		load.setToolTipText("Load Test Set (CSV)");
 		chooser.setCurrentDirectory(new File("data"));
 
 //		Dimension v = combo.getPreferredSize();
@@ -39,8 +31,7 @@ public class TestSetLoadPanel extends GenericLoadPanel
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, this);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, this);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, this);
-		
-		remove(save);
+	
 		revalidate();
 
 	}

@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import se.datadosen.component.RiverLayout;
 
@@ -42,8 +43,13 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	protected JButton warn = new JButton("");
 	protected JFileChooser chooser = new JFileChooser(new File("saved"));
 
+	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
+	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
+	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "SIDE");
+
 	protected GenericLoadPanel()
 	{
+		
 		setLayout(new RiverLayout());
 		combo.addActionListener(new ActionListener()
 		{
@@ -75,6 +81,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	public GenericLoadPanel(String l, boolean showLoad, boolean showDelete, boolean showSave)
 	{
 		this();
+		
 		label = new JLabel(l);
 		buttons.setLayout(new RiverLayout());
 		ImageIcon iconDelete = new ImageIcon("toolkits/icons/cross.png");
@@ -222,6 +229,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		}
 		else
 		{
+			chooser.setFileFilter(sideFilter);
 			chooser.setSelectedFile(new File("saved/" + recipe.getRecipeName()));
 			int response = chooser.showSaveDialog(this);
 			if (response == JFileChooser.APPROVE_OPTION)
@@ -229,7 +237,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 				File target = chooser.getSelectedFile();
 				if (target.exists())
 				{
-					response = JOptionPane.showConfirmDialog(this, target + "already exists. Do you want to overwrite it?");
+					response = JOptionPane.showConfirmDialog(this, target.getName() + " already exists in this folder.\nDo you want to overwrite it?");
 					if (response != JOptionPane.YES_OPTION) return;
 				}
 
@@ -261,13 +269,14 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	public void loadNewItem()
 	{
+		chooser.setFileFilter(sideFilter);
 		int response = chooser.showOpenDialog(this);
 		if (response == JFileChooser.APPROVE_OPTION)
 		{
 			File target = chooser.getSelectedFile();
 			if (!target.exists())
 			{
-				JOptionPane.showMessageDialog(this, "There's not a file there!", "No Such File", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "The selected file does not exist. Where did it go?", "No Such File", JOptionPane.ERROR_MESSAGE);
 			}
 
 			try
@@ -282,7 +291,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			}
 			catch (Exception e)
 			{
-				JOptionPane.showMessageDialog(this, "Error while loading:\n" + e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Error while loading file:\n" + e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 
@@ -291,7 +300,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	protected void loadNewDocumentsFromCSV()
 	{
-		chooser.setFileFilter(FileToolkit.createExtensionListFileFilter(new String[] { "csv" }, true));
+		chooser.setFileFilter(csvFilter);
 		chooser.setMultiSelectionEnabled(true);
 		int result = chooser.showOpenDialog(GenericLoadPanel.this);
 		if (result != JFileChooser.APPROVE_OPTION) { return; }

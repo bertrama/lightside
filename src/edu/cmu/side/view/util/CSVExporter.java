@@ -9,35 +9,18 @@ import java.io.PrintWriter;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 
 public class CSVExporter
 {
 
-	static JFileChooser chooser = new JFileChooser(new File("data"));
-	
-	{
-		chooser.setFileFilter(new FileFilter()
-		{
-
-			@Override
-			public boolean accept(File file)
-			{
-				return file.getPath().endsWith(".csv");
-			}
-
-			@Override
-			public String getDescription()
-			{
-				// TODO Auto-generated method stub
-				return "CSV Files";
-			}
-
-		});
-	}
+	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV (Excel)", "csv", "CSV");
+	static JFileChooser chooser = new JFileChooser(new File("."));
 	
 	public static void exportToCSV(TableModel model)
 	{
+		chooser.setFileFilter(csvFilter);
 		chooser.setSelectedFile(new File("export.csv"));
 		
 		int state = chooser.showDialog(null, "Export to CSV");

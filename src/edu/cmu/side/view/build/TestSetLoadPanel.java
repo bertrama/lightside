@@ -83,13 +83,23 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 			}
 			else
 			{
-				clearWarning();
+				String annotation = trainRecipe.getFeatureTable().getAnnotation();
+				if(!testList.allAnnotations().keySet().contains(annotation))
+				{
+					setWarning("This test set does not have the '"+annotation+ "' label you're training on.");
+				}
+				else
+				{
+					testList.setCurrentAnnotation(annotation);
+					clearWarning();
+				}
 			}
 		}
 		else
 		{
 			clearWarning();
 		}
+		
 	}
 
 	@Override

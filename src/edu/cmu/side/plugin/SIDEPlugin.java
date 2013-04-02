@@ -1,12 +1,17 @@
 package edu.cmu.side.plugin;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
+import javax.swing.text.Highlighter.HighlightPainter;
 
 import edu.cmu.side.Workbench;
 

@@ -1,6 +1,6 @@
 package edu.cmu.side.model.feature;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -29,12 +29,20 @@ public class LocalFeatureHit extends FeatureHit
 		this.hits = hits;
 	}
 	
-	public LocalFeatureHit(Feature feature, Object value, int documentIndex, int[] h)
+	public LocalFeatureHit(Feature feature, Object value, int documentIndex, int start, int end)
 	{
 		super(feature, value, documentIndex);
-		this.singleHit = h;
-		hits = Arrays.asList(h);
+		hits = new ArrayList<int[]>();
+		addHit(start, end);
 	}
+	
+//	public LocalFeatureHit(Feature feature, Object value, int documentIndex, int[] h)
+//	{
+//		super(feature, value, documentIndex);
+//		this.singleHit = h;
+//		hits = new ArrayList<int[]>();
+//		addHit(h[0], h[1]);
+//	}
 	
 	public Collection<int[]> getHits()
 	{
@@ -50,5 +58,10 @@ public class LocalFeatureHit extends FeatureHit
 				x+="("+h[0]+","+h[1]+") ";
 		}
 		return x;
+	}
+
+	public void addHit(int start, int end)
+	{
+		hits.add(new int[]{start, end});
 	}
 }

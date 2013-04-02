@@ -5,6 +5,7 @@ import java.util.Map;
 
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
+import edu.cmu.side.plugin.FeatureFetcher.AbstractFeatureFetcherPlugin;
 
 /**
  * Filter plugins are used in the Modify Features panel. Given a feature table,
@@ -15,7 +16,7 @@ import edu.cmu.side.model.data.FeatureTable;
  * multiples!
  * 
  */
-public abstract class RestructurePlugin extends SIDEPlugin implements Serializable{
+public abstract class RestructurePlugin extends AbstractFeatureFetcherPlugin implements Serializable{
 
 	@Override
 	public String getType() {
@@ -37,5 +38,6 @@ public abstract class RestructurePlugin extends SIDEPlugin implements Serializab
 	protected abstract FeatureTable restructureWithMaskForSubclass(FeatureTable original, boolean[] mask, StatusUpdater progressIndicator);
 
 	protected abstract FeatureTable restructureTestSetForSubclass(FeatureTable original, FeatureTable test, StatusUpdater progressIndicator);
+	
 	
 }

@@ -7,8 +7,9 @@ import java.util.Map;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.plugin.FeatureFetcher.AbstractFeatureFetcherPlugin;
 
-public abstract class FeaturePlugin extends SIDEPlugin implements Serializable{
+public abstract class FeaturePlugin extends AbstractFeatureFetcherPlugin implements Serializable{
 	private static final long serialVersionUID = -2856017007104452008L;
 
 	public static String type = "feature_hit_extractor";

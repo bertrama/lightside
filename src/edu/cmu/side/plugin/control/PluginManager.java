@@ -19,6 +19,7 @@ import com.yerihyo.yeritools.io.FileToolkit;
 import com.yerihyo.yeritools.text.StringToolkit;
 import com.yerihyo.yeritools.xml.XMLToolkit;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.plugin.SIDEPlugin;
 
 public class PluginManager {
@@ -159,5 +160,10 @@ public class PluginManager {
 
 	public String getErrorMessage() {
 		return errorMessage;
+	}
+	
+	public static SIDEPlugin getPluginByClassname(String classname)
+	{
+		 return Workbench.pluginManager.getPluginWrapperByPluginClassName(classname).getSIDEPlugin();
 	}
 }

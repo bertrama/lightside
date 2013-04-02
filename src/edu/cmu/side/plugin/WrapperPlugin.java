@@ -9,8 +9,10 @@ import se.datadosen.component.RiverLayout;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
+import edu.cmu.side.plugin.FeatureFetcher.AbstractFeatureFetcherPlugin;
 
-public abstract class WrapperPlugin extends SIDEPlugin{
+public abstract class WrapperPlugin extends AbstractFeatureFetcherPlugin
+{
 
 
 	protected JPanel panel = new JPanel(new RiverLayout());

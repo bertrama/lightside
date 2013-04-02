@@ -1,10 +1,17 @@
 package edu.cmu.side.model.feature;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import edu.cmu.side.plugin.FeatureFetcher;
+import edu.cmu.side.plugin.FeaturePlugin;
+import edu.cmu.side.plugin.control.PluginManager;
 
 public class Feature implements Serializable, Comparable<Feature>
 {
@@ -32,14 +39,16 @@ public class Feature implements Serializable, Comparable<Feature>
 	protected Feature.Type featureType;
 	protected Collection<String> nominalValues;
 	
+	protected transient FeatureFetcher extractor;
+	
 	private static Map<String, Map<String, Feature>> featureCache = new TreeMap<String, Map<String, Feature>>();
 	
-	public static Feature fetchFeature(String prefix, String name, Feature.Type type){
+	public static Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
 		if(!featureCache.containsKey(prefix)){
 			featureCache.put(prefix, new HashMap<String, Feature>(100000));
 		}
 		if(!featureCache.get(prefix).containsKey(name+"_"+type.toString())){
-			Feature newFeat = new Feature(prefix, name, type);
+			Feature newFeat = new Feature(prefix, name, type, extractorPlugin);
 			featureCache.get(prefix).put(name+"_"+type.toString(), newFeat);
 			return newFeat;			
 		}else{
@@ -47,8 +56,8 @@ public class Feature implements Serializable, Comparable<Feature>
 		}
 	}
 	
-	public static Feature fetchFeature(String prefix, String name, Collection<String> nominals){
-		Feature f = fetchFeature(prefix, name, Feature.Type.NOMINAL);
+	public static Feature fetchFeature(String prefix, String name, Collection<String> nominals, FeatureFetcher extractorPlugin){
+		Feature f = fetchFeature(prefix, name, Feature.Type.NOMINAL, extractorPlugin);
 		if(f.nominalValues == null){
 			f.setNominalValues(nominals);
 		}
@@ -65,15 +74,16 @@ public class Feature implements Serializable, Comparable<Feature>
 	 * @param name a prefix-unique name for this feature
 	 * @param type a hint for feature handling - Feature.Type.NUMERIC, BOOLEAN, or STRING
 	 */
-	private Feature(String prefix, String name, Feature.Type type)
+	private Feature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin)
 	{
 		this.featureName = name;
 		this.extractorPrefix = prefix;
 		this.featureType = type;
+		this.extractor = extractorPlugin;
 	}
 	
 	protected Feature(){
-		this("none","none",Type.BOOLEAN);
+		this("none","none",Type.BOOLEAN, null);
 	}
 	/**
 	 * Construct a Nominal (enumerated type) Feature.
@@ -81,7 +91,7 @@ public class Feature implements Serializable, Comparable<Feature>
 	 * @param name a prefix-unique name for this feature
 	 * @param nominals the possible values this Feature can express
 	 */
-	private Feature(String prefix, String name, Collection<String> nominals)
+	private Feature(String prefix, String name, Collection<String> nominals, FeatureFetcher extractorPlugin)
 	{
 		this.featureName = name;
 		this.extractorPrefix = prefix;
@@ -96,8 +106,8 @@ public class Feature implements Serializable, Comparable<Feature>
 	
 	public Feature clone(String prefix){
 		if (featureType == Feature.Type.NOMINAL)
-			return new Feature(extractorPrefix, prefix+featureName, nominalValues);
-		return new Feature(extractorPrefix, prefix+featureName, featureType);
+			return new Feature(extractorPrefix, prefix+featureName, nominalValues, extractor);
+		return new Feature(extractorPrefix, prefix+featureName, featureType, extractor);
 	}
 	
 	/**
@@ -163,4 +173,35 @@ public class Feature implements Serializable, Comparable<Feature>
 			b.setNominalValues(a.getNominalValues());
 		return b;
 	}
+
+	public FeatureFetcher getExtractor()
+	{
+		return extractor;
+	}
+	
+	public boolean isTokenized()
+	{
+		return extractor.isTokenized(this);
+	}
+	
+
+	private void writeObject(ObjectOutputStream out) throws IOException
+	{
+		out.writeObject(featureName);
+		out.writeObject(extractorPrefix);
+		out.writeObject(featureType);
+		out.writeObject(nominalValues);
+		out.writeObject(extractor.getClass().getName());
+	}
+	
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	{
+		featureName = (String) in.readObject();
+		extractorPrefix = (String) in.readObject();;
+		featureType = (Type) in.readObject();;
+		nominalValues = (Collection<String>) in.readObject();
+		
+		extractor = (FeatureFetcher) PluginManager.getPluginByClassname((String) in.readObject());
+	}
+
 }

@@ -12,9 +12,34 @@ public class LocalFeatureHit extends FeatureHit
 	 * {start, end} pairs indicating where this feature is expressed in this document.
 	 * end - start = length of hit.
 	 */
-	private Collection<int[]> hits;
-
-	private int[] singleHit;
+	private Collection<HitLocation> hits;
+	
+	public static class HitLocation
+	{
+		private int start;
+		private int end;
+		private String column;
+		public HitLocation(String column, int start, int end)
+		{
+			super();
+			this.start = start;
+			this.end = end;
+			this.column = column;
+		}
+		public int getStart()
+		{
+			return start;
+		}
+		public int getEnd()
+		{
+			return end;
+		}
+		public String getColumn()
+		{
+			return column;
+		}
+		
+	}
 	
 	/**
 	 * 
@@ -23,17 +48,17 @@ public class LocalFeatureHit extends FeatureHit
 	 * @param documentIndex the index of the document in the current document set.
 	 * @param hits {start, end} pairs indicating exactly where this feature hits in this document.
 	 */
-	public LocalFeatureHit(Feature feature, Object value, int documentIndex, Collection<int[]> hits)
+	public LocalFeatureHit(Feature feature, Object value, int documentIndex, Collection<HitLocation> hits)
 	{
 		super(feature, value, documentIndex);
 		this.hits = hits;
 	}
 	
-	public LocalFeatureHit(Feature feature, Object value, int documentIndex, int start, int end)
+	public LocalFeatureHit(Feature feature, Object value, int documentIndex, String column, int start, int end)
 	{
 		super(feature, value, documentIndex);
-		hits = new ArrayList<int[]>();
-		addHit(start, end);
+		hits = new ArrayList<HitLocation>();
+		addHit(column, start, end);
 	}
 	
 //	public LocalFeatureHit(Feature feature, Object value, int documentIndex, int[] h)
@@ -44,7 +69,7 @@ public class LocalFeatureHit extends FeatureHit
 //		addHit(h[0], h[1]);
 //	}
 	
-	public Collection<int[]> getHits()
+	public Collection<HitLocation> getHits()
 	{
 		return hits;
 	}
@@ -54,14 +79,14 @@ public class LocalFeatureHit extends FeatureHit
 		String x = feature+"@"+documentIndex+"("+value+"):";
 		if(hits != null)
 		{
-			for(int[] h : hits)
-				x+="("+h[0]+","+h[1]+") ";
+			for(HitLocation h : hits)
+				x+="("+h.column+": "+h.start+","+h.end+") ";
 		}
 		return x;
 	}
 
-	public void addHit(int start, int end)
+	public void addHit(String column, int start, int end)
 	{
-		hits.add(new int[]{start, end});
+		hits.add(new HitLocation(column, start, end));
 	}
 }

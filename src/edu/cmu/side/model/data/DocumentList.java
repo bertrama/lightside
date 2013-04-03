@@ -17,12 +17,14 @@ import com.yerihyo.yeritools.swing.AlertDialog;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.feature.Feature;
 
-public class DocumentList implements Serializable{
+public class DocumentList implements Serializable
+{
 	private static final long serialVersionUID = -5433699826930815886L;
 
 	List<String> filenameList = new ArrayList<String>();
 	Map<String, List<String>> allAnnotations = new HashMap<String, List<String>>();
 	Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
+	boolean differentiateTextColumns = false;
 	String currentAnnotation; 
 	Feature.Type type;
 	String name = "Default documents";
@@ -278,12 +280,37 @@ public class DocumentList implements Serializable{
 		return sb.toString();
 	}
 
-	public String getCurrentAnnotation(){
+	public String getCurrentAnnotation()
+	{
 		return currentAnnotation;
 	}
 
-	public Set<String> getTextColumns(){
+	public Set<String> getTextColumns()
+	{
 		return textColumns.keySet();
+	}
+	
+	
+	
+	public boolean textColumnsAreDifferentiated()
+	{
+		return differentiateTextColumns;
+	}
+
+
+	public void setDifferentiateTextColumns(boolean textColumnsShouldBeDifferentiated)
+	{
+		this.differentiateTextColumns = textColumnsShouldBeDifferentiated;
+	}
+
+
+	public String getTextFeatureName(String baseName, String column)
+	{
+		if(differentiateTextColumns)
+		{
+			return column+":"+baseName;
+		}
+		else return baseName;
 	}
 	
 	/**

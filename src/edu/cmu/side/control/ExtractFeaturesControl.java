@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -133,6 +134,20 @@ public class ExtractFeaturesControl extends GenesisControl{
 	public static String getTargetAnnotation(){
 		return targetAnnotation;
 	}
+	
+	public static final ActionListener differentiateTextColumnsListener = new ActionListener()
+	{
+		@Override
+		public void actionPerformed(ActionEvent event)
+		{
+			boolean differentiate = ((JCheckBox)event.getSource()).isSelected();
+			if(highlightedDocumentList != null)
+			{
+				highlightedDocumentList.getDocumentList().setDifferentiateTextColumns(differentiate);
+			}
+		}
+		
+	};
 	
 	public static class AnnotationComboListener implements ActionListener{
 		private ExtractCombinedLoadPanel parentComponent;

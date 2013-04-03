@@ -6,7 +6,7 @@ import java.util.Map;
 public class RegroupFeatureHit extends FeatureHit{
 
 	protected int originalIndex;
-	public RegroupFeatureHit(FeatureHit original, Map<Integer, Integer> indexMap) {
+	public RegroupFeatureHit(FeatureHit original, Map<Integer, Integer> indexMap, int[] docTextOffsets) {
 		super(original.getFeature(), original.getValue(), indexMap.get(original.getDocumentIndex()));
 		originalIndex = original.getDocumentIndex();
 	}

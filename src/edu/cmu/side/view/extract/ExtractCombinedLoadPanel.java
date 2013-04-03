@@ -1,7 +1,8 @@
 package edu.cmu.side.view.extract;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,7 +22,6 @@ import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
-import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
@@ -34,6 +35,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 	JComboBox annotationField = new JComboBox();
 	SelectPluginList textColumnsList = new SelectPluginList();
 	JScrollPane textColumnsScroll = new JScrollPane(textColumnsList);
+	JCheckBox differentiateBox = new JCheckBox("Differentiate Text Fields");
 
 	public ExtractCombinedLoadPanel(String s)
 	{	
@@ -47,6 +49,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		pan.add("hfill", annotationField);
 		pan.add("br left", new JLabel("Text Fields:"));
 		pan.add("br hfill", textColumnsScroll);
+		pan.add("br left", differentiateBox);
 		add(BorderLayout.SOUTH, pan);
 
 		// GenesisControl.addListenerToMap(files, files); //you should never
@@ -58,6 +61,9 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		
 		ImageIcon iconLoad = new ImageIcon("toolkits/icons/csv_note.png");
 		load.setIcon(iconLoad);
+		
+		differentiateBox.addActionListener(ExtractFeaturesControl.differentiateTextColumnsListener);
+		differentiateBox.setToolTipText("When checked, extractors will create features that are unique to each text field.");
 	}
 
 	@Override

@@ -96,16 +96,19 @@ public class Workbench{
 
 			Collection<Refreshable> listeners = GenesisControl.getListeners(source);
 
+
+			String sourceName = source instanceof RecipeManager.Stage ? source.toString() : source.getClass().getName();
+			
 			if(!listeners.isEmpty())
 			{
 				updateCount++;
 				long update = updateCount;
 				GenesisControl.setCurrentlyUpdating(source, true);
-//				System.out.println("Workbench.update begin update #"+update+" for source "+source.getClass().getName());
+//				System.out.println("Workbench.update begin update #"+update+" for source "+sourceName);
 				
 				for(Refreshable listen : listeners)
 				{
-//						System.out.println("Workbench.update #" + updateCount + ":\n\tsource  " + source.getClass().getName() + "\n\trefresh "
+//						System.out.println("Workbench.update #" + updateCount + ":\n\tsource  " + sourceName + "\n\trefresh "
 //								+ listen.getClass().getName());
 
 						listen.refreshPanel();
@@ -118,8 +121,8 @@ public class Workbench{
 		}
 	}
 
-	public static Collection<Recipe> getRecipesByPane(RecipeManager.Stage type){
-		return recipeManager.getRecipeCollectionByType(type);
+	public static Collection<Recipe> getRecipesByPane(RecipeManager.Stage... types){
+		return recipeManager.getRecipeCollectionByType(types);
 	}
 
 	//Parameterized collections? Who needs 'em!

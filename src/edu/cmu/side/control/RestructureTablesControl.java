@@ -119,13 +119,17 @@ public class RestructureTablesControl extends GenesisControl{
 		}
 
 		@Override
-		protected void doTask(){
+		protected void doTask()
+		{
 			try
 			{
 				FeatureTable current = plan.getFeatureTable();
+				//TODO: use some sort of nested recipe
 				for (SIDEPlugin plug : plan.getFilters().keySet())
 				{
+					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t<= "+current.getSize());
 					current = ((RestructurePlugin) plug).restructure(current, plan.getFilters().get(plug), update);
+					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t=> "+current.getSize());
 				}
 				current.setName(name);
 				plan.setFilteredTable(current);

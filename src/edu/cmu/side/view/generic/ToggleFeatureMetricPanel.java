@@ -7,24 +7,29 @@ import javax.swing.ButtonGroup;
 
 import edu.cmu.side.view.util.RadioButtonListEntry;
 
-public abstract class ToggleFeatureMetricPanel extends GenericFeatureMetricPanel{
+public abstract class ToggleFeatureMetricPanel extends GenericFeatureMetricPanel
+{
 
 	ButtonGroup toggleButtons = new ButtonGroup();
 
 	Object selectedObject;
 
-
 	@Override
-	public Object getCellObject(Object o){
+	public Object getCellObject(Object o)
+	{
 		RadioButtonListEntry tb = new RadioButtonListEntry(o, (o != null && o.equals(selectedObject)));
-		if(tb.isSelected()){
+		if (tb.isSelected())
+		{
 			System.out.println(o + ", " + selectedObject + ", " + o.equals(selectedObject) + " TFMP21");
 		}
-		tb.addItemListener(new ItemListener(){
+		tb.addItemListener(new ItemListener()
+		{
 			@Override
-			public void itemStateChanged(ItemEvent arg0) {
-				RadioButtonListEntry entry = ((RadioButtonListEntry)arg0.getSource());
-				if(entry.isSelected()){
+			public void itemStateChanged(ItemEvent arg0)
+			{
+				RadioButtonListEntry entry = ((RadioButtonListEntry) arg0.getSource());
+				if (entry.isSelected())
+				{
 					selectedObject = entry.getValue();
 				}
 			}
@@ -35,7 +40,8 @@ public abstract class ToggleFeatureMetricPanel extends GenericFeatureMetricPanel
 	}
 
 	@Override
-	public void refreshPanel(){
+	public void refreshPanel()
+	{
 		super.refreshPanel();
 		toggleButtons = new ButtonGroup();
 	}

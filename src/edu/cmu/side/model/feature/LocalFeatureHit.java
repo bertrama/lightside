@@ -1,5 +1,6 @@
 package edu.cmu.side.model.feature;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,7 +15,7 @@ public class LocalFeatureHit extends FeatureHit
 	 */
 	private Collection<HitLocation> hits;
 	
-	public static class HitLocation
+	public static class HitLocation implements Serializable
 	{
 		private int start;
 		private int end;

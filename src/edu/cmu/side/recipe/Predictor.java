@@ -78,7 +78,9 @@ public class Predictor
 
 	public Predictor(Map<String, String> params) throws DeserializationException, FileNotFoundException
 	{
-		System.out.println(params);
+
+		if(!quiet)
+			System.out.println(params);
 
 		this.modelPath = params.get("path");
 		this.predictionAnnotation = params.get("prediction");
@@ -133,6 +135,17 @@ public class Predictor
 		return predict(corpus).getPredictions();
 
 	}
+	
+
+	public double predictScore(String instance, String label)
+	{
+		DocumentList corpus = null;
+		corpus = new DocumentList(instance);
+	
+		PredictionResult predictionResult = predict(corpus);
+		
+		return predictionResult.getDistributions().get(label).get(0);
+	}
 
 	/**
 	 * @param corpus
@@ -146,14 +159,16 @@ public class Predictor
 			Chef.quiet = quiet;
 			Recipe newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE, 0);
 			FeatureTable predictTable = newRecipe.getTrainingTable();
-			
-			System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0");
+
+			if(!quiet)
+				System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0");
 			
 			FeatureTable trainingTable = recipe.getTrainingTable();
 			predictTable.reconcileFeatures(trainingTable);
 			
 
-			System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0 after reconciliation");
+			if(!quiet)
+				System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0 after reconciliation");
 			
 			result = recipe.getLearner().predict(trainingTable, predictTable, recipe.getLearnerSettings(), textUpdater, newRecipe.getWrappers());
 		}

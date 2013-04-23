@@ -135,7 +135,7 @@ public class Recipe implements Serializable
 	public void addFilter(RestructurePlugin plug, Map<String, String> settings){
 		if(settings == null)
 			settings = plug.generateConfigurationSettings();
-		filters.put(plug, plug.generateConfigurationSettings());
+		filters.put(plug, settings);
 		resetStage();
 	}
 	
@@ -186,7 +186,7 @@ public class Recipe implements Serializable
 		Recipe newRecipe = fetchRecipe();
 		if(stage.equals(RecipeManager.Stage.DOCUMENT_LIST)){
 			addFeaturePlugins(prior, newRecipe, (Collection<FeaturePlugin>)next);
-		}else if(stage.equals(RecipeManager.Stage.FEATURE_TABLE)){
+		}else if(stage.equals(RecipeManager.Stage.FEATURE_TABLE) || stage.equals(RecipeManager.Stage.MODIFIED_TABLE)){
 			addRestructurePlugins(prior, newRecipe, (Collection<RestructurePlugin>)next);
 		}
 		return newRecipe;
@@ -248,13 +248,16 @@ public class Recipe implements Serializable
 	
 	protected static void addRestructurePlugins(Recipe prior, Recipe newRecipe, Collection<RestructurePlugin> next){
 		newRecipe.setDocumentList(prior.getDocumentList());
-		for(SIDEPlugin plugin : prior.getExtractors().keySet()){
-			newRecipe.addExtractor((FeaturePlugin)plugin, prior.getExtractors().get(plugin));
+		for (SIDEPlugin plugin : prior.getExtractors().keySet())
+		{
+			newRecipe.addExtractor((FeaturePlugin) plugin, prior.getExtractors().get(plugin));
 		}
-		newRecipe.setFeatureTable(prior.getFeatureTable());
-		for(RestructurePlugin plugin : next){
+		newRecipe.setFeatureTable(prior.getTrainingTable());
+		
+		for (RestructurePlugin plugin : next)
+		{
 			assert next instanceof RestructurePlugin;
-			newRecipe.addFilter(plugin, prior.getExtractors().get(plugin));
+			newRecipe.addFilter(plugin, plugin.generateConfigurationSettings());
 		}
 	}
 

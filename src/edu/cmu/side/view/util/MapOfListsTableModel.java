@@ -26,7 +26,7 @@ public class MapOfListsTableModel extends AbstractTableModel
 	@Override
 	public Class<?> getColumnClass(int c)
 	{
-		if(map != null && !map.get(columnLabels[c]).isEmpty())
+		if(map != null && map.get(columnLabels[c]) != null && !map.get(columnLabels[c]).isEmpty())
 		{
 			return map.get(columnLabels[c]).get(0).getClass();
 		}

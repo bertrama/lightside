@@ -13,12 +13,23 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 	public GenericLoadCSVPanel(String title)
 	{
 		super(title);
+		configureLoadCSVPanel();
+	}
+
+	protected void configureLoadCSVPanel()
+	{
 		this.remove(save);
 		chooser.setCurrentDirectory(new File("data"));
 		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_page.png");
 		load.setIcon(iconLoad);
 	}
 	
+	public GenericLoadCSVPanel(String title, boolean showLoad, boolean showDelete, boolean showSave, boolean showDescription)
+	{
+		super(title, showLoad, showDelete, showSave, showDescription);
+		configureLoadCSVPanel();
+	}
+
 	@Override
 	public void refreshPanel()
 	{

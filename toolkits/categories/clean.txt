@@ -1,4 +1,0 @@
-CLEAN
-clean
-spotless
-clear

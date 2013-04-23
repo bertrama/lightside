@@ -43,6 +43,16 @@ public class Feature implements Serializable, Comparable<Feature>
 	
 	private static Map<String, Map<String, Feature>> featureCache = new TreeMap<String, Map<String, Feature>>();
 	
+	public static Feature fetchFeature(String prefix, String name, Feature.Type type)
+	{
+		String featureName = name+"_"+type;
+		if(featureCache.containsKey(prefix) && featureCache.get(prefix).containsKey(featureName))
+		{
+			return featureCache.get(prefix).get(featureName);
+		}
+		return null;
+	}
+	
 	public static Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
 		if(!featureCache.containsKey(prefix)){
 			featureCache.put(prefix, new HashMap<String, Feature>(100000));

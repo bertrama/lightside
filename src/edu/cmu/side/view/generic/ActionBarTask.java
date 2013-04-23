@@ -37,15 +37,18 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	
 	protected void finishTask()
 	{
-		actionBar.update.reset();
-		actionBar.progressBar.setVisible(false);
-		actionBar.actionButton.setEnabled(true);
-		actionBar.cancel.setEnabled(false);
-		actionBar.cancel.removeActionListener(stopListener);
-		actionBar.cancel.setIcon(originalIcon);
-
-		actionBar.endedTask();
-		Workbench.update(actionBar); //this is the only SIDE-specific code in this class...
+		if(actionBar != null)
+		{
+			actionBar.update.reset();
+			actionBar.progressBar.setVisible(false);
+			actionBar.actionButton.setEnabled(true);
+			actionBar.cancel.setEnabled(false);
+			actionBar.cancel.removeActionListener(stopListener);
+			actionBar.cancel.setIcon(originalIcon);
+	
+			actionBar.endedTask();
+			Workbench.update(actionBar); //this is the only SIDE-specific code in this class...
+		}
 	}
 	
 	@Override
@@ -63,21 +66,28 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	protected void beginTask()
 	{
 		halt = false;
-		originalIcon = actionBar.cancel.getIcon();
-		actionBar.cancel.addActionListener(stopListener);
-		actionBar.cancel.setEnabled(true);
-		actionBar.progressBar.setVisible(true);
-		actionBar.actionButton.setEnabled(false);
-		actionBar.startedTask();
+		if(actionBar != null)
+		{
+			originalIcon = actionBar.cancel.getIcon();
+			actionBar.cancel.addActionListener(stopListener);
+			actionBar.cancel.setEnabled(true);
+			actionBar.progressBar.setVisible(true);
+			actionBar.actionButton.setEnabled(false);
+			actionBar.startedTask();
+		}
 	}
+		
 
 	public ActionBarTask(ActionBar action)
 	{
 		this.progressBarList = new ArrayList<JProgressBar>();
-		this.actionBar = action;
 		this.addPropertyChangeListener(this);
-		
-		progressBarList.add(actionBar.progressBar);
+
+		if(action != null)
+		{
+			this.actionBar = action;
+			progressBarList.add(actionBar.progressBar);
+		}
 		
 		stopListener = new ActionListener(){
 
@@ -91,7 +101,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 				else
 				{
 					halt = true;
-					actionBar.cancel.setIcon(dangerIcon);
+					if(actionBar != null) actionBar.cancel.setIcon(dangerIcon);
 					requestCancel();
 				}
 			}};

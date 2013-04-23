@@ -73,10 +73,10 @@ public class Chef
 		
 		for (SIDEPlugin plug : extractors.keySet())
 		{
-			System.out.println("Extractor Settings: "+extractors.get(plug));
+			//System.out.println("Extractor Settings: "+extractors.get(plug));
 			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
 			hits.addAll(extractorHits);
-			System.out.println(extractorHits.size()+" hits for "+plug);
+			//System.out.println(extractorHits.size()+" hits for "+plug);
 		}
 		FeatureTable ft = new FeatureTable(corpus, hits, threshold, annotation, type);
 		recipe.setFeatureTable(ft);
@@ -137,7 +137,7 @@ public class Chef
 		}
 		else
 		{
-			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
+//			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
 		}
 		corpus.setLabelArray(original.getLabelArray());
 		corpus.setTextColumns(new HashSet<String>(original.getTextColumns()));
@@ -146,7 +146,7 @@ public class Chef
 
 	protected static Recipe loadRecipe(String recipePath) throws DeserializationException, FileNotFoundException
 	{
-		System.out.println("loading recipe from "+recipePath);
+		//System.out.println("loading recipe from "+recipePath);
 		File recipeFile = new File(recipePath);
 		if (!recipeFile.exists())
 		{

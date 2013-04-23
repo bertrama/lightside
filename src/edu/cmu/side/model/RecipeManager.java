@@ -30,12 +30,16 @@ public class RecipeManager{
 
 	static List<Recipe> recipes = new ArrayList<Recipe>();
 
-	public Collection<Recipe> getRecipeCollectionByType(Stage type){
+	public Collection<Recipe> getRecipeCollectionByType(Stage... types){
 		List<Recipe> filtered = new ArrayList<Recipe>();
 		for(Recipe recipe : recipes){
 			Stage stage = recipe.getStage();
-			if(stage.equals(type)){
-				filtered.add(recipe);
+			for(Stage type : types)
+			{
+				if (stage.equals(type))
+				{
+					filtered.add(recipe);
+				}
 			}
 		}
 		return filtered;

@@ -73,6 +73,16 @@
         <classname>plugins.restructure.RegroupPlugin</classname>
     </plugin>
     
+    
+    <plugin>
+        <name>Filter Feature Values</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Filter Instances By Feature Value]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.restructure.FeatureValueFilter</classname>
+    </plugin>
+    
     <plugin>
         <name>Basic Feature Evaluations</name>
         <author>Elijah Mayfield</author>
@@ -158,14 +168,14 @@
         
     
     
-<!--     <plugin>
+    <plugin>
         <name>Feature Selection</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
         <description><![CDATA[Chi squared feature selection]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.wrappers.FeatureSelection</classname>
-    </plugin>  -->
+    </plugin> 
       
             
  <!--   <plugin>

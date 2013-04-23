@@ -42,6 +42,11 @@ public class DocumentList implements Serializable
 
 	public void setClassValueType(Feature.Type t)
 	{
+		if(t != type)
+		{
+			labelArray = null;
+			getLabelArray();
+		}
 		type = t;
 	}
 	

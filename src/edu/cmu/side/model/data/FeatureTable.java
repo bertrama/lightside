@@ -71,7 +71,7 @@ public class FeatureTable implements Serializable
 		this.threshold = thresh;
 		this.documents = sdl;
 
-		System.out.println("FT 74: " + hits.size() + "total incoming hits");
+//		System.out.println("FT 74: " + hits.size() + "total incoming hits");
 
 		for (int i = 0; i < sdl.getSize(); i++)
 		{
@@ -100,7 +100,7 @@ public class FeatureTable implements Serializable
 			}
 		}
 
-		System.out.println("FT 74: "+hitsPerDocument.get(0).size()+" thresholded hits for doc 0");
+//		System.out.println("FT 74: "+hitsPerDocument.get(0).size()+" thresholded hits for doc 0");
 	}
 
 	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh){
@@ -475,6 +475,8 @@ public class FeatureTable implements Serializable
 	{
 		//TODO: decide if this removal step is neccessary - it may be un-needful, but could save space.
 		Collection<Feature> toRemove = new ArrayList<Feature>();
+
+		System.out.println("FT 508: Unreconciled training set has "+this.getFeatureSet().size() + " features");
 		
 		for(Feature f : this.hitsPerFeature.keySet())
 		{
@@ -493,7 +495,7 @@ public class FeatureTable implements Serializable
 		{
 			this.hitsPerFeature.remove(f);
 		}
-		System.out.println("FT 487: removed "+toRemove.size() + " features.");
+		System.out.println("FT 487: removed "+toRemove.size() + " features. "+this.getFeatureSet().size() + " features remain.");
 		
 		
 		//add empty feature map entries so all training features are accounted for in this new feature table.
@@ -504,5 +506,8 @@ public class FeatureTable implements Serializable
 				this.hitsPerFeature.put(f, new ArrayList<FeatureHit>());
 			}
 		}
+		
+		System.out.println("FT 508: Training set has "+this.getFeatureSet().size() + " features");
+		
 	}
 }

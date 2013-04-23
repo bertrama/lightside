@@ -34,7 +34,7 @@ public class ExploreMetricChecklistPanel extends GenericMetricChecklistPanel<Mod
 		@Override
 		public void refreshPanel(){
 			if(ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
-				refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getFeatureTable());			
+				refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getTrainingTable());			
 			}else{
 				refreshPanel(null);
 			}

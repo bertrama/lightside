@@ -69,7 +69,7 @@ public class BuildModelControl extends GenesisControl{
 		wrapperPlugins = new HashMap<WrapperPlugin, Boolean>();
 		SIDEPlugin[] wrappers = PluginManager.getSIDEPluginArrayByType("learning_wrapper");
 		for(SIDEPlugin wr : wrappers){
-			wrapperPlugins.put((WrapperPlugin)wr, true);
+			wrapperPlugins.put((WrapperPlugin)wr, false);
 		}
 	}
 

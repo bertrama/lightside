@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -283,6 +284,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 		{
 			DocumentList documentList = recipe.getDocumentList();
 			String[] annotationNames = documentList.getAnnotationNames();
+			Arrays.sort(annotationNames);
 			DefaultComboBoxModel model = new DefaultComboBoxModel(annotationNames);
 			model.removeElement(documentList.getCurrentAnnotation());
 			annotations.setModel(model);

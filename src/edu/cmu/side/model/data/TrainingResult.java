@@ -25,6 +25,7 @@ public class TrainingResult implements Serializable{
 	private List<? extends Comparable<?>> predictions;
 	private Map<String, Map<String, List<Integer>>> confusionMatrix = new TreeMap<String, Map<String, List<Integer>>>();
 	private Map<String, List<Double>> distributions;
+	transient private Map<String, String> cachedEvaluations = new HashMap<String, String>();
 
 	public String toString(){
 		return name;
@@ -221,5 +222,15 @@ public class TrainingResult implements Serializable{
 			sb.append("\n");
 		}
 		return sb.toString();
+	}
+	
+	public void cacheEvaluations(Map<String, String> eval)
+	{
+		cachedEvaluations.putAll(eval);
+	}
+	
+	public Map<String, String> getCachedEvaluations()
+	{
+		return cachedEvaluations;
 	}
 }

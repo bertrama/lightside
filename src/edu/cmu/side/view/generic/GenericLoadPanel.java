@@ -19,12 +19,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import se.datadosen.component.RiverLayout;
-
-import com.yerihyo.yeritools.io.FileToolkit;
-
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
@@ -38,7 +36,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	protected JPanel buttons = new JPanel();
 
-	protected JPanel describePanel = new JPanel(new BorderLayout());
+	protected JPanel describePanel;
 	protected JLabel label;
 	protected JButton warn = new JButton("");
 	protected JFileChooser chooser = new JFileChooser(new File("saved"));
@@ -49,7 +47,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	protected GenericLoadPanel()
 	{
-		
+
 		setLayout(new RiverLayout());
 		combo.addActionListener(new ActionListener()
 		{
@@ -62,10 +60,13 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 					Component recipeTree = GenesisControl.getRecipeTree(getHighlight());
 					describeScroll = new JScrollPane(recipeTree);
-					describePanel.removeAll();
-					describePanel.add(BorderLayout.CENTER, describeScroll);
-
-					describePanel.revalidate();
+					if(describePanel != null)
+					{
+						describePanel.removeAll();
+						describePanel.add(BorderLayout.CENTER, describeScroll);
+	
+						describePanel.revalidate();
+					}
 				}
 				// Workbench.update(GenericLoadPanel.this);
 
@@ -80,8 +81,13 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	public GenericLoadPanel(String l, boolean showLoad, boolean showDelete, boolean showSave)
 	{
+		this(l, showLoad, showDelete, showSave, true);
+	}
+
+	public GenericLoadPanel(String l, boolean showLoad, boolean showDelete, boolean showSave, boolean showDescription)
+	{
 		this();
-		
+
 		label = new JLabel(l);
 		buttons.setLayout(new RiverLayout());
 		ImageIcon iconDelete = new ImageIcon("toolkits/icons/cross.png");
@@ -99,7 +105,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			}
 		});
 		warn.setVisible(false);
-		
+
 		delete.setText("");
 		delete.setIcon(iconDelete);
 		delete.setToolTipText("Delete");
@@ -121,9 +127,14 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		add("br hfill", combo);
 		if (showSave) add("right", save);
 		if (showDelete) add("right", delete);
-		describeScroll = new JScrollPane();
-		describePanel.add(BorderLayout.CENTER, describeScroll);
-		add("br hfill vfill", describePanel);
+
+		if (showDescription)
+		{
+			describePanel = new JPanel(new BorderLayout());
+			describeScroll = new JScrollPane();
+			describePanel.add(BorderLayout.CENTER, describeScroll);
+			add("br hfill vfill", describePanel);
+		}
 		// add("br left hfill", buttons);
 
 		connectButtonListeners();
@@ -172,8 +183,11 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			save.setEnabled(false);
 			delete.setEnabled(false);
 			describeScroll = new JScrollPane();
-			describePanel.removeAll();
-			describePanel.add(BorderLayout.CENTER, describeScroll);
+			if (describePanel != null)
+			{
+				describePanel.removeAll();
+				describePanel.add(BorderLayout.CENTER, describeScroll);
+			}
 		}
 	}
 
@@ -186,9 +200,28 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
+				save.setEnabled(false);
 				if (combo.getSelectedIndex() >= 0)
 				{
-					saveSelectedItem();
+					SwingWorker saver = new SwingWorker()
+					{
+
+						@Override
+						protected Object doInBackground() throws Exception
+						{
+							saveSelectedItem();
+							return null;
+						}
+						
+						@Override
+						public void done()
+						{
+							save.setEnabled(true);
+						}
+						
+					};
+					
+					saver.execute();
 				}
 			}
 
@@ -223,7 +256,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	{
 		Recipe recipe = (Recipe) combo.getSelectedItem();
 
-		if(recipe.getStage() == Stage.FEATURE_TABLE || recipe.getStage() == Stage.MODIFIED_TABLE)
+		if (recipe.getStage() == Stage.FEATURE_TABLE || recipe.getStage() == Stage.MODIFIED_TABLE)
 		{
 			FeatureTableExporter.exportFeatures(recipe);
 		}

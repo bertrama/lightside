@@ -12,6 +12,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -24,6 +25,7 @@ import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
+import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
@@ -149,34 +151,78 @@ public class ExtractFeaturesControl extends GenesisControl{
 		
 	};
 	
-	public static class AnnotationComboListener implements ActionListener{
+	public static class AnnotationComboListener implements ActionListener
+	{
 		private ExtractCombinedLoadPanel parentComponent;
 
-		public AnnotationComboListener(ExtractCombinedLoadPanel parentComponent){
+		public AnnotationComboListener(ExtractCombinedLoadPanel parentComponent)
+		{
 			this.parentComponent = parentComponent;
 		}
-		
-		public void actionPerformed(ActionEvent ae){
-			if(ExtractFeaturesControl.hasHighlightedDocumentList() && parentComponent.getAnnotationField().getSelectedItem() != null && 
-					ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList().allAnnotations().containsKey(
-							parentComponent.getAnnotationField().getSelectedItem().toString())){
-				DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
-				String annot = parentComponent.getAnnotationField().getSelectedItem().toString();
-				if(sdl.getTextColumns().contains(annot)){
-					sdl.setTextColumn(annot, false);					
+
+		static boolean updatingCombos = false;
+		public void actionPerformed(ActionEvent ae)
+		{
+			if (!updatingCombos)
+			{
+				updatingCombos = true;
+				JComboBox annotationFieldCombo = parentComponent.getAnnotationFieldCombo();
+				Object selectedClass = annotationFieldCombo.getSelectedItem();
+
+				if (ExtractFeaturesControl.hasHighlightedDocumentList() && selectedClass != null
+						&& ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList().allAnnotations().containsKey(selectedClass.toString()))
+				{
+					DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
+
+					JComboBox classTypeCombo = parentComponent.getClassTypeCombo();
+					if (ae.getSource() == annotationFieldCombo)
+					{
+						String annot = selectedClass.toString();
+						if (sdl.getTextColumns().contains(annot))
+						{
+							sdl.setTextColumn(annot, false);
+						}
+
+						sdl.setCurrentAnnotation(annot); // because this
+															// modifies a
+															// recipe, should it
+															// notify
+															// the
+															// recipemanager?
+
+						sdl.setClassValueType(null);
+						classTypeCombo.setSelectedItem(sdl.getValueType(annot));
+
+						Map<String, Boolean> columns = new TreeMap<String, Boolean>();
+						for (String s : sdl.allAnnotations().keySet())
+						{
+							if (!sdl.getCurrentAnnotation().equals(s)) columns.put(s, false);
+						}
+						for (String s : sdl.getTextColumns())
+						{
+							columns.put(s, true);
+						}
+						parentComponent.reloadCheckBoxList(columns);
+					}
+					else if (ae.getSource() == classTypeCombo)
+					{
+						Type classType = (Type) classTypeCombo.getSelectedItem();
+						sdl.setClassValueType(null);
+						String currentAnnotation = sdl.getCurrentAnnotation();
+						Type guessedType = sdl.getValueType(currentAnnotation);
+						if ((classType != Type.NUMERIC || guessedType == Type.NUMERIC) &&
+							(classType != Type.BOOLEAN || guessedType == Type.BOOLEAN))
+						{
+							sdl.setClassValueType(classType);
+						}
+						else
+							classTypeCombo.setSelectedItem(sdl.getValueType(currentAnnotation));
+					}
+					Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
+					Workbench.update(parentComponent);
 				}
-				sdl.setCurrentAnnotation(annot);  //because this modifies a recipe, should it notify the recipemanager?
-				Map<String, Boolean> columns = new TreeMap<String, Boolean>();
-				for(String s : sdl.allAnnotations().keySet()){
-					if(!sdl.getCurrentAnnotation().equals(s)) columns.put(s,  false);
-				}
-				for(String s : sdl.getTextColumns()){
-					columns.put(s,  true);
-				}
-				parentComponent.reloadCheckBoxList(columns);
-				Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
-				Workbench.update(parentComponent);			
 			}
+			updatingCombos = false;
 		}
 	}
 	

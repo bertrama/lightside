@@ -53,19 +53,20 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 			TrainingResult result = recipe.getTrainingResult();
 			Collection<ModelMetricPlugin> plugins = BuildModelControl.getModelEvaluationPlugins();
 			for(ModelMetricPlugin plugin : plugins){
-				Map<String, String> keys = plugin.evaluateModel(result, plugin.generateConfigurationSettings());
-				for(String s : keys.keySet()){
+				Map<String, String> evaluations = plugin.evaluateModel(result, plugin.generateConfigurationSettings());
+				result.cacheEvaluations(evaluations);
+				for(String s : evaluations.keySet()){
 					Vector<Object> row = new Vector<Object>();
 					row.add(s);
 					try{
-						Double d = Double.parseDouble(keys.get(s));
+						Double d = Double.parseDouble(evaluations.get(s));
 						row.add(d);
 					}catch(Exception e){
-						row.add(keys.get(s));
+						row.add(evaluations.get(s));
 					}
 					data.add(row);
 				}
-				allKeys.putAll(keys);
+				allKeys.putAll(evaluations);
 			}			
 		}
 		model = new FeatureTableModel(data, header);

@@ -21,6 +21,7 @@ import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
+import edu.cmu.side.plugin.ModelMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.CheckBoxListEntry;
@@ -51,8 +52,11 @@ public abstract class GenesisControl {
 		return currentlyUpdatingMap.get(source);
 	}
 
-	public static void addListenerToMap(Object source, Refreshable child){
-		if(!listenerMap.containsKey(source)){
+	public static void addListenerToMap(Object source, Refreshable child)
+	{
+//		System.out.println("GC 57: "+child.getClass().getName()+ " is listening to "+source);
+		if(!listenerMap.containsKey(source))
+		{
 			listenerMap.put(source, new ArrayList<Refreshable>());
 			currentlyUpdatingMap.put(source, false);
 		}
@@ -121,6 +125,10 @@ public abstract class GenesisControl {
 	public static Collection<Recipe> getFilterTables(){
 		return Workbench.getRecipesByPane(RecipeManager.Stage.MODIFIED_TABLE);
 	}
+	
+	public static Collection<Recipe> getTrainingTables(){
+		return Workbench.getRecipesByPane(RecipeManager.Stage.MODIFIED_TABLE, RecipeManager.Stage.FEATURE_TABLE);
+	}
 
 	public static Collection<Recipe> getTrainedModels(){
 		return Workbench.getRecipesByPane(RecipeManager.Stage.TRAINED_MODEL);
@@ -168,11 +176,16 @@ public abstract class GenesisControl {
 			top.add(getFilterNodes(r));
 		}
 		if(r.getFilteredTable() != null){
-			top.add(getTableNode(r.getFilteredTable(), "Filtered Table:"));
+			top.add(getTableNode(r.getFilteredTable(), "Restructured Table:"));
 		}
 		if(r.getLearner() != null){
 			top.add(getPluginNode("Learning Plugin: ", r.getLearner()));
 		}
+
+		if(r.getWrappers().size()>0){
+			top.add(getWrapperNodes(r));
+		}
+		
 		if(r.getTrainingResult() != null){
 			top.add(getModelNode(r.getTrainingResult()));		
 		}
@@ -208,8 +221,16 @@ public abstract class GenesisControl {
 	}
 
 	public static MutableTreeNode getFilterNodes(Recipe r){
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Filter Plugins:");
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Restructure Plugins:");
 		for(SIDEPlugin plug : r.getFilters().keySet()){
+			node.add(getPluginNode("",plug));
+		}
+		return node;
+	}
+	
+	public static MutableTreeNode getWrapperNodes(Recipe r){
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Wrapper Plugins:");
+		for(SIDEPlugin plug : r.getWrappers().keySet()){
 			node.add(getPluginNode("",plug));
 		}
 		return node;
@@ -226,20 +247,41 @@ public abstract class GenesisControl {
 	public static MutableTreeNode getPluginNode(String label, SIDEPlugin plug){
 		DefaultMutableTreeNode plugin = new DefaultMutableTreeNode(label + (label.length()>0?" ":"") + plug.toString());
 		Map<String, String> keys = plug.generateConfigurationSettings();
-		for(String s : keys.keySet()){
-			DefaultMutableTreeNode set = new DefaultMutableTreeNode(s + ": " + keys.get(s));			
+		for(String key : keys.keySet()){
+			String value = keys.get(key);
+			
+			if(value.length() > 20)
+				value = value.substring(0, 20)+"...";
+			
+			DefaultMutableTreeNode setting = new DefaultMutableTreeNode(key + ": " + value);	
+			plugin.add(setting);
 		}
 		return plugin;
 	}
 	public static MutableTreeNode getTableNode(FeatureTable features, String key){
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(key+" " + features.getName());
-		DefaultMutableTreeNode size = new DefaultMutableTreeNode("# Features: " + features.getFeatureSet().size());
+		DefaultMutableTreeNode size = new DefaultMutableTreeNode(features.getFeatureSet().size() + " features");
 		node.add(size);
 		return node;
 	}
 
 	public static MutableTreeNode getModelNode(TrainingResult model){
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Trained Model: " + model.getName());
+		Map<String, String> evaluations = model.getCachedEvaluations();
+		for (String key : evaluations.keySet())
+		{
+			String value = evaluations.get(key);
+			try
+			{
+				double d = Double.parseDouble(value);
+				value = String.format("%.3f", d);
+			}
+			catch (NumberFormatException e)
+			{
+			}
+			node.add(new DefaultMutableTreeNode(key + ": " + value));
+		}
+		
 		return node;
 	}
 

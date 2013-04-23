@@ -1,14 +1,14 @@
 package edu.cmu.side.view.extract;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -22,6 +22,7 @@ import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
@@ -32,7 +33,8 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 
 	ExtractLoadPanel files = new ExtractLoadPanel("CSV Files:");
 
-	JComboBox annotationField = new JComboBox();
+	JComboBox annotationFieldCombo = new JComboBox();
+	JComboBox classTypeCombo = new JComboBox();
 	SelectPluginList textColumnsList = new SelectPluginList();
 	JScrollPane textColumnsScroll = new JScrollPane(textColumnsList);
 	JCheckBox differentiateBox = new JCheckBox("Differentiate Text Fields");
@@ -42,11 +44,17 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		setLayout(new BorderLayout());
 		add(BorderLayout.CENTER, files);
 		JPanel pan = new JPanel(new RiverLayout());
-		annotationField.addActionListener(new ExtractFeaturesControl.AnnotationComboListener(this));
-		// annotationField.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
+		ExtractFeaturesControl.AnnotationComboListener comboListener = new ExtractFeaturesControl.AnnotationComboListener(this);
+		annotationFieldCombo.addActionListener(comboListener);
+		classTypeCombo.addActionListener(comboListener);
+		// annotationFieldCombo.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
 
+		textColumnsScroll.setPreferredSize(new Dimension(0, 100));
+		
 		pan.add("left", new JLabel("Class:"));
-		pan.add("hfill", annotationField);
+		pan.add("hfill", annotationFieldCombo);
+		pan.add("br left", new JLabel("Type: "));
+		pan.add("hfill", classTypeCombo);
 		pan.add("br left", new JLabel("Text Fields:"));
 		pan.add("br hfill", textColumnsScroll);
 		pan.add("br left", differentiateBox);
@@ -62,6 +70,9 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		ImageIcon iconLoad = new ImageIcon("toolkits/icons/csv_note.png");
 		load.setIcon(iconLoad);
 		
+		classTypeCombo.setModel(new DefaultComboBoxModel(new Type[]{Type.NOMINAL, Type.NUMERIC}));
+		classTypeCombo.setSelectedItem(Type.NOMINAL);
+		
 		differentiateBox.addActionListener(ExtractFeaturesControl.differentiateTextColumnsListener);
 		differentiateBox.setToolTipText("When checked, extractors will create features that are unique to each text field.");
 	}
@@ -72,7 +83,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		if (files.getHighlight() != null)
 		{
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
-			Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
+			Workbench.reloadComboBoxContent(annotationFieldCombo, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
 			Map<String, Boolean> columns = new TreeMap<String, Boolean>();
 			for (String s : sdl.allAnnotations().keySet())
 			{
@@ -86,10 +97,11 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		}
 		else
 		{
-			Workbench.reloadComboBoxContent(annotationField, new ArrayList<Object>(), null);
+			Workbench.reloadComboBoxContent(annotationFieldCombo, new ArrayList<Object>(), null);
 			reloadCheckBoxList(new TreeMap<String, Boolean>());
 		}
-		annotationField.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
+		annotationFieldCombo.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
+		classTypeCombo.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList());
 
 	}
 
@@ -110,7 +122,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 					// recipemanager? or on the individual recipe?
 					DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 					sdl.setTextColumn(((CheckBoxListEntry) ie.getItem()).getValue().toString(), ie.getStateChange() == ItemEvent.SELECTED);
-					Workbench.reloadComboBoxContent(annotationField, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
+					Workbench.reloadComboBoxContent(annotationFieldCombo, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
 					Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
 					Workbench.update(ExtractCombinedLoadPanel.this);
 				}
@@ -121,8 +133,14 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		textColumnsList.setModel(model);
 	}
 
-	public JComboBox getAnnotationField()
+	public JComboBox getAnnotationFieldCombo()
 	{
-		return annotationField;
+		return annotationFieldCombo;
+	}
+	
+
+	public JComboBox getClassTypeCombo()
+	{
+		return classTypeCombo;
 	}
 }

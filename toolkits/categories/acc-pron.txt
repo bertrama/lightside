@@ -1,6 +1,0 @@
-ACC-PRON
-me
-them
-her
-him
-us

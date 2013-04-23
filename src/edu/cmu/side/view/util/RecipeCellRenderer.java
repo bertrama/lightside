@@ -38,10 +38,12 @@ public class RecipeCellRenderer extends DefaultTreeCellRenderer {
             setIcon(new ImageIcon("toolkits/icons/application_side_expand.png"));       	
         }else if(nodeObj.toString().startsWith("Trained Model:")){
             setIcon(new ImageIcon("toolkits/icons/chart_curve.png"));       	
-        }else if(nodeObj.toString().startsWith("Filter Plugins:")){
+        }else if(nodeObj.toString().startsWith("Restructure Plugins:")){
             setIcon(new ImageIcon("toolkits/icons/table_go.png"));       	
         }else if(nodeObj.toString().startsWith("Feature Plugins:")){
             setIcon(new ImageIcon("toolkits/icons/table_add.png"));       	
+        }else if(nodeObj.toString().startsWith("Wrapper Plugins:")){
+            setIcon(new ImageIcon("toolkits/icons/table_go.png"));           	
         }else if(nodeObj.toString().startsWith("Learning Plugin:")){
             setIcon(new ImageIcon("toolkits/icons/table_gear.png"));       	
         }else{

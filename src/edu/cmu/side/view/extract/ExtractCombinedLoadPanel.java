@@ -85,6 +85,20 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 			Workbench.reloadComboBoxContent(annotationFieldCombo, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
 			Map<String, Boolean> columns = new TreeMap<String, Boolean>();
+			
+			
+			if(sdl.guessValueType(sdl.getCurrentAnnotation()) == Type.NOMINAL)
+			{
+				classTypeCombo.setModel(new DefaultComboBoxModel(new Object[]{Type.NOMINAL}));
+			}
+			else
+			{
+				Type oldType = sdl.getValueType(sdl.getCurrentAnnotation());
+				classTypeCombo.setModel(new DefaultComboBoxModel(new Object[]{Type.NUMERIC, Type.NOMINAL}));
+				sdl.setClassValueType(oldType);
+			}
+			
+			
 			for (String s : sdl.allAnnotations().keySet())
 			{
 				if (sdl.getCurrentAnnotation() == null || !sdl.getCurrentAnnotation().equals(s)) columns.put(s, false);

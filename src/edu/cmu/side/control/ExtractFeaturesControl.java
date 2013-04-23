@@ -203,23 +203,16 @@ public class ExtractFeaturesControl extends GenesisControl{
 							columns.put(s, true);
 						}
 						parentComponent.reloadCheckBoxList(columns);
+						Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
+						Workbench.update(parentComponent);
 					}
 					else if (ae.getSource() == classTypeCombo)
 					{
 						Type classType = (Type) classTypeCombo.getSelectedItem();
-						sdl.setClassValueType(null);
-						String currentAnnotation = sdl.getCurrentAnnotation();
-						Type guessedType = sdl.getValueType(currentAnnotation);
-						if ((classType != Type.NUMERIC || guessedType == Type.NUMERIC) &&
-							(classType != Type.BOOLEAN || guessedType == Type.BOOLEAN))
-						{
-							sdl.setClassValueType(classType);
-						}
-						else
-							classTypeCombo.setSelectedItem(sdl.getValueType(currentAnnotation));
+						System.out.println ("EFC 209 yoohoo: "+classType);
+						sdl.setClassValueType(classType);
 					}
-					Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
-					Workbench.update(parentComponent);
+					
 				}
 			}
 			updatingCombos = false;

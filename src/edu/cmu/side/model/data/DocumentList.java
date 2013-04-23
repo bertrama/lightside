@@ -16,6 +16,7 @@ import com.yerihyo.yeritools.swing.AlertDialog;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.feature.Feature;
+import edu.cmu.side.model.feature.Feature.Type;
 
 public class DocumentList implements Serializable
 {
@@ -44,39 +45,61 @@ public class DocumentList implements Serializable
 	{
 		if(t != type)
 		{
+			type = t;
 			labelArray = null;
 			getLabelArray();
 		}
-		type = t;
 	}
 	
-	/**
-	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
-	 * @return
-	 */
-	public Feature.Type getValueType(String label){
-		Double num;
-		if(label.equals(currentAnnotation) && type != null){
+	public Feature.Type getValueType(String label)
+	{
+		if(type != null && label.equals(currentAnnotation))
+		{
 			return type;
-		}else{
-			Feature.Type localType;
-			for(String s : getPossibleAnn(label)){
-				try{
-					num = Double.parseDouble(s);
-				}catch(Exception e){
-					localType = Feature.Type.NOMINAL;
-					if(label.equals(currentAnnotation)){
-						type = localType;
-					}
-					return localType;
-				}
-			}
-			localType = Feature.Type.NUMERIC;
-			if(label.equals(currentAnnotation)){
+		}
+		else
+		{
+			Feature.Type localType = guessValueType(label);
+			if(label.equals(currentAnnotation))
+			{
 				type = localType;
 			}
 			return localType;
 		}
+	}
+
+	/**
+	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out
+	 * if the data type is nominal or numeric.
+	 * 
+	 * @return
+	 */
+	public Feature.Type guessValueType(String label)
+	{
+		Feature.Type localType;
+		for (String s : getPossibleAnn(label))
+		{
+			try
+			{
+				Double.parseDouble(s);
+			}
+			catch (Exception e)
+			{
+				localType = Feature.Type.NOMINAL;
+				if (label.equals(currentAnnotation))
+				{
+					type = localType;
+				}
+				return localType;
+			}
+		}
+		localType = Feature.Type.NUMERIC;
+		if (label.equals(currentAnnotation))
+		{
+			type = localType;
+		}
+		return localType;
+
 	}
 	
 	public void setName(String n){

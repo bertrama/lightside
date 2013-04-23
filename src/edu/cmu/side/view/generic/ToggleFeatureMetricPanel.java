@@ -20,7 +20,7 @@ public abstract class ToggleFeatureMetricPanel extends GenericFeatureMetricPanel
 		RadioButtonListEntry tb = new RadioButtonListEntry(o, (o != null && o.equals(selectedObject)));
 		if (tb.isSelected())
 		{
-			System.out.println(o + ", " + selectedObject + ", " + o.equals(selectedObject) + " TFMP21");
+			System.out.println("TFMP21: "+o + ", " + selectedObject + ", " + o.equals(selectedObject) + "");
 		}
 		tb.addItemListener(new ItemListener()
 		{
@@ -39,6 +39,11 @@ public abstract class ToggleFeatureMetricPanel extends GenericFeatureMetricPanel
 		return tb;
 	}
 
+	public Object getSelectedObject()
+	{
+		return selectedObject;
+	}
+	
 	@Override
 	public void refreshPanel()
 	{

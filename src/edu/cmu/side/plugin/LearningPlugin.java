@@ -209,11 +209,11 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") 
 					+ "Training fold", (fold + 1), folds.size());
 			
-			FeatureTable pass = table;
+			FeatureTable wrappedTrain = table;
 			
 			try
 			{
-				pass = wrapAndTrain(table, wrappers, progressIndicator, foldsMap, fold);
+				wrappedTrain = wrapAndTrain(table, wrappers, progressIndicator, foldsMap, fold);
 			}
 			catch (Exception e)
 			{
@@ -229,7 +229,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") 
 					+ "Testing fold", (fold+1), folds.size());
 			
-			PredictionResult predictionResult = predictOnFold(pass, pass, fold, foldsMap, updater, wrappers);
+			//TODO: verify that passing the *unwrapped* table on to predict (as the test set) is the right thing to do - it was wrappedTrain before
+			PredictionResult predictionResult = predictOnFold(wrappedTrain, table, fold, foldsMap, updater, wrappers);
 			
 			List<? extends Comparable<?>> predictionsList = predictionResult.getPredictions();
 
@@ -465,13 +466,13 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	public FeatureTable wrapTableBefore(FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator,
 			OrderedPluginMap wrappers, boolean learn)
 	{
-
-		
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
 			wrapper.configureFromSettings(wrappers.get(wrapper));
 			if(learn)
+			{
 				((WrapperPlugin) wrapper).learnFromTrainingData(newData, fold, foldsMap, progressIndicator);
+			}
 		
 			newData = ((WrapperPlugin) wrapper).wrapTableBefore(newData, fold, foldsMap, progressIndicator);
 		}

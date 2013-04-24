@@ -194,16 +194,24 @@ public class BuildModelControl extends GenesisControl{
 //						validationSettings.put("testFeatureTable", extractTestFeatures);
 //					}
 				}
+				
+				//System.out.println("BMC 198: wrappers="+wrapperPlugins);
+				
 				Recipe newRecipe = getHighlightedFeatureTableRecipe();
-				for(WrapperPlugin wrap : wrapperPlugins.keySet()){
-					if(wrapperPlugins.get(wrap)){
-						newRecipe.addWrapper(wrap, wrap.generateConfigurationSettings());						
-					}
-				}
+				
+				
 				LearningPlugin learner = getHighlightedLearningPlugin();
 				Map<String, String> settings = learner.generateConfigurationSettings();
 				newRecipe = Recipe.addLearnerToRecipe(newRecipe, learner, settings);
 				newRecipe.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
+				
+				for(WrapperPlugin wrap : wrapperPlugins.keySet())
+				{
+					if(wrapperPlugins.get(wrap))
+					{
+						newRecipe.addWrapper(wrap, wrap.generateConfigurationSettings());						
+					}
+				}
 				
 //				System.out.println(settings);
 				

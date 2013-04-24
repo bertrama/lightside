@@ -226,11 +226,13 @@ public class TrainingResult implements Serializable{
 	
 	public void cacheEvaluations(Map<String, String> eval)
 	{
-		cachedEvaluations.putAll(eval);
+		getCachedEvaluations().putAll(eval);
 	}
 	
 	public Map<String, String> getCachedEvaluations()
 	{
+		if(cachedEvaluations == null)
+			cachedEvaluations = new HashMap<String, String>();
 		return cachedEvaluations;
 	}
 }

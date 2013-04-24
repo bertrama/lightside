@@ -42,7 +42,7 @@ public class Predictor
 
 	// File name/location is defined in parameter map
 	Recipe recipe;
-	boolean quiet = true;
+	private boolean quiet = true;
 	
 	StatusUpdater textUpdater = new StatusUpdater()
 	{
@@ -50,14 +50,14 @@ public class Predictor
 		@Override
 		public void update(String updateSlot, int slot1, int slot2)
 		{
-			if(!quiet)
+			if(!isQuiet())
 				System.err.println(updateSlot+": "+slot1 + "/"+slot2);
 		}
 
 		@Override
 		public void update(String update)
 		{
-			if(!quiet)
+			if(!isQuiet())
 				System.err.println(update);	
 		}
 
@@ -73,13 +73,13 @@ public class Predictor
 	{
 		this.recipe = r;
 		this.predictionAnnotation = p;
-		quiet = true;
+		setQuiet(true);
 	}
 
 	public Predictor(Map<String, String> params) throws DeserializationException, FileNotFoundException
 	{
 
-		if(!quiet)
+		if(!isQuiet())
 			System.out.println(params);
 
 		this.modelPath = params.get("path");
@@ -156,21 +156,27 @@ public class Predictor
 		PredictionResult result = null;
 		try
 		{
-			Chef.quiet = quiet;
+			Chef.quiet = isQuiet();
 			Recipe newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE, 0);
 			FeatureTable predictTable = newRecipe.getTrainingTable();
-
-			if(!quiet)
+			System.out.println(predictTable.getFeatureSet().size()+ " features total");			
+			
+			if(!isQuiet())
+			{
 				System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0");
+			}
 			
 			FeatureTable trainingTable = recipe.getTrainingTable();
 			predictTable.reconcileFeatures(trainingTable);
 			
 
-			if(!quiet)
+			if(!isQuiet())
+			{
 				System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0 after reconciliation");
+				System.out.println(predictTable.getFeatureSet().size()+ " features total");
+			}
 			
-			result = recipe.getLearner().predict(trainingTable, predictTable, recipe.getLearnerSettings(), textUpdater, newRecipe.getWrappers());
+			result = recipe.getLearner().predict(trainingTable, predictTable, recipe.getLearnerSettings(), textUpdater, recipe.getWrappers());
 		}
 		catch (Exception e)
 		{
@@ -282,6 +288,16 @@ public class Predictor
 //			actualOut.println(answer);
 			System.out.println(answer + "\t" + sentence.substring(0, Math.min(sentence.length(), 100)));
 		}
+	}
+
+	public boolean isQuiet()
+	{
+		return quiet;
+	}
+
+	public void setQuiet(boolean quiet)
+	{
+		this.quiet = quiet;
 	}
 
 }

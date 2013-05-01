@@ -64,11 +64,15 @@ public class ExtractBottomPanel extends AbstractListPanel{
 			}
 			
 			@Override
-			public void refreshPanel(){
-				if(ExtractFeaturesControl.hasHighlightedFeatureTable()){     
+			public void refreshPanel()
+			{
+				if (ExtractFeaturesControl.hasHighlightedFeatureTable())
+				{
 					FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
 					refreshPanel(table);
-				}else{
+				}
+				else
+				{
 					refreshPanel(null);
 				}
 			}
@@ -86,13 +90,20 @@ public class ExtractBottomPanel extends AbstractListPanel{
 			}
 			
 			@Override
-			public void refreshPanel(){
-				if(ExtractFeaturesControl.hasHighlightedFeatureTable()){     
+			public void refreshPanel()
+			{
+				if (ExtractFeaturesControl.hasHighlightedFeatureTable())
+				{
 					FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
+
+					//System.out.println("extract bottom panel 95: GFM refresh table "+table);
 					boolean[] mask = new boolean[table.getSize()];
-					for(int i = 0; i < mask.length; i++) mask[i] = true;
+					for (int i = 0; i < mask.length; i++)
+						mask[i] = true;
 					refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe(), ExtractFeaturesControl.getTableEvaluationPlugins(), mask);
-				}else{
+				}
+				else
+				{
 					refreshPanel(null, ExtractFeaturesControl.getTableEvaluationPlugins(), new boolean[0]);
 				}
 			}

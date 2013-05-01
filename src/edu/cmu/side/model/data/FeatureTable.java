@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import edu.cmu.side.model.feature.Feature;
@@ -57,7 +58,7 @@ public class FeatureTable implements Serializable
 	}
 
 	private FeatureTable(){
-		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(100000); //Rough guess at capacity requirement.
+		this.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>(); //Rough guess at capacity requirement.
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 	}
 
@@ -331,7 +332,7 @@ public class FeatureTable implements Serializable
 		ft.threshold = threshold;
 		ft.annotation = annotation;
 	    
-	    ft.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(30000); //Rough guess at capacity requirement.
+	    ft.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
 	    ft.threshold = threshold;
 	    fillHitsPerDocument(ft);
 	    
@@ -396,7 +397,7 @@ public class FeatureTable implements Serializable
 		//		generateConvertedClassValues();
 		
 
-		this.hitsPerFeature = new HashMap<Feature, Collection<FeatureHit>>(2000); //Rough guess at capacity requirement.
+		this.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>(); //Rough guess at capacity requirement.
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 		
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(2000);

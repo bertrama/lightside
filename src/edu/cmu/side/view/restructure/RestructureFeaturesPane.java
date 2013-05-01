@@ -1,7 +1,7 @@
 package edu.cmu.side.view.restructure;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.Component;
 import java.util.Map;
 
 import javax.swing.JPanel;
@@ -17,6 +17,7 @@ import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.view.generic.GenericTripleFrame;
+import edu.cmu.side.view.util.Refreshable;
 
 public class RestructureFeaturesPane extends JPanel{
 
@@ -25,7 +26,24 @@ public class RestructureFeaturesPane extends JPanel{
 	private static RestructureBottomPanel bottom = new RestructureBottomPanel(action);
 
 	public RestructureFeaturesPane(){
+		
+
 		setLayout(new BorderLayout());
+		
+		GenericPluginChecklistPanel<RestructurePlugin> checklist = new GenericPluginChecklistPanel<RestructurePlugin>("Filters Available:"){
+			@Override
+			public Map<RestructurePlugin, Boolean> getPlugins() {
+				return RestructureTablesControl.getFilterPlugins();
+			}
+		};
+		
+		final GenericPluginConfigPanel<RestructurePlugin> config = new GenericPluginConfigPanel<RestructurePlugin>(){
+			@Override
+			public void refreshPanel() {
+				refreshPanel(RestructureTablesControl.getFilterPlugins());
+			}
+		};
+		
 		GenericLoadPanel load = new GenericLoadPanel("Feature Tables:"){
 
 			@Override
@@ -42,23 +60,22 @@ public class RestructureFeaturesPane extends JPanel{
 			@Override
 			public void refreshPanel() {
 				refreshPanel(RestructureTablesControl.getTrainingTables());
+				Map<RestructurePlugin, Boolean> plugins = RestructureTablesControl.getFilterPlugins();
+				for(RestructurePlugin plug : plugins.keySet())
+				{
+					if(plugins.get(plug))
+					{
+						Component plugUI = plug.getConfigurationUI();
+						if(plugUI instanceof Refreshable)
+						{
+							((Refreshable)plugUI).refreshPanel();
+						}
+					}
+				}
 			}
 			
 		};
 		
-		GenericPluginChecklistPanel<RestructurePlugin> checklist = new GenericPluginChecklistPanel<RestructurePlugin>("Filters Available:"){
-			@Override
-			public Map<RestructurePlugin, Boolean> getPlugins() {
-				return RestructureTablesControl.getFilterPlugins();
-			}
-		};
-		
-		GenericPluginConfigPanel<RestructurePlugin> config = new GenericPluginConfigPanel<RestructurePlugin>(){
-			@Override
-			public void refreshPanel() {
-				refreshPanel(RestructureTablesControl.getFilterPlugins());
-			}
-		};
 		
 		top = new GenericTripleFrame(load, checklist, config);
 		JSplitPane pane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);

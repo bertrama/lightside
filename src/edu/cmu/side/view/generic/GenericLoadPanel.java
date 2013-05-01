@@ -94,8 +94,11 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		ImageIcon iconSave = new ImageIcon("toolkits/icons/disk.png");
 		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
 		ImageIcon iconWarn = new ImageIcon("toolkits/icons/error.png");
+		//TODO: replace with WarningButton utility class
 		warn.setIcon(iconWarn);
 		warn.setBorderPainted(false);
+		warn.setContentAreaFilled(false);
+		warn.setOpaque(false);
 		warn.addActionListener(new ActionListener()
 		{
 			@Override

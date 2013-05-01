@@ -16,6 +16,8 @@ public class WarningButton extends JButton
 		this.setIcon(iconWarn);
 		this.setVisible(false);
 		this.setBorderPainted(false);
+		this.setContentAreaFilled(false);
+		this.setOpaque(false);
 
 		this.addActionListener(new ActionListener()
 		{

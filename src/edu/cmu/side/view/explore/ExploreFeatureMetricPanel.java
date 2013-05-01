@@ -6,12 +6,12 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.view.generic.ActionBar;
-import edu.cmu.side.view.generic.ToggleFeatureMetricPanel;
+import edu.cmu.side.view.generic.FeatureMetricTogglePanel;
 import edu.cmu.side.view.util.RadioButtonListEntry;
 import edu.cmu.side.view.util.SIDETableCellRenderer;
 import edu.cmu.side.view.util.ToggleMouseAdapter;
 
-public class ExploreFeatureMetricPanel extends ToggleFeatureMetricPanel{
+public class ExploreFeatureMetricPanel extends FeatureMetricTogglePanel{
 
 	ActionBar action;
 	

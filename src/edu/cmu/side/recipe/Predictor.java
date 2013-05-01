@@ -64,7 +64,6 @@ public class Predictor
 		@Override
 		public void reset()
 		{
-			// TODO Auto-generated method stub
 			
 		}
 	};
@@ -180,7 +179,6 @@ public class Predictor
 		}
 		catch (Exception e)
 		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -273,7 +271,6 @@ public class Predictor
 //		}
 //		catch (FileNotFoundException e)
 //		{
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 

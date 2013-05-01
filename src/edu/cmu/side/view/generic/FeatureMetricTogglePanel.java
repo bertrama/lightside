@@ -7,7 +7,7 @@ import javax.swing.ButtonGroup;
 
 import edu.cmu.side.view.util.RadioButtonListEntry;
 
-public abstract class ToggleFeatureMetricPanel extends GenericFeatureMetricPanel
+public abstract class FeatureMetricTogglePanel extends GenericFeatureMetricPanel
 {
 
 	ButtonGroup toggleButtons = new ButtonGroup();

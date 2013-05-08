@@ -19,7 +19,6 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 	protected void configureLoadCSVPanel()
 	{
 		this.remove(save);
-		chooser.setCurrentDirectory(new File("data"));
 		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_page.png");
 		load.setIcon(iconLoad);
 	}
@@ -40,6 +39,16 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 	public void loadNewItem()
 	{
 		loadNewDocumentsFromCSV();
+	}
+
+	@Override
+	public void checkChooser()
+	{
+		if(chooser == null)
+		{
+			super.checkChooser();
+			chooser.setCurrentDirectory(new File("data"));
+		}
 	}
 
 }

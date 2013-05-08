@@ -51,22 +51,34 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 					}
 				}
 
-				if(success){
+				if(success)
+				{
+					int r=255, g=255, b=255;
 					if(rend instanceof DefaultTableCellRenderer){
 				        ((DefaultTableCellRenderer)rend).setText(print.format(numberValue));						
 					}
 					if(numberValue > 0){
-						Double outValue = ((Double)(255.0*numberValue)) / sum[1];
-						intensity = outValue.intValue();
-						rend.setBackground(new Color(255-intensity, 255-intensity,255));
-						rend.setForeground(intensity<128?Color.black:Color.white);
-					}else if(numberValue < 0){
-						Double outValue = -((Double)(255.0*numberValue)) / sum[1];
-						intensity = outValue.intValue();
+						intensity = (int)((255*numberValue) / sum[1]);
+						r = 255-intensity;
+						g = 255-intensity;
+						b = 255;
+					}
+					else if(numberValue < 0)
+					{
+						intensity = (int)((255*-numberValue) / sum[1]);
 						
-						rend.setBackground(new Color(255, (new Double(255-(intensity/2.0))).intValue(),255-intensity));
-						rend.setForeground(intensity<128?Color.black:Color.white);
-					}					
+						r = 255;
+						g = 255-(intensity/2);
+						b = 255-intensity;
+						
+					}
+					r = restrict(r, 0, 255);
+					g = restrict(g, 0, 255);
+					b = restrict(b, 0, 255);
+					
+					rend.setBackground(new Color(r, g, b));
+					rend.setForeground(intensity<128?Color.black:Color.white);
+					
 				}
 			}catch(Exception e){
 				e.printStackTrace();
@@ -74,5 +86,14 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 		}
 
 		return rend;
+	}
+	
+	private int restrict(int x, int min, int max)
+	{
+		if(x < min)
+			return min;
+		else if(x > max)
+			return max;
+		else return x;
 	}
 }

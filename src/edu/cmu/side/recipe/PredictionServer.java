@@ -31,6 +31,9 @@ import org.simpleframework.transport.Server;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
+import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.model.data.PredictionResult;
+
 
 /**
  * loads a model trained using lightSIDE uses it to label new instances via the
@@ -100,6 +103,19 @@ public class PredictionServer implements Container
 				}
 
 			}
+
+			else if (target.startsWith("/try"))
+			{
+				if (request.getMethod().equals("POST"))
+				{
+					answer = handleEvaluate(request, response);
+				}
+				else
+				{
+					answer = handleGetEvaluate(request, response, "<h1>Try it out!</h2>");
+				}
+			}
+			
 			else if (target.startsWith("/predict"))
 			{
 				answer = handlePredict(request, response);
@@ -164,11 +180,63 @@ public class PredictionServer implements Container
 	{
 		response.setValue("Content-Type", "text/html");
 		return "<head><title>SIDE Loader</title></head><body>" + "<h1>SIDE Loader</h2>"
-				+ "<form action=\"upload\" method=\"post\" enctype=\"multipart/form-data\">" + "Serialized Model: <input type=\"file\" name=\"model\"><br>"
-				+ "Model Nickname:<input type=\"text\" name=\"modelNick\"> " + "<input type=\"submit\" name=\"Submit\" value=\"Upload Model\">" + "</form>"
+				+ "<form action=\"upload\" method=\"post\" enctype=\"multipart/form-data\">" 
+				+ "Serialized Model: <input type=\"file\" name=\"model\"><br>"
+				+ "Model Nickname:<input type=\"text\" name=\"modelNick\"> " 
+				+ "<input type=\"submit\" name=\"Submit\" value=\"Upload Model\">" 
+				+ "</form>"
 				+ "</body>";
 	}
+	
+	private String handleGetEvaluate(Request request, Response response, String header)
+	{
+		org.simpleframework.http.Path path = request.getPath();
+		if(path.getSegments().length > 1)
+		{
+			String modelName = request.getPath().getPath(1).substring(1);
+			response.setValue("Content-Type", "text/html");
+			return "<head><title>SIDE Effects</title></head><body>" + header
+					+ "<form action=\"/try/"+modelName+"\" method=\"post\" enctype=\"multipart/form-data\">" 
+					+ "<label for=\"sample\">Test the "+modelName+" model:</label><br>"
+					+ "<textarea rows=\"5\" cols=\"50\" name=\"sample\"></textarea><br>"
+					+ "<input type=\"submit\" name=\"Submit\" value=\"Evaluate Text\">"
+					+ "</form>"
+					+ "</body>";
+		}
+		else
+		{	
+			response.setCode(400);
+			return "Must provide a model name: localhost:8000/try/modelname";
+		}
+	}
 
+
+	protected String handleEvaluate(Request request, Response response) throws IOException, FileNotFoundException
+	{
+		Part part = request.getPart("sample");
+		String sample = part.getContent();
+			
+
+		String modelName = request.getPath().getPath(1).substring(1);
+		String answer = checkModel(response, modelName);
+		if(!answer.equals("OK"))
+		{
+			return answer;
+		}
+		
+		PredictionResult prediction = predictors.get(modelName).predict(new DocumentList(sample));
+		
+		Map<String, Double> scores = prediction.getDistributionMapForInstance(0);
+		
+		String header = "";
+		for(String label : scores.keySet())
+		{
+			header += String.format("%s: %.1f%%<br>", label, 100*scores.get(label));
+		}
+
+		return handleGetEvaluate(request, response,"<h3>"+header+"</h3><p style=\"max-width:400px\"><i>"+sample+"</i></p>");
+	}
+	
 	/**
 	 * @param request
 	 * @param body
@@ -256,26 +324,7 @@ public class PredictionServer implements Container
 
 			model = request.getPath().getPath(1).substring(1);
 
-			if (!predictors.containsKey(model))
-			{
-				File f = new File("saved/" + model + ".model.side");// attempt to
-																// attach a
-																// local model
-				if (f.exists())
-				{
-					boolean attached = attachModel(model, f.getAbsolutePath());
-					if (!attached)
-					{
-						response.setCode(418);
-						return "could not load existing model for '" + model + "' -- was it trained on the latest version of LightSIDE?";
-					}
-				}
-				else
-				{
-					response.setCode(404);
-					return "no model available at predict/" + model;
-				}
-			}
+			checkModel(response, model);
 
 			System.out.println("using model " + model + " on " + instances.size() + " instances...");
 			for (Comparable label : predictors.get(model).predict(instances))
@@ -296,6 +345,30 @@ public class PredictionServer implements Container
 			response.setCode(400);
 			return "could not handle request: " + request.getTarget() + "\n(urls should be of the form /predict/model/?q=instance...)";
 		}
+	}
+
+	protected String checkModel(Response response, String model)
+	{
+		if (!predictors.containsKey(model))
+		{
+			// attempt to attach a local model
+			File f = new File("saved/" + model + ".model.side");
+			if (f.exists())
+			{
+				boolean attached = attachModel(model, f.getAbsolutePath());
+				if (!attached)
+				{
+					response.setCode(418);
+					return "could not load existing model for '" + model + "' -- was it trained on the latest version of LightSIDE?";
+				}
+			}
+			else
+			{
+				response.setCode(404);
+				return "no model available named " + model;
+			}
+		}
+		return "OK";
 	}
 
 	public static void main(String[] args) throws Exception

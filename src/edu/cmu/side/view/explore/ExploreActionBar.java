@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
@@ -33,8 +34,14 @@ public class ExploreActionBar extends ActionBar{
 		if(combo.getItemCount()>0 && combo.getSelectedIndex()==-1){
 			combo.setSelectedIndex(0);
 		}
+		
+		settings.removeAll();
+		
 		add("left", new JLabel("Exploration Plugin:"));
-		add("hfill", combo);
+		add("left", combo);
+		add("hfill", settings);
+		add("right", progressBar);
+		add("right", this.updaters);
 	}
 
 	@Override

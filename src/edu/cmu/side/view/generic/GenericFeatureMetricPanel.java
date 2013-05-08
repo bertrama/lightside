@@ -176,31 +176,53 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		}
 		
 		@Override
-		protected void beginTask(){
+		protected void beginTask()
+		{
+//			System.out.println("GFMC 181: begin eval task");
 			super.beginTask();
 			GenericFeatureMetricPanel.this.setEvaluating(true);
 			combo.setEnabled(false);
 		}
 		
 		@Override
-		protected void finishTask(){
+		protected void finishTask()
+		{
+//			System.out.println("GFMC 190: finish eval task");
 			super.finishTask();
 			//Filter the table based on searching and re-sort the display.
 			if(!halt)
 			{
 				model = new FeatureTableModel(rows, header);
+				
+//				for(Vector<Object> row : rows)
+//					System.out.println("GFMC 197: rows="+row);
+				
+				List<SortKey> newSortKeys = new ArrayList<SortKey>();
 
 				display = filterTable(model, filterSearchField.getText());
 				TableColumnModel columns = new DefaultTableColumnModel();
-				for(int i = 0; i < display.getColumnCount(); i++){
+				for(int i = 0; i < display.getColumnCount(); i++)
+				{
 					TableColumn col = new TableColumn(i);
-					col.setHeaderValue(display.getColumnName(i));
+					String columnName = display.getColumnName(i);
+					col.setHeaderValue(columnName);
 					columns.addColumn(col);
 				}
+				
+				for(SortKey key: sortKeysToPass)
+				{
+					if(display.getColumnCount() > key.getColumn())
+					{
+						newSortKeys.add(key);
+					}
+				}
+				
+				
+				
 				featureTable.setColumnModel(columns);
 				featureTable.setModel(display);
 				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(display);
-				sorter.setSortKeys(sortKeysToPass);
+				sorter.setSortKeys(newSortKeys);
 				sorter.setSortsOnUpdates(true);
 				featureTable.setRowSorter(sorter);
 				featureTable.sorterChanged(new RowSorterEvent(sorter));
@@ -255,7 +277,6 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 					for(Feature f : localTable.getFeatureSet()){
 						Vector<Object> row = new Vector<Object>();
 						row.add(getCellObject(f));
-						System.out.println(f);
 						for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
 							for(String s : tableEvaluationPlugins.get(plug).keySet()){
 								if(tableEvaluationPlugins.get(plug).get(s)){
@@ -285,7 +306,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		@Override
 		public void requestCancel()
 		{
-			System.out.println("cancelling...");
+			System.out.println("GFMC cancelling...");
 			plugin.stopWhenPossible();
 		}
 	}

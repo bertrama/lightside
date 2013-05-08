@@ -43,31 +43,29 @@ public class Predictor
 	// File name/location is defined in parameter map
 	Recipe recipe;
 	private boolean quiet = true;
-	
+
 	StatusUpdater textUpdater = new StatusUpdater()
 	{
-		
+
 		@Override
 		public void update(String updateSlot, int slot1, int slot2)
 		{
-			if(!isQuiet())
-				System.err.println(updateSlot+": "+slot1 + "/"+slot2);
+			if (!isQuiet()) System.err.println(updateSlot + ": " + slot1 + "/" + slot2);
 		}
 
 		@Override
 		public void update(String update)
 		{
-			if(!isQuiet())
-				System.err.println(update);	
+			if (!isQuiet()) System.err.println(update);
 		}
 
 		@Override
 		public void reset()
 		{
-			
+
 		}
 	};
-	
+
 	public Predictor(Recipe r, String p)
 	{
 		this.recipe = r;
@@ -78,8 +76,7 @@ public class Predictor
 	public Predictor(Map<String, String> params) throws DeserializationException, FileNotFoundException
 	{
 
-		if(!isQuiet())
-			System.out.println(params);
+		if (!isQuiet()) System.out.println(params);
 
 		this.modelPath = params.get("path");
 		this.predictionAnnotation = params.get("prediction");
@@ -96,10 +93,10 @@ public class Predictor
 		loadModel();
 	}
 
-	protected FeatureTable prepareTestSet( DocumentList test)
+	protected FeatureTable prepareTestSet(DocumentList test)
 	{
 		test.setLabelArray(recipe.getDocumentList().getLabelArray());
-		
+
 		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
 		OrderedPluginMap extractors = recipe.getExtractors();
 		for (SIDEPlugin plug : extractors.keySet())
@@ -134,15 +131,14 @@ public class Predictor
 		return predict(corpus).getPredictions();
 
 	}
-	
 
 	public double predictScore(String instance, String label)
 	{
 		DocumentList corpus = null;
 		corpus = new DocumentList(instance);
-	
+
 		PredictionResult predictionResult = predict(corpus);
-		
+
 		return predictionResult.getDistributions().get(label).get(0);
 	}
 
@@ -158,68 +154,75 @@ public class Predictor
 			Chef.quiet = isQuiet();
 			Recipe newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE, 0);
 			FeatureTable predictTable = newRecipe.getTrainingTable();
-			System.out.println(predictTable.getFeatureSet().size()+ " features total");			
-			
-			if(!isQuiet())
-			{
-				System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0");
-			}
-			
-			FeatureTable trainingTable = recipe.getTrainingTable();
-			predictTable.reconcileFeatures(trainingTable);
-			
+			System.out.println(predictTable.getFeatureSet().size() + " features total");
 
-			if(!isQuiet())
+			if (!isQuiet())
 			{
-				System.out.println(predictTable.getHitsForDocument(0).size()+ " feature hits in document 0 after reconciliation");
-				System.out.println(predictTable.getFeatureSet().size()+ " features total");
+				System.out.println(predictTable.getHitsForDocument(0).size() + " feature hits in document 0");
 			}
-			
-			result = recipe.getLearner().predict(trainingTable, predictTable, recipe.getLearnerSettings(), textUpdater, recipe.getWrappers());
+
+			result = predictFromTable(predictTable);
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 
-		return result;	
+		return result;
 	}
-	
+
+	public PredictionResult predictFromTable(FeatureTable predictTable)
+	{
+		PredictionResult result = null;
+		FeatureTable trainingTable = recipe.getTrainingTable();
+		predictTable.reconcileFeatures(trainingTable);
+
+		if (!isQuiet())
+		{
+			System.out.println(predictTable.getHitsForDocument(0).size() + " feature hits in document 0 after reconciliation");
+			System.out.println(predictTable.getFeatureSet().size() + " features total");
+		}
+
+		result = recipe.getLearner().predict(trainingTable, predictTable, recipe.getLearnerSettings(), textUpdater, recipe.getWrappers());
+
+		return result;
+	}
+
 	public String prettyPredict(String instance)
 	{
 
 		DocumentList corpus = null;
 		corpus = new DocumentList(instance);
 		String prediction = "?";
-	
+
 		PredictionResult predictionResult = predict(corpus);
-		
+
 		prediction = predictionResult.getPredictions().get(0).toString();
-		if(predictionResult.getDistributions() != null)
+		if (predictionResult.getDistributions() != null)
 		{
-			prediction = prediction + "\t "+ (int)(predictionResult.getDistributions().get(prediction).get(0)*100) + "%";
+			prediction = prediction + "\t " + (int) (predictionResult.getDistributions().get(prediction).get(0) * 100) + "%";
 		}
-		
+
 		return prediction;
 
 	}
-	
+
 	public String predict(String instance)
 	{
 
 		DocumentList corpus = null;
 		corpus = new DocumentList(instance);
 		String prediction = "?";
-	
+
 		PredictionResult predictionResult = predict(corpus);
 		prediction = predictionResult.getPredictions().get(0).toString();
-		
+
 		return prediction;
 
 	}
 
 	/**
-	 * @throws FileNotFoundException 
+	 * @throws FileNotFoundException
 	 * 
 	 */
 	protected void loadModel() throws DeserializationException, FileNotFoundException
@@ -260,20 +263,19 @@ public class Predictor
 		String annotation = "class";
 		if (args.length > 1) annotation = args[1];
 
-		//to swallow all output except for the classifications
-//		PrintStream actualOut = System.out;
-//
-//		try
-//		{
-//			String outLogFilename = "simple_side_predict.log";
-//			PrintStream logPrintStream = new PrintStream(outLogFilename);
-//			System.setOut(logPrintStream);
-//		}
-//		catch (FileNotFoundException e)
-//		{
-//			e.printStackTrace();
-//		}
-
+		// to swallow all output except for the classifications
+		// PrintStream actualOut = System.out;
+		//
+		// try
+		// {
+		// String outLogFilename = "simple_side_predict.log";
+		// PrintStream logPrintStream = new PrintStream(outLogFilename);
+		// System.setOut(logPrintStream);
+		// }
+		// catch (FileNotFoundException e)
+		// {
+		// e.printStackTrace();
+		// }
 
 		Predictor predictor = new Predictor(modelPath, annotation);
 		Scanner input = new Scanner(System.in);
@@ -282,7 +284,7 @@ public class Predictor
 		{
 			String sentence = input.nextLine();
 			String answer = predictor.prettyPredict(sentence);
-//			actualOut.println(answer);
+			// actualOut.println(answer);
 			System.out.println(answer + "\t" + sentence.substring(0, Math.min(sentence.length(), 100)));
 		}
 	}
@@ -295,6 +297,12 @@ public class Predictor
 	public void setQuiet(boolean quiet)
 	{
 		this.quiet = quiet;
+	}
+
+	public Map<String, Double> getScores(String sample)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

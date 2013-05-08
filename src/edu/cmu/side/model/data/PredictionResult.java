@@ -3,6 +3,7 @@ package edu.cmu.side.model.data;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class PredictionResult implements Serializable
 {
@@ -61,6 +62,19 @@ public class PredictionResult implements Serializable
 		for(int j = 0; j < labels.length; j++)
 		{
 			distro[j] = distributions.get(labels[j]).get(i);
+		}
+		
+		return distro;
+	}
+	
+	public Map<String, Double> getDistributionMapForInstance(int i)
+	{
+		Map<String, Double> distro = new TreeMap<String, Double>();
+		
+		
+		for(String key : distributions.keySet())
+		{
+			distro.put(key, distributions.get(key).get(i));
 		}
 		
 		return distro;

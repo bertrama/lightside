@@ -477,7 +477,7 @@ public class FeatureTable implements Serializable
 		//TODO: decide if this removal step is neccessary - it may be un-needful, but could save space.
 		Collection<Feature> toRemove = new ArrayList<Feature>();
 
-		System.out.println("FT 508: Unreconciled training set has "+this.getFeatureSet().size() + " features");
+//		System.out.println("FT 480: Unreconciled feature table has "+this.getFeatureSet().size() + " features, vs. "+train.getFeatureSet().size()+" in target");
 		
 		for(Feature f : this.hitsPerFeature.keySet())
 		{
@@ -496,7 +496,7 @@ public class FeatureTable implements Serializable
 		{
 			this.hitsPerFeature.remove(f);
 		}
-		System.out.println("FT 487: removed "+toRemove.size() + " features. "+this.getFeatureSet().size() + " features remain.");
+//		System.out.println("FT 487: removed "+toRemove.size() + " features. "+this.getFeatureSet().size() + " features remain.");
 		
 		
 		//add empty feature map entries so all training features are accounted for in this new feature table.
@@ -508,7 +508,7 @@ public class FeatureTable implements Serializable
 			}
 		}
 		
-		System.out.println("FT 508: Training set has "+this.getFeatureSet().size() + " features");
+//		System.out.println("FT 511: Reconciled table has "+this.getFeatureSet().size() + " features");
 		
 	}
 }

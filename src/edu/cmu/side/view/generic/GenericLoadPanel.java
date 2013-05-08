@@ -39,7 +39,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	protected JPanel describePanel;
 	protected JLabel label;
 	protected JButton warn = new JButton("");
-	protected JFileChooser chooser = new JFileChooser(new File("saved"));
+	protected JFileChooser chooser;
 
 	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
 	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
@@ -257,6 +257,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	public void saveSelectedItem()
 	{
+		checkChooser();
+		
 		Recipe recipe = (Recipe) combo.getSelectedItem();
 
 		if (recipe.getStage() == Stage.FEATURE_TABLE || recipe.getStage() == Stage.MODIFIED_TABLE)
@@ -305,6 +307,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	public void loadNewItem()
 	{
+		checkChooser();
+		
 		chooser.setFileFilter(sideFilter);
 		int response = chooser.showOpenDialog(this);
 		if (response == JFileChooser.APPROVE_OPTION)
@@ -336,6 +340,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	protected void loadNewDocumentsFromCSV()
 	{
+		checkChooser();
+		
 		chooser.setFileFilter(csvFilter);
 		chooser.setMultiSelectionEnabled(true);
 		int result = chooser.showOpenDialog(GenericLoadPanel.this);
@@ -355,6 +361,14 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		setHighlight(r);
 		refreshPanel();
 		Workbench.update(this);
+	}
+
+	protected void checkChooser()
+	{
+		if(chooser == null)
+		{
+			chooser = new JFileChooser(new File("saved"));
+		}
 	}
 
 	public void setWarning(String warnText)

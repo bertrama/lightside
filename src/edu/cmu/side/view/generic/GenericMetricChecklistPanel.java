@@ -86,15 +86,19 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
 					String label = check.getValue().toString();
 					Map<E, Map<String, Boolean>> evalPlugins = getEvaluationPlugins();
-					for(E plug : evalPlugins.keySet()){
-						Collection<Feature.Type> types = (Collection<Feature.Type>)plug.getAvailableEvaluations().get(label);
-						if(types.contains(activeType)){
+					for (E plug : evalPlugins.keySet())
+					{
+						Collection<Feature.Type> types = (Collection<Feature.Type>) plug.getAvailableEvaluations().get(label);
+						if (types != null && activeType != null && types.contains(activeType))
+						{
 							check.setEnabled(true);
-						}else{
+						}
+						else
+						{
 							check.setSelected(false);
 							check.setEnabled(false);
 						}
-						
+
 					}
 				}
 			}

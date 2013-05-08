@@ -321,8 +321,10 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	protected abstract void trainAgainstFold(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator) throws Exception;
 
 	public PredictionResult predict(FeatureTable originalData, FeatureTable newData, Map<String, String> configuration, StatusUpdater progressIndicator, OrderedPluginMap wrappers){
+		
+		FeatureTable wrappedTrain = wrapTableBefore(originalData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers, false);
 		this.loadClassifierFromSettings(configuration);
-		return predictOnFold(originalData, newData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers);
+		return predictOnFold(wrappedTrain, newData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers);
 	}
 
 	public  PredictionResult predictOnFold(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap, StatusUpdater progressIndicator, OrderedPluginMap wrappers)

@@ -101,6 +101,16 @@
         <classname>plugins.metrics.features.models.ErrorAnalysisFeatureMetrics</classname>
     </plugin>
     
+    
+    <plugin>
+        <name>Feature Influence Evaluations</name>
+        <author>David Adamson</author>
+        <version>0.5</version>
+        <description><![CDATA[Prediction-powered evaluations of confusion in a matrix]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.metrics.features.models.TrainedModelFeatureEvaluations</classname>
+    </plugin>
+    
     <plugin>
         <name>Basic Model Evaluation Plugins</name>
         <author>Elijah Mayfield</author>
@@ -109,6 +119,7 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.metrics.models.BasicModelEvaluations</classname>
     </plugin>
+
     
     <plugin>
         <name>Basic Model Analysis Plugins</name>

@@ -31,6 +31,8 @@ import org.simpleframework.transport.Server;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
 
+import plugins.learning.WekaCore;
+
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.PredictionResult;
 
@@ -449,12 +451,7 @@ public class PredictionServer implements Container
 	 */
 	protected static void initSIDE()
 	{
-//		SIDEPlugin[] fex = PluginManager.getSIDEPluginArrayByType("feature_hit_extractor");
-//		for (int k = 0; k < fex.length; k++)
-//		{
-//			FeaturePlugin plug = (FeaturePlugin) fex[k];
-//			System.out.println(plug.getOutputName());
-//		}
+		WekaCore.setCaching(true);
 	}
 
 }

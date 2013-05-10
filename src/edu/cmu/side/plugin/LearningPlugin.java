@@ -114,17 +114,34 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		}else{
 			FeatureTable wrappedTable = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
 			List<Comparable<Comparable>> blankPredictions = new ArrayList<Comparable<Comparable>>();
+			Map<String, List<Double>> blankDistributions = new HashMap<String, List<Double>>();
 			switch(wrappedTable.getClassValueType()){
 			case NOMINAL:
 			case BOOLEAN:
 			case STRING:
-				for(int i = 0; i < wrappedTable.getSize(); i++){ blankPredictions.add((Comparable)wrappedTable.getDocumentList().getLabelArray()[0]); }
-				break;
+					String[] labelArray = wrappedTable.getDocumentList().getLabelArray();
+					for (int i = 0; i < wrappedTable.getSize(); i++)
+					{
+						for(String label : labelArray)
+						{
+							if(!blankDistributions.containsKey(label))
+							{
+								blankDistributions.put(label, new ArrayList<Double>(wrappedTable.getSize()));
+							}
+							blankDistributions.get(label).add(1.0/labelArray.length);
+						}
+						blankPredictions.add((Comparable) labelArray[0]);
+					}
+					break;
 			case NUMERIC:
-				for(int i = 0; i < wrappedTable.getSize(); i++){ blankPredictions.add((Comparable)new Double(0.0)); }
-				break;
+					for (int i = 0; i < wrappedTable.getSize(); i++)
+					{
+						blankPredictions.add((Comparable) new Double(0.0));
+					}
+					break;
 			}
 			result = new TrainingResult(wrappedTable, blankPredictions);
+			result.setDistributions(blankDistributions);
 		}
 		result.setLongDescriptionString(getLongDescriptionString());
 		return result;

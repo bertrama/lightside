@@ -53,6 +53,11 @@ public class DocumentList implements Serializable
 	
 	public Feature.Type getValueType(String label)
 	{
+		if(label == null)
+		{
+			return Type.NOMINAL;
+		}
+		
 		if(type != null && label.equals(currentAnnotation))
 		{
 			return type;
@@ -121,6 +126,7 @@ public class DocumentList implements Serializable
 		this(text);
 		for(String ann : annotations.keySet()){
 			addAnnotation(ann, annotations.get(ann));
+			filenameList.add("Document");
 		}
 	}
 	// wrap a single unannotated plain-text instance as a DocumentList
@@ -130,6 +136,7 @@ public class DocumentList implements Serializable
 		instances.add(instance);
 		addAnnotation("text", instances);
 		setTextColumn("text", true);
+		filenameList.add("Document");
 	}
 
 	public DocumentList(Set<String> filenames, String currentAnnot, String textCol){

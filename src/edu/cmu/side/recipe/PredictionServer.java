@@ -46,7 +46,7 @@ import edu.cmu.side.model.data.PredictionResult;
  */
 public class PredictionServer implements Container
 {
-	private static Map<String, Predictor> predictors = new HashMap<String, Predictor>();
+	protected static Map<String, Predictor> predictors = new HashMap<String, Predictor>();
 
 	private final Executor executor;
 
@@ -190,7 +190,7 @@ public class PredictionServer implements Container
 				+ "</body>";
 	}
 	
-	private String handleGetEvaluate(Request request, Response response, String header)
+	protected String handleGetEvaluate(Request request, Response response, String header)
 	{
 		org.simpleframework.http.Path path = request.getPath();
 		if(path.getSegments().length > 1)
@@ -451,6 +451,7 @@ public class PredictionServer implements Container
 	 */
 	protected static void initSIDE()
 	{
+		//remember already-loaded models.
 		WekaCore.setCaching(true);
 	}
 

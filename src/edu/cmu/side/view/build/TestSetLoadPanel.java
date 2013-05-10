@@ -20,7 +20,6 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 	{
 		super(s);
 		load.setToolTipText("Load Test Set (CSV)");
-		chooser.setCurrentDirectory(new File("data"));
 
 //		Dimension v = combo.getPreferredSize();
 //		v.width = 100;

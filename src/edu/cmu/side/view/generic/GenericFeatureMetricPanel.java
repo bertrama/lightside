@@ -13,10 +13,12 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.RowSorter.SortKey;
@@ -43,9 +45,10 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 	protected SIDETable featureTable = new SIDETable();
 	protected FeatureTableModel model = new FeatureTableModel();
 	protected FeatureTableModel display = new FeatureTableModel();
-	protected JTextField filterSearchField = new JTextField(20);
+	protected JTextField filterSearchField = new JTextField();
 	protected JButton exportButton = new JButton("");
 	protected JLabel nameLabel = new JLabel("Features in Table:");
+	protected JPanel filterPanel = new JPanel(new RiverLayout());
 
 	
 	//FIXME: check for race conditions with evaluations in different panels - if it's an issue, make sure every panel gets updated that needs to.
@@ -101,8 +104,9 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		});
 		add("hfill", nameLabel);
 		add("right", exportButton);
-		add("br left", new JLabel("Search:"));
-		add("hfill", filterSearchField);
+		filterPanel.add("left", new JLabel("Search:"));
+		filterPanel.add("hfill", filterSearchField);
+		add("br hfill", filterPanel);
 		add("br hfill vfill", tableScroll);
 	}
 
@@ -118,7 +122,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 //			}
 //		}
 		FeatureTable newTable = (recipe == null ? null : recipe.getTrainingTable());
-		if(!isEvaluating() )//&& localTable != newTable)
+//		if(!isEvaluating() )//&& localTable != newTable)
 		{
 			localTable = newTable;
 			EvaluateFeaturesTask task = new EvaluateFeaturesTask(getActionBar(), recipe, tableEvaluationPlugins, mask, getTargetAnnotation());
@@ -128,6 +132,41 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		exportButton.setEnabled(recipe != null);
 	}
 
+	public FeatureTableModel filterTableForSelected(FeatureTableModel ftm, boolean selected)
+	{
+		Vector<Object> header = new Vector<Object>();
+		Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
+
+		for (int i = 0; i < ftm.getColumnCount(); i++)
+		{
+			header.add(ftm.getColumnName(i));
+		}
+		if (header.size() > 0)
+		{
+			for (int i = 0; i < ftm.getRowCount(); i++)
+			{
+				try
+				{
+					if (ftm.getValueAt(i, 0) != null && ((AbstractButton) ftm.getValueAt(i, 0)).isSelected() == selected)
+					{
+						Vector<Object> row = new Vector<Object>();
+						for (int j = 0; j < ftm.getColumnCount(); j++)
+						{
+							row.add(ftm.getValueAt(i, j));
+						}
+						rows.add(row);
+					}
+				}
+				catch (Exception e)
+				{
+				}
+			}
+		}
+		FeatureTableModel disp = new FeatureTableModel(rows, header);
+
+		return disp;
+	}
+	
 	public FeatureTableModel filterTable(FeatureTableModel ftm, String t){
 		Vector<Object> header = new Vector<Object>();
 		Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
@@ -160,7 +199,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		Map<? extends FeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 		boolean[] mask;
 		String target;
-		FeatureMetricPlugin plugin;
+		FeatureMetricPlugin activePlugin;
 
 		Vector<Object> header = new Vector<Object>();
 		Vector<Vector<Object>> rows = new Vector<Vector<Object>>();
@@ -180,7 +219,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		{
 //			System.out.println("GFMC 181: begin eval task");
 			super.beginTask();
-			GenericFeatureMetricPanel.this.setEvaluating(true);
+			GenericFeatureMetricPanel.setEvaluating(true);
 			combo.setEnabled(false);
 		}
 		
@@ -228,7 +267,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 				featureTable.sorterChanged(new RowSorterEvent(sorter));
 			}
 
-			GenericFeatureMetricPanel.this.setEvaluating(false);
+			GenericFeatureMetricPanel.setEvaluating(false);
 			combo.setEnabled(true);
 		}
 
@@ -237,7 +276,6 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		{
 			try
 			{
-
 				// Store the way that the table was sorted prior to refreshing
 				if(featureTable.getRowSorter() != null){
 					List<? extends SortKey> sortKeys = featureTable.getRowSorter().getSortKeys();
@@ -257,33 +295,48 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 
 				Map<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>> evals = new HashMap<FeatureMetricPlugin, Map<String, Map<Feature, Comparable>>>();
 
-				if(localTable != null){
-					// Generate evaluations for each selected option within a plugin
-					for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
-						plugin = plug;
+				if (localTable != null)
+				{
+					// Generate evaluations for each selected option within a
+					// plugin
+					for (FeatureMetricPlugin plug : tableEvaluationPlugins.keySet())
+					{
+						activePlugin = plug;
 						evals.put(plug, new TreeMap<String, Map<Feature, Comparable>>());
-						for(String s : tableEvaluationPlugins.get(plug).keySet()){
-							if(tableEvaluationPlugins.get(plug).get(s) && !halt){
-								header.add(s);
-								rowCount++;
-								Map<Feature, Comparable> values = plug.evaluateFeatures(recipe, mask, s, target, actionBar.update);
-								evals.get(plug).put(s, values);
+						
+						synchronized(plug)
+						{
+							for (String s : tableEvaluationPlugins.get(plug).keySet())
+							{
+								if (tableEvaluationPlugins.get(plug).get(s) && !halt)
+								{
+									header.add(s);
+									rowCount++;
+									Map<Feature, Comparable> values = plug.evaluateFeatures(recipe, mask, s, target, actionBar.update);
+									evals.get(plug).put(s, values);
+								}
 							}
 						}
 					}
-					
-					
-					//Fill the table's row with the evaluations we just generated
-					for(Feature f : localTable.getFeatureSet()){
+
+					// Fill the table's row with the evaluations we just
+					// generated
+					for (Feature f : localTable.getFeatureSet())
+					{
 						Vector<Object> row = new Vector<Object>();
 						row.add(getCellObject(f));
-						for(FeatureMetricPlugin plug : tableEvaluationPlugins.keySet()){
-							for(String s : tableEvaluationPlugins.get(plug).keySet()){
-								if(tableEvaluationPlugins.get(plug).get(s)){
+						for (FeatureMetricPlugin plug : tableEvaluationPlugins.keySet())
+						{
+							for (String s : tableEvaluationPlugins.get(plug).keySet())
+							{
+								if (tableEvaluationPlugins.get(plug).get(s))
+								{
 									Object value = "";
-									if(evals.get(plug).containsKey(s) && evals.get(plug).get(s) != null){
+									if (evals.get(plug).containsKey(s) && evals.get(plug).get(s) != null)
+									{
 										Object tryVal = evals.get(plug).get(s).get(f);
-										if(tryVal != null){
+										if (tryVal != null)
+										{
 											value = tryVal;
 										}
 									}
@@ -292,9 +345,8 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 							}
 						}
 						rows.add(row);
-					}						
+					}
 				}
-				
 
 			}
 			catch (Exception e)
@@ -307,7 +359,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		public void requestCancel()
 		{
 			System.out.println("GFMC cancelling...");
-			plugin.stopWhenPossible();
+			activePlugin.stopWhenPossible();
 		}
 	}
 

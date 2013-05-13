@@ -24,6 +24,7 @@ import edu.cmu.side.plugin.TableFeatureMetricPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
+import edu.cmu.side.view.restructure.RestructureActionPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
@@ -39,6 +40,18 @@ public class RestructureTablesControl extends GenesisControl{
 	static Map<RestructurePlugin, Boolean> filterPlugins;
 	private static String targetAnnotation;
 	
+	private static RestructureActionPanel actionBar; 
+	
+	public static RestructureActionPanel getActionBar()
+	{
+		return actionBar;
+	}
+
+	public static void setActionBar(RestructureActionPanel actionBar)
+	{
+		RestructureTablesControl.actionBar = actionBar;
+	}
+
 	static{
 		filterPlugins = new HashMap<RestructurePlugin, Boolean>();
 		SIDEPlugin[] filterExtractors = PluginManager.getSIDEPluginArrayByType("restructure_table");
@@ -90,12 +103,16 @@ public class RestructureTablesControl extends GenesisControl{
 			actionBar = action;
 			name = n;
 		}
+
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent arg0)
+		{
 			actionBar.setVisible(true);
 			Collection<RestructurePlugin> plugins = new HashSet<RestructurePlugin>();
-			for(RestructurePlugin plugin : RestructureTablesControl.getFilterPlugins().keySet()){
-				if(RestructureTablesControl.getFilterPlugins().get(plugin)){
+			for (RestructurePlugin plugin : RestructureTablesControl.getFilterPlugins().keySet())
+			{
+				if (RestructureTablesControl.getFilterPlugins().get(plugin))
+				{
 					plugins.add(plugin);
 				}
 			}

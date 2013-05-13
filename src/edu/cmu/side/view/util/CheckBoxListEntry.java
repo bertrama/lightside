@@ -6,7 +6,8 @@ import javax.swing.JCheckBox;
  * 
  * @author gtoffoli
  */
-public class CheckBoxListEntry extends JCheckBox{
+public class CheckBoxListEntry extends JCheckBox implements Comparable<CheckBoxListEntry>
+{
 
   private Object value = null;
 
@@ -37,5 +38,18 @@ public class CheckBoxListEntry extends JCheckBox{
 	  if(value == null) return "NULL";
 	  return value.toString();
   }
+
+@Override
+public int compareTo(CheckBoxListEntry box)
+{
+//	if(this.isSelected() ^ box.isSelected())
+//	{
+//		return this.isSelected() ? -1 : 1;
+//	}
+//	else
+	{
+		return this.getValue().toString().compareTo(box.getValue().toString());
+	}
+}
 
 }

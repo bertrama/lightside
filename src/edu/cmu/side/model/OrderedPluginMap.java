@@ -27,6 +27,7 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 	{
 		return ordering.indexOf((SIDEPlugin) s);
 	}
+	
 
 	private transient OrderedPluginComparator comparator = new OrderedPluginComparator(this);
 
@@ -185,7 +186,6 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 	{
 		return configurations.values();
 	}
-	
 
 	
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException

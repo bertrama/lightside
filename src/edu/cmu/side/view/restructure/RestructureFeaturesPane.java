@@ -27,6 +27,7 @@ public class RestructureFeaturesPane extends JPanel{
 
 	public RestructureFeaturesPane(){
 		
+		RestructureTablesControl.setActionBar(action);
 
 		setLayout(new BorderLayout());
 		

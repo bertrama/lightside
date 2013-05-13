@@ -77,10 +77,20 @@
     <plugin>
         <name>Filter Feature Values</name>
         <author>David Adamson</author>
-        <version>0.1</version>
+        <version>0.7</version>
         <description><![CDATA[Filter Instances By Feature Value]]></description>
         <jarfile>genesis.jar</jarfile>
-        <classname>plugins.restructure.FeatureValueFilter</classname>
+        <classname>plugins.restructure.filter.FeatureValueFilter</classname>
+    </plugin>
+    
+    
+    <plugin>
+        <name>Combine Features</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Combine Features]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.restructure.combine.FeatureCombinerPlugin</classname>
     </plugin>
     
     <plugin>

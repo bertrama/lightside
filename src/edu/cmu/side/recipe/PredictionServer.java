@@ -178,7 +178,7 @@ public class PredictionServer implements Container
 			
 	}
 
-	private String handleGetUpload(Request request, Response response)
+	protected String handleGetUpload(Request request, Response response)
 	{
 		response.setValue("Content-Type", "text/html");
 		return "<head><title>SIDE Loader</title></head><body>" + "<h1>SIDE Loader</h2>"
@@ -197,10 +197,10 @@ public class PredictionServer implements Container
 		{
 			String modelName = request.getPath().getPath(1).substring(1);
 			response.setValue("Content-Type", "text/html");
-			return "<head><title>SIDE Effects</title></head><body>" + header
+			return "<head><title>SIDE Effects</title></head><body style=\"margin:16px\">" + header
 					+ "<form action=\"/try/"+modelName+"\" method=\"post\" enctype=\"multipart/form-data\">" 
 					+ "<label for=\"sample\">Test the "+modelName+" model:</label><br>"
-					+ "<textarea rows=\"5\" cols=\"50\" name=\"sample\"></textarea><br>"
+					+ "<textarea rows=\"5\" cols=\"40\" name=\"sample\" style=\"max-width:400px\"></textarea><br>"
 					+ "<input type=\"submit\" name=\"Submit\" value=\"Evaluate Text\">"
 					+ "</form>"
 					+ "</body>";

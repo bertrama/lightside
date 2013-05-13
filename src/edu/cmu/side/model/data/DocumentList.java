@@ -30,6 +30,8 @@ public class DocumentList implements Serializable
 	Feature.Type type;
 	String name = "Default documents";
 	
+	String emptyAnnotationString = "";
+	
 	String[] annotationNames = null;
 	String[] labelArray = null;
 
@@ -196,7 +198,7 @@ public class DocumentList implements Serializable
 							if(value.length()>0){
 								allAnnotations.get(headers[i]).add(value);
 							}else{
-								allAnnotations.get(headers[i]).add("?");
+								allAnnotations.get(headers[i]).add(emptyAnnotationString);
 								blanks.add(lineID);
 							}
 						}else{

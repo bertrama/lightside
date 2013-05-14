@@ -268,7 +268,17 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					if(predictedDistros != null) //numeric classifiers don't produce distributions
 					for(String label : labelArray)
 					{
-						distributions.get(label).set(i, predictedDistros.get(label).get(i));
+						Double scoreForLabel;
+						if(i >= predictedDistros.get(label).size())
+						{
+							System.out.println("LP 273: prediction result distribution size does not match label/doc array size: "+i+" >= "+predictedDistros.get(label).size());
+							scoreForLabel = 0.0;
+							while(i >= predictedDistros.get(label).size())
+								distributions.get(label).add(scoreForLabel);
+						}
+						else
+							scoreForLabel = predictedDistros.get(label).get(i);
+						distributions.get(label).set(i, scoreForLabel);
 					}
 					
 					predictions[i] = predictionsList.get(i);
@@ -369,6 +379,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	{
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
+			System.out.println("LP 382: wrapping prediction result with "+wrapper + ": "+wrappers.get(wrapper));
 			prediction = ((WrapperPlugin) wrapper).wrapResultAfter(prediction, table, fold, foldsMap, updater);
 		}
 		return prediction;

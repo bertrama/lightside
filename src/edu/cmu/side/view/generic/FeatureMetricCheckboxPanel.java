@@ -32,7 +32,8 @@ import edu.cmu.side.view.util.CheckBoxListEntry;
 public abstract class FeatureMetricCheckboxPanel extends GenericFeatureMetricPanel
 {
 
-	Set<Feature> selectedFeatures = new TreeSet<Feature>();
+	protected Set<Feature> selectedFeatures = new TreeSet<Feature>();
+	protected JButton sortSelectedButton = new JButton("Sort Selected");
 
 	final static String selectKey = "FeatureMetricCheckBoxPanelSelectActionKey";
 	final static String deselectKey = "FeatureMetricCheckBoxPanelDeselectActionKey";
@@ -42,7 +43,6 @@ public abstract class FeatureMetricCheckboxPanel extends GenericFeatureMetricPan
 		super();
 		
 //		filterSearchField.setColumns(10);
-		JButton sortSelectedButton = new JButton("Sort Selected");
 		filterPanel.add("left", sortSelectedButton);
 		
 		final Comparator<CheckBoxListEntry> selectedComparator = new Comparator<CheckBoxListEntry>()
@@ -63,6 +63,7 @@ public abstract class FeatureMetricCheckboxPanel extends GenericFeatureMetricPan
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
+				filterTable(model, "");
 				TableRowSorter<? extends TableModel> rowSorter = (TableRowSorter<? extends TableModel>) featureTable.getRowSorter();
 				List<? extends SortKey> originalKeys = rowSorter.getSortKeys();
 				List<SortKey> keys = new ArrayList<SortKey>(originalKeys);

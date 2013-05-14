@@ -4,11 +4,11 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.yerihyo.yeritools.csv.CSVReader;
@@ -23,12 +23,12 @@ public class DocumentList implements Serializable
 	private static final long serialVersionUID = -5433699826930815886L;
 
 	List<String> filenameList = new ArrayList<String>();
-	Map<String, List<String>> allAnnotations = new HashMap<String, List<String>>();
-	Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
+	Map<String, List<String>> allAnnotations = new TreeMap<String, List<String>>();
+	Map<String, List<String>> textColumns = new TreeMap<String, List<String>>();
 	boolean differentiateTextColumns = false;
 	String currentAnnotation; 
 	Feature.Type type;
-	String name = "Default documents";
+	String name = "Documents";
 	
 	String emptyAnnotationString = "";
 	
@@ -45,8 +45,10 @@ public class DocumentList implements Serializable
 
 	public void setClassValueType(Feature.Type t)
 	{
+//		System.out.println("DL 48: setting class value type for "+currentAnnotation+" to "+t);
 		if(t != type)
 		{
+			new Exception("tracing setClassValueType").printStackTrace(System.out);
 			type = t;
 			labelArray = null;
 			getLabelArray();
@@ -55,6 +57,7 @@ public class DocumentList implements Serializable
 	
 	public Feature.Type getValueType(String label)
 	{
+//		System.out.println("DL 69: getting value type for "+label);
 		if(label == null)
 		{
 			return Type.NOMINAL;
@@ -69,7 +72,7 @@ public class DocumentList implements Serializable
 			Feature.Type localType = guessValueType(label);
 			if(label.equals(currentAnnotation))
 			{
-				type = localType;
+				setClassValueType(localType);
 			}
 			return localType;
 		}
@@ -83,6 +86,8 @@ public class DocumentList implements Serializable
 	 */
 	public Feature.Type guessValueType(String label)
 	{
+//		System.out.println("DL 87: guessing type for "+label);
+		
 		Feature.Type localType;
 		for (String s : getPossibleAnn(label))
 		{
@@ -95,7 +100,7 @@ public class DocumentList implements Serializable
 				localType = Feature.Type.NOMINAL;
 				if (label.equals(currentAnnotation))
 				{
-					type = localType;
+					setClassValueType(localType);
 				}
 				return localType;
 			}
@@ -103,7 +108,7 @@ public class DocumentList implements Serializable
 		localType = Feature.Type.NUMERIC;
 		if (label.equals(currentAnnotation))
 		{
-			type = localType;
+			setClassValueType(localType);
 		}
 		return localType;
 
@@ -223,8 +228,8 @@ public class DocumentList implements Serializable
 		return allAnnotations;
 	}
 
-	private static String[] classGuesses = {"class", "label", "value", "annotation"};
-	private static String[] textGuesses = {"text", "sentence", "turn", "posting", "instance"};
+	private static String[] classGuesses = {"class", "label", "value", "annotation", "score"};
+	private static String[] textGuesses = {"text", "sentence", "turn", "posting", "instance", "essay"};
 
 	public void guessTextAndAnnotationColumns()
 	{
@@ -364,6 +369,7 @@ public class DocumentList implements Serializable
 	}
 
 	public String[] getLabelArray() {
+		
 		if(labelArray == null){
 			Set<String> labelSet = new TreeSet<String>();
 			switch(getValueType(getCurrentAnnotation())){
@@ -428,15 +434,24 @@ public class DocumentList implements Serializable
 
 	public void setCurrentAnnotation(String annot)
 	{
+		setCurrentAnnotation(annot, null);
+	}
+	
+	public void setCurrentAnnotation(String annot, Type t)
+	{
 		if(annot == currentAnnotation)  //TODO: make sure this shortcut doesn't break anything expecting labelArray to be populated
 			return;
 		
 		if (!allAnnotations.containsKey(annot))
 			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
-		labelArray = null;
-		type = null;
-		currentAnnotation = annot;
-		getLabelArray();
+		
+		if(currentAnnotation == null || !currentAnnotation.equals(annot) || type != t)
+		{
+			labelArray = null;
+			type = t;
+			currentAnnotation = annot;
+			getLabelArray();
+		}
 	}
 
 	//TODO: use this in BuildModel and Chef and anywhere else we're translating a recipe to a new document list

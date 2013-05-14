@@ -89,7 +89,7 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 				}
 				else
 				{
-					testList.setCurrentAnnotation(annotation);
+					testList.setCurrentAnnotation(annotation, trainRecipe.getTrainingTable().getClassValueType());
 					clearWarning();
 				}
 			}

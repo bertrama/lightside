@@ -91,7 +91,8 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 
 			@Override
 			public void keyReleased(KeyEvent arg0) {
-				display = filterTable(model, filterSearchField.getText());
+				String filterText = filterSearchField.getText();
+				display = filterTable(model, filterText);
 				featureTable.setModel(display);
 				TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(display);
 				featureTable.setRowSorter(sorter);

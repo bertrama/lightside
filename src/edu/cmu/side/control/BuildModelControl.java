@@ -381,7 +381,7 @@ public class BuildModelControl extends GenesisControl{
 
 		try
 		{
-			test.setCurrentAnnotation(train.getCurrentAnnotation());
+			test.setCurrentAnnotation(train.getCurrentAnnotation(), recipe.getTrainingTable().getClassValueType());
 			test.setTextColumns(new HashSet<String>(train.getTextColumns()));
 
 

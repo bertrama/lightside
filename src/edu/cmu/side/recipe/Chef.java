@@ -133,7 +133,7 @@ public class Chef
 		String currentAnnotation = original.getCurrentAnnotation();
 		if(corpus.allAnnotations().containsKey(currentAnnotation))
 		{
-			corpus.setCurrentAnnotation(currentAnnotation);
+			corpus.setCurrentAnnotation(currentAnnotation, originalRecipe.getTrainingTable().getClassValueType());
 		}
 		else
 		{

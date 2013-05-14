@@ -87,6 +87,17 @@ public class FreqMap<E> extends TreeMap<E, Integer> implements Iterable{
 		}
 
 	}
+	public E getMaxKey()
+	{
+		E maxKey = null;
+		int maxCount = 0;
+		for(E key : keySet())
+		{
+			if(get(key) > maxCount)
+				maxKey = key;
+		}
+		return maxKey;
+	}
 
 }
 

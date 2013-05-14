@@ -183,12 +183,9 @@ public class ExtractFeaturesControl extends GenesisControl{
 							sdl.setTextColumn(annot, false);
 						}
 
-						sdl.setCurrentAnnotation(annot); // because this
-															// modifies a
-															// recipe, should it
-															// notify
-															// the
-															// recipemanager?
+						sdl.setCurrentAnnotation(annot); 
+						// because this modifies a recipe, should it
+						// notify the recipe manager?
 
 						sdl.setClassValueType(null);
 						classTypeCombo.setSelectedItem(sdl.getValueType(annot));

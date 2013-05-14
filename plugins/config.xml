@@ -197,6 +197,18 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.wrappers.FeatureSelection</classname>
     </plugin> 
+    
+    
+    
+    <plugin>
+        <name>Discount Majority</name>
+        <author>David Adamson</author>
+        <version>0.1</version>
+        <description><![CDATA[Favor the weak]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.wrappers.RecallWrapper</classname>
+    </plugin> 
+      
       
             
  <!--   <plugin>
@@ -216,7 +228,7 @@
         <jarfile>cues.jar</jarfile>
         <classname>learning.EnsembleLearner</classname>
     </plugin>
-    
+    -->
     
    <plugin>
         <name>Ensemble Minority Voter</name>
@@ -227,6 +239,7 @@
         <classname>learning.EnsembleMinorityVoter</classname>
     </plugin>
     
+<!--    
       <plugin>
         <name>Pandemonium Voter</name>
         <author>David Adamson</author>

@@ -109,7 +109,8 @@ public class FeatureTable implements Serializable
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
 		this.threshold = thresh;
 		this.documents = sdl;
-		annotation = sdl.getCurrentAnnotation();
+		this.annotation = sdl.getCurrentAnnotation();
+		this.type = sdl.getValueType(annotation);
 		generateConvertedClassValues();
 		
 		for(int i = 0; i < sdl.getSize(); i++){
@@ -252,12 +253,6 @@ public class FeatureTable implements Serializable
 		name = n;
 	}
 
-	public void setDocumentList(DocumentList sdl){
-		documents = sdl;
-		type = null;
-		generateConvertedClassValues();
-	}
-
 	public void setThreshold(int n){
 		threshold = n;
 	}
@@ -272,7 +267,7 @@ public class FeatureTable implements Serializable
 	public DocumentList getDocumentList()
 	{
 		if(documents != null && documents.allAnnotations.keySet().contains(annotation))
-			documents.setCurrentAnnotation(annotation);
+			documents.setCurrentAnnotation(annotation, type);
 		return documents;
 	}
 	
@@ -334,6 +329,9 @@ public class FeatureTable implements Serializable
 	    
 	    ft.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
 	    ft.threshold = threshold;
+	    ft.numericConvertedClassValues = new HashMap<String, double[]>(numericConvertedClassValues);
+	    ft.nominalConvertedClassValues = new ArrayList<String>(nominalConvertedClassValues);
+	    
 	    fillHitsPerDocument(ft);
 	    
 	    

@@ -36,7 +36,7 @@ public class ExtractActionPanel extends ActionBar{
 	
 	public void refreshPanel(){
 		super.refreshPanel();
-		actionButton.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList() && ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList().getCurrentAnnotation() != null);
+		actionButton.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList() && ExtractFeaturesControl.getSelectedClassAnnotation() != null);
 	}
 
 	@Override

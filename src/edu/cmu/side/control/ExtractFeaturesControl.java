@@ -38,6 +38,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.FastListModel;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
+import edu.stanford.nlp.util.Sets;
 
 public class ExtractFeaturesControl extends GenesisControl{
 
@@ -47,6 +48,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 	private static Map<FeaturePlugin, Boolean> featurePlugins;
 	private static Map<TableFeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static String targetAnnotation;
+	private static String selectedClassAnnotation;
+	private static Type selectedClassType;
 	
 	static{
 		featurePlugins = new HashMap<FeaturePlugin, Boolean>();
@@ -63,32 +66,37 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 	}
 
-	public static class AddFilesListener implements ActionListener{
-		private AbstractListPanel parentComponent;
-		private FastListModel model;
-		private JFileChooser chooser = new JFileChooser(Workbench.csvFolder);
-
-		public AddFilesListener(AbstractListPanel parentComponent){
-			this.parentComponent = parentComponent;
-		}
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			chooser.setFileFilter(FileToolkit
-					.createExtensionListFileFilter(new String[] { "csv" }, true));
-			chooser.setMultiSelectionEnabled(true);
-			int result = chooser.showOpenDialog(parentComponent);
-			if (result != JFileChooser.APPROVE_OPTION) {
-				return;
-			}
-			Recipe plan = generateDocumentListRecipe(chooser.getSelectedFiles());
-			plan.getDocumentList().guessTextAndAnnotationColumns();
-			
-			Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
-			setHighlightedDocumentListRecipe(plan);
-			Workbench.update(parentComponent);
-		}
-	}
+//	public static class AddFilesListener implements ActionListener{
+//		private AbstractListPanel parentComponent;
+//		private FastListModel model;
+//		private JFileChooser chooser = new JFileChooser(Workbench.csvFolder);
+//
+//		public AddFilesListener(AbstractListPanel parentComponent){
+//			this.parentComponent = parentComponent;
+//		}
+//
+//		@Override
+//		public void actionPerformed(ActionEvent e) 
+//		{
+//			chooser.setFileFilter(FileToolkit
+//					.createExtensionListFileFilter(new String[] { "csv" }, true));
+//			chooser.setMultiSelectionEnabled(true);
+//			int result = chooser.showOpenDialog(parentComponent);
+//			if (result != JFileChooser.APPROVE_OPTION) {
+//				return;
+//			}
+//			Recipe plan = generateDocumentListRecipe(chooser.getSelectedFiles());
+//			
+//			DocumentList newDocs = plan.getDocumentList();
+//			String label = newDocs.guessTextAndAnnotationColumns();
+//			setSelectedClassAnnotation(label);
+//			setSelectedClassType(newDocs.guessValueType(label));
+//			
+//			Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
+//			setHighlightedDocumentListRecipe(plan);
+//			Workbench.update(parentComponent);
+//		}
+//	}
 	
 
 	public static Recipe generateDocumentListRecipe(File[] files){
@@ -129,7 +137,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 	}
 	
-	public static void setTargetAnnotation(String s){
+	public static void setTargetAnnotation(String s)
+	{
 		targetAnnotation = s;
 	}
 	
@@ -183,17 +192,20 @@ public class ExtractFeaturesControl extends GenesisControl{
 							sdl.setTextColumn(annot, false);
 						}
 
-						sdl.setCurrentAnnotation(annot); 
+//						sdl.setCurrentAnnotation(annot); 
+						setSelectedClassAnnotation(annot);
 						// because this modifies a recipe, should it
 						// notify the recipe manager?
 
-						sdl.setClassValueType(null);
-						classTypeCombo.setSelectedItem(sdl.getValueType(annot));
+//						sdl.setClassValueType(null);
+						Type valueType = sdl.getValueType(annot);
+						classTypeCombo.setSelectedItem(valueType);
+						setSelectedClassType(valueType);
 
 						Map<String, Boolean> columns = new TreeMap<String, Boolean>();
 						for (String s : sdl.allAnnotations().keySet())
 						{
-							if (!sdl.getCurrentAnnotation().equals(s)) columns.put(s, false);
+							if (!getSelectedClassAnnotation().equals(s)) columns.put(s, false);
 						}
 						for (String s : sdl.getTextColumns())
 						{
@@ -207,7 +219,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 					{
 						Type classType = (Type) classTypeCombo.getSelectedItem();
 						System.out.println ("EFC 209 yoohoo: "+classType);
-						sdl.setClassValueType(classType);
+//						sdl.setClassValueType(classType);
+						setSelectedClassType(classType);
 					}
 					
 				}
@@ -276,6 +289,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		protected void doTask(){
 			try
 			{
+				System.out.println("EFC 289: extracting features for new feature table. Annotation "+selectedClassAnnotation+", type "+selectedClassType);
 				Collection<FeatureHit> hits = new HashSet<FeatureHit>();
 				for (SIDEPlugin plug : plan.getExtractors().keySet())
 				{
@@ -287,7 +301,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				}
 				if(!halt)
 				{
-					FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold);
+					FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold, selectedClassAnnotation, selectedClassType);
 					ft.setName(name);
 					plan.setFeatureTable(ft);
 					setHighlightedFeatureTableRecipe(plan);
@@ -348,5 +362,28 @@ public class ExtractFeaturesControl extends GenesisControl{
 	
 	public static void setHighlightedFeatureTableRecipe(Recipe highlight){
 		highlightedFeatureTable = highlight;
+	}
+
+	public static Type getSelectedClassType()
+	{
+		return selectedClassType;
+	}
+
+	public static void setSelectedClassType(Type targetType)
+	{
+		System.out.println("new target type is "+targetType);
+		ExtractFeaturesControl.selectedClassType = targetType;
+	}
+
+	public static String getSelectedClassAnnotation()
+	{
+		return selectedClassAnnotation;
+	}
+
+	public static void setSelectedClassAnnotation(String selectedClassAnnotation)
+	{
+		System.out.println("new selected annotation is "+selectedClassAnnotation);
+		
+		ExtractFeaturesControl.selectedClassAnnotation = selectedClassAnnotation;
 	}
 }

@@ -130,16 +130,17 @@ public class Chef
 	protected static void prepareDocumentList(Recipe originalRecipe, DocumentList corpus)
 	{
 		DocumentList original = originalRecipe.getDocumentList();
-		String currentAnnotation = original.getCurrentAnnotation();
+		FeatureTable originalTable = originalRecipe.getTrainingTable();
+		String currentAnnotation = originalTable.getAnnotation();
 		if(corpus.allAnnotations().containsKey(currentAnnotation))
 		{
-			corpus.setCurrentAnnotation(currentAnnotation, originalRecipe.getTrainingTable().getClassValueType());
+			corpus.setCurrentAnnotation(currentAnnotation, originalTable.getClassValueType());
 		}
 		else
 		{
 //			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
 		}
-		corpus.setLabelArray(original.getLabelArray());
+		corpus.setLabelArray(originalTable.getLabelArray());
 		corpus.setTextColumns(new HashSet<String>(original.getTextColumns()));
 	}
 

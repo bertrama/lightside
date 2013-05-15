@@ -27,7 +27,7 @@ public class DocumentList implements Serializable
 	Map<String, List<String>> textColumns = new TreeMap<String, List<String>>();
 	boolean differentiateTextColumns = false;
 	String currentAnnotation; 
-	Feature.Type type;
+//	Feature.Type type;
 	String name = "Documents";
 	
 	String emptyAnnotationString = "";
@@ -43,21 +43,32 @@ public class DocumentList implements Serializable
 	}
 	
 
-	public void setClassValueType(Feature.Type t)
-	{
-//		System.out.println("DL 48: setting class value type for "+currentAnnotation+" to "+t);
-		if(t != type)
-		{
-			new Exception("tracing setClassValueType").printStackTrace(System.out);
-			type = t;
-			labelArray = null;
-			getLabelArray();
-		}
-	}
+//	public void setClassValueType(Feature.Type t)
+//	{
+////		System.out.println("DL 48: setting class value type for "+currentAnnotation+" to "+t);
+//		if(t != type)
+//		{
+//			new Exception("tracing setClassValueType").printStackTrace(System.out);
+//			type = t;
+//			labelArray = null;
+//			getLabelArray();
+//		}
+//	}
 	
 	public Feature.Type getValueType(String label)
 	{
-//		System.out.println("DL 69: getting value type for "+label);
+		if(label == null)
+		{
+			return Type.NOMINAL;
+		}
+		
+		Feature.Type localType = guessValueType(label);
+		return localType;
+	}
+	
+	/*
+	public Feature.Type getValueType(String label)
+	{
 		if(label == null)
 		{
 			return Type.NOMINAL;
@@ -76,7 +87,7 @@ public class DocumentList implements Serializable
 			}
 			return localType;
 		}
-	}
+	}*/
 
 	/**
 	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out
@@ -98,18 +109,18 @@ public class DocumentList implements Serializable
 			catch (Exception e)
 			{
 				localType = Feature.Type.NOMINAL;
-				if (label.equals(currentAnnotation))
-				{
-					setClassValueType(localType);
-				}
+//				if (label.equals(currentAnnotation))
+//				{
+//					setClassValueType(localType);
+//				}
 				return localType;
 			}
 		}
 		localType = Feature.Type.NUMERIC;
-		if (label.equals(currentAnnotation))
-		{
-			setClassValueType(localType);
-		}
+//		if (label.equals(currentAnnotation))
+//		{
+//			setClassValueType(localType);
+//		}
 		return localType;
 
 	}
@@ -150,7 +161,7 @@ public class DocumentList implements Serializable
 		this(filenames);
 		setTextColumn(textCol, true);
 		setCurrentAnnotation(currentAnnot);
-		getLabelArray();
+		getLabelArray(currentAnnot, guessValueType(currentAnnot));
 	}
 
 	public DocumentList(Set<String> filenames, String textCol){
@@ -231,7 +242,7 @@ public class DocumentList implements Serializable
 	private static String[] classGuesses = {"class", "label", "value", "annotation", "score"};
 	private static String[] textGuesses = {"text", "sentence", "turn", "posting", "instance", "essay"};
 
-	public void guessTextAndAnnotationColumns()
+	public String guessTextAndAnnotationColumns()
 	{
 		if(currentAnnotation == null)
 		{
@@ -269,6 +280,8 @@ public class DocumentList implements Serializable
 					this.setTextColumn(s, true);
 				}
 			}
+		System.out.println("guessing "+currentAnnotation);
+		return currentAnnotation;
 	}
 
 
@@ -290,18 +303,21 @@ public class DocumentList implements Serializable
 	 */
 	public void addAnnotation(String name, List<String> annots){
 		while (allAnnotations.containsKey(name))
-			name = name + " (new one)";
+			name = name + " (new)";
 		allAnnotations.put(name, annots);
 	}
 
-	public List<String> getAnnotationArray(String name) {
-		return allAnnotations.get(name);
+	public List<String> getAnnotationArray(String name) 
+	{
+		if(name != null)
+			return allAnnotations.get(name);
+		return null;
 	}
 
-	public List<String> getAnnotationArray() {
-		if (currentAnnotation == null) return null;
-		return allAnnotations.get(currentAnnotation);
-	}
+//	public List<String> getAnnotationArray() {
+//		if (currentAnnotation == null) return null;
+//		return allAnnotations.get(currentAnnotation);
+//	}
 
 	public Map<String, List<String>> getCoveredTextList() {
 		return textColumns;
@@ -322,10 +338,11 @@ public class DocumentList implements Serializable
 		return sb.toString();
 	}
 
-	public String getCurrentAnnotation()
-	{
-		return currentAnnotation;
-	}
+//use FeatureTable.getAnnotation or ExtractFeatureControl.getTargetAnnotation instead
+//	public String getCurrentAnnotation()
+//	{
+//		return currentAnnotation;
+//	}
 
 	public Set<String> getTextColumns()
 	{
@@ -368,27 +385,32 @@ public class DocumentList implements Serializable
 		return names;
 	}
 
-	public String[] getLabelArray() {
-		
-		if(labelArray == null){
+	
+	public String[] getLabelArray(String column, Type t)
+	{
+
+		if (!column.equals(currentAnnotation) || labelArray == null)
+		{
 			Set<String> labelSet = new TreeSet<String>();
-			switch(getValueType(getCurrentAnnotation())){
-			case NOMINAL:
-			case BOOLEAN:
-				List<String> labels = getAnnotationArray();
-				if(labels != null)
-				{
-					for(String s : labels)
+			switch (t)
+			{
+				case NOMINAL:
+				case BOOLEAN:
+					List<String> labels = getAnnotationArray(column);
+					if (labels != null)
 					{
-						labelSet.add(s);
+						for (String s : labels)
+						{
+							labelSet.add(s);
+						}
 					}
-				}		
-				break;
-			case NUMERIC:
-				for(int i = 0; i < 5; i++){
-					labelSet.add("Q"+(i+1));
-				}
-				break;
+					break;
+				case NUMERIC:
+					for (int i = 0; i < 5; i++)
+					{
+						labelSet.add("Q" + (i + 1));
+					}
+					break;
 			}
 			labelArray = labelSet.toArray(new String[0]);
 		}
@@ -434,7 +456,18 @@ public class DocumentList implements Serializable
 
 	public void setCurrentAnnotation(String annot)
 	{
-		setCurrentAnnotation(annot, null);
+		if(annot == currentAnnotation)  //TODO: make sure this shortcut doesn't break anything expecting labelArray to be populated
+			return;
+		
+		if (!allAnnotations.containsKey(annot))
+			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
+		
+		if(currentAnnotation == null || !currentAnnotation.equals(annot) )//|| type != t)
+		{
+			labelArray = null;
+			currentAnnotation = annot;
+			getLabelArray(annot, guessValueType(annot));
+		}
 	}
 	
 	public void setCurrentAnnotation(String annot, Type t)
@@ -445,12 +478,12 @@ public class DocumentList implements Serializable
 		if (!allAnnotations.containsKey(annot))
 			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
 		
-		if(currentAnnotation == null || !currentAnnotation.equals(annot) || type != t)
+		if(currentAnnotation == null || !currentAnnotation.equals(annot) )//|| type != t)
 		{
 			labelArray = null;
-			type = t;
+//			type = t;
 			currentAnnotation = annot;
-			getLabelArray();
+			getLabelArray(annot, t);
 		}
 	}
 
@@ -497,5 +530,6 @@ public class DocumentList implements Serializable
 
 	public void setFilenames(List<String> f){
 		filenameList = f;
+	
 	}
 }

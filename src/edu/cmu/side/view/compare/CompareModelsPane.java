@@ -134,7 +134,7 @@ public class CompareModelsPane extends AbstractListPanel{
 			{
 				loadCompetitor.setWarning("You're comparing a model to itself.");
 			}
-			else if(!baseList.getAnnotationArray().equals(competeList.getAnnotationArray()))
+			else if(!baseline.getTrainingTable().getAnnotations().equals(competitor.getTrainingTable().getAnnotations()))
 			{
 				loadCompetitor.setWarning("Class labels are not directly comparable.");
 			}

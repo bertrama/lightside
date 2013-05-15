@@ -208,14 +208,12 @@ public abstract class GenesisControl {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Documents: " + docs.getName());
 
 		DefaultMutableTreeNode size = new DefaultMutableTreeNode("Instances: " + docs.getSize());
-		DefaultMutableTreeNode annot = new DefaultMutableTreeNode("Class: " + docs.getCurrentAnnotation());
 		DefaultMutableTreeNode text = new DefaultMutableTreeNode("Text Columns:");
 		for(String s : docs.getTextColumns()){
 			DefaultMutableTreeNode textName = new DefaultMutableTreeNode(s);
 			text.add(textName);
 		}
 		node.add(size);
-		node.add(annot);
 		node.add(text);
 		return node;
 	}
@@ -261,7 +259,11 @@ public abstract class GenesisControl {
 	public static MutableTreeNode getTableNode(FeatureTable features, String key){
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(key+" " + features.getName());
 		DefaultMutableTreeNode size = new DefaultMutableTreeNode(features.getFeatureSet().size() + " features");
+		DefaultMutableTreeNode annot = new DefaultMutableTreeNode("Class: " + features.getAnnotation());
+		DefaultMutableTreeNode type = new DefaultMutableTreeNode("Type: " + features.getClassValueType().toString().toLowerCase());
 		node.add(size);
+		node.add(annot);
+		node.add(type);
 		return node;
 	}
 

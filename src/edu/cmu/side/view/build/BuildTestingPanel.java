@@ -286,7 +286,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 			String[] annotationNames = documentList.getAnnotationNames();
 			Arrays.sort(annotationNames);
 			DefaultComboBoxModel model = new DefaultComboBoxModel(annotationNames);
-			model.removeElement(documentList.getCurrentAnnotation());
+			model.removeElement(recipe.getTrainingTable().getAnnotation());
 			annotations.setModel(model);
 			int items = annotations.getItemCount();
 			if(items > 0)

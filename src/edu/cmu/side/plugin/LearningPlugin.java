@@ -119,7 +119,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 			case NOMINAL:
 			case BOOLEAN:
 			case STRING:
-					String[] labelArray = wrappedTable.getDocumentList().getLabelArray();
+					String[] labelArray = wrappedTable.getLabelArray();
 					for (int i = 0; i < wrappedTable.getSize(); i++)
 					{
 						for(String label : labelArray)
@@ -183,7 +183,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	{
 		DocumentList localDocuments = table.getDocumentList();
 		Comparable[] predictions = new Comparable[localDocuments.getSize()];
-		String[] labelArray = localDocuments.getLabelArray();
+		String[] labelArray = table.getLabelArray();
 		Map<String, List<Double>> distributions = null;
 		
 		Set<Integer> folds = new TreeSet<Integer>();
@@ -283,10 +283,10 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 					
 					predictions[i] = predictionsList.get(i);
 					foldPredicted.add(predictions[i]);
-					foldActual.add(localDocuments.getAnnotationArray().get(i));
+					foldActual.add(table.getAnnotations().get(i));
 					
 					
-					if(predictions[i].equals(localDocuments.getAnnotationArray().get(i)))
+					if(predictions[i].equals(table.getAnnotations().get(i)))
 						correct++;
 					total++;
 				}
@@ -379,7 +379,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 	{
 		for (SIDEPlugin wrapper : wrappers.keySet())
 		{
-			System.out.println("LP 382: wrapping prediction result with "+wrapper + ": "+wrappers.get(wrapper));
+//			System.out.println("LP 382: wrapping prediction result with "+wrapper + ": "+wrappers.get(wrapper));
 			prediction = ((WrapperPlugin) wrapper).wrapResultAfter(prediction, table, fold, foldsMap, updater);
 		}
 		return prediction;
@@ -431,7 +431,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				List<String> predictions = new ArrayList<String>();
 				Map<String, List<Double>> distributions = new HashMap<String, List<Double>>();
 
-				String[] labelArray = originalData.getDocumentList().getLabelArray();
+				String[] labelArray = originalData.getLabelArray();
 				for (String possible : labelArray)
 				{
 					distributions.put(possible, new ArrayList<Double>());

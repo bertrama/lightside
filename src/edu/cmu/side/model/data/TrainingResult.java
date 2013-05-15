@@ -81,7 +81,7 @@ public class TrainingResult implements Serializable{
 		train = tr;
 		test = tr;
 		predictions = pred;
-		generateConfusionMatrix(tr.getClassValueType(), tr.getDocumentList().getAnnotationArray(), predictions);
+		generateConfusionMatrix(tr.getClassValueType(), tr.getAnnotations(), predictions);
 	}
 
 	/**
@@ -91,7 +91,7 @@ public class TrainingResult implements Serializable{
 		train = tr;
 		test = te;
 		predictions = pred;
-		generateConfusionMatrix(te.getClassValueType(), te.getDocumentList().getAnnotationArray(), predictions);
+		generateConfusionMatrix(te.getClassValueType(), te.getAnnotations(), predictions);
 	}
 
 	public TrainingResult(FeatureTable table, PredictionResult pred)

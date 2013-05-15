@@ -83,25 +83,29 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 		if (files.getHighlight() != null)
 		{
 			DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
-			Workbench.reloadComboBoxContent(annotationFieldCombo, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
+			Workbench.reloadComboBoxContent(annotationFieldCombo, sdl.allAnnotations().keySet(), ExtractFeaturesControl.getSelectedClassAnnotation());
 			Map<String, Boolean> columns = new TreeMap<String, Boolean>();
 			
+			if(ExtractFeaturesControl.getSelectedClassAnnotation() == null || !sdl.allAnnotations().containsKey(ExtractFeaturesControl.getSelectedClassAnnotation()))
+			{
+				ExtractFeaturesControl.setSelectedClassAnnotation(sdl.guessTextAndAnnotationColumns());
+			}
 			
-			if(sdl.guessValueType(sdl.getCurrentAnnotation()) == Type.NOMINAL)
+			if(sdl.guessValueType(ExtractFeaturesControl.getSelectedClassAnnotation()) == Type.NOMINAL)
 			{
 				classTypeCombo.setModel(new DefaultComboBoxModel(new Object[]{Type.NOMINAL}));
 			}
 			else
 			{
-				Type oldType = sdl.getValueType(sdl.getCurrentAnnotation());
+				Type oldType = ExtractFeaturesControl.getSelectedClassType();
 				classTypeCombo.setModel(new DefaultComboBoxModel(new Object[]{Type.NUMERIC, Type.NOMINAL}));
-				sdl.setClassValueType(oldType);
+				ExtractFeaturesControl.setSelectedClassType(oldType);
 			}
 			
 			
 			for (String s : sdl.allAnnotations().keySet())
 			{
-				if (sdl.getCurrentAnnotation() == null || !sdl.getCurrentAnnotation().equals(s)) columns.put(s, false);
+				if (ExtractFeaturesControl.getSelectedClassAnnotation() == null || !ExtractFeaturesControl.getSelectedClassAnnotation().equals(s)) columns.put(s, false);
 			}
 			for (String s : sdl.getTextColumns())
 			{
@@ -136,7 +140,7 @@ public class ExtractCombinedLoadPanel extends AbstractListPanel
 					// recipemanager? or on the individual recipe?
 					DocumentList sdl = ExtractFeaturesControl.getHighlightedDocumentListRecipe().getDocumentList();
 					sdl.setTextColumn(((CheckBoxListEntry) ie.getItem()).getValue().toString(), ie.getStateChange() == ItemEvent.SELECTED);
-					Workbench.reloadComboBoxContent(annotationFieldCombo, sdl.allAnnotations().keySet(), sdl.getCurrentAnnotation());
+					Workbench.reloadComboBoxContent(annotationFieldCombo, sdl.allAnnotations().keySet(), ExtractFeaturesControl.getSelectedClassAnnotation());
 					Workbench.update(RecipeManager.Stage.DOCUMENT_LIST);
 					Workbench.update(ExtractCombinedLoadPanel.this);
 				}

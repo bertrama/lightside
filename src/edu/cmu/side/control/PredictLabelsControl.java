@@ -99,7 +99,7 @@ public class PredictLabelsControl extends GenesisControl{
 					if(showDists)
 					{
 						DocumentList documents = trainedModel.getDocumentList();
-						for(String label : documents.getLabelArray())
+						for(String label : trainedModel.getTrainingTable().getLabelArray())
 						{
 							List<String> dist = new ArrayList<String>();
 

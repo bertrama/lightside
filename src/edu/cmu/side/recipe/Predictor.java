@@ -93,24 +93,25 @@ public class Predictor
 		loadModel();
 	}
 
-	protected FeatureTable prepareTestSet(DocumentList test)
-	{
-		test.setLabelArray(recipe.getDocumentList().getLabelArray());
-
-		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-		OrderedPluginMap extractors = recipe.getExtractors();
-		for (SIDEPlugin plug : extractors.keySet())
-		{
-			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(test, extractors.get(plug), textUpdater);
-			hits.addAll(extractorHits);
-		}
-		FeatureTable ft = new FeatureTable(test, hits, 0);
-		for (SIDEPlugin plug : recipe.getFilters().keySet())
-		{
-			ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), textUpdater);
-		}
-		return ft;
-	}
+//	@Deprecated //nobody calls this?
+//	protected FeatureTable prepareTestSet(DocumentList test)
+//	{
+//		test.setLabelArray(recipe.getTrainingTable().getLabelArray());
+//
+//		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
+//		OrderedPluginMap extractors = recipe.getExtractors();
+//		for (SIDEPlugin plug : extractors.keySet())
+//		{
+//			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(test, extractors.get(plug), textUpdater);
+//			hits.addAll(extractorHits);
+//		}
+//		FeatureTable ft = new FeatureTable(test, hits, 0);
+//		for (SIDEPlugin plug : recipe.getFilters().keySet())
+//		{
+//			ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), textUpdater);
+//		}
+//		return ft;
+//	}
 
 	/**
 	 * 

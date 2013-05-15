@@ -166,13 +166,13 @@ public class FeatureTableExporter
 		FileWriter outf = new FileWriter(file);
 		outf.write("Instance");
 		DocumentList localDocuments = ft.getDocumentList();
-		outf.write("," + localDocuments.getCurrentAnnotation());
+		outf.write("," + ft.getAnnotation());
 
 		for (Feature f : ft.getFeatureSet())
 			outf.write("," + f.getFeatureName().replaceAll(",", "_"));
 		outf.write("\n");
 
-		List<String> annotations =	 localDocuments.getAnnotationArray();
+		List<String> annotations =	 ft.getAnnotations();
 
 		for (int i = 0; i < localDocuments.getSize(); i++)
 		{

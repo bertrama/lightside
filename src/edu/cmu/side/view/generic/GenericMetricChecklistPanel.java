@@ -5,12 +5,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
@@ -19,7 +18,6 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.plugin.FeatureMetricPlugin;
-import edu.cmu.side.view.util.AbbreviatedComboBoxCellRenderer;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
@@ -71,11 +69,11 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 	public void refreshPanel(FeatureTable table){
 		if(table != localTable){
 			localTable = table;
-			Set<String> keysLocal = new HashSet<String>();
-			Set<String> keysNew = new HashSet<String>();
+			Set<String> keysNew = new TreeSet<String>();
 			if(table != null)
 			{
-				for(String s : table.getDocumentList().getLabelArray()){
+				for(String s : table.getLabelArray())
+				{
 					keysNew.add(s);
 				}
 			}

@@ -246,13 +246,14 @@ public class BuildModelControl extends GenesisControl{
 			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(test, extractors.get(plug), updater);
 			hits.addAll(extractorHits);
 		}
-		FeatureTable ft = new FeatureTable(test, hits, 0);
+		FeatureTable originalTable = recipe.getTrainingTable();
+		FeatureTable ft = new FeatureTable(test, hits, 0, originalTable.getAnnotation(), originalTable.getClassValueType());
 		for (SIDEPlugin plug : recipe.getFilters().keySet())
 		{
-			ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), updater);
+			ft = ((RestructurePlugin) plug).filterTestSet(originalTable, ft, recipe.getFilters().get(plug), updater);
 		}
 		
-		ft.reconcileFeatures(recipe.getTrainingTable());
+		ft.reconcileFeatures(originalTable);
 		
 		return ft;
 
@@ -381,12 +382,12 @@ public class BuildModelControl extends GenesisControl{
 
 		try
 		{
-			test.setCurrentAnnotation(train.getCurrentAnnotation(), recipe.getTrainingTable().getClassValueType());
+			test.setCurrentAnnotation(recipe.getTrainingTable().getAnnotation(), recipe.getTrainingTable().getClassValueType());
 			test.setTextColumns(new HashSet<String>(train.getTextColumns()));
 
 
-			List<String> trainColumns = train.getAnnotationArray();
-			List<String> testColumns = test.getAnnotationArray();
+			Collection<String> trainColumns = train.allAnnotations().keySet();
+			Collection<String> testColumns = test.allAnnotations().keySet();
 			if(!testColumns.containsAll(trainColumns))
 			{
 				ArrayList<String> missing = new ArrayList<String>(trainColumns);
@@ -398,7 +399,7 @@ public class BuildModelControl extends GenesisControl{
 		}
 		catch(Exception e)
 		{
-			throw new java.lang.IllegalStateException("Test set annotations do not match training set.\nMissing ["+train.getCurrentAnnotation()+"] or "+train.getTextColumns()+" columns.");
+			throw new java.lang.IllegalStateException("Test set annotations do not match training set.\nMissing ["+recipe.getTrainingTable().getAnnotation()+"] or "+train.getTextColumns()+" columns.");
 		}
 
 

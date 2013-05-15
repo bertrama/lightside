@@ -59,6 +59,7 @@ public class BuildActionPanel extends ActionBar {
 
 	public void refreshPanel(){
 		super.refreshPanel();
+		
 		actionButton.setEnabled(BuildModelControl.hasHighlightedFeatureTableRecipe());
 	}
 

@@ -165,7 +165,11 @@ public class FeatureTable implements Serializable
 		return new FeatureTable(docs, newHits, 1, this.getAnnotation(), this.getClassValueType());
 	}
 	
-	public void generateConvertedClassValues(){
+	public void generateConvertedClassValues()
+	{
+		if(annotation == null || type == null)
+			return;
+		
 		numericConvertedClassValues.clear();
 		nominalConvertedClassValues.clear();
 		DocumentList localDocuments = getDocumentList();
@@ -546,7 +550,7 @@ public class FeatureTable implements Serializable
 	
 	public void setAnnotation(String annotation)
 	{
-		if(!annotation.equals(this.annotation))
+		if(annotation != null && !annotation.equals(this.annotation))
 			labelArray = null;
 		this.annotation = annotation;
 	}
@@ -557,17 +561,11 @@ public class FeatureTable implements Serializable
 	 */
 	public Feature.Type getClassValueType()
 	{
-		if(type == null)
-		{
-			throw new IllegalStateException("no class value type assigned for feature table (annotation "+annotation+")");
-		}
 		return type;
 	}
 
 	public String getAnnotation()
 	{
-		if(annotation == null)
-			throw new IllegalStateException("No annotation has been assigned to this feature table.");
 		return annotation;
 	}
 

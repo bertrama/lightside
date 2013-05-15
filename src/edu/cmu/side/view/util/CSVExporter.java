@@ -74,7 +74,10 @@ public class CSVExporter
 							s = s.replaceAll("[\n\r]+", " ");
 							if (s.contains(","))
 							{
-								s = "\"" + s.replaceAll("\"", "\\\"") + "\"";
+								s = s.replaceAll("\"", "\"\"");
+								s = s.replaceAll("Ó", "\"\"");
+								s = s.replaceAll("Ò", "\"\"");
+								s = "\"" + s + "\"";
 							}
 						}
 						else

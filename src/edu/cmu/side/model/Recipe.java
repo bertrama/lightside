@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.cmu.side.model.data.DocumentList;
@@ -20,6 +23,11 @@ import edu.cmu.side.plugin.WrapperPlugin;
 public class Recipe implements Serializable
 {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	RecipeManager.Stage stage = null;
 	private String recipeName = "";
 	OrderedPluginMap extractors;
@@ -209,6 +217,54 @@ public class Recipe implements Serializable
 		}
 		newRecipe.setLearner(next);
 		newRecipe.setLearnerSettings(settings);
+		return newRecipe;
+	}
+	
+	public static Recipe copyPredictionRecipe(Recipe prior)
+	{
+		Recipe newRecipe = fetchRecipe();
+		
+		Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
+		Map<String, List<String>> columns = new HashMap<String, List<String>>();
+		DocumentList originalDocs = prior.getDocumentList();
+		
+		List<String> emptyList = new ArrayList<String>(0);
+		for(String key : originalDocs.getCoveredTextList().keySet())
+		{
+			textColumns.put(key, emptyList);
+		}
+		for(String key : originalDocs.allAnnotations().keySet())
+		{
+			columns.put(key, emptyList);
+		}
+		
+		DocumentList newDocs = new DocumentList(emptyList, textColumns, columns, prior.getFeatureTable().getAnnotation());
+		newDocs.setLabelArray(prior.getFeatureTable().getLabelArray());
+		
+		
+		newRecipe.setDocumentList(newDocs);
+		
+		for (SIDEPlugin plugin : prior.getExtractors().keySet())
+		{
+			newRecipe.addExtractor((FeaturePlugin) plugin, prior.getExtractors().get(plugin));
+		}
+		
+		FeatureTable dummyTable = prior.getTrainingTable().predictionClone();
+		
+		newRecipe.setFeatureTable(dummyTable);
+		
+		for (SIDEPlugin plugin : prior.getFilters().keySet())
+		{
+			newRecipe.addFilter((RestructurePlugin) plugin, prior.getFilters().get(plugin));
+		}
+		
+		for (SIDEPlugin plugin : prior.getWrappers().keySet()){
+			newRecipe.addWrapper((WrapperPlugin) plugin, prior.getWrappers().get(plugin));
+		}
+		newRecipe.setLearner(prior.getLearner());
+		newRecipe.setLearnerSettings(prior.getLearnerSettings());
+		newRecipe.setValidationSettings(prior.getValidationSettings());
+
 		return newRecipe;
 	}
 	

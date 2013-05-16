@@ -12,6 +12,8 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
 
+import com.jidesoft.utils.StringUtils;
+
 public class CSVExporter
 {
 

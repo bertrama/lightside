@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
+import java.util.Arrays;
 import java.util.Map;
 
 import org.simpleframework.http.Part;
@@ -50,6 +51,7 @@ public class HighlightingPredictionServer extends PredictionServer
 	@Override
 	protected String handleGetEvaluate(Request request, Response response, String header)
 	{
+		System.out.println((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/(1024*1024) + " M used");
 		return styleLink+"\n"+super.handleGetEvaluate(request, response, header);
 	}
 	
@@ -79,6 +81,8 @@ public class HighlightingPredictionServer extends PredictionServer
 				header += String.format("%s: %.1f%%<br>", label, 100 * scores.get(label));
 			}
 
+			sampleDoc.setLabelArray(predictor.getLabelArray());
+			
 			SentenceEvaluator sentenceEvaluator = new SentenceEvaluator(sampleDoc, predictor, 0);
 
 			sentenceEvaluator.evaluate();

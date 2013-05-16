@@ -29,7 +29,7 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.FeatureTableExporter;
+import edu.cmu.side.view.util.RecipeExporter;
 
 public abstract class GenericLoadPanel extends AbstractListPanel
 {
@@ -44,6 +44,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
 	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
 	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "SIDE");
+	static FileNameExtensionFilter trainedFilter = new FileNameExtensionFilter("Predict-Only", "predict.side");
 
 	protected GenericLoadPanel()
 	{
@@ -263,7 +264,11 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 		if (recipe.getStage() == Stage.FEATURE_TABLE || recipe.getStage() == Stage.MODIFIED_TABLE)
 		{
-			FeatureTableExporter.exportFeatures(recipe);
+			RecipeExporter.exportFeatures(recipe);
+		}
+		if (recipe.getStage() == Stage.TRAINED_MODEL)
+		{
+			RecipeExporter.exportTrainedModel(recipe);
 		}
 		else
 		{

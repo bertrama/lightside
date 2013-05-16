@@ -576,5 +576,37 @@ public class FeatureTable implements Serializable
 		
 		this.type = type;
 	}
+
+	public FeatureTable predictionClone()
+	{
+		FeatureTable ft = new FeatureTable();
+	    ft.setName(getName()+" (prediction clone)");
+
+//	    ft.documents = documents;
+		ft.type = type;
+		ft.threshold = threshold;
+		ft.annotation = annotation;
+		ft.labelArray = labelArray;
+	    
+	    ft.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
+	    ft.threshold = threshold;
+	    ft.numericConvertedClassValues = new HashMap<String, double[]>(numericConvertedClassValues);
+	    ft.nominalConvertedClassValues = new ArrayList<String>(nominalConvertedClassValues);
+	    
+	    Collection<FeatureHit> emptyHits = new ArrayList<FeatureHit>(0);
+	    
+	    for(Feature f : hitsPerFeature.keySet())
+	    {
+	    	ft.hitsPerFeature.put(f, emptyHits);
+	    }
+	    
+	    for(int i = 0; i < getSize(); i++)
+	    {
+	    	ft.hitsPerDocument.add(emptyHits);
+	    }
+	    
+	    
+	    return ft;
+	}
 	
 }

@@ -379,6 +379,10 @@ public class DocumentList implements Serializable
 		return filenameList.get(docIndex);
 	}
 
+	public List<String> getFilenameList(){
+		return filenameList;
+	}
+	
 	public Set<String> getFilenames(){
 		Set<String> names = new HashSet<String>();
 		for(String s : filenameList) names.add(s);

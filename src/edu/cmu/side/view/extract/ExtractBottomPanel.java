@@ -20,7 +20,7 @@ import edu.cmu.side.view.generic.GenericFeatureMetricPanel;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMetricChecklistPanel;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.FeatureTableExporter;
+import edu.cmu.side.view.util.RecipeExporter;
 
 public class ExtractBottomPanel extends AbstractListPanel{
 

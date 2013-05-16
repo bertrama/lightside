@@ -1,28 +1,19 @@
 package edu.cmu.side.recipe;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.ObjectInputStream;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.TreeSet;
 
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
-import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
-import edu.cmu.side.model.feature.FeatureHit;
-import edu.cmu.side.plugin.FeaturePlugin;
-import edu.cmu.side.plugin.RestructurePlugin;
-import edu.cmu.side.plugin.SIDEPlugin;
 
 /**
  * loads a model trained using lightSIDE uses it to label new instances.
@@ -304,6 +295,11 @@ public class Predictor
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public String[] getLabelArray()
+	{
+		return recipe.getTrainingTable().getLabelArray();
 	}
 
 }

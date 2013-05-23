@@ -10,6 +10,7 @@ import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
+import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
@@ -22,6 +23,8 @@ public class ExploreResultsControl extends GenesisControl{
 	private static StatusUpdater update = new SwingUpdaterLabel();
 	private static String highlightedRow; private static String highlightedColumn;
 	private static Feature highlightedFeature;
+	
+	private static ActionBar actionBar;
 	
 
 	static{
@@ -94,5 +97,13 @@ public class ExploreResultsControl extends GenesisControl{
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		highlightedTrainedModel = highlight;
+	}
+	public static ActionBar getActionBar()
+	{
+		return actionBar;
+	}
+	public static void setActionBar(ActionBar actionBar)
+	{
+		ExploreResultsControl.actionBar = actionBar;
 	}
 }

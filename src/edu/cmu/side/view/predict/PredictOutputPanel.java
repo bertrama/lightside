@@ -3,6 +3,8 @@ package edu.cmu.side.view.predict;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -20,6 +22,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CSVExporter;
 import edu.cmu.side.view.util.DocumentListTableModel;
 import edu.cmu.side.view.util.SIDETable;
+import fr.emse.tatiana.corpus.COMMSDBUploader;
 
 public class PredictOutputPanel extends AbstractListPanel
 {
@@ -28,7 +31,8 @@ public class PredictOutputPanel extends AbstractListPanel
 	DocumentListTableModel model = new DocumentListTableModel(null);
 	JLabel label = new JLabel("Selected Dataset");
 	JScrollPane tableScroll;
-	JButton export = new JButton("");
+	JButton exportToCSVButton = new JButton("", new ImageIcon("toolkits/icons/note_go.png"));
+	JButton exportToDBButton = new JButton("Upload to DB", new ImageIcon("toolkits/icons/database_go.png"));
 
 	public void setLabel(String l)
 	{
@@ -37,21 +41,57 @@ public class PredictOutputPanel extends AbstractListPanel
 
 	public PredictOutputPanel()
 	{
-		export.setIcon(new ImageIcon("toolkits/icons/note_go.png"));
-		export.setToolTipText("Export to CSV...");
-		export.addActionListener(new ActionListener(){
+		exportToCSVButton.setToolTipText("Export to CSV...");
+		exportToCSVButton.addActionListener(new ActionListener()
+		{
 
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
 				CSVExporter.exportToCSV(model);
-			}});
-		export.setEnabled(false);
+			}
+		});
+		exportToCSVButton.setEnabled(false);
+
+		boolean showDB = false;
 		
+		try
+		{
+			// Test to see if the magic is there.
+			Class.forName("fr.emse.tatiana.corpus.COMMSDBUploader");
+			showDB = true;
+			exportToDBButton.setEnabled(false);
+			exportToDBButton.setToolTipText("Upload selected rows to the database");
+			exportToDBButton.addActionListener(new ActionListener()
+			{
+
+				@Override
+				public void actionPerformed(ActionEvent arg0)
+				{
+					List<Integer> selection = new ArrayList<Integer>();
+					for (int i : docTable.getSelectedRows())
+					{
+						selection.add(docTable.convertRowIndexToModel(i));
+					}
+					if (selection.isEmpty()) selection = null;
+
+					COMMSDBUploader.uploadDocumentList(PredictLabelsControl.getHighlightedUnlabeledData().getDocumentList(), selection,
+							PredictLabelsControl.getUpdater());
+				}
+			});
+
+		}
+		catch (ClassNotFoundException e)
+		{
+			// no worries
+		}
+
 		setLayout(new RiverLayout());
 		add("left", label);
 		add("hfill", new JPanel());
-		add("right", export);
+		if(showDB)
+			add("right", exportToDBButton);
+		add("right", exportToCSVButton);
 		docTable.setModel(model);
 		docTable.setBorder(BorderFactory.createLineBorder(Color.gray));
 		docTable.setRowSorter(new TableRowSorter<TableModel>(model));
@@ -59,7 +99,7 @@ public class PredictOutputPanel extends AbstractListPanel
 		tableScroll = new JScrollPane(docTable);
 		add("br hfill vfill", tableScroll);
 	}
-	
+
 	public void refreshPanel()
 	{
 		refreshPanel(PredictLabelsControl.getHighlightedUnlabeledData());
@@ -68,15 +108,16 @@ public class PredictOutputPanel extends AbstractListPanel
 	public void refreshPanel(Recipe recipe)
 	{
 		model.setDocumentList(null);
-		
-		if(recipe == null)
+
+		if (recipe == null)
 			model.setDocumentList(null);
 		else
 			model.setDocumentList(recipe.getDocumentList());
-		
-		export.setEnabled(recipe != null);
-		
-		//table.setModel(new DocumentListTableModel(recipe.getDocumentList()));
+
+		exportToCSVButton.setEnabled(recipe != null);
+		exportToDBButton.setEnabled(recipe != null && recipe.getDocumentList().allAnnotations().containsKey("src-anchor"));
+
+		// table.setModel(new DocumentListTableModel(recipe.getDocumentList()));
 	}
 
 }

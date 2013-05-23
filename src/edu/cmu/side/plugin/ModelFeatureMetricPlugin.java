@@ -18,10 +18,10 @@ public abstract class ModelFeatureMetricPlugin<E extends Comparable<E>> extends 
 		return type;	
 	}
 
-	public Map<Feature, E> evaluateModelFeatures(TrainingResult model, boolean[] mask, String eval, StatusUpdater update) {
+	public Map<Feature, E> evaluateModelFeatures(Recipe traningResultsRecipe, boolean[] mask, String eval, StatusUpdater update) {
 		String act = getHighlightedRow();
 		String pred = getHighlightedColumn();
-		return evaluateModelFeatures(model, mask, eval, pred, act, update);
+		return evaluateModelFeatures(traningResultsRecipe, mask, eval, pred, act, update);
 	}
 	
 	public abstract String getHighlightedRow();
@@ -29,10 +29,10 @@ public abstract class ModelFeatureMetricPlugin<E extends Comparable<E>> extends 
 	public abstract String getHighlightedColumn();
 	
 	public Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target, StatusUpdater update){
-		return evaluateModelFeatures(recipe.getTrainingResult(), mask, eval, update);
+		return evaluateModelFeatures(recipe, mask, eval, update);
 	}
 
-	public abstract Map<Feature, E> evaluateModelFeatures(TrainingResult model, boolean[] mask, String eval, String pred, String act, StatusUpdater update);
+	public abstract Map<Feature, E> evaluateModelFeatures(Recipe recipe, boolean[] mask, String eval, String pred, String act, StatusUpdater update);
 
-	public abstract E targetedFeatureEvaluation(TrainingResult model, boolean[] mask, String eval, String pred, String act, Feature f, StatusUpdater update);
+	public abstract E targetedFeatureEvaluation(Recipe recipe, boolean[] mask, String eval, String pred, String act, Feature f, StatusUpdater update);
 }

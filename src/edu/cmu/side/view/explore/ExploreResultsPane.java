@@ -2,7 +2,6 @@ package edu.cmu.side.view.explore;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -14,7 +13,6 @@ import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
-import edu.cmu.side.view.generic.ActionBarTask;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.view.generic.GenericTripleFrame;
@@ -110,6 +108,8 @@ public class ExploreResultsPane extends JPanel{
 		GenesisControl.addListenerToMap(matrix, analysis);
 		GenesisControl.addListenerToMap(features, analysis);
 		GenesisControl.addListenerToMap(middle, analysis);
+		
+		ExploreResultsControl.setActionBar(middle);
 
 	}
 	

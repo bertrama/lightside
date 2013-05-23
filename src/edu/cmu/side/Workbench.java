@@ -1,27 +1,30 @@
 package edu.cmu.side;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.WorkbenchPanel;
-import edu.cmu.side.view.extract.ExtractCombinedLoadPanel;
-import edu.cmu.side.view.extract.ExtractLoadPanel;
-import edu.cmu.side.view.util.Refreshable;
-import edu.cmu.side.view.util.GlassPane;
+import edu.cmu.side.view.util.MemoryMonitorPanel;
 import edu.cmu.side.view.util.Refreshable;
 
 
@@ -39,11 +42,9 @@ public class Workbench{
 
 	public static PluginManager pluginManager = new PluginManager(PLUGIN_FOLDER);
 	public static RecipeManager recipeManager = new RecipeManager();
-
-	
 	
 	static WorkbenchPanel panel;
-	static GlassPane pane;
+//	static GlassPane pane;
 
 	static boolean serverMode = false;
 	static Image iconImage; 
@@ -55,9 +56,16 @@ public class Workbench{
 		JFrame frame = new JFrame();
 		frame.setIconImages(getIcons("toolkits/icons/bulbs/bulb_128.png", "toolkits/icons/bulbs/simple_32.png", "toolkits/icons/bulbs/simple_16.png")); //for windows?
 
+		JPanel nestingPanel = new JPanel(new BorderLayout(0,0));
+		nestingPanel.setBorder(BorderFactory.createEmptyBorder());
+		
 		panel = new WorkbenchPanel();
 		panel.setBorder(BorderFactory.createEmptyBorder());
-		frame.setContentPane(panel);
+		
+		nestingPanel.add(panel, BorderLayout.CENTER);
+		nestingPanel.add(new MemoryMonitorPanel(), BorderLayout.SOUTH);
+		
+		frame.setContentPane(nestingPanel);
 		//		pane = new GlassPane(frame.getContentPane());
 		//		frame.setGlassPane(pane);
 		frame.setSize(new Dimension(1024,768));
@@ -82,8 +90,7 @@ public class Workbench{
 	
 	public static void main(String[] args) throws Exception
 	{
-
-		Workbench workbench = new Workbench();
+		new Workbench();
 	}
 
 	public static RecipeManager getRecipeManager(){

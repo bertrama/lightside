@@ -228,7 +228,7 @@
         <jarfile>cues.jar</jarfile>
         <classname>learning.EnsembleLearner</classname>
     </plugin>
-    -->
+    
     
    <plugin>
         <name>Ensemble Minority Voter</name>
@@ -239,7 +239,7 @@
         <classname>learning.EnsembleMinorityVoter</classname>
     </plugin>
     
-<!--    
+ 
       <plugin>
         <name>Pandemonium Voter</name>
         <author>David Adamson</author>

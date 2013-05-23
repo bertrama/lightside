@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -34,12 +35,12 @@ import edu.cmu.side.view.util.RecipeExporter;
 public abstract class GenericLoadPanel extends AbstractListPanel
 {
 
-	protected JPanel buttons = new JPanel();
 
 	protected JPanel describePanel;
 	protected JLabel label;
 	protected JButton warn = new JButton("");
 	protected JFileChooser chooser;
+	protected JPanel buttons = new JPanel(new RiverLayout(0, 0));
 
 	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
 	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
@@ -90,7 +91,6 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		this();
 
 		label = new JLabel(l);
-		buttons.setLayout(new RiverLayout());
 		ImageIcon iconDelete = new ImageIcon("toolkits/icons/cross.png");
 		ImageIcon iconSave = new ImageIcon("toolkits/icons/disk.png");
 		ImageIcon iconLoad = new ImageIcon("toolkits/icons/folder_table.png");
@@ -125,9 +125,12 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		load.setToolTipText("Load");
 		load.setBorderPainted(true);
 
+		buttons.setBorder(BorderFactory.createEmptyBorder());
+		
 		add("hfill", label);
-		add("right", warn);
-		if (showLoad) add("right", load);
+		buttons.add("right", warn);
+		if (showLoad) buttons.add("right", load);
+		add("right", buttons);
 		add("br hfill", combo);
 		if (showSave) add("right", save);
 		if (showDelete) add("right", delete);
@@ -266,7 +269,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		{
 			RecipeExporter.exportFeatures(recipe);
 		}
-		if (recipe.getStage() == Stage.TRAINED_MODEL)
+		else if (recipe.getStage() == Stage.TRAINED_MODEL)
 		{
 			RecipeExporter.exportTrainedModel(recipe);
 		}

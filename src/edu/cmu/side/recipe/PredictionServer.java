@@ -355,6 +355,11 @@ public class PredictionServer implements Container
 		{
 			// attempt to attach a local model
 			File f = new File("saved/" + model + ".model.side");
+			if(!f.exists())
+				f = new File("saved/"+model+".predict");
+			if(!f.exists())
+				f = new File("saved/"+model);
+			
 			if (f.exists())
 			{
 				boolean attached = attachModel(model, f.getAbsolutePath());

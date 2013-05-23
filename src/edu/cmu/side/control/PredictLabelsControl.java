@@ -57,7 +57,7 @@ public class PredictLabelsControl extends GenesisControl{
 		return unlabeledDataRecipes;
 	}
 
-	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showMaxScore, final boolean showDists)
+	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showMaxScore, final boolean showDists, final boolean overwrite)
 	{
 		new ActionBarTask(predictActionBar){
 
@@ -80,7 +80,7 @@ public class PredictLabelsControl extends GenesisControl{
 				List<String> predictions = (List<String>) results.getPredictions();
 				
 				
-				docs.addAnnotation(name, predictions);
+				docs.addAnnotation(name, predictions, overwrite);
 				
 
 				Map<String, List<Double>> distributions = results.getDistributions();
@@ -93,7 +93,7 @@ public class PredictLabelsControl extends GenesisControl{
 						{
 							likely.add(String.format("%.3f", distributions.get(predictions.get(i)).get(i)));
 						}
-						docs.addAnnotation(name+"_score", likely);
+						docs.addAnnotation(name+"_score", likely, overwrite);
 					}
 					
 					if(showDists)
@@ -108,7 +108,7 @@ public class PredictLabelsControl extends GenesisControl{
 								dist.add(String.format("%.3f", distributions.get(label).get(i)));
 							}
 							
-							docs.addAnnotation(name+"_"+label+"_score", dist);
+							docs.addAnnotation(name+"_"+label+"_score", dist, overwrite);
 						}
 					}
 				}

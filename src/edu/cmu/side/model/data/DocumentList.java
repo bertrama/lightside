@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,11 @@ public class DocumentList implements Serializable
 	// wrap a list of unannotated plain-text instances as a DocumentList
 	public DocumentList(List<String> instances)
 	{
-		addAnnotation("text", instances);
+		addAnnotation("text", instances, false);
 		setTextColumn("text", true);
+
+		for(int i = 0; i < instances.size(); i++)
+			filenameList.add("Document");
 	}
 	
 
@@ -140,11 +144,39 @@ public class DocumentList implements Serializable
 		currentAnnotation = currentAnnot;
 	}
 
-	public DocumentList(List<String> text, Map<String, List<String>> annotations){
-		this(text);
-		for(String ann : annotations.keySet()){
-			addAnnotation(ann, annotations.get(ann));
+	public DocumentList(List<Map<String, String>> rows, Collection<String> columns)
+	{
+		for(String key : columns)
+		{
+			allAnnotations.put(key, new ArrayList<String>(rows.size()));
+		}
+		
+		for(Map<String, String> row : rows)
+		{
 			filenameList.add("Document");
+			
+			for(String key : columns)
+			{
+				if(row.containsKey(key))
+				{
+					allAnnotations.get(key).add(row.get(key));
+				}
+				else
+				{
+					allAnnotations.get(key).add(emptyAnnotationString);
+				}
+			}
+		}
+		
+	}
+
+	public DocumentList(List<String> text, Map<String, List<String>> annotations)
+	{
+		this(text);
+		
+		for (String ann : annotations.keySet())
+		{
+			addAnnotation(ann, annotations.get(ann), false);
 		}
 	}
 	// wrap a single unannotated plain-text instance as a DocumentList
@@ -152,7 +184,7 @@ public class DocumentList implements Serializable
 	{
 		List<String> instances = new ArrayList<String>();
 		instances.add(instance);
-		addAnnotation("text", instances);
+		addAnnotation("text", instances, false);
 		setTextColumn("text", true);
 		filenameList.add("Document");
 	}
@@ -301,8 +333,8 @@ public class DocumentList implements Serializable
 	/**
 	 * Adds a new annotation. Primarily used by the prediction interface.
 	 */
-	public void addAnnotation(String name, List<String> annots){
-		while (allAnnotations.containsKey(name))
+	public void addAnnotation(String name, List<String> annots, boolean updateExisting){
+		while (!updateExisting && allAnnotations.containsKey(name))
 			name = name + " (new)";
 		allAnnotations.put(name, annots);
 	}
@@ -535,5 +567,63 @@ public class DocumentList implements Serializable
 	public void setFilenames(List<String> f){
 		filenameList = f;
 	
+	}
+
+
+	public void addInstances(List<Map<String, String>> rows, Collection<String> columns)
+	{
+		for(String key : columns)
+		{
+			if(!allAnnotations.containsKey(key) && !textColumns.containsKey(key))
+			{
+				ArrayList<String> newColumn = new ArrayList<String>(rows.size());
+				for(int i = 0; i < getSize(); i++)
+				{
+					newColumn.add(emptyAnnotationString);
+				}
+				allAnnotations.put(key, newColumn);
+			}
+		}
+		
+		for(Map<String, String> row : rows)
+		{
+			filenameList.add("Document");
+			
+			for(String key : allAnnotations.keySet())
+			{
+				if(row.containsKey(key))
+				{
+					allAnnotations.get(key).add(row.get(key));
+				}
+				else
+				{
+					allAnnotations.get(key).add(emptyAnnotationString);
+				}
+			}
+			
+			for(String key : textColumns.keySet())
+			{
+				if(row.containsKey(key))
+				{
+					textColumns.get(key).add(row.get(key));
+				}
+				else
+				{
+					textColumns.get(key).add(emptyAnnotationString);
+				}
+			}
+		}
+	}
+
+
+	public String getEmptyAnnotationString()
+	{
+		return emptyAnnotationString;
+	}
+
+
+	public void setEmptyAnnotationString(String emptyAnnotationString)
+	{
+		this.emptyAnnotationString = emptyAnnotationString;
 	}
 }

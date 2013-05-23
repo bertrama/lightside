@@ -18,6 +18,8 @@ public class MemoryMonitorPanel extends JPanel
 {
 	JLabel textMonitor = new JLabel();
 	WarningButton warn = new WarningButton();
+	boolean warned = false;
+	
 	public MemoryMonitorPanel()
 	{
 		this.setLayout(new FlowLayout(FlowLayout.RIGHT, 10,0));
@@ -43,16 +45,25 @@ public class MemoryMonitorPanel extends JPanel
 //						
 						textMonitor.setText(String.format("%.1f GB used, %.1f GB max", beanUsed, beanMax));
 						
-						if(beanUsed/(double)beanMax > 0.75)
+						double fractionUsed = beanUsed/(double)beanMax;
+						if(fractionUsed >= 0.7)
 						{
 							textMonitor.setForeground(Color.red.darker());
-							warn.setWarning("<html>You're running out of memory!<br> Delete some old feature tables or models, or give LightSIDE more memory<br>(by editing LightSIDE.bat on Windows, or run.sh on Mac/Linux)</html>" );
+							warn.setWarning("<html>You're running out of memory!<br> Delete some old feature tables or models,<br>or give LightSIDE more memory<br>(by editing LightSIDE.bat on Windows, or run.sh on Mac/Linux)</html>" );
+							
+							if(fractionUsed >= 0.8 && !warned)
+							{
+								warn.doClick();
+								warned = true;
+							}
 						}
 						else
 						{
 							textMonitor.setForeground(Color.black);
 							warn.clearWarning();
 						}
+						
+						
 						
 					}
 					

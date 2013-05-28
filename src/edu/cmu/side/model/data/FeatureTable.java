@@ -240,8 +240,11 @@ public class FeatureTable implements Serializable
 		return nominalConvertedClassValues;
 	}
 
-	public int getSize(){
-		return documents.getSize();
+	public int getSize()
+	{
+		if(documents != null)
+			return documents.getSize();
+		else return hitsPerDocument.size();
 	}
 	
 	public void setName(String n){

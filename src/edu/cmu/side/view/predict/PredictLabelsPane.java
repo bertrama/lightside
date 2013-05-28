@@ -35,7 +35,7 @@ public class PredictLabelsPane extends JPanel{
 
 		@Override
 		public void refreshPanel() {
-			refreshPanel(PredictLabelsControl.getTrainedModels());
+			refreshPanel(Workbench.getRecipesByPane(RecipeManager.Stage.TRAINED_MODEL, RecipeManager.Stage.PREDICTION_ONLY));
 		}
 		
 	};
@@ -68,6 +68,7 @@ public class PredictLabelsPane extends JPanel{
 		
 		 //TODO: why can't these each be (parameterized) in genericLoadPane?
 		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, load);
+		GenesisControl.addListenerToMap(RecipeManager.Stage.PREDICTION_ONLY, load);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, newData);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, output);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.PREDICTION_RESULT, actionBar);

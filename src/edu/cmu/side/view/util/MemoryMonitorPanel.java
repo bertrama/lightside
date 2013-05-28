@@ -1,34 +1,71 @@
 package edu.cmu.side.view.util;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
-import se.datadosen.component.RiverLayout;
 
 public class MemoryMonitorPanel extends JPanel
 {
 	JLabel textMonitor = new JLabel();
-	WarningButton warn = new WarningButton();
+	WarningButton warnButton = new WarningButton();
+	JButton bugButton = new JButton("<html><u>Report a Bug</u></html>", new ImageIcon("toolkits/icons/bug.png"));
 	boolean warned = false;
 	
 	public MemoryMonitorPanel()
 	{
-		this.setLayout(new FlowLayout(FlowLayout.RIGHT, 10,0));
+		JPanel memories = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+		this.setLayout(new BorderLayout(10,0));
 		this.setBorder(BorderFactory.createEmptyBorder(0,0, 0, 0));
-		warn.setBorder(BorderFactory.createEmptyBorder());
+		warnButton.setBorder(BorderFactory.createEmptyBorder());
+		bugButton.setBorder(BorderFactory.createEmptyBorder(0, 10, 5, 10));
 		textMonitor.setBorder(BorderFactory.createEmptyBorder());
 		textMonitor.setFont(textMonitor.getFont().deriveFont(10.0f));
-		this.add(textMonitor);
-		this.add(warn);
+		memories.add(textMonitor);
+		memories.add(warnButton);
+		this.add(bugButton, BorderLayout.WEST);
+
+		bugButton.setBorderPainted(false);
+		bugButton.setContentAreaFilled(false);
+		bugButton.addActionListener(new ActionListener()
+		{
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				try
+				{
+					Desktop.getDesktop().browse(new URI("https://bitbucket.org/kertrats/lightside/issues?status=new&status=open"));
+				}
+				catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				catch (URISyntaxException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
+		this.add(memories, BorderLayout.EAST);
 		new Timer().scheduleAtFixedRate(
 				new TimerTask()
 				{
@@ -49,18 +86,18 @@ public class MemoryMonitorPanel extends JPanel
 						if(fractionUsed >= 0.7)
 						{
 							textMonitor.setForeground(Color.red.darker());
-							warn.setWarning("<html>You're running out of memory!<br> Delete some old feature tables or models,<br>or give LightSIDE more memory<br>(by editing LightSIDE.bat on Windows, or run.sh on Mac/Linux)</html>" );
+							warnButton.setWarning("<html>You're running out of memory!<br> Delete some old feature tables or models,<br>or give LightSIDE more memory<br>(by editing LightSIDE.bat on Windows, or run.sh on Mac/Linux)</html>" );
 							
 							if(fractionUsed >= 0.8 && !warned)
 							{
-								warn.doClick();
+								warnButton.doClick();
 								warned = true;
 							}
 						}
 						else
 						{
 							textMonitor.setForeground(Color.black);
-							warn.clearWarning();
+							warnButton.clearWarning();
 						}
 						
 						

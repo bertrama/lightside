@@ -16,7 +16,8 @@ public class RecipeManager{
 		NONE("blank.side"),
 		DOCUMENT_LIST("docs.side"), 
 		FEATURE_TABLE("table.side"), 
-		MODIFIED_TABLE("struct.side"), 
+		MODIFIED_TABLE("struct.side"),
+		PREDICTION_ONLY("predict"), 
 		TRAINED_MODEL("model.side"), 
 		PREDICTION_RESULT("pred.side");
 		

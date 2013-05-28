@@ -17,6 +17,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import plugins.learning.WekaTools;
 import weka.core.Instances;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.TrainingResult;
@@ -244,11 +245,15 @@ public class RecipeExporter
 
 	public static void exportTrainedModel(Recipe tableRecipe)
 	{
-		modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter);
+		if(tableRecipe.getStage() == Stage.TRAINED_MODEL)
+			modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter);
+		else
+			modelChooser = setUpChooser(modelChooser, predictFilter);
+			
 		TrainingResult result = tableRecipe.getTrainingResult();
 		try
 		{
-			modelChooser.setSelectedFile(new File(result.getName() + "." + ((FileNameExtensionFilter) modelChooser.getFileFilter()).getExtensions()[0]));
+			modelChooser.setSelectedFile(new File((result == null ? tableRecipe.getRecipeName() : result.getName()) + "." + ((FileNameExtensionFilter) modelChooser.getFileFilter()).getExtensions()[0]));
 
 			int state = modelChooser.showDialog(null, "Save Feature Table");
 			if (state == JFileChooser.APPROVE_OPTION)

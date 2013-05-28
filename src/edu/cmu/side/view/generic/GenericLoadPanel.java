@@ -269,7 +269,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		{
 			RecipeExporter.exportFeatures(recipe);
 		}
-		else if (recipe.getStage() == Stage.TRAINED_MODEL)
+		else if (recipe.getStage() == Stage.TRAINED_MODEL || recipe.getStage() == Stage.PREDICTION_ONLY)
 		{
 			RecipeExporter.exportTrainedModel(recipe);
 		}

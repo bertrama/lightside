@@ -103,7 +103,12 @@ public class Chef
 			return newRecipe;
 		
 		FeatureTable originalFeatures = originalRecipe.getFeatureTable();
-		simmerFeatures(newRecipe, newThreshold, originalFeatures.getAnnotation(), originalFeatures.getClassValueType());
+		String annotation = originalFeatures.getAnnotation();
+		
+		if(!corpus.allAnnotations().containsKey(annotation))
+			annotation = null;
+		
+		simmerFeatures(newRecipe, newThreshold, annotation, originalFeatures.getClassValueType());
 		
 		if(finalStage.compareTo(Stage.TRAINED_MODEL) < 0)
 			return newRecipe;

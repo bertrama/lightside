@@ -43,20 +43,37 @@ public class Recipe implements Serializable
 	TrainingResult trainedModel;
 	PredictionResult predictionResult;
 	
-	public RecipeManager.Stage getStage(){
-		if(stage == null){
-			if(predictionResult != null){
+	public RecipeManager.Stage getStage()
+	{
+		if (stage == null)
+		{
+			if (predictionResult != null)
+			{
 				stage = RecipeManager.Stage.PREDICTION_RESULT;
-			}else if(trainedModel != null){
+			}
+			else if (trainedModel != null)
+			{
 				stage = RecipeManager.Stage.TRAINED_MODEL;
-			}else if(filteredTable != null){
+			}
+			else if (learnerSettings != null && learnerSettings.containsKey("classifier"))
+			{
+				stage = RecipeManager.Stage.PREDICTION_ONLY;
+			}
+			else if (filteredTable != null)
+			{
 				stage = RecipeManager.Stage.MODIFIED_TABLE;
-			}else if(featureTable != null){
+			}
+			else if (featureTable != null)
+			{
 				stage = RecipeManager.Stage.FEATURE_TABLE;
-			}else if(documentList != null){
+			}
+			else if (documentList != null)
+			{
 				stage = RecipeManager.Stage.DOCUMENT_LIST;
-			}else stage = RecipeManager.Stage.NONE;
-			
+			}
+			else
+				stage = RecipeManager.Stage.NONE;
+
 		}
 		return stage;
 	}
@@ -65,21 +82,30 @@ public class Recipe implements Serializable
 		stage = null;
 	}
 
-	public String toString(){
+	public String toString()
+	{
 		String out = "";
-		if(RecipeManager.Stage.DOCUMENT_LIST.equals(stage)){
+		if (RecipeManager.Stage.DOCUMENT_LIST.equals(stage))
+		{
 			out = documentList.getName();
-		}else if(RecipeManager.Stage.FEATURE_TABLE.equals(stage)){
-			out = featureTable.getName();
-		}else if(RecipeManager.Stage.MODIFIED_TABLE.equals(stage)){
-			out = filteredTable.getName();
-		}else if(RecipeManager.Stage.TRAINED_MODEL.equals(stage)){
-			out = trainedModel.getName();
-		}else{
-			out = "Default: " + stage;
 		}
-		if(out == null)
-			out = stage.toString();
+		else if (RecipeManager.Stage.FEATURE_TABLE.equals(stage))
+		{
+			out = featureTable.getName();
+		}
+		else if (RecipeManager.Stage.MODIFIED_TABLE.equals(stage))
+		{
+			out = filteredTable.getName();
+		}
+		else if (RecipeManager.Stage.TRAINED_MODEL.equals(stage))
+		{
+			out = trainedModel.getName();
+		}
+		else
+		{
+			out = ""+stage;
+		}
+		if (out == null) out = stage.toString();
 		return out;
 	}
 
@@ -264,6 +290,7 @@ public class Recipe implements Serializable
 		newRecipe.setLearner(prior.getLearner());
 		newRecipe.setLearnerSettings(prior.getLearnerSettings());
 		newRecipe.setValidationSettings(prior.getValidationSettings());
+		newRecipe.setRecipeName(prior.getRecipeName());
 
 		return newRecipe;
 	}
@@ -331,7 +358,7 @@ public class Recipe implements Serializable
 			}else if(RecipeManager.Stage.TRAINED_MODEL.equals(stage)){
 				out = trainedModel.getName();
 			}else{
-				out = "Default: " + stage;
+				out = ""+stage;
 			}
 			return out+"."+stage.extension;
 		}

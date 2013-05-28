@@ -30,7 +30,7 @@ public class TrainedModelExporter
 	static JFileChooser chooser;
 
 	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "table.side");
-	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict");
+	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict.side", "predict");
 
 	public static void setUpChooser()
 	{
@@ -116,6 +116,7 @@ public class TrainedModelExporter
 
 	public static void exportToSerialized(Recipe recipe, File target) throws IOException
 	{
+		recipe.setRecipeName(target.getName());
 		FileOutputStream fout = new FileOutputStream(target);
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(recipe);
@@ -125,6 +126,7 @@ public class TrainedModelExporter
 	public static void exportForPrediction(Recipe recipe, File target) throws IOException
 	{
 		Recipe dupe = Recipe.copyPredictionRecipe(recipe);
+		dupe.setRecipeName(target.getName());
 		FileOutputStream fout = new FileOutputStream(target);
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(dupe);

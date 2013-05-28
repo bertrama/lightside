@@ -1,10 +1,10 @@
 package edu.cmu.side.recipe;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Scanner;
 
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
@@ -252,8 +252,9 @@ public class Predictor
 		else
 			modelPath = args[0];
 
-		String annotation = "class";
-		if (args.length > 1) annotation = args[1];
+		String annotation = "predicted";
+		String unlabeledData = "data/mine/movies_unlabeled.csv";
+		if (args.length > 1) unlabeledData = args[1];
 
 		// to swallow all output except for the classifications
 		// PrintStream actualOut = System.out;
@@ -269,16 +270,31 @@ public class Predictor
 		// e.printStackTrace();
 		// }
 
+		System.out.println("loading predictor from "+modelPath);
 		Predictor predictor = new Predictor(modelPath, annotation);
-		Scanner input = new Scanner(System.in);
+		predictor.setQuiet(false);
 
-		while (input.hasNextLine())
+		System.out.println("loading docs from "+unlabeledData);
+		DocumentList docs = new DocumentList(new HashSet<String>(Arrays.asList(unlabeledData)));
+
+		System.out.println("predicting...");
+		PredictionResult predicted = predictor.predict(docs);
+		List<? extends Comparable<?>> predictions = predicted.getPredictions();
+		for(int i = 0; i < docs.getSize(); i++)
 		{
-			String sentence = input.nextLine();
-			String answer = predictor.prettyPredict(sentence);
-			// actualOut.println(answer);
-			System.out.println(answer + "\t" + sentence.substring(0, Math.min(sentence.length(), 100)));
+			String text = docs.getPrintableTextAt(i);
+			System.out.println(predictions.get(i) + "\t"+text.substring(0, Math.min(100, text.length())));
 		}
+		
+//		Scanner input = new Scanner(System.in);
+//
+//		while (input.hasNextLine())
+//		{
+//			String sentence = input.nextLine();
+//			String answer = predictor.prettyPredict(sentence);
+//			// actualOut.println(answer);
+//			System.out.println(answer + "\t" + sentence.substring(0, Math.min(sentence.length(), 100)));
+//		}
 	}
 
 	public boolean isQuiet()

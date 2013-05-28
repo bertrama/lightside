@@ -70,7 +70,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 						describePanel.revalidate();
 					}
 				}
-				// Workbench.update(GenericLoadPanel.this);
+				Workbench.update(GenericLoadPanel.this);
 
 			}
 		});

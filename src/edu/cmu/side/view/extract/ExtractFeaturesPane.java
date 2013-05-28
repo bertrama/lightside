@@ -59,6 +59,7 @@ public class ExtractFeaturesPane extends JPanel{
 		pane.setDividerLocation(450);
 		add(BorderLayout.CENTER, pane);
 
+		GenesisControl.addListenerToMap(load.files, pluginConfig);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, pluginChecklist);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, pluginConfig);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.DOCUMENT_LIST, action);

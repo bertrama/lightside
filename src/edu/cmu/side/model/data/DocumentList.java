@@ -312,7 +312,6 @@ public class DocumentList implements Serializable
 					this.setTextColumn(s, true);
 				}
 			}
-		System.out.println("guessing "+currentAnnotation);
 		return currentAnnotation;
 	}
 

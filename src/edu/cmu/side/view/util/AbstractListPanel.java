@@ -55,9 +55,6 @@ public class AbstractListPanel extends JPanel implements Refreshable{
 		init();
 	}
 
-	/* (non-Javadoc)
-	 * @see edu.cmu.side.view.util.Refreshable#refreshPanel()
-	 */
 	@Override
 	public void refreshPanel(){
 		if(listModel.getSize()>0 && list.getSelectedIndex()==-1){

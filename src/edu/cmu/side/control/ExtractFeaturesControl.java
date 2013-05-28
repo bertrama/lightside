@@ -371,7 +371,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 
 	public static void setSelectedClassType(Type targetType)
 	{
-		System.out.println("new target type is "+targetType);
 		ExtractFeaturesControl.selectedClassType = targetType;
 	}
 
@@ -382,7 +381,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 
 	public static void setSelectedClassAnnotation(String selectedClassAnnotation)
 	{
-		System.out.println("new selected annotation is "+selectedClassAnnotation);
 		
 		ExtractFeaturesControl.selectedClassAnnotation = selectedClassAnnotation;
 	}

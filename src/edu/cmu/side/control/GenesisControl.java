@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
 import edu.cmu.side.Workbench;
+import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.StatusUpdater;
@@ -179,7 +180,7 @@ public abstract class GenesisControl {
 			top.add(getTableNode(r.getFilteredTable(), "Restructured Table:"));
 		}
 		if(r.getLearner() != null){
-			top.add(getPluginNode("Learning Plugin: ", r.getLearner()));
+			top.add(getPluginNode("Learning Plugin: ", r.getLearner(), r.getLearnerSettings()));
 		}
 
 		if(r.getWrappers().size()>0){
@@ -220,31 +221,34 @@ public abstract class GenesisControl {
 
 	public static MutableTreeNode getFilterNodes(Recipe r){
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Restructure Plugins:");
-		for(SIDEPlugin plug : r.getFilters().keySet()){
-			node.add(getPluginNode("",plug));
+		OrderedPluginMap filters = r.getFilters();
+		for(SIDEPlugin plug : filters.keySet()){
+			node.add(getPluginNode("",plug, filters.get(plug)));
 		}
 		return node;
 	}
 	
 	public static MutableTreeNode getWrapperNodes(Recipe r){
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Wrapper Plugins:");
-		for(SIDEPlugin plug : r.getWrappers().keySet()){
-			node.add(getPluginNode("",plug));
+		OrderedPluginMap wrappers = r.getWrappers();
+		for(SIDEPlugin plug : wrappers.keySet()){
+			node.add(getPluginNode("",plug, wrappers.get(plug)));
 		}
 		return node;
 	}
 	
 	public static MutableTreeNode getExtractorNodes(Recipe r){
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Feature Plugins:");
-		for(SIDEPlugin plug : r.getExtractors().keySet()){
-			node.add(getPluginNode("",plug));
+		OrderedPluginMap extractors = r.getExtractors();
+		for(SIDEPlugin plug : extractors.keySet()){
+			node.add(getPluginNode("",plug, extractors.get(plug)));
 		}
 		return node;
 	}
 
-	public static MutableTreeNode getPluginNode(String label, SIDEPlugin plug){
+	public static MutableTreeNode getPluginNode(String label, SIDEPlugin plug, Map<String, String> keys){
 		DefaultMutableTreeNode plugin = new DefaultMutableTreeNode(label + (label.length()>0?" ":"") + plug.toString());
-		Map<String, String> keys = plug.generateConfigurationSettings();
+//		Map<String, String> keys = plug.generateConfigurationSettings();
 		for(String key : keys.keySet()){
 			String value = keys.get(key);
 			

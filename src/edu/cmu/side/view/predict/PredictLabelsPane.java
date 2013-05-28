@@ -22,6 +22,11 @@ public class PredictLabelsPane extends JPanel{
 
 	GenericLoadPanel load = new GenericLoadPanel("Model to Apply:"){
 
+		{
+			checkChooser();
+			chooser.addChoosableFileFilter(GenericLoadPanel.trainedFilter);
+		}
+		
 		@Override
 		public void setHighlight(Recipe r) {
 			PredictLabelsControl.setHighlightedTrainedModelRecipe(r);

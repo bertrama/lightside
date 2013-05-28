@@ -29,8 +29,8 @@ public class TrainedModelExporter
 
 	static JFileChooser chooser;
 
-	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "table.side");
-	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict.side", "predict");
+	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "model.side", "side");
+	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict.side", "side");
 
 	public static void setUpChooser()
 	{

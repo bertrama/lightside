@@ -42,10 +42,10 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	protected JFileChooser chooser;
 	protected JPanel buttons = new JPanel(new RiverLayout(0, 0));
 
-	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
-	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
-	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "SIDE");
-	static FileNameExtensionFilter trainedFilter = new FileNameExtensionFilter("Predict-Only", "predict.side");
+	public static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
+	public static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff");
+	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "model.side");
+	public static FileNameExtensionFilter trainedFilter = new FileNameExtensionFilter("Predict-Only", "side", "predict.side");
 
 	protected GenericLoadPanel()
 	{

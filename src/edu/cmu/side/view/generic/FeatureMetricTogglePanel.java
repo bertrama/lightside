@@ -18,10 +18,7 @@ public abstract class FeatureMetricTogglePanel extends GenericFeatureMetricPanel
 	public Object getCellObject(Object o)
 	{
 		RadioButtonListEntry tb = new RadioButtonListEntry(o, (o != null && o.equals(selectedObject)));
-		if (tb.isSelected())
-		{
-			System.out.println("TFMP21: "+o + ", " + selectedObject + ", " + o.equals(selectedObject) + "");
-		}
+
 		tb.addItemListener(new ItemListener()
 		{
 			@Override

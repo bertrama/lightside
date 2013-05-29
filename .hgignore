@@ -19,5 +19,5 @@ data/*
 saved/*
 folds/*
 sweeps/*
-*fold*.txt
+*fold*.txt  
 *.log

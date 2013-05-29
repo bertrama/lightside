@@ -97,6 +97,12 @@ public class ExploreResultsControl extends GenesisControl{
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		highlightedTrainedModel = highlight;
+		if (highlightedTrainedModel == null
+				|| (highlightedFeature != null 
+					&& !highlightedTrainedModel.getFeatureTable().getFeatureSet().contains(highlightedFeature)))
+		{
+			highlightedFeature = null;
+		}
 	}
 	public static ActionBar getActionBar()
 	{

@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 
-	DecimalFormat n = new DecimalFormat("#.####");
+	DecimalFormat decimalFormat = new DecimalFormat("#.####");
 	private int cutoff = 25;
 
 	public SIDETableCellRenderer(int cutoff)
@@ -46,7 +46,7 @@ public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 	        	
 	        }
 		}
-		if(value instanceof CheckBoxListEntry){
+		else if(value instanceof CheckBoxListEntry){
 			CheckBoxListEntry checkButton = (CheckBoxListEntry) value;
 			checkButton.setEnabled(isEnabled());
 			checkButton.setFont(getFont());
@@ -60,9 +60,13 @@ public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 	        }
 			
 		}
-		if(value instanceof Double && rend instanceof JLabel)
+		else if(value instanceof Double && rend instanceof JLabel)
 		{
-			((JLabel) rend).setText(n.format((Double)value));
+			JLabel label = (JLabel) rend;
+			if(((Double)value).isNaN())
+				label.setText("?");
+			else 
+				label.setText(decimalFormat.format((Double)value));
 		}
 		
 		

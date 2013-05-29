@@ -88,8 +88,8 @@ public class CompareModelsPane extends AbstractListPanel{
 		top.add(BorderLayout.CENTER, grid);
 		top.add(BorderLayout.SOUTH, dropdown);
 		Workbench.reloadComboBoxContent(combo, CompareModelsControl.getModelComparisonPlugins().keySet(), null);
-		if(combo.getItemCount() > 0){
-			System.out.println("Setting combo!");
+		if(combo.getItemCount() > 0)
+		{
 			combo.setSelectedIndex(0);
 		}
 		JScrollPane scroll = new JScrollPane(middle);

@@ -46,7 +46,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 			}
 			evalPlugins.put(plug, opts);
 		}
-		pluginsModel.addAll(pluginsToPass.toArray(new Object[0]));			
+		pluginsModel.addAll(pluginsToPass.toArray());			
 		pluginsList.setModel(pluginsModel);
 
 		combo.addActionListener(new ActionListener() {
@@ -80,31 +80,34 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 			Feature.Type activeType = (localTable == null?null: localTable.getClassValueType());
 			Workbench.reloadComboBoxContent(combo, keysNew, (keysNew.size()>0?keysNew.toArray(new String[0])[0]:null));
 			for(int i = 0; i < pluginsModel.getSize(); i++){
-				if(pluginsModel.get(i) instanceof CheckBoxListEntry){
+				if(pluginsModel.get(i) instanceof CheckBoxListEntry)
+				{
+
 					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
 					String label = check.getValue().toString();
 					Map<E, Map<String, Boolean>> evalPlugins = getEvaluationPlugins();
 					for (E plug : evalPlugins.keySet())
 					{
 						Collection<Feature.Type> types = (Collection<Feature.Type>) plug.getAvailableEvaluations().get(label);
-						if (types != null && activeType != null && types.contains(activeType))
-						{
-							check.setEnabled(true);
-						}
-						else
+						
+						if (types != null && activeType != null && !types.contains(activeType))
 						{
 							check.setSelected(false);
 							check.setEnabled(false);
+						}
+						else
+						{
+							check.setEnabled(true);
 						}
 
 					}
 				}
 			}
-			for(int i = 0; i < pluginsModel.getSize(); i++){
-				if(pluginsModel.get(i) instanceof CheckBoxListEntry){
-					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
-				}
-			}
+//			for(int i = 0; i < pluginsModel.getSize(); i++){
+//				if(pluginsModel.get(i) instanceof CheckBoxListEntry){
+//					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
+//				}
+//			}
 			pluginsList.setModel(pluginsModel);
 			revalidate();
 			repaint();

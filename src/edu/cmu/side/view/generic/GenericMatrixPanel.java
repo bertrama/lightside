@@ -142,4 +142,14 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 	public Object getCellObject(Object o){
 		return o;
 	}
+
+	public String getSetting()
+	{
+		return setting;
+	}
+
+	public void setSetting(String setting)
+	{
+		this.setting = setting;
+	}
 }

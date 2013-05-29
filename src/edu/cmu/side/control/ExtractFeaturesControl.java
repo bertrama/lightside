@@ -218,7 +218,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 					else if (ae.getSource() == classTypeCombo)
 					{
 						Type classType = (Type) classTypeCombo.getSelectedItem();
-						System.out.println ("EFC 209 yoohoo: "+classType);
 //						sdl.setClassValueType(classType);
 						setSelectedClassType(classType);
 					}
@@ -289,7 +288,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		protected void doTask(){
 			try
 			{
-				System.out.println("EFC 289: extracting features for new feature table. Annotation "+selectedClassAnnotation+", type "+selectedClassType);
+//				System.out.println("EFC 289: extracting features for new feature table. Annotation "+selectedClassAnnotation+", type "+selectedClassType);
 				Collection<FeatureHit> hits = new HashSet<FeatureHit>();
 				for (SIDEPlugin plug : plan.getExtractors().keySet())
 				{

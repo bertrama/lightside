@@ -85,10 +85,12 @@ public abstract class GenesisControl {
 		}
 		@Override
 		public void itemStateChanged(ItemEvent ie) {
-			String eval = ((CheckBoxListEntry)ie.getSource()).getValue().toString();
+			CheckBoxListEntry entry = (CheckBoxListEntry)ie.getSource();
+			boolean state = entry.isSelected();
+			String eval = entry.getValue().toString();
 			for(SIDEPlugin plug : plugins.keySet()){
 				if(plugins.get(plug).containsKey(eval)){
-					boolean flip = !plugins.get(plug).get(eval);
+					boolean flip = state;//!plugins.get(plug).get(eval);
 					plugins.get(plug).put(eval, flip);
 					Workbench.update(source);
 				}

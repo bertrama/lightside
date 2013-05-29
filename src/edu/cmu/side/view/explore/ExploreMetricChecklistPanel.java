@@ -32,13 +32,17 @@ public class ExploreMetricChecklistPanel extends GenericMetricChecklistPanel<Mod
 		public void setTargetAnnotation(String s) {}
 		
 		@Override
-		public void refreshPanel(){
-			if(ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
-				refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getTrainingTable());			
-			}else{
-				refreshPanel(null);
-			}
+	public void refreshPanel()
+	{
+		if (ExploreResultsControl.hasHighlightedTrainedModelRecipe())
+		{
+			refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getTrainingTable());
 		}
+		else
+		{
+			//refreshPanel(null);
+		}
+	}
 	
 	
 }

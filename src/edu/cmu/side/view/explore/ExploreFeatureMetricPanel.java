@@ -29,6 +29,7 @@ public class ExploreFeatureMetricPanel extends FeatureMetricTogglePanel{
 			}
 		});
 		featureTable.setDefaultRenderer(Object.class, new SIDETableCellRenderer());
+		featureTable.setDefaultRenderer(Double.class, new SIDETableCellRenderer());
 	}
 
 	@Override

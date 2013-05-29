@@ -37,14 +37,14 @@
         <classname>plugins.features.RegexFeatures</classname>
     </plugin>
 
-    <plugin>
+<!--     <plugin>
         <name>Predicted Annotation Feature</name>
         <author>David Adamson</author>
         <version>1.0</version>
         <description><![CDATA[Extraction of (Predicted) Class Label from Previous Turns (for sequential data)]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.features.PredictedAnnotationFeatures</classname>
-    </plugin>
+    </plugin> -->
     
    <!--  <plugin>
         <name>Sequential Features</name>
@@ -200,14 +200,14 @@
     
     
     
-    <plugin>
+<!--     <plugin>
         <name>Discount Majority</name>
         <author>David Adamson</author>
         <version>0.1</version>
         <description><![CDATA[Favor the weak]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.wrappers.RecallWrapper</classname>
-    </plugin> 
+    </plugin>  -->
       
       
             

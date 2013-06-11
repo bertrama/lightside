@@ -1,6 +1,7 @@
 package edu.cmu.side.view.generic;
 
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 
@@ -12,7 +13,6 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
-//import fr.emse.tatiana.corpus.COMMSDBWriter;
 
 public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 {

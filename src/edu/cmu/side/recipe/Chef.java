@@ -64,7 +64,7 @@ public class Chef
 		}
 	};
 
-
+	//Extract Features
 	protected static void simmerFeatures(Recipe recipe, int threshold, String annotation, Type type)
 	{		
 		DocumentList corpus = recipe.getDocumentList();
@@ -122,6 +122,7 @@ public class Chef
 	 * @param newRecipe
 	 * @throws Exception
 	 */
+	//Build Model
 	protected static void broilModel(Recipe newRecipe) throws Exception
 	{
 		TrainingResult trainResult = newRecipe.getLearner().train(newRecipe.getTrainingTable(), newRecipe.getLearnerSettings(), newRecipe.getValidationSettings(), newRecipe.getWrappers(), textUpdater);
@@ -207,7 +208,7 @@ public class Chef
 		if (args.length < 2) corpusFiles.add(dataFile);
 		else for(int i = 1; i < args.length; i++)
 		{
-			corpusFiles.add(dataFile);
+			corpusFiles.add(args[i]);
 		}
 
 		Recipe recipe = loadRecipe(recipePath);

@@ -12,7 +12,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
-import fr.emse.tatiana.corpus.COMMSDBWriter;
+//import fr.emse.tatiana.corpus.COMMSDBWriter;
 
 public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 {
@@ -42,7 +42,7 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
-					COMMSDBWriter.loadDocumentsFromDB(ExtractFeaturesControl.getUpdater());
+//					COMMSDBWriter.loadDocumentsFromDB(ExtractFeaturesControl.getUpdater());
 				}
 			});
 

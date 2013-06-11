@@ -22,7 +22,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CSVExporter;
 import edu.cmu.side.view.util.DocumentListTableModel;
 import edu.cmu.side.view.util.SIDETable;
-import fr.emse.tatiana.corpus.COMMSDBUploader;
+//import fr.emse.tatiana.corpus.COMMSDBUploader;
 
 public class PredictOutputPanel extends AbstractListPanel
 {
@@ -75,8 +75,8 @@ public class PredictOutputPanel extends AbstractListPanel
 					}
 					if (selection.isEmpty()) selection = null;
 
-					COMMSDBUploader.uploadDocumentList(PredictLabelsControl.getHighlightedUnlabeledData().getDocumentList(), selection,
-							PredictLabelsControl.getUpdater());
+//					COMMSDBUploader.uploadDocumentList(PredictLabelsControl.getHighlightedUnlabeledData().getDocumentList(), selection,
+//							PredictLabelsControl.getUpdater());
 				}
 			});
 

@@ -438,31 +438,41 @@ public class DocumentListTest extends TestCase{
 		assertEquals(docList.currentAnnotation, "class");
 		assertTrue(docList.getTextColumns().contains("text"));
 	}
-//	@Test
-//	public void testNotInClassList(){
-//		List<Map<String,String>> rows = new ArrayList<Map<String,String>>();
-//		Collection<String> columns = new ArrayList<String>();
-//		columns.add("sbt");
-//		columns.add("sbv");
-//		Map<String,String> first = new HashMap<String,String>();
-//		Map<String,String> second = new HashMap<String,String>();
-//		Map<String,String> third = new HashMap<String,String>();
-//		first.put("sbt", "First");
-//		first.put("sbv", "3");
-//		second.put("sbt", "Second");
-//		third.put("sbv", "4");
-//		rows.add(first);
-//		rows.add(second);
-//		rows.add(third);
-//		DocumentList dList = new DocumentList(rows, columns);
-//		assertNull(dList.currentAnnotation);
-//		assertEquals(dList.getTextColumns().size(),0);
-//		dList.guessTextAndAnnotationColumns();
-//		//assertEquals(dList.currentAnnotation, "sbv");
-//		//assertTrue(dList.getTextColumns().contains("sbt"));
-//		System.out.println(dList.getTextColumns().size());
-//	}
-	
+	@Test
+	public void testNotInClassList(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("heuristicTest.csv");
+		DocumentList dList = new DocumentList(fileNames);
+		assertNull(dList.currentAnnotation);
+		assertEquals(dList.getTextColumns().size(),0);
+		dList.guessTextAndAnnotationColumns();
+		assertEquals(dList.currentAnnotation, "sbv");
+		assertTrue(dList.getTextColumns().contains("sbt"));
+	}
+	@Test
+	public void testGuessText(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("heuristicTest.csv");
+		DocumentList dList = new DocumentList(fileNames);
+		dList.setCurrentAnnotation("sbv");
+		assertEquals(dList.currentAnnotation, "sbv");
+		assertEquals(dList.getTextColumns().size(),0);
+		dList.guessTextAndAnnotationColumns();
+		assertEquals(dList.currentAnnotation, "sbv");
+		assertTrue(dList.getTextColumns().contains("sbt"));
+	}
+	@Test
+	public void testCurrAnnot(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("heuristicTest.csv");
+		DocumentList dList = new DocumentList(fileNames);
+		dList.setTextColumn("sbt", true);
+		assertNull(dList.currentAnnotation);
+		assertEquals(dList.getTextColumns().size(),1);
+		dList.guessTextAndAnnotationColumns();
+		assertEquals(dList.currentAnnotation, "sbv");
+		assertTrue(dList.getTextColumns().contains("sbt"));
+	}
 	@Test
 	public void testAddAnnotationsUpdateExisting(){
 		Set<String> fileNames = new TreeSet<String>();
@@ -765,6 +775,160 @@ public class DocumentListTest extends TestCase{
 	}
 	@Test
 	public void testSetTextColumns(){
-		
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		Set<String> texts = new HashSet<String>();
+		texts.add("text");
+		docList.setTextColumns(texts);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
 	}
+	@Test
+	public void testOverWriteTextColumns(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		Set<String> texts = new HashSet<String>();
+		texts.add("text");
+		docList.setTextColumns(texts);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+		texts.remove("text");
+		texts.add("Role");
+		docList.setTextColumns(texts);
+		assertNotNull(docList.textColumns.get("Role"));
+		assertNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+	}
+	@Test
+	public void testSetTextColumnIsText(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		docList.setTextColumn("text", true);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+	}
+	@Test
+	public void testSetTextColumnAlreadyThere(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		docList.setTextColumn("text", true);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+		docList.setTextColumn("text", true);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+	}
+	@Test
+	public void testSetTextColumnInvalidText(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		try{
+			docList.setTextColumn("invalid", true);
+			fail("Failed to catch exception");
+		} catch(IllegalStateException e){
+			assertEquals(e.getMessage(), "Can't find the text column named invalid in provided file");
+		}
+	}
+	@Test
+	public void testRemoveTextColumn(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		docList.setTextColumn("text", true);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+		docList.setTextColumn("text", false);
+		assertNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 0);
+	}
+	@Test
+	public void testRemoveTextColumnNotThere(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		docList.setTextColumn("text", true);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+		docList.setTextColumn("notThere", false);
+		assertNotNull(docList.textColumns.get("text"));
+		assertEquals(docList.textColumns.size(), 1);
+	}
+	@Test
+	public void testSetFileNames(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		fileNames.add("test1.csv");
+		ArrayList<String> newFileList = new ArrayList<String>(fileNames);
+		docList.setFilenames(newFileList);
+		assertEquals(docList.getFilenameList().size(), 2);
+		assertEquals(docList.getFilenameList(), newFileList);
+		docList.setFilenames(null);
+		assertNull(docList.getFilenameList());
+	}
+	@Test
+	public void testEmptyAddInstances(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		int currentSize = docList.getSize();
+		docList.addInstances(new ArrayList<Map<String,String>>(), new ArrayList<String>());
+		assertEquals(currentSize, docList.getSize());
+	}
+	@Test
+	public void testAddInstancesMultipleCases(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		ArrayList<Map<String,String>> rows = new ArrayList<Map<String,String>>();
+		Map<String,String> firstAddition = new HashMap<String,String>();
+		firstAddition.put("add1", "firstValue");
+		firstAddition.put("add2", "SecondValue");
+		Map<String,String> secondAddition = new HashMap<String,String>();
+		secondAddition.put("add1", "firstValue");
+		secondAddition.put("add2", "SecondValue");
+		rows.add(firstAddition);
+		rows.add(secondAddition);
+		String[] newColumns = {"add1", "add2", "text"};
+		List<String> columns = Arrays.asList(newColumns);
+		int currentSize = docList.getSize();
+		docList.addInstances(rows, columns);
+		assertEquals(currentSize+rows.size(), docList.getSize());
+	}
+	@Test
+	public void testAddInstancesTextColumns(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		ArrayList<Map<String,String>> rows = new ArrayList<Map<String,String>>();
+		Map<String,String> firstAddition = new HashMap<String,String>();
+		Map<String,String> secondAddition = new HashMap<String,String>();
+		firstAddition.put("text", "sampletext1");
+		firstAddition.put("text", "sampletext2");
+		secondAddition.put("text", "sampletext1");
+		secondAddition.put("text", "sampletext2");
+		rows.add(firstAddition);
+		rows.add(secondAddition);
+		docList.setTextColumn("text", true);
+		docList.setTextColumn("Cond", true);
+		String[] newColumns = {"add1", "add2", "text"};
+		List<String> columns = Arrays.asList(newColumns);
+		int currentSize = docList.getSize();
+		docList.addInstances(rows, columns);
+		assertEquals(currentSize + rows.size(), docList.getSize());
+	}
+	@Test
+	public void testGetAndSetEmptAnnotStr(){
+		Set<String> fileNames = new TreeSet<String>();
+		fileNames.add("TutorialData.csv");
+		DocumentList docList = new DocumentList(fileNames);
+		docList.setEmptyAnnotationString("test");
+		assertEquals(docList.getEmptyAnnotationString(), "test");
+	}
+	
 }

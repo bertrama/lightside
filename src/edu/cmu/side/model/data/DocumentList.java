@@ -286,35 +286,7 @@ public class DocumentList implements Serializable
 		localName.trim();
 		setName(localName);
 	}
-	public void consolidateFileStructures(List<TreeMap<String,List<String>>> annotationList){
-		//First: find all headers and put them into a larger list.
-		for(TreeMap<String,List<String>> individual: annotationList){
-			for(String annotation: individual.keySet()){
-				if(!allAnnotations.containsKey(annotation)){
-					allAnnotations.put(annotation, new ArrayList<String>());
-				}
-			}
-		}
-		//Next: Iterate over each file's Treemap and then iterate over each keySet item in the allAnnotations and add the value to the map if there, if null, add equals amounts of whitespace
-		Set<String> totalKeys;
-		for(TreeMap<String,List<String>> individual: annotationList){
-			Set<String> indKeys = individual.keySet();
-			Set<String> blankKeys = new HashSet<String>(allAnnotations.keySet());
-			blankKeys.removeAll(indKeys);
-			int size = 0;
-			for(String annotation: indKeys){
-				allAnnotations.get(annotation).addAll(individual.get(annotation));
-				size = individual.get(annotation).size();
-			}
-			for(String annotation: blankKeys){
-				ArrayList<String> blanks = new ArrayList<String>();
-				for(int i=0; i<size; i++){
-					blanks.add(emptyAnnotationString);
-				}
-				allAnnotations.get(annotation).addAll(blanks);
-			}
-		}
-	}
+
 
 	public Map<String, List<String>> allAnnotations() {
 		return allAnnotations;
@@ -338,7 +310,6 @@ public class DocumentList implements Serializable
 			if(textName != null)
 				setTextColumn(textName, true);
 		}
-		//TODO: Wha-?
 		if(currentAnnotation == null || textColumns.isEmpty())
 			for (String s : this.getAnnotationNames())
 			{
@@ -617,6 +588,7 @@ public class DocumentList implements Serializable
 
 	public void addInstances(List<Map<String, String>> rows, Collection<String> columns)
 	{
+		
 		for(String key : columns)
 		{
 			if(!allAnnotations.containsKey(key) && !textColumns.containsKey(key))

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -41,7 +42,7 @@ public class DocumentList implements Serializable
 	{
 		addAnnotation("text", instances, false);
 		setTextColumn("text", true);
-
+		
 		for(int i = 0; i < instances.size(); i++)
 			filenameList.add("Document");
 	}
@@ -206,11 +207,14 @@ public class DocumentList implements Serializable
 		currentAnnotation = null;
 		int totalLines = 0;
 		String localName = "";
+//		List<TreeMap<String,List<String>>> annotationList = new ArrayList<TreeMap<String,List<String>>>();
 		for(String filename : filenames){
 			int ending = filename.lastIndexOf(".csv");
 			localName += filename.substring(filename.lastIndexOf("/")+1, ending==-1?filename.length():ending) + " ";
 			ArrayList<Integer> blanks = new ArrayList<Integer>();
 			ArrayList<Integer> extras = new ArrayList<Integer>();
+//			TreeMap<String,List<String>> currentFileMap = new TreeMap<String,List<String>>();
+//			annotationList.add(currentFileMap);
 			int lineID = 0;
 
 			try{
@@ -226,10 +230,16 @@ public class DocumentList implements Serializable
 						annotationColumns.add(i);
 					}
 				}
-
+				
 				for(String annotation : headers){
 					if(annotation.length() > 0 && !allAnnotations.containsKey(annotation)){
-						allAnnotations.put(annotation, new ArrayList<String>());						
+						allAnnotations.put(annotation, new ArrayList<String>());
+//						currentFileMap.put(annotation, new ArrayList<String>());
+						if(totalLines>0){
+							String[] fill = new String[totalLines];
+							Arrays.fill(fill, emptyAnnotationString);
+							allAnnotations.get(annotation).addAll(Arrays.asList(fill));
+						}
 					}
 				}
 
@@ -256,6 +266,15 @@ public class DocumentList implements Serializable
 					filenameList.add(filename);
 					lineID++;
 				}
+				//Now, fill unfilled areas with empty strings
+				Set<String> toRemoveSet = new HashSet<String>(Arrays.asList(headers));
+				Set<String> removedAnnotations = new HashSet<String>(allAnnotations.keySet());
+				removedAnnotations.removeAll(toRemoveSet);
+				String[] empty = new String[lineID];
+				Arrays.fill(empty, emptyAnnotationString);
+				for(String emptyAnnotation : removedAnnotations){
+					allAnnotations.get(emptyAnnotation).addAll(Arrays.asList(empty));
+				}
 			}catch(Exception e){
 				AlertDialog.show("Error!", "Failed to load CSV into memory.", null);
 				e.printStackTrace();
@@ -263,8 +282,38 @@ public class DocumentList implements Serializable
 
 			totalLines += lineID;
 		}
+//		consolidateFileStructures(annotationList);
 		localName.trim();
 		setName(localName);
+	}
+	public void consolidateFileStructures(List<TreeMap<String,List<String>>> annotationList){
+		//First: find all headers and put them into a larger list.
+		for(TreeMap<String,List<String>> individual: annotationList){
+			for(String annotation: individual.keySet()){
+				if(!allAnnotations.containsKey(annotation)){
+					allAnnotations.put(annotation, new ArrayList<String>());
+				}
+			}
+		}
+		//Next: Iterate over each file's Treemap and then iterate over each keySet item in the allAnnotations and add the value to the map if there, if null, add equals amounts of whitespace
+		Set<String> totalKeys;
+		for(TreeMap<String,List<String>> individual: annotationList){
+			Set<String> indKeys = individual.keySet();
+			Set<String> blankKeys = new HashSet<String>(allAnnotations.keySet());
+			blankKeys.removeAll(indKeys);
+			int size = 0;
+			for(String annotation: indKeys){
+				allAnnotations.get(annotation).addAll(individual.get(annotation));
+				size = individual.get(annotation).size();
+			}
+			for(String annotation: blankKeys){
+				ArrayList<String> blanks = new ArrayList<String>();
+				for(int i=0; i<size; i++){
+					blanks.add(emptyAnnotationString);
+				}
+				allAnnotations.get(annotation).addAll(blanks);
+			}
+		}
 	}
 
 	public Map<String, List<String>> allAnnotations() {
@@ -289,7 +338,7 @@ public class DocumentList implements Serializable
 			if(textName != null)
 				setTextColumn(textName, true);
 		}
-		
+		//TODO: Wha-?
 		if(currentAnnotation == null || textColumns.isEmpty())
 			for (String s : this.getAnnotationNames())
 			{
@@ -301,7 +350,6 @@ public class DocumentList implements Serializable
 					length += t.length();
 				}
 				length = length/getSize();
-				
 				if(currentAnnotation == null && values.size() < (this.getSize() / 10.0))
 				{
 					this.setCurrentAnnotation(s);
@@ -423,7 +471,6 @@ public class DocumentList implements Serializable
 	
 	public String[] getLabelArray(String column, Type t)
 	{
-
 		if (!column.equals(currentAnnotation) || labelArray == null)
 		{
 			Set<String> labelSet = new TreeSet<String>();
@@ -496,7 +543,6 @@ public class DocumentList implements Serializable
 		
 		if (!allAnnotations.containsKey(annot))
 			throw new IllegalStateException("Can't find the label column named " + annot + " in provided file");
-		
 		if(currentAnnotation == null || !currentAnnotation.equals(annot) )//|| type != t)
 		{
 			labelArray = null;

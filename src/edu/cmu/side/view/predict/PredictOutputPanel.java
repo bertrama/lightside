@@ -1,6 +1,7 @@
 package edu.cmu.side.view.predict;
 
 import java.awt.Color;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -22,7 +23,6 @@ import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.CSVExporter;
 import edu.cmu.side.view.util.DocumentListTableModel;
 import edu.cmu.side.view.util.SIDETable;
-//import fr.emse.tatiana.corpus.COMMSDBUploader;
 
 public class PredictOutputPanel extends AbstractListPanel
 {

@@ -310,23 +310,7 @@ public class DocumentListTest extends TestCase{
 	}
 	/*---------------------------------------------------------------------------------------------------*/
 	//Various Method Tests Begins
-	@Test
-	public void testGetAnnotationArrayNull(){
-		DocumentList dList = new DocumentList("test");
-		assertNull(dList.getAnnotationArray(null));
-	}
-	@Test
-	public void testGetAnnotationArray(){
-		List<String> instances = new ArrayList<String>();
-		for(int i = 0; i < 5; i++){
-			instances.add("i");
-		}
-		Map<String, List<String>> annMap = new TreeMap<String, List<String>>();
-		annMap.put("value", instances);
-		annMap.put("otherValue", instances);
-		DocumentList dList = new DocumentList(instances, annMap);
-		assertEquals(instances, dList.getAnnotationArray("value"));
-	}
+	
 	@Test
 	public void testGetPossibleAnn(){
 		List<String> instances = new ArrayList<String>();
@@ -362,7 +346,7 @@ public class DocumentListTest extends TestCase{
 		DocumentList dList = new DocumentList(instances, annMap);
 		assertEquals(dList.getValueType("value"),Feature.Type.NUMERIC);
 	}
-	@Test
+	@Test 
 	public void testGetValueTypeNominal(){
 		List<String> instances = new ArrayList<String>();
 		for(int i = 0; i < 5; i++){
@@ -929,6 +913,25 @@ public class DocumentListTest extends TestCase{
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setEmptyAnnotationString("test");
 		assertEquals(docList.getEmptyAnnotationString(), "test");
+	}
+	/****************************************************/
+	//Useless Tests Go Here
+	@Test
+	public void testGetAnnotationArrayNull(){
+		DocumentList dList = new DocumentList("test");
+		assertNull(dList.getAnnotationArray(null));
+	}
+	@Test
+	public void testGetAnnotationArray(){
+		List<String> instances = new ArrayList<String>();
+		for(int i = 0; i < 5; i++){
+			instances.add("i");
+		}
+		Map<String, List<String>> annMap = new TreeMap<String, List<String>>();
+		annMap.put("value", instances);
+		annMap.put("otherValue", instances);
+		DocumentList dList = new DocumentList(instances, annMap);
+		assertEquals(instances, dList.getAnnotationArray("value"));
 	}
 	
 }

@@ -18,8 +18,20 @@ import java.util.TreeSet;
 import junit.framework.TestCase;
 
 public class DocumentListTest extends TestCase{
+	List<Map<String,String>> rows;
+	Collection<String> columns;
+	DocumentList dList;
+	List<String> instances;
+	
+	List<String> fileNames;
+	Set<String> fileSet;
 	public void setUp(){
-		//Do we need?
+		//Row and Columns
+		rows = new ArrayList<Map<String,String>>();
+		columns = new ArrayList<String>();
+		
+		//instances
+		instances = new ArrayList<String>();
 	}
 	/*
 	 * Testing for constructor #1:
@@ -30,21 +42,19 @@ public class DocumentListTest extends TestCase{
 	 */
 	@Test
 	public void testRowColumnConstructor(){
-		List<Map<String,String>> rows = new ArrayList<Map<String,String>>();
-		Collection<String> columns = new ArrayList<String>();
 		columns.add("text");
 		columns.add("value");
-		Map<String,String> first = new HashMap<String,String>();
-		Map<String,String> second = new HashMap<String,String>();
-		Map<String,String> third = new HashMap<String,String>();
-		first.put("text", "First");
-		first.put("value", "FirstVal");
-		second.put("text", "Second");
-		third.put("value", "SecondVal");
-		rows.add(first);
-		rows.add(second);
-		rows.add(third);
-		DocumentList dList = new DocumentList(rows, columns);
+		Map<String,String> row1 = new HashMap<String,String>();
+		Map<String,String> row2 = new HashMap<String,String>();
+		Map<String,String> row3 = new HashMap<String,String>();
+		row1.put("text", "First");
+		row1.put("value", "FirstVal");
+		row2.put("text", "Second");
+		row3.put("value", "SecondVal");
+		rows.add(row1);
+		rows.add(row2);
+		rows.add(row3);
+		dList = new DocumentList(rows, columns);
 		assertEquals(dList.allAnnotations.size(), 2);
 		assertEquals(dList.getTextColumns().size(), 0);
 		assertEquals(dList.filenameList.size(), 3);
@@ -52,9 +62,7 @@ public class DocumentListTest extends TestCase{
 
 	@Test
 	public void testRowColumnEmpty(){
-		List<Map<String,String>> rows = new ArrayList<Map<String,String>>();
-		Collection<String> columns = new ArrayList<String>();
-		DocumentList dList = new DocumentList(rows, columns);
+		dList = new DocumentList(rows, columns);
 		assertEquals(dList.allAnnotations.size(),0);
 		assertEquals(dList.getTextColumns().size(),0);
 		assertEquals(dList.filenameList.size(),0);
@@ -70,19 +78,17 @@ public class DocumentListTest extends TestCase{
 
 	@Test
 	public void testInstancesConstructor(){
-		List<String> instances = new ArrayList<String>();
 		for(int i = 0; i < 5; i++){
 			instances.add("i");
 		}
-		DocumentList dList = new DocumentList(instances);
+		dList = new DocumentList(instances);
 		assertEquals(dList.allAnnotations.size(),0);
 		assertEquals(dList.getTextColumns().size(),1);
 		assertEquals(dList.getFilenameList().size(),5);
 	}
 	@Test
 	public void testInstancesEmpty(){
-		List<String> instances = new ArrayList<String>();
-		DocumentList dList = new DocumentList(instances);
+		dList = new DocumentList(instances);
 		assertEquals(dList.allAnnotations.size(),0);
 		assertEquals(dList.getTextColumns().size(),1);
 		assertEquals(dList.getFilenameList().size(),0);
@@ -98,14 +104,13 @@ public class DocumentListTest extends TestCase{
 
 	@Test
 	public void testInstancesAndAnnotationsConstruction(){
-		List<String> instances = new ArrayList<String>();
 		for(int i = 0; i < 5; i++){
 			instances.add("i");
 		}
 		Map<String, List<String>> annMap = new TreeMap<String, List<String>>();
 		annMap.put("value", instances);
 		annMap.put("otherValue", instances);
-		DocumentList dList = new DocumentList(instances, annMap);
+		dList = new DocumentList(instances, annMap);
 		assertEquals(dList.allAnnotations.size(),2);
 		assertEquals(dList.getTextColumns().size(),1);
 		assertEquals(dList.getFilenameList().size(),5);
@@ -124,13 +129,13 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testAssignmentConstructor(){
 		String[] files = {"Doc","Doc","Doc"};
-		List<String> fileNames = new ArrayList<String>(Arrays.asList(files));
+		fileNames = new ArrayList<String>(Arrays.asList(files));
 		Map<String, List<String>> texts = new HashMap<String, List<String>>();
 		String[] values = {"one","two","three"};
 		ArrayList<String> firstVals = new ArrayList<String>(Arrays.asList(values));
 		texts.put("Value", firstVals);
 		String currentAnnot = "Value";
-		DocumentList dList = new DocumentList(fileNames, texts,texts,currentAnnot);
+		dList = new DocumentList(fileNames, texts,texts,currentAnnot);
 		assertEquals(dList.filenameList, fileNames);
 		assertTrue(dList.getTextColumns().contains("Value"));
 		assertEquals(dList.currentAnnotation,currentAnnot);
@@ -158,24 +163,10 @@ public class DocumentListTest extends TestCase{
 		assertEquals(docList.getTextColumns().size(),0);
 	}
 	@Test
-	public void testSingleFileNameNoSuffix(){
-		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("train2");
-		DocumentList docList = new DocumentList(fileNames);
-		assertNotNull(docList);
-		assertEquals(docList.getSize(),1278);
-		String[] annNames = docList.getAnnotationNames();
-		assertEquals(annNames.length,4);
-		assertEquals(docList.getAnnotationNames()[0], "score1");
-		assertEquals(docList.getAnnotationNames()[1], "score2");
-		assertNull(docList.currentAnnotation);
-		assertEquals(docList.getTextColumns().size(),0);
-	}
-	@Test
 	public void testMultipleFileNameDifferentHeaders(){
 		Set<String> fileNames = new TreeSet<String>();
 		fileNames.add("MovieReviews.csv");
-		fileNames.add("train2.csv");
+		fileNames.add("test2.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		int size = 0;
 		for(List<String> arString: docList.allAnnotations.values()){
@@ -185,8 +176,8 @@ public class DocumentListTest extends TestCase{
 				assertEquals(arString.size(),size);
 			}
 		}
-		assertEquals(docList.getSize(), 1578);
-		assertEquals(docList.getAnnotationNames().length, 5);
+		assertEquals(docList.getSize(), 302);
+		assertEquals(docList.getAnnotationNames().length, 4);
 
 	}
 
@@ -212,7 +203,7 @@ public class DocumentListTest extends TestCase{
 		Set<String> fileNames = new TreeSet<String>();
 		fileNames.add("sentiment_documents.csv");
 		fileNames.add("TutorialData.csv");
-		fileNames.add("train2.csv");
+		fileNames.add("test2.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		int size = 0;
 		for(List<String> arString: docList.allAnnotations.values()){
@@ -222,8 +213,8 @@ public class DocumentListTest extends TestCase{
 				assertEquals(arString.size(),size);
 			}
 		}
-		assertEquals(docList.getSize(), 4393);
-		assertEquals(docList.getAnnotationNames().length, 17);
+		assertEquals(docList.getSize(), 3117);
+		assertEquals(docList.getAnnotationNames().length, 16);
 	}
 
 	/*

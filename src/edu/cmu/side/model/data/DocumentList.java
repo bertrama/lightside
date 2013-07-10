@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ public class DocumentList implements Serializable
 	
 	String emptyAnnotationString = "";
 	
-	String[] annotationNames = null;
+//	String[] annotationNames = null;
 	String[] labelArray = null;
 
 	// wrap a list of unannotated plain-text instances as a DocumentList
@@ -139,10 +140,10 @@ public class DocumentList implements Serializable
 	}
 	
 	public DocumentList(List<String> filenames, Map<String, List<String>> texts, Map<String, List<String>> annotations, String currentAnnot){
-		filenameList = filenames;
-		textColumns = texts;
-		allAnnotations = annotations;
-		currentAnnotation = currentAnnot;
+		filenameList = filenames!=null?filenames:filenameList;
+		textColumns = texts!=null?texts:textColumns;
+		allAnnotations = annotations!=null?annotations:allAnnotations;
+		currentAnnotation = currentAnnot!=null?currentAnnot:currentAnnotation;
 	}
 
 	public DocumentList(List<Map<String, String>> rows, Collection<String> columns)
@@ -203,88 +204,42 @@ public class DocumentList implements Serializable
 	}
 
 	public DocumentList(Set<String> filenames){
-		CSVReader in;
-		currentAnnotation = null;
-		int totalLines = 0;
-		String localName = "";
-//		List<TreeMap<String,List<String>>> annotationList = new ArrayList<TreeMap<String,List<String>>>();
-		for(String filename : filenames){
-			int ending = filename.lastIndexOf(".csv");
-			localName += filename.substring(filename.lastIndexOf("/")+1, ending==-1?filename.length():ending) + " ";
-			ArrayList<Integer> blanks = new ArrayList<Integer>();
-			ArrayList<Integer> extras = new ArrayList<Integer>();
-//			TreeMap<String,List<String>> currentFileMap = new TreeMap<String,List<String>>();
-//			annotationList.add(currentFileMap);
-			int lineID = 0;
-
-			try{
-				File f = new File(filename);
-				if(!f.exists())
-					f = new File(Workbench.dataFolder.getAbsolutePath(), filename.substring(Math.max(filename.lastIndexOf("/"), filename.lastIndexOf("\\"))+1));
-				in = new CSVReader(new FileReader(f));
-				String[] headers = in.readNextMeaningful();
-				List<Integer> annotationColumns = new ArrayList<Integer>();
-				for(int i = 0; i < headers.length; i++){
-					headers[i] = headers[i].trim();
-					if(headers[i].length()>0){
-						annotationColumns.add(i);
-					}
-				}
-				
-				for(String annotation : headers){
-					if(annotation.length() > 0 && !allAnnotations.containsKey(annotation)){
-						allAnnotations.put(annotation, new ArrayList<String>());
-//						currentFileMap.put(annotation, new ArrayList<String>());
-						if(totalLines>0){
-							String[] fill = new String[totalLines];
-							Arrays.fill(fill, emptyAnnotationString);
-							allAnnotations.get(annotation).addAll(Arrays.asList(fill));
-						}
-					}
-				}
-
-				String[] line;
-
-				while((line = in.readNextMeaningful()) != null){
-					String[] instance = new String[line.length];
-					for(int i = 0; i < line.length; i++){
-						instance[i] = line[i].replaceAll("[^\r\n\\p{ASCII}]", "");
-					}
-					for(int i = 0; i < instance.length; i++){
-						String value = instance[i];
-						if(annotationColumns.contains(i)){
-							if(value.length()>0){
-								allAnnotations.get(headers[i]).add(value);
-							}else{
-								allAnnotations.get(headers[i]).add(emptyAnnotationString);
-								blanks.add(lineID);
-							}
-						}else{
-							extras.add(lineID);
-						}
-					}
-					filenameList.add(filename);
-					lineID++;
-				}
-				//Now, fill unfilled areas with empty strings
-				Set<String> toRemoveSet = new HashSet<String>(Arrays.asList(headers));
-				Set<String> removedAnnotations = new HashSet<String>(allAnnotations.keySet());
-				removedAnnotations.removeAll(toRemoveSet);
-				String[] empty = new String[lineID];
-				Arrays.fill(empty, emptyAnnotationString);
-				for(String emptyAnnotation : removedAnnotations){
-					allAnnotations.get(emptyAnnotation).addAll(Arrays.asList(empty));
-				}
-			}catch(Exception e){
-				AlertDialog.show("Error!", "Failed to load CSV into memory.", null);
-				e.printStackTrace();
-			}
-
-			totalLines += lineID;
+		HashMap<String, List<String>> fileHolders = new HashMap<String, List<String>>();
+		for (String string : filenames) {
+			
 		}
-//		consolidateFileStructures(annotationList);
-		localName.trim();
-		setName(localName);
+		for (String file : filenames) {
+			
+			
+		}
+	}
+	
+	public void combine(DocumentList other){
+		this.getFilenameList().addAll(other.getFilenameList());
+		for(String ann : other.getAnnotationNames()){
+			if(!this.allAnnotations.containsKey(ann)){
+				String[] blankArray = new String[this.getSize()];
+				Arrays.fill(blankArray, emptyAnnotationString);
+				List<String> blanks = new ArrayList<String>(Arrays.asList(blankArray));
+				this.addAnnotation(ann,blanks,false);
+			}
+		}
+		for(String ann : allAnnotations.keySet()){
+			if(other.allAnnotations.containsKey(ann)){
+				this.allAnnotations.get(ann).addAll(other.allAnnotations.get(ann));
+			} else {
+				String[] blankArray = new String[other.getSize()];
+				Arrays.fill(blankArray, emptyAnnotationString);
+				List<String> blanks = new ArrayList<String>(Arrays.asList(blankArray));
+				this.allAnnotations.get(ann).addAll(blanks);
+			}
+		}
+	}
+	
+	public void combine(List<DocumentList> others){
+		for (DocumentList documentList : others) {
+			this.combine(documentList);
+		}
 	}
 
 

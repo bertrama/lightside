@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
@@ -405,4 +409,19 @@ public class Recipe implements Serializable
 		out.writeObject(validationSettings);
 	}
 
+	public void saveToXML(Document doc) {
+		//First, write the Recipe parent
+		Element recipe = doc.createElement("Recipe");
+		doc.appendChild(recipe);
+		//Next, we write out the stage
+		Attr stage = doc.createAttribute("Stage");
+		stage.setNodeValue(stage.getValue());
+		recipe.setAttributeNode(stage);
+		//writing out recipeName
+		Attr name = doc.createAttribute("Recipe Name");
+		name.setNodeValue(recipeName);
+		recipe.setAttributeNode(name);
+		//Writing out plugins
+		
+	}
 }

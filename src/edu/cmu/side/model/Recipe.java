@@ -422,6 +422,57 @@ public class Recipe implements Serializable
 		name.setNodeValue(recipeName);
 		recipe.setAttributeNode(name);
 		//Writing out plugins
+		Element extractorsElement = doc.createElement("Extractors");
+		recipe.appendChild(extractorsElement);
+		//extractors.saveToXML(doc, extractorsElement);
+		Element filtersElement = doc.createElement("Filters");
+		recipe.appendChild(filtersElement);
+		//filters.saveToXML(doc, filtersElement);
+		Element wrappersElement = doc.createElement("Wrappers");
+		recipe.appendChild(wrappersElement);
+		//wrappers.saveToXML(doc, wrappersElement);
 		
+		//Writing learner
+		Element learnerElement = doc.createElement("Learner");
+		recipe.appendChild(learnerElement);
+		//learner.saveToXML(doc, learnerElement);
+		
+		//Writing learner settings
+		Element learnerSettingsElement = doc.createElement("Learner Settings");
+		learnerElement.appendChild(learnerSettingsElement);
+		Attr attrSetting;
+		for (String setting : learnerSettings.keySet()) {
+			attrSetting = doc.createAttribute(setting);
+			learnerSettingsElement.setAttribute(setting, learnerSettings.get(setting));
+		}
+		
+		//Writing DocumentList
+		Element documentListElement = doc.createElement("Document List");
+		recipe.appendChild(documentListElement);
+		//documentList.writeToXML(doc, documentListElement);
+		
+		//Writing FeatureTable and filtertable
+		Element featureTableElement = doc.createElement("Feature Table");
+		recipe.appendChild(featureTableElement);
+		//featureTable.writeToXML(doc, featureTableElement);
+		
+		Element filteredTableElement = doc.createElement("Filtered Table");
+		recipe.appendChild(filteredTableElement);
+		//filteredTable.writeToXML(doc, filteredTableElement);
+		
+		//TrainedModel
+		Element trainedModelElement = doc.createElement("Trained Model");
+		recipe.appendChild(trainedModelElement);
+		//trainedModel.writeToXML(doc, trainedModelElement);
+		
+		//PredictionResults
+		Element predictionResultsElement = doc.createElement("Prediction Results");
+		recipe.appendChild(predictionResultsElement);
+		//predictionResult.writeToXML(doc, predictionResultsElement);
+
+		//ValidationSettings
+		Element validationSettingsElement = doc.createElement("Validation Settings");
+		recipe.appendChild(validationSettingsElement);
+		//We have to serialize the map
 	}
 }

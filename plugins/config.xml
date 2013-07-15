@@ -1,14 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
-<!--     <plugin>
-        <name>WordMatchingExamplePlugin</name>
-        <author>David Adamson</author>
-        <version>1.0</version>
-        <description><![CDATA[Simple Sample String Matching Extractor]]></description>
-        <jarfile>custom.jar</jarfile>
-        <classname>plugins.features.WordMatchingExamplePlugin</classname>
-    </plugin> -->
-    
     <plugin>
         <name>Basic Features</name>
         <author>Elijah Mayfield</author>
@@ -73,14 +64,14 @@
         <classname>plugins.restructure.GrowthModel</classname>
     </plugin>
     
-<!--     <plugin>
+    <plugin>
         <name>Regroup Features</name>
         <author>Elijah Mayfield</author>
         <version>1.0</version>
         <description><![CDATA[Regroup instances by column]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.restructure.RegroupPlugin</classname>
-    </plugin> -->
+    </plugin>
     
     
     <plugin>
@@ -139,15 +130,6 @@
         <classname>plugins.metrics.models.BasicModelEvaluations</classname>
     </plugin>
 
-    <plugin>
-        <name>Advanced Model Evaluation Plugins</name>
-        <author>Elijah Mayfield</author>
-        <version>1.0</version>
-        <description><![CDATA[Advanced model evaluations]]></description>
-        <jarfile>warpcore.jar</jarfile>
-        <classname>com.lightsidelabs.plugins.metrics.models.AdvancedModelEvaluations</classname>
-    </plugin>
-    
     
     <plugin>
         <name>Basic Model Analysis Plugins</name>
@@ -165,15 +147,6 @@
         <description><![CDATA[Basic document display for error analysis]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.analysis.one.display.DocumentsDisplay</classname>
-    </plugin>
-
-    <plugin>
-        <name>Explore Prediction Cues</name>
-        <author>David Adamson</author>
-        <version>1.0</version>
-        <description><![CDATA[Basic document display for error analysis]]></description>
-        <jarfile>warpcore.jar</jarfile>
-        <classname>com.lightsidelabs.plugins.analysis.ExplorePredictionCuesPlugin</classname>
     </plugin>
     
     

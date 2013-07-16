@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
+<!--     <plugin>
+        <name>WordMatchingExamplePlugin</name>
+        <author>David Adamson</author>
+        <version>1.0</version>
+        <description><![CDATA[Simple Sample String Matching Extractor]]></description>
+        <jarfile>custom.jar</jarfile>
+        <classname>plugins.features.WordMatchingExamplePlugin</classname>
+    </plugin> -->
+    
     <plugin>
         <name>Basic Features</name>
         <author>Elijah Mayfield</author>

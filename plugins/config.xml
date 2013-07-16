@@ -36,6 +36,15 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.features.RegexFeatures</classname>
     </plugin>
+    
+    <plugin>
+        <name>CSV Parser</name>
+        <author>Andrew Latterner</author>
+        <version>1.0</version>
+        <description><![CDATA[Build DocumentList From CSV file]]></description>
+        <jarfile>genesis.jar</jarfile>
+        <classname>plugins.fileParsing.CSVParser</classname>
+   </plugin>
 
 <!--     <plugin>
         <name>Predicted Annotation Feature</name>
@@ -294,7 +303,9 @@
         <description><![CDATA[Build Cues From Nothing]]></description>
         <jarfile>genesis.jar</jarfile>
         <classname>wrapper.ForwardCueWrapper</classname>
-    </plugin> 
+   </plugin> 
+    
+   
     
    <plugin>
         <name>Backwards Cue Wrapper</name>

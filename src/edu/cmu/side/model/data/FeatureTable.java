@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.thoughtworks.xstream.XStream;
+
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
@@ -610,6 +612,12 @@ public class FeatureTable implements Serializable
 	    
 	    
 	    return ft;
+	}
+	
+	public String writeToXML(){
+		XStream streamer = new XStream();
+		String streamed = streamer.toXML(this);
+		return streamed;
 	}
 	
 }

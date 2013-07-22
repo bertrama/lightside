@@ -14,6 +14,8 @@ import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.thoughtworks.xstream.XStream;
+
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
@@ -410,6 +412,8 @@ public class Recipe implements Serializable
 	}
 
 	public void saveToXML(Document doc) {
+		
+		XStream streamer = new XStream();
 		//First, write the Recipe parent
 		Element recipe = doc.createElement("Recipe");
 		doc.appendChild(recipe);

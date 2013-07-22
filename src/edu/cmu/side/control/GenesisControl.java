@@ -218,7 +218,7 @@ public abstract class GenesisControl {
 		}
 		DefaultMutableTreeNode files = new DefaultMutableTreeNode("Files: ");
 		for(String s : docs.getFilenames()){
-			DefaultMutableTreeNode fileName = new DefaultMutableTreeNode(s.substring(s.lastIndexOf("\\")+1));
+			DefaultMutableTreeNode fileName = new DefaultMutableTreeNode(s.substring(s.lastIndexOf(java.io.File.separator)+1));
 			files.add(fileName);
 		}
 		node.add(files);

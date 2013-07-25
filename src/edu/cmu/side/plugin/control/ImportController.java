@@ -13,23 +13,30 @@ public class ImportController {
 	private ImportController(){}
 	static SIDEPlugin[] parsers = PluginManager.getSIDEPluginArrayByType("file_parser");
 	static HashMap<FileParser, HashSet<String>> fileChunks;
-	private static void getValidPlugin(String fileName){
+	private static boolean getValidPlugin(String fileName){
+		boolean foundParser = false;
 		for (SIDEPlugin parser : parsers) {
-			if(((FileParser)parser).canHandle(fileName)) fileChunks.get(parser).add(fileName);
+			if(((FileParser)parser).canHandle(fileName)) {
+				fileChunks.get(parser).add(fileName);
+				foundParser = true;
+			}
 		}
+		return foundParser;
 	}
 	
-	public static DocumentList makeDocumentList(TreeSet<String> fileNames){
+	public static DocumentList makeDocumentList(TreeSet<String> fileNames) throws Exception{
 		if(fileNames.size()==0) return null;
 		fileChunks = new HashMap<FileParser, HashSet<String>>();
 		if(parsers.length==0){
-			//We need to throw an exception here
+			throw new Exception("There are no parsers");
 		}
 		for (SIDEPlugin parser : parsers) {
 			fileChunks.put((FileParser)parser, new HashSet<String>());
 		}
 		for (String file : fileNames) {
-			getValidPlugin(file);
+			if(!getValidPlugin(file)){
+				throw new Exception("File: " + file.toString() + " could not be parsed.");
+			}
 		}
 		ArrayList<DocumentList> toAggregate = new ArrayList<DocumentList>();
 		for(SIDEPlugin parser : parsers){

@@ -1,7 +1,6 @@
 package edu.cmu.side.recipe.converters;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,6 +13,7 @@ import edu.cmu.side.model.data.DocumentList;
 
 public class ConverterControl {
 	public static DocumentList docList;
+//	public static
 	//whatever else should get repeated here
 	private ConverterControl(){
 		
@@ -23,6 +23,7 @@ public class ConverterControl {
 		clearVariables();
 		File file = createFile(fileName);
 		XStream stream = new XStream();
+		stream.registerConverter(new RecipeConverter());
 		try {
 			FileOutputStream out = new FileOutputStream(file);
 			PrintStream printStream = new PrintStream(out);

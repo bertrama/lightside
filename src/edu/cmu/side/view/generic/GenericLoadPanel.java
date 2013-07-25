@@ -364,11 +364,15 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		{
 			docNames.add(f.getPath());
 		}
-
+		try{
 		DocumentList testDocs = ImportController.makeDocumentList(docNames);
 		testDocs.guessTextAndAnnotationColumns();
 		Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
 		setHighlight(r);
+		} catch(Exception e){
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 		refreshPanel();
 		Workbench.update(this);
 	}

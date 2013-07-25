@@ -208,14 +208,11 @@ public class DocumentList implements Serializable
         currentAnnotation = null;
         int totalLines = 0;
         String localName = "";
-//      List<TreeMap<String,List<String>>> annotationList = new ArrayList<TreeMap<String,List<String>>>();
         for(String filename : filenames){
                 int ending = filename.lastIndexOf(".csv");
                 localName += filename.substring(filename.lastIndexOf("/")+1, ending==-1?filename.length():ending) + " ";
                 ArrayList<Integer> blanks = new ArrayList<Integer>();
                 ArrayList<Integer> extras = new ArrayList<Integer>();
-//              TreeMap<String,List<String>> currentFileMap = new TreeMap<String,List<String>>();
-//              annotationList.add(currentFileMap);
                 int lineID = 0;
 
                 try{
@@ -283,7 +280,6 @@ public class DocumentList implements Serializable
 
                 totalLines += lineID;
         }
-//      consolidateFileStructures(annotationList);
         localName.trim();
         setName(localName);
 	}

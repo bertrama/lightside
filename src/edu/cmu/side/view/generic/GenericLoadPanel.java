@@ -11,6 +11,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -29,6 +30,7 @@ import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.plugin.control.ImportController;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.RecipeExporter;
 
@@ -356,17 +358,21 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		if (result != JFileChooser.APPROVE_OPTION) { return; }
 
 		File[] selectedFiles = chooser.getSelectedFiles();
-		HashSet<String> docNames = new HashSet<String>();
+		TreeSet<String> docNames = new TreeSet<String>();
 
 		for (File f : selectedFiles)
 		{
 			docNames.add(f.getPath());
 		}
-
-		DocumentList testDocs = new DocumentList(docNames);
+		try{
+		DocumentList testDocs = ImportController.makeDocumentList(docNames);
 		testDocs.guessTextAndAnnotationColumns();
 		Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
 		setHighlight(r);
+		} catch(Exception e){
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 		refreshPanel();
 		Workbench.update(this);
 	}

@@ -151,7 +151,7 @@ public class Chef
 	}
 
 
-	protected static Recipe loadRecipe(String recipePath) throws DeserializationException, FileNotFoundException
+	public static Recipe loadRecipe(String recipePath) throws DeserializationException, FileNotFoundException
 	{
 		//System.out.println("loading recipe from "+recipePath);
 		File recipeFile = new File(recipePath);
@@ -177,7 +177,7 @@ public class Chef
 	}
 
 	
-	protected static void saveRecipe(Recipe newRecipe, File target)
+	public static void saveRecipe(Recipe newRecipe, File target)
 	{
 		try
 		{
@@ -218,6 +218,11 @@ public class Chef
 		if(result.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
 			System.out.println(result.getTrainingResult().getTextConfusionMatrix());
 		
+	}
+
+	public static void setQuiet(boolean b)
+	{
+		quiet = true;
 	}
 
 }

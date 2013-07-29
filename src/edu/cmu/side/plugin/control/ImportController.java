@@ -1,5 +1,8 @@
 package edu.cmu.side.plugin.control;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +27,7 @@ public class ImportController {
 		return foundParser;
 	}
 	
-	public static DocumentList makeDocumentList(TreeSet<String> fileNames) throws Exception{
+	public static DocumentList makeDocumentList(TreeSet<String> fileNames) throws Exception, IOException, FileNotFoundException{
 		if(fileNames.size()==0) return null;
 		fileChunks = new HashMap<FileParser, HashSet<String>>();
 		if(parsers.length==0){
@@ -33,9 +36,13 @@ public class ImportController {
 		for (SIDEPlugin parser : parsers) {
 			fileChunks.put((FileParser)parser, new HashSet<String>());
 		}
-		for (String file : fileNames) {
-			if(!getValidPlugin(file)){
-				throw new Exception("File: " + file.toString() + " could not be parsed.");
+		for (String fileName : fileNames) {
+			File file = new File(fileName);
+			if(!file.exists()){
+				throw new FileNotFoundException(fileName);
+			}
+			else if(!getValidPlugin(fileName)){
+				throw new Exception("File: " + fileName.toString() + " could not be parsed.");
 			}
 		}
 		ArrayList<DocumentList> toAggregate = new ArrayList<DocumentList>();

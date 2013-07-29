@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -364,11 +365,17 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		{
 			docNames.add(f.getPath());
 		}
-
+		try{
 		DocumentList testDocs = ImportController.makeDocumentList(docNames);
 		testDocs.guessTextAndAnnotationColumns();
 		Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
 		setHighlight(r);
+		}catch(FileNotFoundException e){
+			JOptionPane.showMessageDialog(this, e.getMessage(), "File Not Found", JOptionPane.ERROR_MESSAGE);
+		}catch(Exception e){
+			JOptionPane.showMessageDialog(this, e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+			e.printStackTrace();
+		}
 		refreshPanel();
 		Workbench.update(this);
 	}

@@ -37,10 +37,11 @@ public class ConverterControl {
 	
 	public static Recipe readFromXML(String fileName){
 		clearVariables();
-		File file = new File(fileName);
-		if(!file.exists()) return null;
+		File file = createFile(fileName);
 		XStream stream = new XStream();
-		return (Recipe) stream.fromXML(file);
+		stream.registerConverter(new RecipeConverter());
+		Recipe r =(Recipe) stream.fromXML(file);
+		return r;
 	}
 	
 	private static File createFile(String name){

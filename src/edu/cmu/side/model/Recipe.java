@@ -216,6 +216,18 @@ public class Recipe implements Serializable
 		wrappers = new OrderedPluginMap();
 		getStage();
 	}
+	
+	public void setExtractors(OrderedPluginMap extract){
+		this.extractors = extract;
+	}
+	
+	public void setFilters(OrderedPluginMap filter){
+		this.filters = filter;
+	}
+	
+	public void setWrappers(OrderedPluginMap wrappers){
+		this.wrappers = wrappers;
+	}
 
 	public static Recipe fetchRecipe(){
 		return new Recipe();

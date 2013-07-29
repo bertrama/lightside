@@ -28,70 +28,55 @@ public class RecipeConverter implements Converter{
 	@Override
 	public void marshal(Object obj, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-/*
- * RecipeManager.Stage stage = null;
-	private String recipeName = "";
-	OrderedPluginMap extractors;
-	OrderedPluginMap filters;
-	OrderedPluginMap wrappers;
-	LearningPlugin learner;
-	Map<String, String> learnerSettings;
-	Map<String, Serializable> validationSettings;
 
-	DocumentList documentList;
-	FeatureTable featureTable;
-	FeatureTable filteredTable;
-	TrainingResult trainedModel;
-	PredictionResult predictionResult;
- */
 		Recipe recipe = (Recipe) obj;
-		writer.addAttribute("Recipe Name", recipe.getRecipeName());
+		writer.addAttribute("name", recipe.getRecipeName());
+
 		writer.startNode("Extractors");
-		
 		context.convertAnother(recipe.getExtractors()!=null?recipe.getExtractors():"");
 		writer.endNode();
-		
+
 		writer.startNode("Filters");
 		context.convertAnother(recipe.getFilters()!=null?recipe.getFilters():"");
 		writer.endNode();
-		
+
 		writer.startNode("Wrappers");
 		context.convertAnother(recipe.getWrappers());
 		writer.endNode();
-		
+
 		writer.startNode("Learner");
 		context.convertAnother(recipe.getLearner()!=null?recipe.getLearner():"");
 		writer.endNode();
-		
+
 		writer.startNode("Learner Settings");
 		context.convertAnother(recipe.getLearnerSettings()!=null?recipe.getLearnerSettings():"");
 		writer.endNode();
-		
+
 		writer.startNode("Validation Settings");
 		context.convertAnother(recipe.getValidationSettings()!=null?recipe.getValidationSettings():"");
 		writer.endNode();
-//		
-//		DocumentList documentList;
-//		FeatureTable featureTable;
-//		FeatureTable filteredTable;
-//		TrainingResult trainedModel;
-//		PredictionResult predictionResult;
+		//		
+		//		DocumentList documentList;
+		//		FeatureTable featureTable;
+		//		FeatureTable filteredTable;
+		//		TrainingResult trainedModel;
+		//		PredictionResult predictionResult;
 		writer.startNode("Document List");
 		context.convertAnother(recipe.getDocumentList()!=null?recipe.getDocumentList():"");
 		writer.endNode();
-		
+
 		writer.startNode("Feature Table");
 		context.convertAnother(recipe.getFeatureTable()!=null?recipe.getFeatureTable():"");
 		writer.endNode();
-	
+
 		writer.startNode("Filtered Table");
 		context.convertAnother(recipe.getFilteredTable()!=null?recipe.getFilteredTable():"");
 		writer.endNode();
-		
+
 		writer.startNode("Trained Model");
 		context.convertAnother(recipe.getTrainingResult()!=null?recipe.getTrainingResult():"");
 		writer.endNode();
-		
+
 		writer.startNode("Prediction Results");
 		context.convertAnother(recipe.getPredictionResult()!=null?recipe.getPredictionResult():"");
 		writer.endNode();
@@ -100,8 +85,47 @@ public class RecipeConverter implements Converter{
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
-		// TODO Auto-generated method stub
-		return null;
+
+		Recipe r = Recipe.fetchRecipe();
+		String name = reader.getAttribute("name");
+		r.setRecipeName(name);
+		reader.moveDown();
+//		OrderedPluginMap map = (OrderedPluginMap) context.convertAnother(reader.getValue(), OrderedPluginMap.class);
+		System.out.println(reader.getNodeName());
+		System.out.println(reader.getAttributeCount());
+		//		r.setExtractors((OrderedPluginMap) context.convertAnother(reader.getValue(), OrderedPluginMap.class));
+		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setFilters((OrderedPluginMap) context.convertAnother(reader.getValue(),OrderedPluginMap.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setWrappers((OrderedPluginMap) context.convertAnother(reader.getValue(),OrderedPluginMap.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setLearner((LearningPlugin) context.convertAnother(reader.getValue(), LearningPlugin.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setLearnerSettings((Map<String,String>) context.convertAnother(reader.getValue(), Map.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setValidationSettings((Map<String,Serializable>) context.convertAnother(reader.getValue(), Map.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setDocumentList((DocumentList) context.convertAnother(reader.getValue(),DocumentList.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setFeatureTable((FeatureTable) context.convertAnother(reader.getValue(),FeatureTable.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setFilteredTable((FeatureTable) context.convertAnother(reader.getValue(),FeatureTable.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setTrainingResult((TrainingResult) context.convertAnother(reader.getValue(),TrainingResult.class));
+		//		reader.moveUp();
+		//		reader.moveDown();
+		//		r.setPredictionResult((PredictionResult) context.convertAnother(reader.getValue(), PredictionResult.class));
+		//		reader.moveUp();
+		return r;
 	}
 
 }

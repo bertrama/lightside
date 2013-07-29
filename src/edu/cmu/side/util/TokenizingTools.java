@@ -56,6 +56,7 @@ public class TokenizingTools
 	
 	public static List<CoreLabel> tagInvertible(List<CoreLabel> tokens)
 	{
+
 		tagger.tagCoreLabels(tokens);
 		
 		return tokens;

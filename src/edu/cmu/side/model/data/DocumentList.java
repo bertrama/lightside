@@ -20,6 +20,7 @@ import com.yerihyo.yeritools.swing.AlertDialog;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
+import edu.cmu.side.plugin.control.ImportController;
 
 public class DocumentList implements Serializable
 {

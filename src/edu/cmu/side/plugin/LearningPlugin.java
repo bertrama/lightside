@@ -55,12 +55,14 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 		}
 		
 		
-		DocumentList sdl = (DocumentList)validationSettings.get("testSet");
 		TrainingResult result = null;
 		if (Boolean.TRUE.toString().equals(validationSettings.get("test")))
 		{
+			
 			if (validationSettings.get("type").equals("CV"))
 			{
+
+				DocumentList docsForCV = table.getDocumentList();//(DocumentList)validationSettings.get("testSet");
 				Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
 				int numFolds = -1;
 				try
@@ -76,26 +78,26 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				{
 					if(validationSettings.get("foldMethod").equals("AUTO"))
 					{
-						numFolds = Math.min(10, sdl.getSize());
+						numFolds = Math.min(10, docsForCV.getSize());
 					}
-					foldsMap = BuildModelControl.getFoldsMapRandom(sdl, numFolds);
+					foldsMap = BuildModelControl.getFoldsMapRandom(docsForCV, numFolds);
 				}
 				else if (validationSettings.get("source").equals("ANNOTATIONS"))
 				{
 					String annotation = validationSettings.get("annotation").toString();
 					if(validationSettings.get("foldMethod").equals("AUTO"))
 					{
-						numFolds = sdl.getPossibleAnn(annotation).size();
+						numFolds = docsForCV.getPossibleAnn(annotation).size();
 					}
-					foldsMap = BuildModelControl.getFoldsMapByAnnotation(sdl, annotation, numFolds);
+					foldsMap = BuildModelControl.getFoldsMapByAnnotation(docsForCV, annotation, numFolds);
 				}
 				else if (validationSettings.get("source").equals("FILES"))
 				{
 					if(validationSettings.get("foldMethod").equals("AUTO"))
 					{
-						numFolds = sdl.getFilenames().size();
+						numFolds = docsForCV.getFilenames().size();
 					}
-					foldsMap = BuildModelControl.getFoldsMapByFile(sdl, numFolds);
+					foldsMap = BuildModelControl.getFoldsMapByFile(docsForCV, numFolds);
 				}
 				
 				result = evaluateCrossValidation(table, foldsMap, wrappers, progressIndicator);
@@ -292,7 +294,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
 				}
 				//predictionIndex++;
 			}
-			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
+//			System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
 //			if(table.getClassValueType() != Type.NUMERIC)
 //			{
 //				String evaluation = EvaluationUtils.evaluate(foldActual, foldPredicted, labelArray, BuildModelControl.getNewName()+".fold"+fold+".eval");

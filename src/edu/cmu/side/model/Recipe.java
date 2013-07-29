@@ -80,6 +80,7 @@ public class Recipe implements Serializable
 
 	public void resetStage(){
 		stage = null;
+		stage = getStage();
 	}
 
 	public String toString()
@@ -371,7 +372,7 @@ public class Recipe implements Serializable
 	
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
 	{
-		System.out.println("reading "+this + " from "+in);
+		//System.out.println("reading "+this + " from "+in);
 		stage = (RecipeManager.Stage) in.readObject();
 		recipeName = (String) in.readObject();
 		extractors = (OrderedPluginMap) in.readObject();
@@ -389,7 +390,7 @@ public class Recipe implements Serializable
 
 	private void writeObject(ObjectOutputStream out) throws IOException
 	{
-		System.out.println("writing "+this + " to "+out);
+		//System.out.println("writing "+this + " to "+out);
 		out.writeObject(stage);
 		out.writeObject(recipeName);
 		out.writeObject(extractors);

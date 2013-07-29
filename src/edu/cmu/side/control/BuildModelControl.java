@@ -121,6 +121,8 @@ public class BuildModelControl extends GenesisControl{
 
 	public static Map<Integer, Integer> getFoldsMapRandom(DocumentList documents, int num){
 		Map<Integer, Integer> foldsMap = new TreeMap<Integer, Integer>();
+
+//		System.out.println("BMC 125: fold randomly using up to "+num+" folds for "+documents.getSize() + " documents");
 		for(int i = 0; i < documents.getSize(); i++){
 			foldsMap.put(i, i%num);
 		}
@@ -132,7 +134,7 @@ public class BuildModelControl extends GenesisControl{
 
 		int foldNum = 0;
 
-		System.out.println("BMC 131: fold by annotation using up to "+num+" folds");
+//		System.out.println("BMC 131: fold by annotation using up to "+num+" folds");
 		
 		Map<String, Integer> foldsByLabel = new TreeMap<String, Integer>();
 		List<String> annotationValues = documents.getAnnotationArray(annotation);
@@ -142,7 +144,7 @@ public class BuildModelControl extends GenesisControl{
 			if (!foldsByLabel.containsKey(annotationValue))
 			{
 				foldsByLabel.put(annotationValue, foldNum++);
-				System.out.println("BMC 141: "+annotationValue+" is assigned to fold #"+foldsByLabel.get(annotationValue) % num);
+//				System.out.println("BMC 141: "+annotationValue+" is assigned to fold #"+foldsByLabel.get(annotationValue) % num);
 			}
 			foldsMap.put(i, foldsByLabel.get(annotationValue) % num);
 		}

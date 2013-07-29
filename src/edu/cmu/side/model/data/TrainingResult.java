@@ -142,8 +142,8 @@ public class TrainingResult implements Serializable{
 					confusionMatrix.get(p).put(a, new ArrayList<Integer>());
 				}
 			}
-			System.out.println("TR 145: "+predicted.size()+" predicted intances");
-			System.out.println("TR 145: "+actual.size()+" actual intances");
+//			System.out.println("TR 145: "+predicted.size()+" predicted intances");
+//			System.out.println("TR 145: "+actual.size()+" actual intances");
 			for(int i = 0; i < actual.size(); i++)
 			{
 				String pred;

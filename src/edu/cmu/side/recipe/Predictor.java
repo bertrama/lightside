@@ -146,10 +146,10 @@ public class Predictor
 			Chef.quiet = isQuiet();
 			Recipe newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE, 0);
 			FeatureTable predictTable = newRecipe.getTrainingTable();
-			System.out.println(predictTable.getFeatureSet().size() + " features total");
 
 			if (!isQuiet())
 			{
+				System.out.println(predictTable.getFeatureSet().size() + " features total");
 				System.out.println(predictTable.getHitsForDocument(0).size() + " feature hits in document 0");
 			}
 

@@ -121,7 +121,7 @@ public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 	
 	public static SIDEPlugin fromSerializable(Serializable pug)
 	{
-		System.out.println("loading plugin "+pug);
+		//System.out.println("loading plugin "+pug);
 		if(pug == null) 
 			return null;
 		

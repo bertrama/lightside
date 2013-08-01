@@ -36,7 +36,7 @@ public class Workbench{
 	public static File toolkitsFolder = new File(rootFolder, "toolkits");
 	public static File savedFolder = new File(BASE_PATH, "saved");
 
-	public static PluginManager pluginManager = new PluginManager(PLUGIN_FOLDER);
+//	public static PluginManager pluginManager = new PluginManager(PLUGIN_FOLDER);
 	public static RecipeManager recipeManager = new RecipeManager();
 	
 	static WorkbenchPanel panel;

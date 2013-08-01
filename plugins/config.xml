@@ -36,7 +36,7 @@
 		<jarfile>genesis.jar</jarfile>
 		<classname>plugins.features.RegexFeatures</classname>
 	</plugin>
-	<plugin>
+<!-- 	<plugin>
 		<name>Random Indexing</name>
 		<author>David Adamson</author>
 		<version>0.1</version>
@@ -44,9 +44,9 @@
 		<jarfile>warpcore.jar</jarfile>
 		<classname>com.lightsidelabs.plugins.restructure.RandomIndexingPlugin
 		</classname>
-	</plugin>
+	</plugin> -->
 
-	<plugin>
+<!-- 	<plugin>
 		<name>Cohesion</name>
 		<author>David Adamson</author>
 		<version>0.1</version>
@@ -54,7 +54,7 @@
 		<jarfile>warpcore.jar</jarfile>
 		<classname>com.lightsidelabs.plugins.features.CosineSimilarityPlugin
 		</classname>
-	</plugin>
+	</plugin> -->
 
 	<plugin>
 		<name>CSV Parser</name>

@@ -28,8 +28,8 @@ import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.util.EvaluationUtils;
 import edu.cmu.side.view.util.DefaultMap;
 
-public abstract class LearningPlugin extends SIDEPlugin implements Serializable{
-	private static final File foldsFile = new File("folds");
+public abstract class LearningPlugin extends SIDEPlugin implements Serializable
+{
 
 	private static final long serialVersionUID = -7928450759075851993L;
 

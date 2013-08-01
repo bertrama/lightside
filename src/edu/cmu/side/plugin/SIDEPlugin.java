@@ -14,6 +14,7 @@ import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.text.Highlighter.HighlightPainter;
 
 import edu.cmu.side.Workbench;
+import edu.cmu.side.plugin.control.PluginManager;
 
 public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 {
@@ -125,7 +126,7 @@ public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 		if(pug == null) 
 			return null;
 		
-		SIDEPlugin plugin = Workbench.pluginManager.getPluginWrapperByPluginClassName((String) pug).getSIDEPlugin();
+		SIDEPlugin plugin = PluginManager.getSharedPluginManager().getPluginWrapperByPluginClassName((String) pug).getSIDEPlugin();
 		return plugin;
 	}
 	

@@ -55,7 +55,33 @@
 		<classname>com.lightsidelabs.plugins.features.CosineSimilarityPlugin
 		</classname>
 	</plugin> -->
-
+	<plugin>
+		<name>Stretchy Stopwords</name>
+		<author>David Adamson</author>
+		<version>0.1</version>
+		<description><![CDATA[within-document cohesion]]></description>
+		<jarfile>warpcore.jar</jarfile>
+		<classname>com.lightsidelabs.plugins.features.StopwordsAndStyle
+		</classname>
+	</plugin>
+	<plugin>
+		<name>Parse Features</name>
+		<author>David Adamson</author>
+		<version>0.1</version>
+		<description><![CDATA[features from parsing]]></description>
+		<jarfile>warpcore.jar</jarfile>
+		<classname>com.lightsidelabs.plugins.features.ParseFeatures
+		</classname>
+	</plugin>
+	<plugin>
+		<name>Character N-Grams</name>
+		<author>David Adamson</author>
+		<version>0.1</version>
+		<description><![CDATA[within-document cohesion]]></description>
+		<jarfile>warpcore.jar</jarfile>
+		<classname>com.lightsidelabs.plugins.features.CharacterNGrams
+		</classname>
+	</plugin>
 	<plugin>
 		<name>CSV Parser</name>
 		<author>Andrew Latterner</author>
@@ -111,6 +137,16 @@
 		<description><![CDATA[Combine Features]]></description>
 		<jarfile>genesis.jar</jarfile>
 		<classname>plugins.restructure.combine.FeatureCombinerPlugin
+		</classname>
+	</plugin>
+
+	<plugin>
+		<name>Basic Feature Evaluations</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Basic Fscore evaluations]]></description>
+		<jarfile>warpcore.jar</jarfile>
+		<classname>com.lightsidelabs.plugins.metrics.models.AdvancedModelEvaluations
 		</classname>
 	</plugin>
 

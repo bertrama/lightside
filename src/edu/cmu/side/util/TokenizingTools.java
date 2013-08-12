@@ -11,8 +11,6 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 import edu.stanford.nlp.ling.CoreLabel;
-import edu.stanford.nlp.ling.HasWord;
-import edu.stanford.nlp.objectbank.TokenizerFactory;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.PTBTokenizer.PTBTokenizerFactory;
 import edu.stanford.nlp.process.Tokenizer;
@@ -22,14 +20,16 @@ import edu.stanford.nlp.util.StringUtils;
 public class TokenizingTools
 {
 	private static MaxentTagger tagger;
-	private static TokenizerFactory<CoreLabel> factory;
+	private static PTBTokenizerFactory<CoreLabel> factory;
 
 	static
 	{
 		try
 		{
 //			TaggerConfig config = new TaggerConfig(args);
-			tagger = new MaxentTagger("toolkits/maxent/wsj-0-18-left3words.tagger");
+			tagger = new MaxentTagger("toolkits/maxent/english-caseless-left3words-distsim.tagger");
+//			tagger = new MaxentTagger("toolkits/maxent/wsj-0-18-caseless-left3words-distsim.tagger");
+//			tagger = new MaxentTagger("toolkits/maxent/wsj-0-18-left3words.tagger");
 			factory = PTBTokenizerFactory.newPTBTokenizerFactory(false, true);
 //			factory = PTBTokenizerFactory.newTokenizerFactory();
 			// check if we are to use a custom stoplist

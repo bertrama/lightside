@@ -10,6 +10,7 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.PredictionResult;
+import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.recipe.Predictor;
 import edu.cmu.side.view.generic.ActionBarTask;
 import edu.cmu.side.view.predict.PredictActionBar;
@@ -57,7 +58,7 @@ public class PredictLabelsControl extends GenesisControl{
 		return unlabeledDataRecipes;
 	}
 
-	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showMaxScore, final boolean showDists, final boolean overwrite)
+	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showMaxScore, final boolean showDists, final boolean overwrite,final boolean useEvaluation)
 	{
 		new ActionBarTask(predictActionBar){
 
@@ -70,12 +71,21 @@ public class PredictLabelsControl extends GenesisControl{
 			@Override
 			protected void doTask()
 			{
-				Predictor predictor = new Predictor(trainedModel, name);
 				DocumentList docs = highlightedUnlabeledData.getDocumentList();
-
 				
 				
-				PredictionResult results = predictor.predict(docs);
+				PredictionResult results;
+				
+				if(useEvaluation)
+				{
+					TrainingResult trainingResult = trainedModel.getTrainingResult();
+					results = new PredictionResult(trainingResult.getPredictions(), trainingResult.getDistributions());
+				}	
+				else
+				{
+					Predictor predictor = new Predictor(trainedModel, name);
+					results = predictor.predict(docs);
+				}
 				
 				List<String> predictions = (List<String>) results.getPredictions();
 				

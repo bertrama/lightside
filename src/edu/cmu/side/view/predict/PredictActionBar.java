@@ -13,6 +13,8 @@ import javax.swing.event.CaretListener;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.RecipeManager.Stage;
+import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.WarningButton;
@@ -20,8 +22,9 @@ import edu.cmu.side.view.util.WarningButton;
 public class PredictActionBar extends ActionBar
 {
 	JCheckBox showMaxScoreBox = new JCheckBox("Show Predicted Label's Score");
-	JCheckBox showDistsBox = new JCheckBox("Show All Scores");
+	JCheckBox showDistsBox = new JCheckBox("Show Label Distribution");
 	JCheckBox overwriteBox = new JCheckBox("Overwrite Columns");
+	JCheckBox useEvaluationBox = new JCheckBox("Use Model Evaluation Results");
 	WarningButton warn = new WarningButton();
 
 	public PredictActionBar(StatusUpdater update)
@@ -52,8 +55,11 @@ public class PredictActionBar extends ActionBar
 			}
 		});
 		
+		useEvaluationBox.setToolTipText("Just use the prediction results from the (cross-validated, etc) model evaluation.");
+		
 		settings.add("left", warn);
-		settings.add("left", showMaxScoreBox);
+//		settings.add("left", showMaxScoreBox);
+		settings.add("left", useEvaluationBox);
 		settings.add("left", showDistsBox);
 		settings.add("left", overwriteBox);
 		
@@ -64,7 +70,7 @@ public class PredictActionBar extends ActionBar
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				PredictLabelsControl.executePredictTask(PredictActionBar.this, name.getText(), showMaxScoreBox.isSelected(), showDistsBox.isSelected(), overwriteBox.isSelected());
+				PredictLabelsControl.executePredictTask(PredictActionBar.this, name.getText(), showMaxScoreBox.isSelected(), showDistsBox.isSelected(), overwriteBox.isSelected(), useEvaluationBox.isSelected());
 			}
 		});
 		
@@ -87,6 +93,16 @@ public class PredictActionBar extends ActionBar
 	public void refreshPanel()
 	{
 		checkColumnName();
+		Recipe trainRecipe = PredictLabelsControl.getHighlightedTrainedModelRecipe();
+		Recipe unlabeledRecipe = PredictLabelsControl.getHighlightedUnlabeledData();
+		
+		if(trainRecipe != null && unlabeledRecipe != null)
+		{
+			DocumentList evalList = trainRecipe.getTrainingResult().getEvaluationTable().getDocumentList();
+			DocumentList labelList = unlabeledRecipe.getDocumentList();
+			
+			setPredictOnTrain(evalList.equals(labelList));
+		}
 	}
 
 	protected boolean isPredictionPossible()
@@ -113,6 +129,12 @@ public class PredictActionBar extends ActionBar
 			warn.clearWarning();
 			actionButton.setEnabled(isPredictionPossible());
 		}
+	}
+	
+	public void setPredictOnTrain(boolean matchingDocs)
+	{
+		useEvaluationBox.setEnabled(matchingDocs);
+		useEvaluationBox.setSelected(matchingDocs);
 	}
 
 }

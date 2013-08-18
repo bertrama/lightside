@@ -104,30 +104,25 @@ public class DocumentList implements Serializable
 	 */
 	public Feature.Type guessValueType(String label)
 	{
-//		System.out.println("DL 87: guessing type for "+label);
+//		System.out.println("DL 107: guessing type for "+label);
 		
 		Feature.Type localType;
 		for (String s : getPossibleAnn(label))
 		{
+			if(!s.equals(emptyAnnotationString))
 			try
 			{
 				Double.parseDouble(s);
 			}
 			catch (Exception e)
 			{
+//				System.err.println("DL 118: failed to parse "+s+" -- defaulting to nominal for column "+label);
 				localType = Feature.Type.NOMINAL;
-//				if (label.equals(currentAnnotation))
-//				{
-//					setClassValueType(localType);
-//				}
 				return localType;
 			}
 		}
 		localType = Feature.Type.NUMERIC;
-//		if (label.equals(currentAnnotation))
-//		{
-//			setClassValueType(localType);
-//		}
+//		System.err.println("DL 124: parsed every row! Column "+label+" is numeric.");
 		return localType;
 
 	}

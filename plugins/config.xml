@@ -55,7 +55,7 @@
 		<classname>com.lightsidelabs.plugins.features.CosineSimilarityPlugin
 		</classname>
 	</plugin> -->
-	<plugin>
+<!-- 	<plugin>
 		<name>Stretchy Stopwords</name>
 		<author>David Adamson</author>
 		<version>0.1</version>
@@ -63,7 +63,7 @@
 		<jarfile>warpcore.jar</jarfile>
 		<classname>com.lightsidelabs.plugins.features.StopwordsAndStyle
 		</classname>
-	</plugin>
+	</plugin> -->
 	<plugin>
 		<name>Parse Features</name>
 		<author>David Adamson</author>
@@ -140,15 +140,15 @@
 		</classname>
 	</plugin>
 
-	<plugin>
-		<name>Basic Feature Evaluations</name>
+<!-- 	<plugin>
+		<name>Advanced Model Evaluations</name>
 		<author>Elijah Mayfield</author>
 		<version>1.0</version>
 		<description><![CDATA[Basic Fscore evaluations]]></description>
 		<jarfile>warpcore.jar</jarfile>
 		<classname>com.lightsidelabs.plugins.metrics.models.AdvancedModelEvaluations
 		</classname>
-	</plugin>
+	</plugin> -->
 
 	<plugin>
 		<name>Basic Feature Evaluations</name>

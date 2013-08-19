@@ -119,6 +119,7 @@ public class Chef
 	}
 
 	/**
+	 * Build model and update recipe settings to include the new classifier. 
 	 * @param newRecipe
 	 * @throws Exception
 	 */
@@ -127,6 +128,9 @@ public class Chef
 	{
 		TrainingResult trainResult = newRecipe.getLearner().train(newRecipe.getTrainingTable(), newRecipe.getLearnerSettings(), newRecipe.getValidationSettings(), newRecipe.getWrappers(), textUpdater);
 		newRecipe.setTrainingResult(trainResult);
+		
+		//get the updated settings from the learner, including the trained Weka classifier!
+		newRecipe.setLearnerSettings(newRecipe.getLearner().generateConfigurationSettings());
 	}
 
 	/**

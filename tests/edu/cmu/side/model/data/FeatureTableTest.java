@@ -46,8 +46,8 @@ public class FeatureTableTest extends TestCase{
 
 		}
 	};
-	static String[] files = {"TutorialData.csv"};
-	static String[] numericFiles = {"heuristicTest.csv"};
+	static String[] files = {"testData"+System.getProperty("file.separator")+"MovieReviews.csv"};
+	static String[] numericFiles = {"testData"+System.getProperty("file.separator")+"heuristicTest.csv"};
 	static DocumentList docList;
 	static DocumentList numericDocList;
 	Boolean hasChanged = true;
@@ -75,14 +75,14 @@ public class FeatureTableTest extends TestCase{
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
 		assertNotNull(ft);
-		assertEquals(ft.getSize(),1115);
+		assertEquals(ft.getSize(),300);
 	}
 	@Test
 	public void testFeatureTableConstructionNullAnnotation(){
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, null, Feature.Type.NOMINAL);
 		assertNotNull(ft);
-		assertEquals(ft.getSize(),1115);
+		assertEquals(ft.getSize(),300);
 	}
 	@Test
 	public void testFeatureTableConstructionNullType(){
@@ -90,7 +90,7 @@ public class FeatureTableTest extends TestCase{
 		String annotation = docList.currentAnnotation;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, null);
 		assertNotNull(ft);
-		assertEquals(ft.getSize(),1115);
+		assertEquals(ft.getSize(),300);
 	}
 	@Test
 	public void testFeatureTableConstructionBoolean(){
@@ -98,7 +98,7 @@ public class FeatureTableTest extends TestCase{
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.BOOLEAN);
 		assertNotNull(ft);
-		assertEquals(ft.getSize(),1115);
+		assertEquals(ft.getSize(),300);
 	}
 	@Test
 	public void testFeatureTableConstructionNumeric(){
@@ -128,28 +128,28 @@ public class FeatureTableTest extends TestCase{
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		System.out.println(ft.getNumericClassValues("D")[115]);
-		int numberOfDs = 0;
-		for(Double dub: ft.getNumericClassValues("D")){
+		int numberOfPOS = 0;
+		
+		for(Double dub: ft.getNumericClassValues(" NEG")){
 			if(!dub.equals(1.0)){
-				numberOfDs++;
+				numberOfPOS++;
 			}
 		}
-		assertEquals(ft.getNumericClassValues("D").length-numberOfDs, 240);
+		assertEquals(ft.getNumericClassValues(" NEG").length-numberOfPOS, 150);
 	}
 	@Test
 	public void testGetNominalClassValues(){
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		assertEquals(ft.getNominalClassValues().size(), 1115);
+		assertEquals(ft.getNominalClassValues().size(), 300);
 	}
 	@Test
 	public void testGetSizeWithDocuments(){
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		assertEquals(ft.getSize(), 1115);
+		assertEquals(ft.getSize(), 300);
 	}
 	@Test
 	public void testSetAndGetName(){
@@ -179,15 +179,15 @@ public class FeatureTableTest extends TestCase{
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		assertEquals(ft.getFeatureSet().size(), 333);
+		assertEquals(ft.getFeatureSet().size(), 3475);
 	}
 	@Test
 	public void testGetSortedFeatures(){
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		assertEquals(ft.getSortedFeatures().size(), 333);
-		assertEquals(((TreeSet<Feature>) ft.getSortedFeatures()).first().toString(),"!!!");
+		assertEquals(ft.getSortedFeatures().size(), 3475);
+		assertEquals(((TreeSet<Feature>) ft.getSortedFeatures()).first().toString(),"--");
 	}
 	@Test
 	public void testGetHitsForFeature(){
@@ -197,8 +197,7 @@ public class FeatureTableTest extends TestCase{
 		Iterator<Feature> iter = ft.getFeatureSet().iterator();
 		
 		Collection<FeatureHit> hitsForFeat = ft.getHitsForFeature(iter.next());
-		System.out.println(hitsForFeat.toString());
-		assertEquals(hitsForFeat.size(),11);
+		assertEquals(hitsForFeat.size(),91);
 	}
 	@Test
 	public void testGetHitsForDocument(){
@@ -206,8 +205,7 @@ public class FeatureTableTest extends TestCase{
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
 		Collection<FeatureHit> features = ft.getHitsForDocument(0);
-		System.out.println(features.size());
-		assertEquals(28, features.size());
+		assertEquals(307, features.size());
 	}
 	
 	

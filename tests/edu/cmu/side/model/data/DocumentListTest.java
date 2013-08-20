@@ -18,6 +18,7 @@ import java.util.TreeSet;
 import junit.framework.TestCase;
 
 public class DocumentListTest extends TestCase{
+	String delimiter = System.getProperty("file.separator");
 	List<Map<String,String>> rows;
 	Collection<String> columns;
 	DocumentList dList;
@@ -165,8 +166,8 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testMultipleFileNameDifferentHeaders(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
-		fileNames.add("test2.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"test2.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		int size = 0;
 		for(List<String> arString: docList.allAnnotations.values()){
@@ -184,8 +185,8 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testMultipleFileNameSameHeaders(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("sentiment_documents.csv");
-		fileNames.add("sentiment_sentences.csv");
+		fileNames.add("testData"+delimiter+"sentiment_documents.csv");
+		fileNames.add("testData"+delimiter+"sentiment_sentences.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		int size = 0;
 		for(List<String> arString: docList.allAnnotations.values()){
@@ -197,24 +198,6 @@ public class DocumentListTest extends TestCase{
 		}
 		assertEquals(docList.getSize(), 12662);
 		assertEquals(docList.getAnnotationNames().length, 2);
-	}
-	@Test
-	public void testThreeFileNameDifferentHeaders(){
-		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("sentiment_documents.csv");
-		fileNames.add("TutorialData.csv");
-		fileNames.add("test2.csv");
-		DocumentList docList = new DocumentList(fileNames);
-		int size = 0;
-		for(List<String> arString: docList.allAnnotations.values()){
-			if(size==0){
-				size=arString.size();
-			} else {
-				assertEquals(arString.size(),size);
-			}
-		}
-		assertEquals(docList.getSize(), 3117);
-		assertEquals(docList.getAnnotationNames().length, 16);
 	}
 
 	/*
@@ -228,7 +211,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSingleFileNameWithText(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames, "text");
 		assertNotNull(docList);
 		assertEquals(docList.getSize(),300);
@@ -242,7 +225,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSingleFileNameWithInvalidText(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		try{
 			DocumentList docList = new DocumentList(fileNames, "invalid");
 			fail("No illegal state exception caught");
@@ -261,7 +244,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testFilesAndTextAndCurrentAnnot(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames, "class","text");
 		assertNotNull(docList);
 		assertEquals(docList.getSize(),300);
@@ -275,7 +258,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testInvalidCurrentAnnot(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		try{
 			DocumentList docList = new DocumentList(fileNames, "INVALID!","text");
 			fail("should've caught IllegalStateException but didn't");
@@ -382,7 +365,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGuessTextColumnsAndAnnots(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		assertNull(docList.currentAnnotation);
 		assertEquals(docList.getTextColumns().size(),0);
@@ -393,7 +376,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGuessTextAndAnnotsNoClass(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("test1.csv");
+		fileNames.add("testData"+delimiter+"test1.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		assertNull(docList.currentAnnotation);
 		assertEquals(docList.getTextColumns().size(),0);
@@ -402,7 +385,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testAlreadyHaveTextAndAnnots(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		assertNull(docList.currentAnnotation);
 		assertEquals(docList.getTextColumns().size(),0);
@@ -416,7 +399,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testNotInClassList(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("heuristicTest.csv");
+		fileNames.add("testData"+delimiter+"heuristicTest.csv");
 		DocumentList dList = new DocumentList(fileNames);
 		assertNull(dList.currentAnnotation);
 		assertEquals(dList.getTextColumns().size(),0);
@@ -427,7 +410,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGuessText(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("heuristicTest.csv");
+		fileNames.add("testData"+delimiter+"heuristicTest.csv");
 		DocumentList dList = new DocumentList(fileNames);
 		dList.setCurrentAnnotation("sbv");
 		assertEquals(dList.currentAnnotation, "sbv");
@@ -439,7 +422,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testCurrAnnot(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("heuristicTest.csv");
+		fileNames.add("testData"+delimiter+"heuristicTest.csv");
 		DocumentList dList = new DocumentList(fileNames);
 		dList.setTextColumn("sbt", true);
 		assertNull(dList.currentAnnotation);
@@ -451,7 +434,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testAddAnnotationsUpdateExisting(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.addAnnotation("exists", new ArrayList<String>(), false);
 		docList.addAnnotation("exists", new ArrayList<String>(), false);
@@ -463,7 +446,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testAddAnnotationNotUpdateExisting(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.addAnnotation("exists", new ArrayList<String>(), true);
 		docList.addAnnotation("exists", new ArrayList<String>(), true);
@@ -475,7 +458,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetCoveredTextList(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("MovieReviews.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setTextColumn("text", true);
 		List<String> textList = docList.textColumns.get("text");
@@ -484,7 +467,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetPrintableTextAtSingleColumn(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setTextColumn("text", true);
 		String expected = docList.getCoveredTextList().get("text").get(3);
@@ -493,11 +476,11 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetPrintableTextAtMultipleColumns(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setTextColumn("text", true);
-		docList.setTextColumn("Session", true);
-		String expected = "Session:\n" + docList.getCoveredTextList().get("Session").get(3) + "\n";
+		docList.setTextColumn("class", true);
+		String expected = "class:\n" + docList.getCoveredTextList().get("class").get(3) + "\n";
 		expected += "text:\n" + docList.getCoveredTextList().get("text").get(3) + "\n";
 		assertEquals(docList.getPrintableTextAt(3), expected);
 	}
@@ -505,7 +488,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testTextColumnsAreDifferentiatedSetterAndGetters(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		boolean areDiff = docList.textColumnsAreDifferentiated();
 		docList.setDifferentiateTextColumns(!areDiff);
@@ -515,7 +498,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetTextFeatureNameDifferentiated(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setDifferentiateTextColumns(true);
 		String expected = "column:basename";
@@ -524,7 +507,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetTextFeatureNameNonDifferentiated(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setDifferentiateTextColumns(false);
 		String expected = "basename";
@@ -574,32 +557,33 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetLabelArrayNominal(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"sentiment_sentences.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		String[] expected = {"A","B","C","D"};
-		assertTrue(Arrays.equals(docList.getLabelArray("Class", Feature.Type.NOMINAL), expected));
+		String[] expected = {"neg","pos"};
+		System.out.println(docList.getLabelArray("class", Feature.Type.NOMINAL)[0]);
+		assertTrue(Arrays.equals(docList.getLabelArray("class", Feature.Type.NOMINAL), expected));
 	}
 	//TODO: THIS TEST MEANS LITTLE->NOTHING. Consult bosses
 	@Test
 	public void testGetLabelArrayBoolean(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"sentiment_sentences.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		String[] expected = {"A","B","C","D"};
-		assertTrue(Arrays.equals(docList.getLabelArray("Class", Feature.Type.BOOLEAN), expected));
+		String[] expected = {"neg","pos"};
+		assertTrue(Arrays.equals(docList.getLabelArray("class", Feature.Type.BOOLEAN), expected));
 	}
 	@Test
 	public void testGetLabelArrayNumeric(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"sentiment_sentences.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		String[] expected = {"Q1","Q2","Q3","Q4","Q5"};
-		assertTrue(Arrays.equals(docList.getLabelArray("Class", Feature.Type.NUMERIC), expected));
+		assertTrue(Arrays.equals(docList.getLabelArray("class", Feature.Type.NUMERIC), expected));
 	}
 	@Test
 	public void testGetLabelArrayNull(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		String[] expected = {};
 		assertTrue(Arrays.equals(docList.getLabelArray("Fail", Feature.Type.BOOLEAN), expected));
@@ -607,12 +591,12 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSetLabelArray(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"sentiment_sentences.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		String[] newLabelArray = {"first", "second"};
-		docList.setCurrentAnnotation("Class");
+		docList.setCurrentAnnotation("class");
 		docList.setLabelArray(newLabelArray);
-		assertTrue(Arrays.equals(newLabelArray, docList.getLabelArray("Class", Feature.Type.NOMINAL)));
+		assertTrue(Arrays.equals(newLabelArray, docList.getLabelArray("class", Feature.Type.NOMINAL)));
 	}
 	@Test
 	public void testGetSizeFromText(){
@@ -632,14 +616,14 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetSizeByAnnotations(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		assertEquals(docList.getSize(),1115);
+		assertEquals(docList.getSize(),300);
 	}
 	@Test
 	public void testGetSizeByAnnotationsNoAnnotation(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		Map<String, List<String>> newAnnotList = new TreeMap<String, List<String>>();
 		newAnnotList.put("test", new ArrayList<String>());
@@ -649,7 +633,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetSizeEmptyDocumentList(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.allAnnotations = null;
 		assertEquals(docList.getSize(),0);
@@ -657,29 +641,29 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSetCurrentAnnotation(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"sentiment_sentences.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		docList.setCurrentAnnotation("Class");
+		docList.setCurrentAnnotation("class");
 		assertNotNull(docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
+		assertEquals("class", docList.currentAnnotation);
 	}
 	@Test
 	public void testSetCurrentAnnotationAlreadySet(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		docList.setCurrentAnnotation("Class");
+		docList.setCurrentAnnotation("class");
 		String[] currentLabelArray = docList.labelArray;
 		assertNotNull(docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
-		docList.setCurrentAnnotation("Class");
+		assertEquals("class", docList.currentAnnotation);
+		docList.setCurrentAnnotation("class");
 		assertEquals(currentLabelArray, docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
+		assertEquals("class", docList.currentAnnotation);
 	}
 	@Test
 	public void testSetCurrAnnotationInvalid(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		try{
 			docList.setCurrentAnnotation("Invalid");
@@ -691,42 +675,42 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSetCurrAnnotationDifferentAnn(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		docList.setCurrentAnnotation("Class");
+		docList.setCurrentAnnotation("class");
 		String[] currentLabelArray = docList.labelArray;
 		assertNotNull(docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
-		docList.setCurrentAnnotation("Session");
+		assertEquals("class", docList.currentAnnotation);
+		docList.setCurrentAnnotation("text");
 		assertNotSame(currentLabelArray, docList.labelArray);
-		assertEquals("Session", docList.currentAnnotation);
+		assertEquals("text", docList.currentAnnotation);
 	}
 	@Test
 	public void testSetCurrAnnotationWithType(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		docList.setCurrentAnnotation("Class", Feature.Type.NOMINAL);
+		docList.setCurrentAnnotation("class", Feature.Type.NOMINAL);
 		assertNotNull(docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
+		assertEquals("class", docList.currentAnnotation);
 	}
 	@Test
 	public void testSetCurrentAnnotationWithTypeAlreadySet(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		docList.setCurrentAnnotation("Class", Feature.Type.NOMINAL);
+		docList.setCurrentAnnotation("class", Feature.Type.NOMINAL);
 		String[] currentLabelArray = docList.labelArray;
 		assertNotNull(docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
-		docList.setCurrentAnnotation("Class", Feature.Type.NOMINAL);
+		assertEquals("class", docList.currentAnnotation);
+		docList.setCurrentAnnotation("class", Feature.Type.NOMINAL);
 		assertEquals(currentLabelArray, docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
+		assertEquals("class", docList.currentAnnotation);
 	}
 	@Test
 	public void testSetCurrAnnotationWithTypeInvalid(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		try{
 			docList.setCurrentAnnotation("Invalid", Feature.Type.NOMINAL);
@@ -738,20 +722,20 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSetCurrAnnotationWithTypeDifferentAnn(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		docList.setCurrentAnnotation("Class", Feature.Type.NOMINAL);
+		docList.setCurrentAnnotation("class", Feature.Type.NOMINAL);
 		String[] currentLabelArray = docList.labelArray;
 		assertNotNull(docList.labelArray);
-		assertEquals("Class", docList.currentAnnotation);
-		docList.setCurrentAnnotation("Session", Feature.Type.NOMINAL);
+		assertEquals("class", docList.currentAnnotation);
+		docList.setCurrentAnnotation("text", Feature.Type.NOMINAL);
 		assertNotSame(currentLabelArray, docList.labelArray);
-		assertEquals("Session", docList.currentAnnotation);
+		assertEquals("text", docList.currentAnnotation);
 	}
 	@Test
 	public void testSetTextColumns(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		Set<String> texts = new HashSet<String>();
 		texts.add("text");
@@ -762,7 +746,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testOverWriteTextColumns(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		Set<String> texts = new HashSet<String>();
 		texts.add("text");
@@ -770,16 +754,16 @@ public class DocumentListTest extends TestCase{
 		assertNotNull(docList.textColumns.get("text"));
 		assertEquals(docList.textColumns.size(), 1);
 		texts.remove("text");
-		texts.add("Role");
+		texts.add("class");
 		docList.setTextColumns(texts);
-		assertNotNull(docList.textColumns.get("Role"));
+		assertNotNull(docList.textColumns.get("class"));
 		assertNull(docList.textColumns.get("text"));
 		assertEquals(docList.textColumns.size(), 1);
 	}
 	@Test
 	public void testSetTextColumnIsText(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setTextColumn("text", true);
 		assertNotNull(docList.textColumns.get("text"));
@@ -788,7 +772,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSetTextColumnAlreadyThere(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setTextColumn("text", true);
 		assertNotNull(docList.textColumns.get("text"));
@@ -800,7 +784,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSetTextColumnInvalidText(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		try{
 			docList.setTextColumn("invalid", true);
@@ -812,7 +796,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testRemoveTextColumn(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setTextColumn("text", true);
 		assertNotNull(docList.textColumns.get("text"));
@@ -824,7 +808,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testRemoveTextColumnNotThere(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setTextColumn("text", true);
 		assertNotNull(docList.textColumns.get("text"));
@@ -836,7 +820,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testSetFileNames(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		fileNames.add("test1.csv");
 		ArrayList<String> newFileList = new ArrayList<String>(fileNames);
@@ -849,7 +833,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testEmptyAddInstances(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		int currentSize = docList.getSize();
 		docList.addInstances(new ArrayList<Map<String,String>>(), new ArrayList<String>());
@@ -858,7 +842,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testAddInstancesMultipleCases(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		ArrayList<Map<String,String>> rows = new ArrayList<Map<String,String>>();
 		Map<String,String> firstAddition = new HashMap<String,String>();
@@ -878,7 +862,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testAddInstancesTextColumns(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		ArrayList<Map<String,String>> rows = new ArrayList<Map<String,String>>();
 		Map<String,String> firstAddition = new HashMap<String,String>();
@@ -890,7 +874,7 @@ public class DocumentListTest extends TestCase{
 		rows.add(firstAddition);
 		rows.add(secondAddition);
 		docList.setTextColumn("text", true);
-		docList.setTextColumn("Cond", true);
+		docList.setTextColumn("class", true);
 		String[] newColumns = {"add1", "add2", "text"};
 		List<String> columns = Arrays.asList(newColumns);
 		int currentSize = docList.getSize();
@@ -900,7 +884,7 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetAndSetEmptAnnotStr(){
 		Set<String> fileNames = new TreeSet<String>();
-		fileNames.add("TutorialData.csv");
+		fileNames.add("testData"+delimiter+"MovieReviews.csv");
 		DocumentList docList = new DocumentList(fileNames);
 		docList.setEmptyAnnotationString("test");
 		assertEquals(docList.getEmptyAnnotationString(), "test");

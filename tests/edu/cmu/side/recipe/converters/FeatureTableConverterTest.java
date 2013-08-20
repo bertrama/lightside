@@ -19,7 +19,8 @@ public class FeatureTableConverterTest {
 	Recipe recipe;
 	@Before
 	public void setUp(){
-		File file = new File("test.model.side");
+		String delim = System.getProperty("file.separator");
+		File file = new File("testData"+delim+"test.model.side");
 
 		try {
 			FileInputStream in = new FileInputStream(file);
@@ -34,10 +35,13 @@ public class FeatureTableConverterTest {
 			e.printStackTrace();
 		}
 	}
+	//This is an abnormally long test. We can speed it up by switching it to writing to a file.
+	
 	@Test
 	public void testConvertExistant(){
 		FeatureTable ftBefore = recipe.getFeatureTable();
 		XStream streamer = new XStream();
+		streamer.registerConverter(new FeatureTableConverter());
 		String xml = streamer.toXML(ftBefore);
 		Object afterObj = streamer.fromXML(xml);
 		FeatureTable ftAfter = (FeatureTable) afterObj;
@@ -47,6 +51,7 @@ public class FeatureTableConverterTest {
 	public void testConvertNull(){
 		FeatureTable ftBefore = recipe.getFilteredTable();
 		XStream streamer = new XStream();
+		streamer.registerConverter(new FeatureTableConverter());
 		String XML = streamer.toXML(ftBefore);
 		Object afterObj = streamer.fromXML(XML);
 		assertNull(afterObj);

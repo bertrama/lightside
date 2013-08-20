@@ -47,7 +47,8 @@ public class ConverterControlTest{
 	Recipe recipe;
 	@Before
 	public void setUp(){
-		File file = new File("test.model.side");
+		String delim = System.getProperty("file.separator");
+		File file = new File("testData"+delim+"test.model.side");
 
 		try {
 			FileInputStream in = new FileInputStream(file);
@@ -65,7 +66,6 @@ public class ConverterControlTest{
 	
 	@Test
 	public void testConverterControlWriter(){
-		System.out.println(recipe.getRecipeName());
 		ConverterControl.writeToXML("Blahbla.xml", recipe);
 		Recipe r = ConverterControl.readFromXML("Blahbla.xml");
 		assertTrue(r.getFeatureTable().equals(recipe.getFeatureTable()));

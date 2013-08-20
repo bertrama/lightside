@@ -47,7 +47,7 @@ public class ConverterControlTest{
 	Recipe recipe;
 	@Before
 	public void setUp(){
-		File file = new File("bayes1.model.side");
+		File file = new File("test.model.side");
 
 		try {
 			FileInputStream in = new FileInputStream(file);

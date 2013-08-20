@@ -15,6 +15,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
 
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -44,7 +46,9 @@ public class Recipe implements Serializable
 	Map<String, Serializable> validationSettings;
 
 	DocumentList documentList;
+	@XStreamAlias("FeatureTable")
 	FeatureTable featureTable;
+	@XStreamAlias("FilteredTable")
 	FeatureTable filteredTable;
 	TrainingResult trainedModel;
 	PredictionResult predictionResult;
@@ -422,73 +426,70 @@ public class Recipe implements Serializable
 		out.writeObject(predictionResult);
 		out.writeObject(validationSettings);
 	}
-
-	public void saveToXML(Document doc) {
+	//TODO: handle nullchecks more gracefully?
+	//Deep equals for testing
+	public boolean equals(Recipe other){
 		
-		XStream streamer = new XStream();
-		//First, write the Recipe parent
-		Element recipe = doc.createElement("Recipe");
-		doc.appendChild(recipe);
-		//Next, we write out the stage
-		Attr stage = doc.createAttribute("Stage");
-		stage.setNodeValue(stage.getValue());
-		recipe.setAttributeNode(stage);
-		//writing out recipeName
-		Attr name = doc.createAttribute("Recipe Name");
-		name.setNodeValue(recipeName);
-		recipe.setAttributeNode(name);
-		//Writing out plugins
-		Element extractorsElement = doc.createElement("Extractors");
-		recipe.appendChild(extractorsElement);
-		//extractors.saveToXML(doc, extractorsElement);
-		Element filtersElement = doc.createElement("Filters");
-		recipe.appendChild(filtersElement);
-		//filters.saveToXML(doc, filtersElement);
-		Element wrappersElement = doc.createElement("Wrappers");
-		recipe.appendChild(wrappersElement);
-		//wrappers.saveToXML(doc, wrappersElement);
+		boolean toReturn = true;
 		
-		//Writing learner
-		Element learnerElement = doc.createElement("Learner");
-		recipe.appendChild(learnerElement);
-		//learner.saveToXML(doc, learnerElement);
+		//Check basics
+		if(this.stage!=other.getStage() || !this.getRecipeName().equals(other.getRecipeName())) toReturn=false;
 		
-		//Writing learner settings
-		Element learnerSettingsElement = doc.createElement("Learner Settings");
-		learnerElement.appendChild(learnerSettingsElement);
-		Attr attrSetting;
-		for (String setting : learnerSettings.keySet()) {
-			attrSetting = doc.createAttribute(setting);
-			learnerSettingsElement.setAttribute(setting, learnerSettings.get(setting));
+		//OrderedPluginMaps
+		if(!xorNull(this.extractors, other.getExtractors())){
+			toReturn=!this.extractors.equals(other.getExtractors())?false:toReturn;
+		}
+		if(!xorNull(this.wrappers, other.getWrappers())){
+			toReturn=!this.wrappers.equals(other.getWrappers())?false:toReturn;
+		}
+		if(!xorNull(this.filters, other.getFilters())){
+			toReturn=!this.filters.equals(other.getFilters())?false:toReturn;
 		}
 		
-		//Writing DocumentList
-		Element documentListElement = doc.createElement("Document List");
-		recipe.appendChild(documentListElement);
-		//documentList.writeToXML(doc, documentListElement);
+		//learner
+		if(!xorNull(this.getLearner(), other.getLearner())){
+			toReturn=!this.learner.equals(other.getLearner())?false:toReturn;
+		}
 		
-		//Writing FeatureTable and filtertable
-		Element featureTableElement = doc.createElement("Feature Table");
-		recipe.appendChild(featureTableElement);
-		//featureTable.writeToXML(doc, featureTableElement);
+		//Learner Settings
+		if(!xorNull(this.learnerSettings, other.getLearnerSettings())){
+			toReturn=!this.learnerSettings.equals(other.getLearnerSettings())?false:toReturn;
+		}
+		//Validation Settings
+		//Serializable equality isn't working due to it using Serializable.equals rather than the
+		//Individual class'.equals
+//		Map<String, Serializable> otherValidationSettings = other.getValidationSettings();
+//		if(!this.validationSettings.keySet().equals(otherValidationSettings.keySet())) toReturn = false;
+//		for(String str: this.validationSettings.keySet()){
+//			if(!this.validationSettings.get(str).equals(otherValidationSettings.get(str))){
+//				
+//				toReturn=false;
+//			}
+//		}
+		//DocumentList
+		if(!xorNull(this.documentList,other.getDocumentList())){
+			toReturn=this.documentList==null?toReturn:this.documentList.equals(other.getDocumentList());
+		}
+		//FeatureTables
+		if(!xorNull(this.featureTable,other.getFeatureTable())){
+			toReturn=this.featureTable==null?toReturn:this.featureTable.equals(other.getFeatureTable());
+		}
 		
-		Element filteredTableElement = doc.createElement("Filtered Table");
-		recipe.appendChild(filteredTableElement);
-		//filteredTable.writeToXML(doc, filteredTableElement);
-		
+		if(!xorNull(this.filteredTable, other.getFilteredTable())){
+			toReturn=this.filteredTable==null?toReturn:this.filteredTable.equals(other.getFilteredTable());
+		}
 		//TrainedModel
-		Element trainedModelElement = doc.createElement("Trained Model");
-		recipe.appendChild(trainedModelElement);
-		//trainedModel.writeToXML(doc, trainedModelElement);
-		
-		//PredictionResults
-		Element predictionResultsElement = doc.createElement("Prediction Results");
-		recipe.appendChild(predictionResultsElement);
-		//predictionResult.writeToXML(doc, predictionResultsElement);
-
-		//ValidationSettings
-		Element validationSettingsElement = doc.createElement("Validation Settings");
-		recipe.appendChild(validationSettingsElement);
-		//We have to serialize the map
+		if(!xorNull(this.trainedModel,other.getTrainingResult())){
+			toReturn = this.trainedModel==null?toReturn:this.trainedModel.equals(other.getTrainingResult());
+		}
+		//PredictionResult
+		if(!xorNull(this.predictionResult,other.getPredictionResult())){
+			toReturn=this.predictionResult==null?toReturn:this.predictionResult.equals(other.getPredictionResult());
+		}
+		return toReturn;
+	}
+	//TODO: This really shouldn't live here...
+	private boolean xorNull(Object a, Object b){
+		return((a==null||b==null)&&!(a==null&&b==null));
 	}
 }

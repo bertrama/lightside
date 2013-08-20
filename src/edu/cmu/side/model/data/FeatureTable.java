@@ -13,11 +13,16 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
 import com.thoughtworks.xstream.XStream;
 
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.model.feature.LocalFeatureHit;
+import edu.cmu.side.model.feature.LocalFeatureHit.HitLocation;
 import edu.cmu.side.model.feature.RegroupFeatureHit;
 
 /**
@@ -614,10 +619,32 @@ public class FeatureTable implements Serializable
 	    return ft;
 	}
 	
-	public String writeToXML(){
-		XStream streamer = new XStream();
-		String streamed = streamer.toXML(this);
-		return streamed;
+	public boolean equals(FeatureTable other){
+		boolean returnStatement = true;
+		if(this.documents!=null){
+			returnStatement=this.documents.equals(other.getDocumentList())?returnStatement:false;
+		} else {
+			returnStatement=other.getDocumentList()==null?returnStatement:false;
+		}
+		
+		returnStatement=this.threshold.equals(other.threshold)?returnStatement:false;
+		returnStatement=this.getAnnotation().equals(other.getAnnotation())?returnStatement:false;
+		returnStatement=this.getClassValueType().equals(other.getClassValueType())?returnStatement:false;
+		if(this.getFeatureSet().equals(other.getFeatureSet())){
+			for(Feature feat: this.getFeatureSet()){
+				returnStatement=this.getHitsForFeature(feat).equals(other.getHitsForFeature(feat))?returnStatement:false;
+			}
+		} else {
+			returnStatement=false;
+		}
+		if(this.getDocumentList().equals(other.getDocumentList())){
+			for(int i = 0; i< this.hitsPerDocument.size(); i++){
+				returnStatement=this.getHitsForDocument(i).equals(other.getHitsForDocument(i))?returnStatement:false;
+			}
+		} else {
+			returnStatement=false;
+		}
+		return returnStatement;
 	}
 	
 }

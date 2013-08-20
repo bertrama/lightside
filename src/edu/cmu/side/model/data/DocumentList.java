@@ -674,6 +674,21 @@ public class DocumentList implements Serializable
 	}
 
 
+	public String getCurrentAnnotation(){
+		return this.currentAnnotation;
+	}
+	
+	public boolean equals(DocumentList other){
+		boolean toReturn = true;
+		toReturn=this.getFilenameList().equals(other.getFilenameList())?toReturn:false;
+		toReturn=this.allAnnotations().equals(other.allAnnotations())?toReturn:false;
+		toReturn=this.getTextColumns().equals(other.getTextColumns())?toReturn:false;
+		toReturn=(this.textColumnsAreDifferentiated()==other.textColumnsAreDifferentiated())?toReturn:false;
+		toReturn=(this.getCurrentAnnotation().equals(other.getCurrentAnnotation()))?toReturn:false;
+		toReturn=(this.getName().equals(other.getName()))?toReturn:false;
+		toReturn=(this.getEmptyAnnotationString().equals(other.getEmptyAnnotationString()))?toReturn:false;
+		return toReturn;
+	}
 	public String getEmptyAnnotationString()
 	{
 		return emptyAnnotationString;
@@ -684,61 +699,5 @@ public class DocumentList implements Serializable
 	{
 		this.emptyAnnotationString = emptyAnnotationString;
 	}
-	public String writeToXML(){
-		XStream streamer = new XStream();
-		return streamer.toXML(this);
-	}
-	
-	public class documentListConverter implements Converter{
 
-		@Override
-		public boolean canConvert(Class clazz) {
-			//Here's where you will check version ID most likely.
-			return true;
-		}
-
-		@Override
-		public void marshal(Object toMarshal, HierarchicalStreamWriter writer,
-				MarshallingContext context) {
-			DocumentList docList = (DocumentList) toMarshal;
-			
-//			writer.startNode("Filename List");
-//			context.convertAnother(filenameList);
-//			writer.addAttribute("Filename List",filenameList);
-//			writer.endNode();
-			
-		}
-
-		@Override
-		public Object unmarshal(HierarchicalStreamReader reader,
-				UnmarshallingContext context) {
-			// TODO Auto-generated method stub
-			return null;
-		}
-		
-		private byte[] toSerial(Object obj){
-			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			try {
-				ObjectOutputStream objOut = new ObjectOutputStream(out);
-				objOut.writeObject(out);
-				return out.toByteArray();
-			} catch (IOException e) {
-				//really bad thing to return but until we have a better idea of how to handle it...
-				e.printStackTrace();
-				return new byte[0];
-			}
-		}
-		
-		private Object fromSerial(byte[] arr){
-			ByteArrayInputStream in = new ByteArrayInputStream(arr);
-	        try {
-	        	ObjectInputStream objIn = new ObjectInputStream(in);
-				return objIn.readObject();
-			} catch (ClassNotFoundException | IOException e) {
-				e.printStackTrace();
-				return null;
-			}
-		}
-		
-	}
 }

@@ -13,13 +13,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import edu.cmu.side.Workbench;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 
 public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, String>>, Serializable
 {
-
+	private static final long serialVersionUID = -6199030948623279927L;
 	private List<SIDEPlugin> ordering = new ArrayList<SIDEPlugin>();
 	private Map<SIDEPlugin, Map<String, String>> configurations = new HashMap<SIDEPlugin, Map<String, String>>();
 
@@ -28,7 +34,15 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 		return ordering.indexOf((SIDEPlugin) s);
 	}
 	
-
+	public boolean equals(OrderedPluginMap other){
+		boolean toReturn = true;
+		for(SIDEPlugin plug: ordering){
+			if(this.getOrdering(plug) != other.getOrdering(plug)) toReturn = false;
+			if(!this.get(plug).equals(other.get(plug))) toReturn = false;
+		}
+		if(!this.keySet().equals(other.keySet())) toReturn = false;
+		return toReturn;
+	}
 	private transient OrderedPluginComparator comparator = new OrderedPluginComparator(this);
 
 	@Override
@@ -223,6 +237,40 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 		out.writeObject(orderedPlugins);
 		out.writeObject(pluginConfigurations);
 		
+	}
+	
+	public void writeToXML(Document doc, Element parent){
+		for(SIDEPlugin plugin: ordering){
+			String classpath = plugin.getClass().toString();
+			Element pluginElement = doc.createElement("plugin");
+			pluginElement.setAttribute("class", classpath);
+			parent.appendChild(pluginElement);
+			
+			Map<String,String> configs = configurations.get(plugin);
+			for (String configsKey : configs.keySet()) {
+				Element configuration = doc.createElement("configuration");
+				configuration.setAttribute(configsKey.replace(" ","_").replace("?","_q_"), configs.get(configsKey));
+				pluginElement.appendChild(configuration);
+			}
+		}
+	}
+	
+	public void readFromXML(Element parent) throws ClassNotFoundException, InstantiationException, IllegalAccessException{
+		NodeList nodes = parent.getChildNodes();
+		for(int i = 0; i<nodes.getLength();i++){
+			Element element = (Element) nodes.item(i);
+			Class classPath = Class.forName(element.getAttribute("class"));
+			SIDEPlugin plugin = (SIDEPlugin) classPath.newInstance();
+			ordering.add(plugin);
+			NodeList children = element.getChildNodes();
+			for(int j = 0; j<children.getLength();j++){
+				Element child = (Element) children.item(j);
+				NamedNodeMap map = child.getAttributes();
+				for (int k=0;k<map.getLength();k++) {
+					System.out.println(map.item(k));
+				}
+			}
+		}
 	}
 
 }

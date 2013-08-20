@@ -69,8 +69,8 @@
 		<author>David Adamson</author>
 		<version>0.1</version>
 		<description><![CDATA[features from parsing]]></description>
-		<jarfile>warpcore.jar</jarfile>
-		<classname>com.lightsidelabs.plugins.features.ParseFeatures
+		<jarfile>genesis.jar</jarfile>
+		<classname>plugins.features.ParseFeatures
 		</classname>
 	</plugin>
 	<plugin>
@@ -78,8 +78,8 @@
 		<author>David Adamson</author>
 		<version>0.1</version>
 		<description><![CDATA[within-document cohesion]]></description>
-		<jarfile>warpcore.jar</jarfile>
-		<classname>com.lightsidelabs.plugins.features.CharacterNGrams
+		<jarfile>genesis.jar</jarfile>
+		<classname>plugins.features.CharacterNGrams
 		</classname>
 	</plugin>
 	<plugin>

@@ -50,7 +50,7 @@ public class MemoryMonitorPanel extends JPanel
 			{
 				try
 				{
-					Desktop.getDesktop().browse(new URI("https://bitbucket.org/kertrats/lightside/issues?status=new&status=open"));
+					Desktop.getDesktop().browse(new URI("https://bitbucket.org/lightsidelabs/lightside/issues?status=new&status=open"));
 				}
 				catch (IOException e)
 				{

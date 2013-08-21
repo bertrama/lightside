@@ -14,11 +14,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
-import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.WorkbenchPanel;
 import edu.cmu.side.view.util.MemoryMonitorPanel;
 import edu.cmu.side.view.util.Refreshable;
@@ -45,9 +45,16 @@ public class Workbench{
 	static boolean serverMode = false;
 	static Image iconImage; 
 
-	public Workbench(){
+	public Workbench()
+	{
 
-		
+		try
+		{
+			// Set System L&F
+			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+		}
+		catch (Exception e)
+		{}
 		
 		JFrame frame = new JFrame();
 		frame.setIconImages(getIcons("toolkits/icons/bulbs/bulb_128.png", "toolkits/icons/bulbs/simple_32.png", "toolkits/icons/bulbs/simple_16.png")); //for windows?

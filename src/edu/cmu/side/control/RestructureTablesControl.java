@@ -16,6 +16,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.RestructurePlugin;
@@ -151,7 +152,9 @@ public class RestructureTablesControl extends GenesisControl{
 				current.setName(name);
 				plan.setFilteredTable(current);
 				setHighlightedFilterTableRecipe(plan);
+				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
 				Workbench.getRecipeManager().addRecipe(plan);
+				Workbench.update(Stage.MODIFIED_TABLE);
 			}
 			catch (Exception e)
 			{

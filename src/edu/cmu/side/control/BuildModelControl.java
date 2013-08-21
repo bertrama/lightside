@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -300,6 +301,10 @@ public class BuildModelControl extends GenesisControl{
 						plan.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
 						BuildModelControl.setHighlightedTrainedModelRecipe(plan);
 						Workbench.getRecipeManager().addRecipe(plan);
+						ExploreResultsControl.setHighlightedTrainedModelRecipe(plan);
+						CompareModelsControl.setCompetingTrainedModelRecipe(plan);
+						PredictLabelsControl.setHighlightedTrainedModelRecipe(plan);
+						Workbench.update(Stage.TRAINED_MODEL);
 					}
 				}
 			}

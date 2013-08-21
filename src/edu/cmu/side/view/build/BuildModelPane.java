@@ -50,8 +50,8 @@ public class BuildModelPane extends JPanel{
 			@Override
 			public void refreshPanel() {
 				Collection<Recipe> recipes = new ArrayList<Recipe>();
-				recipes.addAll(BuildModelControl.getFeatureTables());
 				recipes.addAll(BuildModelControl.getFilterTables());
+				recipes.addAll(BuildModelControl.getFeatureTables());
 				refreshPanel(recipes);
 			}
 		};

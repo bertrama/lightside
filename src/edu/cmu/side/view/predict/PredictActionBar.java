@@ -24,7 +24,7 @@ public class PredictActionBar extends ActionBar
 	JCheckBox showMaxScoreBox = new JCheckBox("Show Predicted Label's Score");
 	JCheckBox showDistsBox = new JCheckBox("Show Label Distribution");
 	JCheckBox overwriteBox = new JCheckBox("Overwrite Columns");
-	JCheckBox useEvaluationBox = new JCheckBox("Use Model Evaluation Results");
+	JCheckBox useEvaluationBox = new JCheckBox("Use Model Validation Results");
 	WarningButton warn = new WarningButton();
 
 	public PredictActionBar(StatusUpdater update)
@@ -87,6 +87,7 @@ public class PredictActionBar extends ActionBar
 	public void endedTask()
 	{
 		Workbench.update(this);
+		Workbench.update(Stage.DOCUMENT_LIST);
 	}
 	
 	@Override

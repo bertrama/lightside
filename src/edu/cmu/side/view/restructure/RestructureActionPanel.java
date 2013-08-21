@@ -12,8 +12,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.RestructureTablesControl;
+import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.generic.ActionBar;

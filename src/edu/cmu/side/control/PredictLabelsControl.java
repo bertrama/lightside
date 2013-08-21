@@ -67,7 +67,7 @@ public class PredictLabelsControl extends GenesisControl{
 			{
 				//TODO: halt nicely.
 			}
-
+			
 			@Override
 			protected void doTask()
 			{

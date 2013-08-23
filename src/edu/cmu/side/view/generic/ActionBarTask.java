@@ -76,6 +76,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 			actionBar.cancel.addActionListener(stopListener);
 			actionBar.cancel.setEnabled(true);
 			actionBar.progressBar.setVisible(true);
+			actionBar.progressBar.setIndeterminate(true);
 			actionBar.actionButton.setEnabled(false);
 			actionBar.startedTask();
 		}
@@ -123,7 +124,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 		{
 			if (stateValue == SwingWorker.StateValue.DONE)
 			{
-				progressBar.setIndeterminate(false);
+				progressBar.setIndeterminate(true);
 				progressBar.setString(null);
 				
 			}

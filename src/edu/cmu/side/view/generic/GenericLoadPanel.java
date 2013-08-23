@@ -2,6 +2,7 @@ package edu.cmu.side.view.generic;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -77,6 +78,42 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 			}
 		});
+	}
+
+	//not directly connected to setHighlight or getHighlight - just the UI.
+	public Recipe getSelectedItem()
+	{
+		if (combo.getSelectedItem() != null)
+		{
+			return (Recipe) combo.getSelectedItem();
+		}
+		return null;
+		
+	}
+	
+	//not directly connected to setHighlight or getHighlight - just the UI.
+	public void setSelectedItem(Recipe r)
+	{
+		if (r != null)
+		{
+			combo.setSelectedItem(r);
+			save.setEnabled(true);
+			combo.setEnabled(true);
+			delete.setEnabled(true);
+		}
+		else
+		{
+			combo.setEnabled(false);
+			combo.setSelectedIndex(-1);
+			save.setEnabled(false);
+			delete.setEnabled(false);
+			describeScroll = new JScrollPane();
+			if (describePanel != null)
+			{
+				describePanel.removeAll();
+				describePanel.add(BorderLayout.CENTER, describeScroll);
+			}
+		}
 	}
 
 	public GenericLoadPanel(String l)
@@ -397,5 +434,26 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	public void clearWarning()
 	{
 		warn.setVisible(false);
+	}
+	
+	public void setEnabled(boolean enabled)
+	{
+		super.setEnabled(enabled);
+		
+		combo.setEnabled(enabled);
+		load.setEnabled(enabled);
+		delete.setEnabled(enabled);
+		save.setEnabled(enabled);
+		warn.setEnabled(enabled);
+		
+		for(Component c : describeScroll.getComponents())
+		{
+			c.setEnabled(enabled);
+			if(c instanceof Container)
+			for(Component cc : ((Container)c).getComponents())
+			{
+				cc.setEnabled(enabled);
+			}
+		}
 	}
 }

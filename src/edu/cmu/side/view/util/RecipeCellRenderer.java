@@ -14,7 +14,7 @@ public class RecipeCellRenderer extends DefaultTreeCellRenderer {
 	
 	public RecipeCellRenderer()
 	{
-		this(40);
+		this(1000);
 	}
 	
 	public RecipeCellRenderer(int textCutoff)

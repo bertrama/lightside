@@ -18,12 +18,21 @@ public class CSVExporter
 {
 
 	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV (Excel)", "csv", "CSV");
-	static JFileChooser chooser = new JFileChooser(new File("."));
+	static JFileChooser chooser = new JFileChooser(new File("./data/"));
 	
+
 	public static void exportToCSV(TableModel model)
 	{
+		exportToCSV(model, "export.csv");
+	}
+	
+	public static void exportToCSV(TableModel model, String filename)
+	{
+		if(!filename.endsWith(".csv"))
+			filename += ".csv";
+		
 		chooser.setFileFilter(csvFilter);
-		chooser.setSelectedFile(new File("export.csv"));
+		chooser.setSelectedFile(new File(filename));
 		
 		int state = chooser.showDialog(null, "Export to CSV");
 		if(state == chooser.APPROVE_OPTION)

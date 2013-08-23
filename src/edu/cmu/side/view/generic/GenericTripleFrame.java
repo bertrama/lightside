@@ -22,17 +22,25 @@ public class GenericTripleFrame extends JPanel{
 
 	public GenericTripleFrame(AbstractListPanel chooseData, AbstractListPanel choosePlugin, AbstractListPanel chooseSettings, boolean scrollable){
 		bigSplit.setLeftComponent(chooseData);
+		
 		smallSplit.setLeftComponent(choosePlugin);
-		if(scrollable){
+		
+		if (scrollable)
+		{
 			scroll = new JScrollPane(chooseSettings);
-			smallSplit.setRightComponent(scroll);			
-		}else{
+			smallSplit.setRightComponent(scroll);
+		}
+		else
+		{
 			smallSplit.setRightComponent(chooseSettings);
 		}
+
 		bigSplit.setRightComponent(smallSplit);
+		
 		scroll.setBorder(BorderFactory.createEmptyBorder());
 		bigSplit.setBorder(BorderFactory.createEmptyBorder());
 		smallSplit.setBorder(BorderFactory.createEmptyBorder());
+		
 		chooseData.setPreferredSize(new Dimension(275, 450));
 		smallSplit.setPreferredSize(new Dimension(650, 450));
 		choosePlugin.setPreferredSize(new Dimension(300, 450));

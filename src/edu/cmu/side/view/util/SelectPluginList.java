@@ -164,7 +164,7 @@ public class SelectPluginList extends JList {
  */
 class SelectPluginCellRenderer extends DefaultListCellRenderer {
 	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
-	private int cutoff = 25;
+	private int cutoff = 30;
 
 	public Component getListCellRendererComponent(JList list, Object value, int index,
 			boolean isSelected, boolean cellHasFocus) {

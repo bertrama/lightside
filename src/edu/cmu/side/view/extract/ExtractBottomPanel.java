@@ -108,20 +108,32 @@ public class ExtractBottomPanel extends AbstractListPanel{
 				}
 			}
 		};
-		setLayout(new BorderLayout());
-		JSplitPane split = new JSplitPane();
-		split.setLeftComponent(control);
-		split.setBorder(BorderFactory.createEmptyBorder());
+		
+		JSplitPane bigSplit = new JSplitPane();
+		bigSplit.setLeftComponent(control);
+		
 		JSplitPane displaySplit = new JSplitPane();
 		displaySplit.setLeftComponent(checklist);
 		displaySplit.setRightComponent(display);
+		
+		bigSplit.setRightComponent(displaySplit);
+		
+		bigSplit.setBorder(BorderFactory.createEmptyBorder());
 		displaySplit.setBorder(BorderFactory.createEmptyBorder());
-		displaySplit.setPreferredSize(new Dimension(650,200));
-		checklist.setPreferredSize(new Dimension(275,200));
-		display.setPreferredSize(new Dimension(350, 200));
-		split.setRightComponent(displaySplit);
+		display.setBorder(BorderFactory.createEmptyBorder());
+
 		control.setPreferredSize(new Dimension(275,200));
-		add(BorderLayout.CENTER, split);
+		displaySplit.setPreferredSize(new Dimension(650,200));
+		checklist.setPreferredSize(new Dimension(300,200));
+		display.setPreferredSize(new Dimension(325, 200));
+
+		Dimension minimumSize = new Dimension(50, 200);
+		control.setMinimumSize(minimumSize);
+		checklist.setMinimumSize(minimumSize);
+		display.setMinimumSize(minimumSize);
+		
+		setLayout(new BorderLayout());
+		add(BorderLayout.CENTER, bigSplit);
 
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, control);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, checklist);
@@ -131,7 +143,8 @@ public class ExtractBottomPanel extends AbstractListPanel{
 		GenesisControl.addListenerToMap(checklist, display);
 	}
 
-	public void refreshPanel(){
+	public void refreshPanel()
+	{
 		control.refreshPanel();
 	}
 }

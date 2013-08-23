@@ -37,7 +37,7 @@ public class AbstractListPanel extends JPanel implements Refreshable{
 		list = new JList();
 		list.setModel(listModel);	
 		combo = new JComboBox();
-		combo.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
+		//combo.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
 
 		listScroll = new JScrollPane(list);
 		description = new JTextArea();

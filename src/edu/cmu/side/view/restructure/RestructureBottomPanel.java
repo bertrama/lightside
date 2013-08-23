@@ -96,7 +96,6 @@ public class RestructureBottomPanel extends AbstractListPanel{
 				}
 			}
 		};
-		setLayout(new BorderLayout());
 		JSplitPane pane = new JSplitPane();
 		pane.setLeftComponent(control);
 
@@ -111,6 +110,12 @@ public class RestructureBottomPanel extends AbstractListPanel{
 		checklist.setPreferredSize(new Dimension(275,200));
 		display.setPreferredSize(new Dimension(350, 200));
 
+		Dimension minimumSize = new Dimension(50, 200);
+		control.setMinimumSize(minimumSize);
+		checklist.setMinimumSize(minimumSize);
+		display.setMinimumSize(minimumSize);
+
+		setLayout(new BorderLayout());
 		add(BorderLayout.CENTER, pane);
 
 		GenesisControl.addListenerToMap(RecipeManager.Stage.MODIFIED_TABLE, control);

@@ -276,8 +276,7 @@ public class DocumentList implements Serializable
 
                 totalLines += lineID;
         }
-        localName.trim();
-        setName(localName);
+        setName(localName.trim());
 	}
 	
 	public void combine(DocumentList other){
@@ -663,5 +662,14 @@ public class DocumentList implements Serializable
 	public void setEmptyAnnotationString(String emptyAnnotationString)
 	{
 		this.emptyAnnotationString = emptyAnnotationString;
+	}
+	
+	public DocumentList clone()
+	{
+		DocumentList newDocs = new DocumentList(new ArrayList(getFilenameList()), new TreeMap<String, List<String>>(getCoveredTextList()), new TreeMap<String, List<String>>(allAnnotations()), currentAnnotation);
+		newDocs.setName(getName());
+		newDocs.setLabelArray(labelArray);
+		newDocs.setDifferentiateTextColumns(differentiateTextColumns);
+		return newDocs;
 	}
 }

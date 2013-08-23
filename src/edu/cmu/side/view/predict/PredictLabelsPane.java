@@ -3,7 +3,10 @@ package edu.cmu.side.view.predict;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -20,6 +23,7 @@ import edu.cmu.side.view.util.DocumentListTableModel;
 public class PredictLabelsPane extends JPanel{
 
 
+	JCheckBox useValidationBox = new JCheckBox ("Add Validation Results to Test Data");
 	GenericLoadPanel load = new GenericLoadPanel("Model to Apply:"){
 
 		{
@@ -57,11 +61,37 @@ public class PredictLabelsPane extends JPanel{
 		setLayout(new BorderLayout());
 		JSplitPane pane = new JSplitPane();
 		
+		JPanel newDataPanel = new JPanel(new BorderLayout());
+		newDataPanel.add(useValidationBox, BorderLayout.NORTH);
+		newDataPanel.add(newData, BorderLayout.CENTER);
+		useValidationBox.setToolTipText("Add the predictions from the trained-model validation to a copy of the test data.");
+		useValidationBox.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0)
+			{
+				boolean validation = useValidationBox.isSelected();
+				newData.setEnabled(!validation);
+				PredictLabelsControl.setUseValidationResults(validation);
+				
+				if(validation)
+				{
+					PredictLabelsControl.setHighlightedUnlabeledData(PredictLabelsControl.getHighlightedTrainedModelRecipe());
+				}
+				else
+				{
+					newData.refreshPanel();
+					PredictLabelsControl.setHighlightedUnlabeledData(newData.getSelectedItem());
+				}
+
+				Workbench.update(newData);
+				
+			}});
 		
 		
 		JPanel left = new JPanel(new GridLayout(2,1));
 		left.add(load);
-		left.add(newData);
+		left.add(newDataPanel);
 		pane.setLeftComponent(left);
 		pane.setRightComponent(output);
 		Dimension minimumSize = new Dimension(50, 200);

@@ -7,6 +7,8 @@ import java.util.Map;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.PredictionResult;
@@ -22,8 +24,8 @@ public class PredictLabelsControl extends GenesisControl{
 	private static Recipe highlightedUnlabeledData;
 	
 	private static Collection<Recipe> unlabeledDataRecipes = new ArrayList<Recipe>();
-	
 	private static StatusUpdater update = new SwingUpdaterLabel();
+	private static boolean useValidationResults;
 
 	public static StatusUpdater getUpdater()
 	{
@@ -40,14 +42,23 @@ public class PredictLabelsControl extends GenesisControl{
 
 	public static void setHighlightedTrainedModelRecipe(Recipe highlight){
 		trainedModel = highlight;
+		if(useValidationResults)
+		{
+			setHighlightedUnlabeledData(highlight);
+			Workbench.update(Stage.DOCUMENT_LIST);
+		}
 	}
 	
 	public static boolean hasHighlightedUnlabeledData(){
 		return highlightedUnlabeledData != null;
 	}
 	
-	public static Recipe getHighlightedUnlabeledData(){
-		return highlightedUnlabeledData;
+	public static Recipe getHighlightedUnlabeledData()
+	{
+//		if(useValidationResults)
+//			return trainedModel;
+//		else
+			return highlightedUnlabeledData;
 	}
 	
 	public static void setHighlightedUnlabeledData(Recipe r){
@@ -71,10 +82,32 @@ public class PredictLabelsControl extends GenesisControl{
 			@Override
 			protected void doTask()
 			{
-				DocumentList docs = highlightedUnlabeledData.getDocumentList();
+				DocumentList originalDocs;
+				DocumentList newDocs;
+				if(useEvaluation)
+				{
+					originalDocs = trainedModel.getTrainingResult().getEvaluationTable().getDocumentList();
+
+					TrainingResult results = trainedModel.getTrainingResult();
+					List<String> predictions = (List<String>) results.getPredictions();
+					newDocs = addLabelsToDocs(name, showDists, overwrite, originalDocs, results, predictions);
+				}
+				else
+				{
+					originalDocs = highlightedUnlabeledData.getDocumentList();
+
+					Predictor predictor = new Predictor(trainedModel, name);
+					newDocs = predictor.predict(originalDocs, name, showDists, overwrite);
+				}
 				
+				RecipeManager manager = Workbench.getRecipeManager();
+				Recipe fetched = manager.fetchDocumentListRecipe(newDocs);
+				newDocs.setName(newDocs.getName() + " (" + name + ")");
 				
-				PredictionResult results;
+				setHighlightedUnlabeledData(fetched);
+				Workbench.update(Stage.DOCUMENT_LIST);
+				
+				/*PredictionResult results;
 				
 				if(useEvaluation)
 				{
@@ -108,7 +141,6 @@ public class PredictLabelsControl extends GenesisControl{
 					
 					if(showDists)
 					{
-						DocumentList documents = trainedModel.getDocumentList();
 						for(String label : trainedModel.getTrainingTable().getLabelArray())
 						{
 							List<String> dist = new ArrayList<String>();
@@ -121,10 +153,55 @@ public class PredictLabelsControl extends GenesisControl{
 							docs.addAnnotation(name+"_"+label+"_score", dist, overwrite);
 						}
 					}
-				}
+				}*/
 						
 			}
+
+			protected DocumentList addLabelsToDocs(final String name, final boolean showDists, final boolean overwrite,
+					DocumentList docs, TrainingResult results, List<String> predictions)
+			{
+				Map<String, List<Double>> distributions = results.getDistributions();
+				DocumentList newDocs = docs.clone();
+				newDocs.addAnnotation(name, predictions, overwrite);
+				if(distributions != null)
+				{	
+					if(showDists)
+					{
+						for(String label : trainedModel.getTrainingTable().getLabelArray())
+						{
+							List<String> dist = new ArrayList<String>();
+
+							for(int i = 0; i < predictions.size(); i++)
+							{
+								dist.add(String.format("%.3f", distributions.get(label).get(i)));
+							}
+							
+							newDocs.addAnnotation(name+"_"+label+"_score", dist, overwrite);
+						}
+					}
+				}
+				return newDocs;
+			}
 		}.execute();
+	}
+	
+	public static String getColumnNameSuggestion()
+	{
+		Recipe recipe = PredictLabelsControl.getHighlightedTrainedModelRecipe();
+		String prefix = recipe == null ? "": recipe.getTrainingTable().getAnnotation()+"_";
+		String suffix = useValidationResults?"validation":"prediction";
+		String nameSuggestion = prefix+suffix;
+		return nameSuggestion;
+	}
+
+	public static boolean shouldUseValidationResults()
+	{
+		return useValidationResults;
+	}
+
+	public static void setUseValidationResults(boolean validate)
+	{
+		useValidationResults = validate;
 	}
 	
 }

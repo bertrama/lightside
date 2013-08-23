@@ -48,7 +48,9 @@ public class PredictOutputPanel extends AbstractListPanel
 			@Override
 			public void actionPerformed(ActionEvent arg0)
 			{
-				CSVExporter.exportToCSV(model);
+				Recipe recipe = PredictLabelsControl.getHighlightedUnlabeledData();
+				if(recipe != null)
+				CSVExporter.exportToCSV(model, recipe.getDocumentList().getName());
 			}
 		});
 		exportToCSVButton.setEnabled(false);
@@ -112,7 +114,10 @@ public class PredictOutputPanel extends AbstractListPanel
 		if (recipe == null)
 			model.setDocumentList(null);
 		else
+		{
 			model.setDocumentList(recipe.getDocumentList());
+			setLabel("Selected Dataset: " + recipe.getDocumentList().getName());
+		}
 
 		exportToCSVButton.setEnabled(recipe != null);
 		exportToDBButton.setEnabled(recipe != null && recipe.getDocumentList().allAnnotations().containsKey("src-anchor"));

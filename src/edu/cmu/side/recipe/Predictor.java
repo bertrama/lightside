@@ -1,10 +1,12 @@
 package edu.cmu.side.recipe;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
@@ -134,6 +136,54 @@ public class Predictor
 		return predictionResult.getDistributions().get(label).get(0);
 	}
 
+	/**
+	 * @param corpus
+	 * @return a DocumentList with new columns!
+	 */
+	public DocumentList predict(DocumentList corpus, String predictionColumn, boolean addDistributionColumns, boolean overWrite)
+	{
+		PredictionResult result = null;
+		Recipe newRecipe = null;
+		try
+		{
+			Chef.quiet = isQuiet();
+			newRecipe = Chef.followRecipe(recipe, corpus, Stage.MODIFIED_TABLE, 0);
+			FeatureTable predictTable = newRecipe.getTrainingTable();
+
+			if (!isQuiet())
+			{
+				System.out.println(predictTable.getFeatureSet().size() + " features total");
+				System.out.println(predictTable.getHitsForDocument(0).size() + " feature hits in document 0");
+			}
+
+			result = predictFromTable(predictTable);
+			
+			DocumentList newDocs = newRecipe.getDocumentList().clone();
+			//newDocs = new DocumentList(new ArrayList(newDocs.getFilenameList()), new TreeMap<String, List<String>>(newDocs.getCoveredTextList()), new TreeMap<String, List<String>>(newDocs.allAnnotations()), predictTable.getAnnotation());
+			
+			newDocs.addAnnotation(predictionColumn, (List<String>) result.getPredictions(), overWrite);
+			if(addDistributionColumns)
+			{
+				Map<String, List<Double>> distributions = result.getDistributions();
+				for(String label : distributions.keySet())
+				{
+					List<String> stringDists = new ArrayList<String>(newDocs.getSize());
+					for(Double d : distributions.get(label))
+					{
+					   stringDists.add(d.toString());
+					}
+					newDocs.addAnnotation(predictionColumn+"_"+label, stringDists, overWrite);
+				}
+			}
+			return newDocs;
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	/**
 	 * @param corpus
 	 * @return

@@ -218,7 +218,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		@Override
 		protected void beginTask()
 		{
-				System.out.println("GFMC 181: begin eval task");
+//				System.out.println("GFMC 181: begin eval task");
 				GenericFeatureMetricPanel.setEvaluating(true);
 				combo.setEnabled(false);
 				super.beginTask();

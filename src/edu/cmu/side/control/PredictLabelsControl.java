@@ -71,7 +71,9 @@ public class PredictLabelsControl extends GenesisControl{
 
 	public static void executePredictTask(final PredictActionBar predictActionBar, final String name, final boolean showMaxScore, final boolean showDists, final boolean overwrite,final boolean useEvaluation)
 	{
-		new ActionBarTask(predictActionBar){
+		new ActionBarTask(predictActionBar)
+		{
+			DocumentList newDocs = null;
 
 			@Override
 			public void requestCancel()
@@ -80,10 +82,23 @@ public class PredictLabelsControl extends GenesisControl{
 			}
 			
 			@Override
+			protected void finishTask()
+			{
+				super.finishTask();
+
+				RecipeManager manager = Workbench.getRecipeManager();
+				Recipe fetched = manager.fetchDocumentListRecipe(newDocs);
+				newDocs.setName(newDocs.getName() + " (" + name + ")");
+				
+				setHighlightedUnlabeledData(fetched);
+				Workbench.update(Stage.DOCUMENT_LIST);
+				
+			}
+			
+			@Override
 			protected void doTask()
 			{
 				DocumentList originalDocs;
-				DocumentList newDocs;
 				if(useEvaluation)
 				{
 					originalDocs = trainedModel.getTrainingResult().getEvaluationTable().getDocumentList();
@@ -100,12 +115,6 @@ public class PredictLabelsControl extends GenesisControl{
 					newDocs = predictor.predict(originalDocs, name, showDists, overwrite);
 				}
 				
-				RecipeManager manager = Workbench.getRecipeManager();
-				Recipe fetched = manager.fetchDocumentListRecipe(newDocs);
-				newDocs.setName(newDocs.getName() + " (" + name + ")");
-				
-				setHighlightedUnlabeledData(fetched);
-				Workbench.update(Stage.DOCUMENT_LIST);
 				
 				/*PredictionResult results;
 				

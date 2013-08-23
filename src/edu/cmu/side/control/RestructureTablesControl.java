@@ -135,6 +135,17 @@ public class RestructureTablesControl extends GenesisControl{
 			plan = newRecipe;
 			name = n;
 		}
+		@Override
+		protected void finishTask()
+		{
+			super.finishTask();
+			
+			setHighlightedFilterTableRecipe(plan);
+			BuildModelControl.setHighlightedFeatureTableRecipe(plan);
+			Workbench.getRecipeManager().addRecipe(plan);
+			Workbench.update(Stage.MODIFIED_TABLE);;
+
+		}
 
 		@Override
 		protected void doTask()
@@ -145,16 +156,12 @@ public class RestructureTablesControl extends GenesisControl{
 				//TODO: use some sort of nested recipe
 				for (SIDEPlugin plug : plan.getFilters().keySet())
 				{
-					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t<= "+current.getSize());
+//					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t<= "+current.getSize());
 					current = ((RestructurePlugin) plug).restructure(current, plan.getFilters().get(plug), update);
-					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t=> "+current.getSize());
+//					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t=> "+current.getSize());
 				}
 				current.setName(name);
 				plan.setFilteredTable(current);
-				setHighlightedFilterTableRecipe(plan);
-				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
-				Workbench.getRecipeManager().addRecipe(plan);
-				Workbench.update(Stage.MODIFIED_TABLE);
 			}
 			catch (Exception e)
 			{

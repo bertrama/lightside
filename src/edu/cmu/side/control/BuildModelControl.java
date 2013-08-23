@@ -275,6 +275,18 @@ public class BuildModelControl extends GenesisControl{
 			name = n;
 
 		}
+		
+		@Override
+		protected void finishTask()
+		{
+			super.finishTask();
+			BuildModelControl.setHighlightedTrainedModelRecipe(plan);
+			Workbench.getRecipeManager().addRecipe(plan);
+			ExploreResultsControl.setHighlightedTrainedModelRecipe(plan);
+			CompareModelsControl.setCompetingTrainedModelRecipe(plan);
+			PredictLabelsControl.setHighlightedTrainedModelRecipe(plan);
+			Workbench.update(Stage.TRAINED_MODEL);
+		}
 
 		@Override
 		protected void doTask(){
@@ -299,12 +311,6 @@ public class BuildModelControl extends GenesisControl{
 
 						plan.setLearnerSettings(plan.getLearner().generateConfigurationSettings());
 						plan.setValidationSettings(new TreeMap<String, Serializable>(validationSettings));
-						BuildModelControl.setHighlightedTrainedModelRecipe(plan);
-						Workbench.getRecipeManager().addRecipe(plan);
-						ExploreResultsControl.setHighlightedTrainedModelRecipe(plan);
-						CompareModelsControl.setCompetingTrainedModelRecipe(plan);
-						PredictLabelsControl.setHighlightedTrainedModelRecipe(plan);
-						Workbench.update(Stage.TRAINED_MODEL);
 					}
 				}
 			}

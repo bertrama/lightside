@@ -285,6 +285,17 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 
 		@Override
+		protected void finishTask()
+		{
+			super.finishTask();
+
+			setHighlightedFeatureTableRecipe(plan);
+			RestructureTablesControl.setHighlightedFeatureTableRecipe(plan);
+			BuildModelControl.setHighlightedFeatureTableRecipe(plan);
+			Workbench.getRecipeManager().addRecipe(plan);
+		}
+		
+		@Override
 		protected void doTask(){
 			try
 			{
@@ -303,10 +314,6 @@ public class ExtractFeaturesControl extends GenesisControl{
 					FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold, selectedClassAnnotation, selectedClassType);
 					ft.setName(name);
 					plan.setFeatureTable(ft);
-					setHighlightedFeatureTableRecipe(plan);
-					RestructureTablesControl.setHighlightedFeatureTableRecipe(plan);
-					BuildModelControl.setHighlightedFeatureTableRecipe(plan);
-					Workbench.getRecipeManager().addRecipe(plan);
 				}
 			}
 			catch (Exception e)

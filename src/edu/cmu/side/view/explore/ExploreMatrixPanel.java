@@ -11,7 +11,6 @@ import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.view.generic.GenericMatrixPanel;
 import edu.cmu.side.view.util.ToggleMouseAdapter;
 import edu.cmu.side.view.util.RadioButtonListEntry;
-import edu.cmu.side.view.util.ToggleButtonTableEntry;
 
 public class ExploreMatrixPanel extends GenericMatrixPanel{
 

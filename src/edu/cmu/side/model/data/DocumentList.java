@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,6 @@ import com.yerihyo.yeritools.swing.AlertDialog;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
-import edu.cmu.side.plugin.control.ImportController;
 
 public class DocumentList implements Serializable
 {
@@ -133,6 +131,54 @@ public class DocumentList implements Serializable
 	
 	public String getName(){
 		return name;
+	}
+	
+	public DocumentList subsetSample(double percentage){
+		List<String> newText = new ArrayList<String>();
+		Map<String, List<String>> newAnnotations = new TreeMap<String, List<String>>();
+		for(String s : allAnnotations.keySet()){
+			newAnnotations.put(s, new ArrayList<String>());
+		}
+		int modulo = 10;
+
+		double size = 0.0+getSize();
+		
+		for(int offset = 0; offset < modulo; offset++){
+			int index = 0;
+			while(newText.size() < size*percentage && index+offset < size){
+				int i = index+offset;
+				newText.add(getPrintableTextAt(i));
+				for(String s : allAnnotations.keySet()){
+					newAnnotations.get(s).add(allAnnotations.get(s).get(i));
+				}
+				index += modulo;
+			}
+		}
+		return new DocumentList(newText, newAnnotations);
+	}
+	
+	public static DocumentList merge(DocumentList a, DocumentList b){
+		List<String> newText = new ArrayList<String>();
+		Map<String, List<String>> newAnnotations = new TreeMap<String, List<String>>();
+		for(String s : a.allAnnotations().keySet()){
+			if(b.allAnnotations().containsKey(s)){
+				newAnnotations.put(s, new ArrayList<String>());
+			}
+		}
+		for(int i = 0; i < a.getSize(); i++){
+			newText.add(a.getPrintableTextAt(i));
+			for(String s : newAnnotations.keySet()){
+				newAnnotations.get(s).add(a.getAnnotationArray(s).get(i));
+			}
+		}
+		for(int i = 0; i < b.getSize(); i++){
+			newText.add(b.getPrintableTextAt(i));
+			for(String s : newAnnotations.keySet()){
+				newAnnotations.get(s).add(b.getAnnotationArray(s).get(i));
+			}
+		}
+		
+		return new DocumentList(newText, newAnnotations);
 	}
 	
 	public DocumentList(List<String> filenames, Map<String, List<String>> texts, Map<String, List<String>> annotations, String currentAnnot){
@@ -664,6 +710,7 @@ public class DocumentList implements Serializable
 		this.emptyAnnotationString = emptyAnnotationString;
 	}
 	
+	@Override
 	public DocumentList clone()
 	{
 		DocumentList newDocs = new DocumentList(new ArrayList(getFilenameList()), new TreeMap<String, List<String>>(getCoveredTextList()), new TreeMap<String, List<String>>(allAnnotations()), currentAnnotation);

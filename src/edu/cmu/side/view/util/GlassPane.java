@@ -1,6 +1,5 @@
 package edu.cmu.side.view.util;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
@@ -30,9 +29,11 @@ implements ItemListener {
 
 	Container contentPane;
 	//React to change button clicks.
+	@Override
 	public void itemStateChanged(ItemEvent e) {
 	}
 
+	@Override
 	protected void paintComponent(Graphics g) {
 		Font f = new Font(Font.SANS_SERIF, Font.BOLD, 30);
 		g.setFont(f);
@@ -124,30 +125,37 @@ class CBListener extends MouseInputAdapter {
 		this.contentPane = contentPane;
 	}
 
+	@Override
 	public void mouseMoved(MouseEvent e) {
 		redispatchMouseEvent(e, false);
 	}
 
+	@Override
 	public void mouseDragged(MouseEvent e) {
 		redispatchMouseEvent(e, false);
 	}
 
+	@Override
 	public void mouseClicked(MouseEvent e) {
 		redispatchMouseEvent(e, false);
 	}
 
+	@Override
 	public void mouseEntered(MouseEvent e) {
 		redispatchMouseEvent(e, false);
 	}
 
+	@Override
 	public void mouseExited(MouseEvent e) {
 		redispatchMouseEvent(e, false);
 	}
 
+	@Override
 	public void mousePressed(MouseEvent e) {
 		redispatchMouseEvent(e, false);
 	}
 
+	@Override
 	public void mouseReleased(MouseEvent e) {
 		redispatchMouseEvent(e, true);
 	}

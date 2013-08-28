@@ -33,7 +33,7 @@ public class RestructureBottomPanel extends AbstractListPanel{
 		
 		@Override
 		public void refreshPanel() {
-			refreshPanel(RestructureTablesControl.getFilterTables());
+			refreshPanel(GenesisControl.getFilterTables());
 		}
 		
 		@Override
@@ -124,6 +124,7 @@ public class RestructureBottomPanel extends AbstractListPanel{
 		GenesisControl.addListenerToMap(checklist, display);
 	}
 	
+	@Override
 	public void refreshPanel(){
 		control.refreshPanel();
 	}

@@ -1,6 +1,5 @@
 package edu.cmu.side.model.feature;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;

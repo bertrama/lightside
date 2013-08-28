@@ -1,25 +1,13 @@
 package edu.cmu.side.view.restructure;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.cmu.side.Workbench;
-import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.RestructureTablesControl;
-import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.view.generic.ActionBar;
-import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class RestructureActionPanel extends ActionBar{
 
@@ -38,6 +26,7 @@ public class RestructureActionPanel extends ActionBar{
 		name.setText(getDefaultName());
 	}
 
+	@Override
 	public void refreshPanel(){
 		super.refreshPanel();
 		actionButton.setEnabled(RestructureTablesControl.getFilterPlugins().values().contains(Boolean.TRUE)

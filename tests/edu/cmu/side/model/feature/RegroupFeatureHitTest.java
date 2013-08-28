@@ -1,14 +1,10 @@
 package edu.cmu.side.model.feature;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.Test;
-
-import edu.cmu.side.model.feature.LocalFeatureHit.HitLocation;
 
 import junit.framework.TestCase;
 
@@ -20,6 +16,7 @@ public class RegroupFeatureHitTest extends TestCase {
 	Map<Integer,Integer> indexes;
 	String[] options = {"first", "second"};
 	
+	@Override
 	public void setUp(){
 		testFeature = Feature.fetchFeature("pre", "fix", Feature.Type.NUMERIC, null);
 		fh = new FeatureHit(testFeature, 2, 2);

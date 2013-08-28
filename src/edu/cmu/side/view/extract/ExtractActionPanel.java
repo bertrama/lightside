@@ -1,22 +1,13 @@
 package edu.cmu.side.view.extract;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.view.generic.ActionBar;
-import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class ExtractActionPanel extends ActionBar{
 
@@ -34,6 +25,7 @@ public class ExtractActionPanel extends ActionBar{
 		actionButton.addActionListener(new ExtractFeaturesControl.BuildTableListener(this, threshold, name));
 	}
 	
+	@Override
 	public void refreshPanel(){
 		super.refreshPanel();
 		actionButton.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList() && ExtractFeaturesControl.getSelectedClassAnnotation() != null);

@@ -60,7 +60,7 @@ public class RestructureFeaturesPane extends JPanel{
 
 			@Override
 			public void refreshPanel() {
-				refreshPanel(RestructureTablesControl.getTrainingTables());
+				refreshPanel(GenesisControl.getTrainingTables());
 				Map<RestructurePlugin, Boolean> plugins = RestructureTablesControl.getFilterPlugins();
 				for(RestructurePlugin plug : plugins.keySet())
 				{

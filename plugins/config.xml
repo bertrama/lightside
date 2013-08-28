@@ -140,7 +140,7 @@
 		</classname>
 	</plugin>
 
-<!-- 	<plugin>
+	<plugin>
 		<name>Advanced Model Evaluations</name>
 		<author>Elijah Mayfield</author>
 		<version>1.0</version>
@@ -148,7 +148,7 @@
 		<jarfile>warpcore.jar</jarfile>
 		<classname>com.lightsidelabs.plugins.metrics.models.AdvancedModelEvaluations
 		</classname>
-	</plugin> -->
+	</plugin>
 
 	<plugin>
 		<name>Basic Feature Evaluations</name>

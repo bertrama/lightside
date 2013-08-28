@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,7 +21,6 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.FastListModel;
 import edu.cmu.side.view.util.RadioButtonListEntry;
 import edu.cmu.side.view.util.SelectPluginList;
@@ -86,6 +84,7 @@ public class BuildPluginPanel extends AbstractListPanel {
 		listener.actionPerformed(new ActionEvent(rb, -1, ""));
 	}
 	
+	@Override
 	public void refreshPanel(){
 
 		repaint();

@@ -75,6 +75,7 @@ public class LocalFeatureHit extends FeatureHit
 		return hits;
 	}
 	
+	@Override
 	public String toString()
 	{
 		String x = feature+"@"+documentIndex+"("+value+"):";

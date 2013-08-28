@@ -7,8 +7,6 @@ import java.text.DecimalFormat;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-
 import edu.cmu.side.view.generic.GenericMatrixPanel;
 
 public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
@@ -19,6 +17,7 @@ public class ConfusionCellRenderer  extends DefaultTableCellRenderer{
 		parent = p;
 	}
 
+	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
 			boolean isSelected, boolean hasFocus, int rowIndex, int vColIndex) {
 		Double[] sum = parent.getSum();

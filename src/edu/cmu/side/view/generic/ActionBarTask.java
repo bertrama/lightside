@@ -114,6 +114,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 
 	
 	//from OnPanelSwingTask
+	@Override
 	public void propertyChange(PropertyChangeEvent evt)
 	{
 		evt.getSource();

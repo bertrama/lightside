@@ -34,6 +34,7 @@ public class RegroupFeatureHit extends FeatureHit{
 		}
 	}
 	
+	@Override
 	public String toString()
 	{
 		return this.feature+"@"+this.documentIndex+"/"+this.getOriginalIndex();

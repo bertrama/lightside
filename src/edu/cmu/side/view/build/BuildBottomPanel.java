@@ -36,7 +36,7 @@ public class BuildBottomPanel extends AbstractListPanel {
 
 		@Override
 		public void refreshPanel() {
-			refreshPanel(BuildModelControl.getTrainedModels());
+			refreshPanel(GenesisControl.getTrainedModels());
 		}
 	};
 
@@ -54,6 +54,7 @@ public class BuildBottomPanel extends AbstractListPanel {
 	};
 
 	private GenericModelMetricPanel result = new GenericModelMetricPanel(){
+		@Override
 		public void refreshPanel(){
 			refreshPanel(BuildModelControl.getHighlightedTrainedModelRecipe());
 		}
@@ -88,6 +89,7 @@ public class BuildBottomPanel extends AbstractListPanel {
 		
 	}
 
+	@Override
 	public void refreshPanel(){
 		control.refreshPanel();
 	}

@@ -2,11 +2,9 @@ package edu.cmu.side.view.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -14,15 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import plugins.learning.WekaTools;
-import weka.core.Instances;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.data.DocumentList;
-import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.TrainingResult;
-import edu.cmu.side.model.feature.Feature;
-import edu.cmu.side.model.feature.Feature.Type;
-import edu.cmu.side.model.feature.FeatureHit;
 
 public class TrainedModelExporter
 {

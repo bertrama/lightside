@@ -66,7 +66,7 @@ public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 			if(((Double)value).isNaN())
 				label.setText("?");
 			else 
-				label.setText(decimalFormat.format((Double)value));
+				label.setText(decimalFormat.format(value));
 		}
 		
 		

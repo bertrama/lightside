@@ -12,6 +12,7 @@ public abstract class EvaluateOneModelPlugin extends SIDEPlugin{
 	/**
 	 * @return A short prefix string for the plugin name.
 	 */
+	@Override
 	public abstract String getOutputName();
 
 }

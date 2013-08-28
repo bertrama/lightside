@@ -1,9 +1,7 @@
 package edu.cmu.side.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -26,6 +24,7 @@ public class OrderedPluginMapTest extends TestCase {
 	HashMap<String, String> test2Map;
 	HashMap<String, String> test3Map;
 	OrderedPluginMap testOnThis;
+	@Override
 	public void setUp(){
 		test1Plugin = new ModelTextOutput();
 		test2Plugin = new ModelTextOutput();
@@ -210,7 +209,7 @@ public class OrderedPluginMapTest extends TestCase {
 		testOnThis.put(test1Plugin, test1Map);
 		testOnThis.put(test2Plugin, test2Map);
 		testOnThis.put(test3Plugin, test3Map);
-		Collection<Map<String,String>> values =  (Collection<Map<String, String>>) testOnThis.values();
+		Collection<Map<String,String>> values =  testOnThis.values();
 		assertEquals(values.size(), 3);
 		assertTrue(values.contains(test1Map));
 		assertTrue(values.contains(test2Map));

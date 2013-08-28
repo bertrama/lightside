@@ -3,33 +3,17 @@ package edu.cmu.side.view.compare;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.Collections;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.TreeSet;
-
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 
-import se.datadosen.component.RiverLayout;
-
 import edu.cmu.side.Workbench;
-import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.CompareModelsControl;
 import edu.cmu.side.control.GenesisControl;
-import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
-import edu.cmu.side.plugin.EvaluateTwoModelPlugin;
-import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
-import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
-import edu.cmu.side.view.generic.GenericPluginConfigPanel;
 import edu.cmu.side.view.util.AbstractListPanel;
 
 public class CompareModelsPane extends AbstractListPanel{
@@ -50,7 +34,7 @@ public class CompareModelsPane extends AbstractListPanel{
 
 		@Override
 		public void refreshPanel() {
-			refreshPanel(CompareModelsControl.getTrainedModels());
+			refreshPanel(GenesisControl.getTrainedModels());
 		}
 
 	};
@@ -71,7 +55,7 @@ public class CompareModelsPane extends AbstractListPanel{
 
 		@Override
 		public void refreshPanel() {
-			refreshPanel(CompareModelsControl.getTrainedModels());
+			refreshPanel(GenesisControl.getTrainedModels());
 		}
 	};
 	
@@ -109,6 +93,7 @@ public class CompareModelsPane extends AbstractListPanel{
 
 	}
 	
+	@Override
 	public void refreshPanel(){
 		dropdown.refreshPanel();
 		if(CompareModelsControl.getHighlightedModelComparisonPlugin() != null){

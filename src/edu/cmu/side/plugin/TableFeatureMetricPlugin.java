@@ -1,6 +1,5 @@
 package edu.cmu.side.plugin;
 
-import java.util.Collection;
 import java.util.Map;
 
 import edu.cmu.side.model.Recipe;
@@ -14,12 +13,14 @@ public abstract class TableFeatureMetricPlugin<E extends Comparable<E>> extends 
 	
 	public static String type = "table_feature_evaluation";
 	
+	@Override
 	public String getType() {
 		return type;	
 	}
 	
 	public abstract Map<Feature, E> evaluateTableFeatures(FeatureTable model, boolean[] mask, String eval, String target, StatusUpdater update);
 
+	@Override
 	public Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target, StatusUpdater update){
 		return evaluateTableFeatures(recipe.getTrainingTable(), mask, eval, target, update);
 	}

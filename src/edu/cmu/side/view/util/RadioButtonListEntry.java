@@ -21,7 +21,8 @@ public class RadioButtonListEntry extends JRadioButton{
 	    this.value = value;
 	  }
 
-	  public String toString()
+	  @Override
+	public String toString()
 	  {
 		  if(value == null) return "NULL";
 		  return value.toString();

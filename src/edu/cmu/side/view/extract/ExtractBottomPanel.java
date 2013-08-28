@@ -20,7 +20,6 @@ import edu.cmu.side.view.generic.GenericFeatureMetricPanel;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMetricChecklistPanel;
 import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.RecipeExporter;
 
 public class ExtractBottomPanel extends AbstractListPanel{
 
@@ -36,7 +35,7 @@ public class ExtractBottomPanel extends AbstractListPanel{
 
 		@Override
 		public void refreshPanel() {
-			refreshPanel(ExtractFeaturesControl.getFeatureTables());
+			refreshPanel(GenesisControl.getFeatureTables());
 		}
 
 		@Override
@@ -143,6 +142,7 @@ public class ExtractBottomPanel extends AbstractListPanel{
 		GenesisControl.addListenerToMap(checklist, display);
 	}
 
+	@Override
 	public void refreshPanel()
 	{
 		control.refreshPanel();

@@ -1,10 +1,7 @@
 package edu.cmu.side.view.build;
 
 import java.awt.Dimension;
-import java.io.File;
 import java.util.Collections;
-
-import javax.swing.ImageIcon;
 
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
@@ -60,7 +57,7 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 	@Override
 	public void refreshPanel()
 	{
-		refreshPanel(BuildModelControl.getDocumentLists());
+		refreshPanel(GenesisControl.getDocumentLists());
 		
 		revalidate();
 	}

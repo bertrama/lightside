@@ -81,7 +81,7 @@ public class MapOfListsTableModel extends AbstractTableModel
 	{
 		if (map != null)
 		{
-			columnLabels = (String[]) new TreeSet<String>(map.keySet()).toArray(columnLabels);
+			columnLabels = new TreeSet<String>(map.keySet()).toArray(columnLabels);
 		}
 		else
 		{

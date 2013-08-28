@@ -47,7 +47,8 @@ public class GaussianPriorImpl
   /**
    * Update function specific to Laplace Prior.
    */
-  public double update(int j, Instances instances, double beta,
+  @Override
+public double update(int j, Instances instances, double beta,
     double hyperparameter, double[] r, double deltaV) {
     int i;
     double numerator = 0.0;
@@ -99,7 +100,8 @@ public class GaussianPriorImpl
    * @param betas
    * @param hyperparameters
    */
-  public void computePenalty(double[] betas, double[] hyperparameters) {
+  @Override
+public void computePenalty(double[] betas, double[] hyperparameters) {
     penalty = 0.0;
 
     for (int j = 0; j < betas.length; j++) {
@@ -116,7 +118,8 @@ public class GaussianPriorImpl
    * 
    * @return		the revision
    */
-  public String getRevision() {
+  @Override
+public String getRevision() {
     return RevisionUtils.extract("$Revision: 1.2 $");
   }
 }

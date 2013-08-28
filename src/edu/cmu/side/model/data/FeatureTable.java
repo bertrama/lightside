@@ -2,7 +2,6 @@ package edu.cmu.side.model.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -12,9 +11,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import edu.cmu.side.model.feature.Feature;
-import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.model.feature.RegroupFeatureHit;
 
@@ -315,6 +315,7 @@ public class FeatureTable implements Serializable
 	    }
 	}
 	
+	@Override
 	public FeatureTable clone()
 	{
 		FeatureTable ft = new FeatureTable();
@@ -612,4 +613,18 @@ public class FeatureTable implements Serializable
 	    return ft;
 	}
 	
+
+	public boolean isWeighted()
+	{
+		Pattern p = Pattern.compile("\\D*(\\d+)\\D*");
+		for(String s : getLabelArray())
+		{
+			Matcher m = p.matcher(s);
+			if(!m.matches())
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 }

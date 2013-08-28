@@ -107,6 +107,7 @@ public class PluginWrapper implements Comparable<PluginWrapper>, XMLable {
 		this.configMap.putAll(XMLToolkit.xmlSimpleTypeToMap(xmlElement, "plugin"));
 	}
 
+	@Override
 	public void fromXML(Element root) throws Exception {
 //		NodeList children = xDoc.getChildNodes();
 		for (Element element : XMLToolkit.getChildElements(root)) {
@@ -114,14 +115,17 @@ public class PluginWrapper implements Comparable<PluginWrapper>, XMLable {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return this.configMap.get(NAME) + " v " + this.configMap.get(VERSION);
 	}
 
+	@Override
 	public String toXML(){
 		return XMLToolkit.mapToXMLSimpleTypeString("plugin", configMap);
 	}
 
+	@Override
 	public int compareTo(PluginWrapper arg0) {
 		int result = 0;
 		try {

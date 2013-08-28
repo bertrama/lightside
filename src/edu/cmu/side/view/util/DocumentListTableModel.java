@@ -1,8 +1,6 @@
 package edu.cmu.side.view.util;
 
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.TreeSet;
 
 import javax.swing.table.AbstractTableModel;
@@ -92,7 +90,7 @@ public class DocumentListTableModel extends AbstractTableModel
 	{
 		if(docs != null)
 		{
-			annotationNames = (String[]) new TreeSet<String>(docs.allAnnotations().keySet()).toArray(annotationNames);
+			annotationNames = new TreeSet<String>(docs.allAnnotations().keySet()).toArray(annotationNames);
 		}
 		else
 		{

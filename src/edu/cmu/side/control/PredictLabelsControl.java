@@ -11,7 +11,6 @@ import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
-import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.recipe.Predictor;
 import edu.cmu.side.view.generic.ActionBarTask;

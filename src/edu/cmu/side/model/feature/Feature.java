@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import edu.cmu.side.plugin.FeatureFetcher;
-import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 
 public class Feature implements Serializable, Comparable<Feature>
@@ -109,6 +108,7 @@ public class Feature implements Serializable, Comparable<Feature>
 		this.nominalValues = nominals;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return featureName;

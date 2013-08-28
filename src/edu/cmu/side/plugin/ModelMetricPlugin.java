@@ -1,9 +1,7 @@
 package edu.cmu.side.plugin;
 
-import java.util.Collection;
 import java.util.Map;
 
-import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.TrainingResult;
 
 public abstract class ModelMetricPlugin extends SIDEPlugin{
@@ -14,6 +12,7 @@ public abstract class ModelMetricPlugin extends SIDEPlugin{
 	
 	public static String type = "model_evaluation";
 	
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -21,6 +20,7 @@ public abstract class ModelMetricPlugin extends SIDEPlugin{
 	/**
 	 * @return A short prefix string for the plugin name.
 	 */
+	@Override
 	public abstract String getOutputName();
 
 	/**

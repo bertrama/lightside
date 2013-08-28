@@ -14,6 +14,7 @@ public abstract class FeaturePlugin extends AbstractFeatureFetcherPlugin impleme
 
 	public static String type = "feature_hit_extractor";
 	
+	@Override
 	public String getType() {
 		return type;
 	}

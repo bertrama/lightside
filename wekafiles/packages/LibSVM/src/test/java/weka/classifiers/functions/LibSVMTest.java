@@ -41,7 +41,8 @@ public class LibSVMTest
   }
 
   /** Creates a default SMO */
-  public Classifier getClassifier() {
+  @Override
+public Classifier getClassifier() {
     return new LibSVM();
   }
 

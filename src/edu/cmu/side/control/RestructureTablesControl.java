@@ -2,8 +2,6 @@ package edu.cmu.side.control;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +13,6 @@ import javax.swing.JTextField;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
@@ -26,7 +23,6 @@ import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
 import edu.cmu.side.view.restructure.RestructureActionPanel;
-import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 

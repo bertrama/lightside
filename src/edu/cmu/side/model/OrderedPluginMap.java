@@ -13,9 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 
-import edu.cmu.side.Workbench;
 import edu.cmu.side.plugin.SIDEPlugin;
-import edu.cmu.side.plugin.control.PluginManager;
 
 public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, String>>, Serializable
 {
@@ -25,7 +23,7 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 
 	public int getOrdering(Object s)
 	{
-		return ordering.indexOf((SIDEPlugin) s);
+		return ordering.indexOf(s);
 	}
 	
 
@@ -102,7 +100,7 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 	}
 
 	@Override
-	public Set<java.util.Map.Entry<SIDEPlugin, Map<String, String>>> entrySet()
+	public Set<Map.Entry<SIDEPlugin, Map<String, String>>> entrySet()
 	{
 		return configurations.entrySet();
 	}

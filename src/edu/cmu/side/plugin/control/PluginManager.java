@@ -19,7 +19,6 @@ import com.yerihyo.yeritools.io.FileToolkit;
 import com.yerihyo.yeritools.text.StringToolkit;
 import com.yerihyo.yeritools.xml.XMLToolkit;
 
-import edu.cmu.side.Workbench;
 import edu.cmu.side.plugin.SIDEPlugin;
 
 public class PluginManager {
@@ -46,7 +45,7 @@ public class PluginManager {
 		PluginWrapper result = null;
 
 		for (Iterator<PluginWrapper> iTemp = getAllPlugins().iterator(); iTemp.hasNext();) {
-			PluginWrapper pTemp = (PluginWrapper) iTemp.next();
+			PluginWrapper pTemp = iTemp.next();
 			if (pTemp.getConfigMap().get(PluginWrapper.CLASSNAME).equalsIgnoreCase(pluginClassName)) {
 				result = pTemp;
 				break;
@@ -89,6 +88,7 @@ public class PluginManager {
 		 getPluginTypeMap().add(pluginWrapper.getType(), pluginWrapper);
 	}
 
+	@Override
 	public String toString() {
 		return "PluginWrapper Manager";
 	}

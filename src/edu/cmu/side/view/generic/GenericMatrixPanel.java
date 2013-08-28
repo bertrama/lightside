@@ -77,6 +77,7 @@ public abstract class GenericMatrixPanel extends AbstractListPanel{
 		matrixDisplay.setModel(matrixModel);
 		matrixDisplay.setBorder(BorderFactory.createLineBorder(Color.gray));
 		matrixDisplay.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseReleased(MouseEvent e){
 				int row = matrixDisplay.getSelectedRow();
 				int col = matrixDisplay.getSelectedColumn();

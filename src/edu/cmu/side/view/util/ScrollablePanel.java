@@ -243,11 +243,13 @@ public class ScrollablePanel extends JPanel implements Scrollable, SwingConstant
 
 	// Implement Scrollable interface
 
+	@Override
 	public Dimension getPreferredScrollableViewportSize()
 	{
 		return getPreferredSize();
 	}
 
+	@Override
 	public int getScrollableUnitIncrement(Rectangle visible, int orientation, int direction)
 	{
 		switch (orientation)
@@ -261,6 +263,7 @@ public class ScrollablePanel extends JPanel implements Scrollable, SwingConstant
 		}
 	}
 
+	@Override
 	public int getScrollableBlockIncrement(Rectangle visible, int orientation, int direction)
 	{
 		switch (orientation)
@@ -282,6 +285,7 @@ public class ScrollablePanel extends JPanel implements Scrollable, SwingConstant
 			return distance * info.getAmount() / 100;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportWidth()
 	{
 		if (scrollableWidth == ScrollableSizeHint.NONE) return false;
@@ -295,6 +299,7 @@ public class ScrollablePanel extends JPanel implements Scrollable, SwingConstant
 		return false;
 	}
 
+	@Override
 	public boolean getScrollableTracksViewportHeight()
 	{
 		if (scrollableHeight == ScrollableSizeHint.NONE) return false;
@@ -333,6 +338,7 @@ public class ScrollablePanel extends JPanel implements Scrollable, SwingConstant
 			return amount;
 		}
 
+		@Override
 		public String toString()
 		{
 			return "ScrollablePanel[" + type + ", " + amount + "]";

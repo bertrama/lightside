@@ -58,6 +58,7 @@ public abstract class GenericTableDisplayPanel extends AbstractListPanel
 		add("br hfill vfill", tableScroll);
 	}
 	
+	@Override
 	public void refreshPanel()
 	{
 		updateTableModel();

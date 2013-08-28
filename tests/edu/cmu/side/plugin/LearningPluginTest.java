@@ -1,7 +1,5 @@
 package edu.cmu.side.plugin;
 
-import junit.framework.TestCase;
-
 import org.junit.*;
 
 /* Things to test:
@@ -31,7 +29,7 @@ public class LearningPluginTest
 {
 
 	@BeforeClass
-	public void setUp() throws Exception
+	public static void setUp() throws Exception
 	{
 		
 	}

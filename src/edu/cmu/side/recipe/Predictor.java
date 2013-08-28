@@ -6,8 +6,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
-
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
 import edu.cmu.side.model.Recipe;

@@ -38,7 +38,7 @@ public class ExploreResultsPane extends JPanel{
 			if(!ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
 				ExploreResultsControl.setHighlightedCell(null, null);
 			}
-			refreshPanel(ExploreResultsControl.getTrainedModels());
+			refreshPanel(GenesisControl.getTrainedModels());
 		}
 		
 	};
@@ -50,6 +50,7 @@ public class ExploreResultsPane extends JPanel{
 	GenericTripleFrame triple;
 
 	GenericPluginConfigPanel<EvaluateOneModelPlugin> analysis = new GenericPluginConfigPanel<EvaluateOneModelPlugin>(false){
+		@Override
 		public void refreshPanel(){
 			refreshPanel(ExploreResultsControl.getModelAnalysisPlugins());
 		}

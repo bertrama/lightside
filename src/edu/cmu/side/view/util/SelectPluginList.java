@@ -106,7 +106,7 @@ public class SelectPluginList extends JList {
 		int[] indices = new int[list.size()];
 
 		for (int i = 0; i < list.size(); ++i) {
-			indices[i] = ((Integer) list.get(i)).intValue();
+			indices[i] = list.get(i).intValue();
 		}
 
 		return indices;
@@ -166,6 +166,7 @@ class SelectPluginCellRenderer extends DefaultListCellRenderer {
 	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 	private int cutoff = 30;
 
+	@Override
 	public Component getListCellRendererComponent(JList list, Object value, int index,
 			boolean isSelected, boolean cellHasFocus) {
 		if(value instanceof SIDEPlugin){

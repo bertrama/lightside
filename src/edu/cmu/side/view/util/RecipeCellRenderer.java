@@ -1,8 +1,6 @@
 package edu.cmu.side.view.util;
 
 import java.awt.Component;
-import java.util.Set;
-
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -23,7 +21,8 @@ public class RecipeCellRenderer extends DefaultTreeCellRenderer {
 		cutoff = textCutoff;
 	}
 
-    public Component getTreeCellRendererComponent(JTree tree,
+    @Override
+	public Component getTreeCellRendererComponent(JTree tree,
       Object value,boolean sel,boolean expanded,boolean leaf,
       int row,boolean hasFocus) {
         super.getTreeCellRendererComponent(tree, value, sel, 

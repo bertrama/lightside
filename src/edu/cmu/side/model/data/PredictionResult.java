@@ -12,6 +12,7 @@ public class PredictionResult implements Serializable
 	private List<? extends Comparable<?>> predictions;
 	private Map<String, List<Double>> distributions;
 
+	@Override
 	public String toString()
 	{
 		if (name != null) return name;

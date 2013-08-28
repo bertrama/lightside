@@ -38,12 +38,14 @@ public class ChiSquaredAttributeEvalTest
   }
 
   /** Creates a default Ranker */
-  public ASSearch getSearch() {
+  @Override
+public ASSearch getSearch() {
     return new Ranker();
   }
 
   /** Creates a default ChiSquaredAttributeEval */
-  public ASEvaluation getEvaluator() {
+  @Override
+public ASEvaluation getEvaluator() {
     return new ChiSquaredAttributeEval();
   }
 

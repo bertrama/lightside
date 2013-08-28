@@ -17,11 +17,13 @@ public class CheckBoxListEntry extends JCheckBox implements Comparable<CheckBoxL
     setBackground(null);
   }
 
-  public boolean isSelected() {
+  @Override
+public boolean isSelected() {
     return super.isSelected();
   }
 
-  public void setSelected(boolean selected) {
+  @Override
+public void setSelected(boolean selected) {
     super.setSelected(selected);
   }
 
@@ -33,7 +35,8 @@ public class CheckBoxListEntry extends JCheckBox implements Comparable<CheckBoxL
     this.value = value;
   }
   
-  public String toString()
+  @Override
+public String toString()
   {
 	  if(value == null) return "NULL";
 	  return value.toString();

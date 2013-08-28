@@ -100,7 +100,8 @@ public class ChiSquaredAttributeEval
    * Returns an enumeration describing the available options
    * @return an enumeration of all the available options
    **/
-  public Enumeration listOptions () {
+  @Override
+public Enumeration listOptions () {
     Vector newVector = new Vector(2);
     newVector.addElement(new Option("\ttreat missing values as a seperate " 
                                     + "value.", "M", 0, "-M"));
@@ -129,7 +130,8 @@ public class ChiSquaredAttributeEval
    * @param options the list of options as an array of strings
    * @throws Exception if an option is not supported
    */
-  public void setOptions (String[] options)
+  @Override
+public void setOptions (String[] options)
     throws Exception {
 
     resetOptions();
@@ -143,7 +145,8 @@ public class ChiSquaredAttributeEval
    *
    * @return an array of strings suitable for passing to setOptions()
    */
-  public String[] getOptions () {
+  @Override
+public String[] getOptions () {
     String[] options = new String[2];
     int current = 0;
 
@@ -225,7 +228,8 @@ public class ChiSquaredAttributeEval
    * @return            the capabilities of this evaluator
    * @see               Capabilities
    */
-  public Capabilities getCapabilities() {
+  @Override
+public Capabilities getCapabilities() {
     Capabilities result = super.getCapabilities();
     result.disableAll();
     
@@ -250,7 +254,8 @@ public class ChiSquaredAttributeEval
    * @throws Exception if the evaluator has not been 
    * generated successfully
    */
-  public void buildEvaluator (Instances data)
+  @Override
+public void buildEvaluator (Instances data)
     throws Exception {
     
     // can evaluator handle data?
@@ -413,7 +418,8 @@ public class ChiSquaredAttributeEval
    * @return the chi-squared value
    * @throws Exception if the attribute could not be evaluated
    */
-  public double evaluateAttribute (int attribute)
+  @Override
+public double evaluateAttribute (int attribute)
     throws Exception {
 
     return m_ChiSquareds[attribute];
@@ -423,7 +429,8 @@ public class ChiSquaredAttributeEval
    * Describe the attribute evaluator
    * @return a description of the attribute evaluator as a string
    */
-  public String toString () {
+  @Override
+public String toString () {
     StringBuffer text = new StringBuffer();
 
     if (m_ChiSquareds == null) {
@@ -448,7 +455,8 @@ public class ChiSquaredAttributeEval
    * 
    * @return		the revision
    */
-  public String getRevision() {
+  @Override
+public String getRevision() {
     return RevisionUtils.extract("$Revision: 6637 $");
   }
 

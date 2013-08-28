@@ -1,7 +1,6 @@
 package edu.cmu.side.view.generic;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.util.ArrayList;
 

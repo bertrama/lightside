@@ -2,7 +2,6 @@ package edu.cmu.side.model.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +26,7 @@ public class TrainingResult implements Serializable{
 	private Map<String, List<Double>> distributions;
 	transient private Map<String, String> cachedEvaluations = new HashMap<String, String>();
 
+	@Override
 	public String toString(){
 		return name;
 	}
@@ -162,7 +162,6 @@ public class TrainingResult implements Serializable{
 			}
 			break;
 		case NUMERIC:
-			ArrayList<Double> values = new ArrayList<Double>();
 			for(int i = 0; i < actual.size(); i++){
 				Double predDbl = Double.parseDouble(predicted.get(i).toString());
 				ArrayList<Double> breakpoints = getEvaluationTable().getNumericBreakpoints();

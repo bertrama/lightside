@@ -57,6 +57,7 @@ public class BuildActionPanel extends ActionBar {
 		}
 	}
 
+	@Override
 	public void refreshPanel(){
 		super.refreshPanel();
 		

@@ -9,11 +9,13 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
+import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
@@ -83,6 +85,7 @@ public class Recipe implements Serializable
 		stage = getStage();
 	}
 
+	@Override
 	public String toString()
 	{
 		String out = "";
@@ -204,7 +207,7 @@ public class Recipe implements Serializable
 		this.validationSettings = validationSettings;
 	}
 
-	private Recipe()
+	protected Recipe()
 	{
 		extractors = new OrderedPluginMap();
 		filters= new OrderedPluginMap();
@@ -344,6 +347,25 @@ public class Recipe implements Serializable
 			newRecipe.addFilter(plugin, plugin.generateConfigurationSettings());
 		}
 	}
+	
+	public String getAnnotation(){
+		FeatureTable table = getTrainingTable();
+		return table==null?null:table.getAnnotation();
+	}
+	public Type getClassValueType(){
+		FeatureTable table = getTrainingTable();
+		return table==null?null:table.getClassValueType();		
+	}
+	
+	public String[] getLabelArray(){
+		FeatureTable table = getTrainingTable();
+		return table==null?null:table.getLabelArray();
+	}
+	public Set<String> getTextColumns(){
+		FeatureTable table = getTrainingTable();
+		return table==null?null:table.getDocumentList().getTextColumns();
+	}
+
 
 	public String getRecipeName()
 	{

@@ -31,6 +31,7 @@ public class FeatureHit implements Comparable<FeatureHit>, Serializable
 	 */
 	protected int documentIndex;
 
+	@Override
 	public FeatureHit clone(){
 		FeatureHit fh = new FeatureHit(feature, value, documentIndex);
 		return fh;
@@ -91,6 +92,7 @@ public class FeatureHit implements Comparable<FeatureHit>, Serializable
 		this.documentIndex = documentIndex;
 	}
 	
+	@Override
 	public String toString()
 	{
 		return feature+"@"+documentIndex+"("+value+")";

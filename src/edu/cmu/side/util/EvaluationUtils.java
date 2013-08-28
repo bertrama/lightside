@@ -5,9 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import edu.cmu.side.model.data.TrainingResult;
-import edu.cmu.side.model.feature.Feature;
-
 public class EvaluationUtils
 {
 

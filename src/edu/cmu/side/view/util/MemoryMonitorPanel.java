@@ -82,7 +82,7 @@ public class MemoryMonitorPanel extends JPanel
 //						
 						textMonitor.setText(String.format("%.1f GB used, %.1f GB max", beanUsed, beanMax));
 						
-						double fractionUsed = beanUsed/(double)beanMax;
+						double fractionUsed = beanUsed/beanMax;
 						if(fractionUsed >= 0.7)
 						{
 							textMonitor.setForeground(Color.red.darker());

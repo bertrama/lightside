@@ -1,9 +1,5 @@
 package edu.cmu.side.plugin;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -23,9 +19,7 @@ import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
-import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
-import edu.cmu.side.util.EvaluationUtils;
 import edu.cmu.side.view.util.DefaultMap;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable
@@ -37,6 +31,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 
 	public static StatusUpdater updater;
 
+	@Override
 	public String getType() {
 		return type;
 	}
@@ -107,6 +102,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 			}
 			else if (validationSettings.get("type").equals("SUPPLY"))
 			{
+				System.out.println("SUPPLY FOUND!");
 				progressIndicator.update("Training model");
 				FeatureTable pass = wrapAndTrain(table, wrappers, progressIndicator, defaultFoldMapZero, 1);
 				progressIndicator.update("Testing model");
@@ -196,20 +192,6 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 		ArrayList<Double> times = new ArrayList<Double>();
 		DecimalFormat print = new DecimalFormat("#.###");
 
-//		PrintWriter out = null ;
-//		if(foldsFile.exists() && foldsFile.isDirectory())
-//		{
-//			try
-//			{
-//				out = new PrintWriter(new FileWriter("folds/"+BuildModelControl.getNewName()+".folds.eval.txt"));
-//			}
-//			catch (IOException e1)
-//			{
-//				e1.printStackTrace();
-//			}
-//			out.println(EvaluationUtils.getHeader());
-//		}
-//		
 		for(Integer fold : folds)
 		{
 			if(fold < 0)
@@ -543,6 +525,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 	 */
 	public abstract Object prepareToPredict(FeatureTable originalData, FeatureTable newData, int i, Map<Integer, Integer> foldsMap);
 
+	@Override
 	public void stopWhenPossible(){
 		halt = true;
 	}

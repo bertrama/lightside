@@ -63,6 +63,7 @@ public class FreqMap<E> extends TreeMap<E, Integer> implements Iterable{
 		}
 		return top;
 	}
+	@Override
 	public Iterator iterator() {
 		ArrayList<FreqUnigram> unis = new ArrayList<FreqUnigram>();
 		for(E uni : this.keySet()){
@@ -82,6 +83,7 @@ public class FreqMap<E> extends TreeMap<E, Integer> implements Iterable{
 			uni = inU;
 			count = inC;
 		}
+		@Override
 		public int compareTo(FreqUnigram o) {
 			return -count.compareTo(o.count);
 		}

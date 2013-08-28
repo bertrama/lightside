@@ -112,7 +112,6 @@ public class Workbench{
 			if(!listeners.isEmpty())
 			{
 				updateCount++;
-				long update = updateCount;
 				GenesisControl.setCurrentlyUpdating(source, true);
 //				System.out.println("Workbench.update begin update #"+update+" for source "+sourceName);
 				

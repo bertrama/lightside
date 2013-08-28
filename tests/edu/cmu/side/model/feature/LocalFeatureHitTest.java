@@ -1,7 +1,6 @@
 package edu.cmu.side.model.feature;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Test;
@@ -12,6 +11,7 @@ import junit.framework.TestCase;
 
 public class LocalFeatureHitTest extends TestCase {
 	Feature testFeature;
+	@Override
 	public void setUp(){
 		testFeature = Feature.fetchFeature("Pre", "fix", Feature.Type.BOOLEAN, null);
 	}

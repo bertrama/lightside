@@ -1,6 +1,8 @@
 package edu.cmu.side.model;
 
 import java.util.ArrayList;
+
+
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -9,6 +11,7 @@ import junit.framework.TestCase;
 
 public class FreqMapTest extends TestCase {
 	FreqMap<String> fm;
+	@Override
 	public void setUp(){
 		fm = new FreqMap<String>();
 	}

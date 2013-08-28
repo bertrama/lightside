@@ -8,11 +8,8 @@ import java.io.PrintWriter;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.TableModel;
-
-import com.jidesoft.utils.StringUtils;
 
 public class CSVExporter
 {
@@ -35,7 +32,7 @@ public class CSVExporter
 		chooser.setSelectedFile(new File(filename));
 		
 		int state = chooser.showDialog(null, "Export to CSV");
-		if(state == chooser.APPROVE_OPTION)
+		if(state == JFileChooser.APPROVE_OPTION)
 		{
 			File f = chooser.getSelectedFile();
 			if(f.exists())

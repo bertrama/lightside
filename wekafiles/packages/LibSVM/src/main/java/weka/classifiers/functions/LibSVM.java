@@ -23,7 +23,6 @@
 
 package weka.classifiers.functions;
 
-import weka.classifiers.Classifier;
 import weka.classifiers.AbstractClassifier;
 import weka.core.Capabilities;
 import weka.core.Instance;
@@ -335,7 +334,8 @@ public class LibSVM
    * 
    * @return the technical information about this class
    */
-  public TechnicalInformation getTechnicalInformation() {
+  @Override
+public TechnicalInformation getTechnicalInformation() {
     TechnicalInformation 	result;
     TechnicalInformation 	additional;
     
@@ -362,7 +362,8 @@ public class LibSVM
    * 
    * @return an enumeration of all the available options.
    */
-  public Enumeration listOptions() {
+  @Override
+public Enumeration listOptions() {
     Vector      result;
     
     result = new Vector();
@@ -557,7 +558,8 @@ public class LibSVM
    * @param options     the options to parse
    * @throws Exception  if parsing fails
    */
-  public void setOptions(String[] options) throws Exception {
+  @Override
+public void setOptions(String[] options) throws Exception {
     String      tmpStr;
     
     tmpStr = Utils.getOption('S', options);
@@ -646,7 +648,8 @@ public class LibSVM
    * 
    * @return            the current setup
    */
-  public String[] getOptions() {
+  @Override
+public String[] getOptions() {
     Vector        result;
     
     result  = new Vector();
@@ -1467,7 +1470,8 @@ public class LibSVM
    * @return 			the distribution
    * @throws Exception 		if the distribution can't be computed successfully
    */
-  public double[] distributionForInstance (Instance instance) throws Exception {	
+  @Override
+public double[] distributionForInstance (Instance instance) throws Exception {	
     int[] labels = new int[instance.numClasses()];
     double[] prob_estimates = null;
 
@@ -1556,7 +1560,8 @@ public class LibSVM
    *
    * @return      the capabilities of this classifier
    */
-  public Capabilities getCapabilities() {
+  @Override
+public Capabilities getCapabilities() {
     Capabilities result = super.getCapabilities();
     result.disableAll();
 
@@ -1602,7 +1607,8 @@ public class LibSVM
    * @throws Exception  if libsvm classes not in classpath or libsvm
    *                    encountered a problem
    */
-  public void buildClassifier(Instances insts) throws Exception {
+  @Override
+public void buildClassifier(Instances insts) throws Exception {
     m_Filter = null;
     
     if (!isPresent())
@@ -1695,7 +1701,8 @@ public class LibSVM
    * 
    * @return            a string representation
    */
-  public String toString() {
+  @Override
+public String toString() {
     return "LibSVM wrapper, original code by Yasser EL-Manzalawy (= WLSVM)";
   }
   
@@ -1704,7 +1711,8 @@ public class LibSVM
    * 
    * @return		the revision
    */
-  public String getRevision() {
+  @Override
+public String getRevision() {
     return RevisionUtils.extract("$Revision: 7562 $");
   }
   

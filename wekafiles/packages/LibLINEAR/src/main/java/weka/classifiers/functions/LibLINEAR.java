@@ -202,7 +202,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      *
      * @return the technical information about this class
      */
-    public TechnicalInformation getTechnicalInformation() {
+    @Override
+	public TechnicalInformation getTechnicalInformation() {
         TechnicalInformation result;
 
         result = new TechnicalInformation(Type.MISC);
@@ -220,7 +221,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      *
      * @return an enumeration of all the available options.
      */
-    @SuppressWarnings("rawtypes")
+    @Override
+	@SuppressWarnings("rawtypes")
     public Enumeration listOptions() {
 
         Vector<Object> result = new Vector<Object>();
@@ -315,7 +317,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      * @param options     the options to parse
      * @throws Exception  if parsing fails
      */
-    public void setOptions(String[] options) throws Exception {
+    @Override
+	public void setOptions(String[] options) throws Exception {
         String tmpStr;
 
         tmpStr = Utils.getOption('S', options);
@@ -359,7 +362,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      *
      * @return            the current setup
      */
-    public String[] getOptions() {
+    @Override
+	public String[] getOptions() {
 
         List<String> options = new ArrayList<String>();
 
@@ -773,7 +777,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      * @return 			the distribution
      * @throws Exception 		if the distribution can't be computed successfully
      */
-    public double[] distributionForInstance(Instance instance) throws Exception {
+    @Override
+	public double[] distributionForInstance(Instance instance) throws Exception {
 
         if (!getDoNotReplaceMissingValues()) {
             m_ReplaceMissingValues.input(instance);
@@ -823,7 +828,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      *
      * @return      the capabilities of this classifier
      */
-    public Capabilities getCapabilities() {
+    @Override
+	public Capabilities getCapabilities() {
         Capabilities result = super.getCapabilities();
         result.disableAll();
 
@@ -846,7 +852,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      * @throws Exception  if liblinear classes not in classpath or liblinear
      *                    encountered a problem
      */
-    public void buildClassifier(Instances insts) throws Exception {
+    @Override
+	public void buildClassifier(Instances insts) throws Exception {
         m_NominalToBinary = null;
         m_Filter = null;
 
@@ -936,7 +943,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      *
      * @return a string representation
      */
-    public String toString() {
+    @Override
+	public String toString() {
         return "LibLINEAR wrapper";
     }
 
@@ -945,7 +953,8 @@ public class LibLINEAR extends AbstractClassifier implements TechnicalInformatio
      *
      * @return the revision
      */
-    public String getRevision() {
+    @Override
+	public String getRevision() {
         return REVISION;
     }
 

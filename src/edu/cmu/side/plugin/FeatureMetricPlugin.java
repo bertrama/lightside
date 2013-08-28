@@ -27,6 +27,7 @@ public abstract class FeatureMetricPlugin<E extends Comparable<E>> extends SIDEP
 	/**
 	 * @return A short prefix string for the plugin name.
 	 */
+	@Override
 	public abstract String getOutputName();
 
 	public abstract Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target, StatusUpdater update);

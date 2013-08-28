@@ -10,8 +10,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import edu.cmu.side.Workbench;
-import edu.cmu.side.control.ExtractFeaturesControl;
-import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 
 public abstract class GenericLoadCSVPanel extends GenericLoadPanel

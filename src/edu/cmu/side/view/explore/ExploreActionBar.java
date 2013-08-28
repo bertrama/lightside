@@ -6,8 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExploreResultsControl;

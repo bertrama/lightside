@@ -1,6 +1,5 @@
 package edu.cmu.side.model.feature;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Test;
@@ -14,6 +13,7 @@ public class FeatureHitTest extends TestCase {
 	
 	FeatureHit nominalFeatureHit;
 	String[] options = {"first", "second"};
+	@Override
 	public void setUp() throws Exception{
 		super.setUp();
 		

@@ -1,6 +1,5 @@
 package edu.cmu.side.control;
 
-import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
@@ -22,14 +21,10 @@ import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
-import edu.cmu.side.plugin.ModelMetricPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.RecipeCellRenderer;
-import edu.cmu.side.view.util.Refreshable;
-import edu.cmu.side.view.util.ScrollablePanel;
-import edu.cmu.side.view.util.ScrollablePanel.ScrollableSizeHint;
 
 public abstract class GenesisControl {
 

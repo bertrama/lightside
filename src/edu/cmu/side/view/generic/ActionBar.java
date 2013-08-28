@@ -80,6 +80,7 @@ public abstract class ActionBar extends AbstractListPanel{
 
 	
 
+	@Override
 	public void refreshPanel()
 	{
 		if(getDefaultName() != null)

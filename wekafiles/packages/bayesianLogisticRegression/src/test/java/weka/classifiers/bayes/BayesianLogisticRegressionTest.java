@@ -38,7 +38,8 @@ public class BayesianLogisticRegressionTest extends AbstractClassifierTest {
   public BayesianLogisticRegressionTest(String name) { super(name);  }
 
   /** Creates a default BayesianLogisticRegression */
-  public Classifier getClassifier() {
+  @Override
+public Classifier getClassifier() {
     return new BayesianLogisticRegression();
   }
 

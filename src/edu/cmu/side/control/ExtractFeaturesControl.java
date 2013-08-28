@@ -13,11 +13,8 @@ import java.util.TreeSet;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-
-import com.yerihyo.yeritools.io.FileToolkit;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
@@ -34,11 +31,8 @@ import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.extract.ExtractCombinedLoadPanel;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
-import edu.cmu.side.view.util.AbstractListPanel;
-import edu.cmu.side.view.util.FastListModel;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
-import edu.stanford.nlp.util.Sets;
 
 public class ExtractFeaturesControl extends GenesisControl{
 
@@ -170,6 +164,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 
 		static boolean updatingCombos = false;
+		@Override
 		public void actionPerformed(ActionEvent ae)
 		{
 			if (!updatingCombos)

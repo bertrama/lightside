@@ -16,6 +16,7 @@ import java.util.TreeSet;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JTable;
 import javax.swing.KeyStroke;
 import javax.swing.RowSorter.SortKey;
@@ -93,10 +94,10 @@ public abstract class FeatureMetricCheckboxPanel extends GenericFeatureMetricPan
 		KeyStroke space = KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0);
 		KeyStroke backspace = KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, 0);
 		KeyStroke delete = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0);
-		featureTable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, selectKey);
-		featureTable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(space, selectKey);
-		featureTable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(backspace, deselectKey);
-		featureTable.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(delete, deselectKey);
+		featureTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(enter, selectKey);
+		featureTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(space, selectKey);
+		featureTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(backspace, deselectKey);
+		featureTable.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(delete, deselectKey);
 		featureTable.getActionMap().put(selectKey, new AbstractAction() {
 
 		    @Override
@@ -174,6 +175,7 @@ public abstract class FeatureMetricCheckboxPanel extends GenericFeatureMetricPan
 
 	public abstract void selectedFeaturesChanged();
 	
+	@Override
 	public Collection<Feature> getSelectedFeatures()
 	{
 		return selectedFeatures;

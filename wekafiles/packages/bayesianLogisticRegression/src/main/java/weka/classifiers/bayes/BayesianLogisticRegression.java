@@ -22,7 +22,6 @@
 
 package weka.classifiers.bayes;
 
-import weka.classifiers.Classifier;
 import weka.classifiers.AbstractClassifier;
 import weka.classifiers.bayes.blr.GaussianPriorImpl;
 import weka.classifiers.bayes.blr.LaplacePriorImpl;
@@ -296,7 +295,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
    * This method tests what kind of data this classifier can handle.
    * return Capabilities
    */
-  public Capabilities getCapabilities() {
+  @Override
+public Capabilities getCapabilities() {
     Capabilities result = super.getCapabilities();
     result.disableAll();
 
@@ -322,7 +322,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
    *        @param data training data
    *        @exception Exception if classifier can't be built successfully.
    */
-  public void buildClassifier(Instances data) throws Exception {
+  @Override
+public void buildClassifier(Instances data) throws Exception {
     Instance instance;
     int i;
     int j;
@@ -399,7 +400,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
     *
     * @return the technical information about this class
     */
-  public TechnicalInformation getTechnicalInformation() {
+  @Override
+public TechnicalInformation getTechnicalInformation() {
     TechnicalInformation result = null;
 
     result = new TechnicalInformation(Type.TECHREPORT);
@@ -518,9 +520,9 @@ public class BayesianLogisticRegression extends AbstractClassifier
       mean += sqr_sum;
     }
 
-    mean = mean / (double) m_Instances.numInstances();
+    mean = mean / m_Instances.numInstances();
 
-    return ((double) m_Instances.numAttributes()) / mean;
+    return (m_Instances.numAttributes()) / mean;
   }
 
   /**
@@ -530,7 +532,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
    * @return the classification
    * @throws Exception if classification can't be done successfully
    */
-  public double classifyInstance(Instance instance) throws Exception {
+  @Override
+public double classifyInstance(Instance instance) throws Exception {
     //TODO: Implement
     double sum_R = 0.0;
     double classification = 0.0;
@@ -559,7 +562,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
    *
    * @return the model as string
    */
-  public String toString() {
+  @Override
+public String toString() {
 
     if (m_Instances == null) {
       return "Bayesian logistic regression: No model built yet.";
@@ -668,7 +672,7 @@ public class BayesianLogisticRegression extends AbstractClassifier
     // Perform two-fold cross-validation to collect
     // unbiased predictions
     if (list != null) {
-      int numFolds = (int) NumFolds;
+      int numFolds = NumFolds;
       Random random = new Random();
       m_Instances.randomize(random);
       m_Instances.stratify(numFolds);
@@ -726,7 +730,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
    *
    * @return an enumeration of all the available options.
    */
-  public Enumeration listOptions() {
+  @Override
+public Enumeration listOptions() {
     Vector newVector = new Vector();
 
     newVector.addElement(new Option("\tShow Debugging Output\n", "D", 0, "-D"));
@@ -827,7 +832,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
    * @param options the list of options as an array of strings
    * @throws Exception if an option is not supported
    */
-  public void setOptions(String[] options) throws Exception {
+  @Override
+public void setOptions(String[] options) throws Exception {
     //Debug Option
     debug = Utils.getFlag('D', options);
 
@@ -890,7 +896,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
   /**
    *
    */
-  public String[] getOptions() {
+  @Override
+public String[] getOptions() {
     Vector result = new Vector();
 
     //Add Debug Mode to options.
@@ -944,14 +951,16 @@ public class BayesianLogisticRegression extends AbstractClassifier
    * @return tip text for this property suitable for
    * displaying in the explorer/experimenter gui
    */
-  public String debugTipText() {
+  @Override
+public String debugTipText() {
     return "Turns on debugging mode.";
   }
 
   /**
    *
    */
-  public void setDebug(boolean debugMode) {
+  @Override
+public void setDebug(boolean debugMode) {
     debug = debugMode;
   }
 
@@ -1253,7 +1262,8 @@ public class BayesianLogisticRegression extends AbstractClassifier
    * 
    * @return		the revision
    */
-  public String getRevision() {
+  @Override
+public String getRevision() {
     return RevisionUtils.extract("$Revision: 6637 $");
   }
 }

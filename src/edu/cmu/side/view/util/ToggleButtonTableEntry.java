@@ -1,7 +1,5 @@
 package edu.cmu.side.view.util;
 
-import javax.swing.JButton;
-import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 
 public class ToggleButtonTableEntry extends JToggleButton{

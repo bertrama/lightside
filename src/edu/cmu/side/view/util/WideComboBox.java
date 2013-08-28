@@ -25,7 +25,8 @@ public class WideComboBox extends JComboBox{
 
     private boolean layingOut = false; 
 
-    public void doLayout(){ 
+    @Override
+	public void doLayout(){ 
         try{ 
             layingOut = true; 
                 super.doLayout(); 
@@ -34,7 +35,8 @@ public class WideComboBox extends JComboBox{
         } 
     } 
 
-    public Dimension getSize(){ 
+    @Override
+	public Dimension getSize(){ 
         Dimension dim = super.getSize(); 
         if(!layingOut) 
             dim.width = Math.max(dim.width, getPreferredSize().width); 

@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.SwingWorker;
 
@@ -101,7 +102,10 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 			{
 				if(halt)
 				{
-					forceCancel();
+					int answer = JOptionPane.showConfirmDialog(null, "You've already pressed the big red button - we're trying to stop safely.\nDo you want to force this "+actionBar.actionButton.getText()+" job to stop?\nAnything could happen.", 
+							"Emergency Stop", JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+					if(answer == JOptionPane.YES_OPTION)
+						forceCancel();
 				}
 				else
 				{

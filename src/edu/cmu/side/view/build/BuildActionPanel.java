@@ -44,7 +44,7 @@ public class BuildActionPanel extends ActionBar {
 		updaters.add("right", trainingLabel);
 		name.setText(getDefaultName());
 		
-		right.remove(cancel);
+		//right.remove(cancel);
 	}
 	
 	public class NameListener implements ActionListener{

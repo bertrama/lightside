@@ -318,7 +318,6 @@ public class BuildModelControl extends GenesisControl{
 			{
 				e.printStackTrace();
 			}
-			finishTask();
 		}
 
 		@Override

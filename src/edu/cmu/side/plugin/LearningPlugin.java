@@ -24,6 +24,7 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.Feature.Type;
+import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.util.EvaluationUtils;
 import edu.cmu.side.view.util.DefaultMap;
@@ -40,6 +41,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 	public String getType() {
 		return type;
 	}
+	
+	public abstract boolean supportsClassType(Feature.Type type);
 
 	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> validationSettings, OrderedPluginMap wrappers, StatusUpdater progressIndicator) throws Exception{
 		halt = false;

@@ -35,11 +35,11 @@ public abstract class ActionBar extends AbstractListPanel{
 	protected String defaultName;
 	protected Stage recipeStage;
 	
-	Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
+	protected Font font = new Font(Font.SANS_SERIF, Font.BOLD, 20);
 
-	JPanel left = new JPanel(new RiverLayout());
-	JPanel middle = new JPanel(new RiverLayout());
-	JPanel right = new JPanel(new RiverLayout());
+	protected JPanel left = new JPanel(new RiverLayout());
+	protected JPanel middle = new JPanel(new RiverLayout());
+	protected JPanel right = new JPanel(new RiverLayout());
 	
 	protected StatusUpdater update;
 

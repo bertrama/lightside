@@ -10,8 +10,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
 import edu.cmu.side.control.BuildModelControl;
+import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
+import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.WrapperPlugin;
 import edu.cmu.side.view.generic.ActionBar;
@@ -41,6 +43,8 @@ public class BuildActionPanel extends ActionBar {
 		updaters.add("right", (Component) update);
 		updaters.add("right", trainingLabel);
 		name.setText(getDefaultName());
+		
+		right.remove(cancel);
 	}
 	
 	public class NameListener implements ActionListener{
@@ -60,7 +64,9 @@ public class BuildActionPanel extends ActionBar {
 	public void refreshPanel(){
 		super.refreshPanel();
 		
-		actionButton.setEnabled(BuildModelControl.hasHighlightedFeatureTableRecipe());
+		Recipe table = BuildModelControl.getHighlightedFeatureTableRecipe();
+		LearningPlugin learner = BuildModelControl.getHighlightedLearningPlugin();
+		actionButton.setEnabled(table != null && learner.supportsClassType(table.getTrainingTable().getClassValueType()));
 	}
 
 	@Override

@@ -179,14 +179,14 @@ public class FeatureTableTest extends TestCase{
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		assertEquals(ft.getFeatureSet().size(), 333);
+		assertEquals(336, ft.getFeatureSet().size());
 	}
 	@Test
 	public void testGetSortedFeatures(){
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		assertEquals(ft.getSortedFeatures().size(), 333);
+		assertEquals(336, ft.getSortedFeatures().size());
 		assertEquals(((TreeSet<Feature>) ft.getSortedFeatures()).first().toString(),"!!!");
 	}
 	@Test

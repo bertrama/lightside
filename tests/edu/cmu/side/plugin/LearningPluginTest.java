@@ -31,7 +31,7 @@ public class LearningPluginTest
 {
 
 	@BeforeClass
-	public void setUp() throws Exception
+	public static void setUp() throws Exception
 	{
 		
 	}

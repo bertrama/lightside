@@ -22,12 +22,19 @@ import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.WrapperPlugin;
 
+/**
+ * A recipe stores the set of options that were chosen to get from an input file to whatever stage of machine learning you're currently at.
+ * All subsequent fields will remain blank; for instance, if this recipe describes a feature table then the learner will be null.
+ * 
+ * Within the researcher UI, everything that points to a data structure points to a recipe containing all of the
+ * steps that led to the creation of that feature table (in that case, a documentList, featureTable, and pluginmap of extractors.
+ * 
+ * @author emayfiel
+ *
+ */
 public class Recipe implements Serializable
 {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	
 	RecipeManager.Stage stage = null;
@@ -138,6 +145,11 @@ public class Recipe implements Serializable
 	
 	public LearningPlugin getLearner(){ return learner; }
 
+	
+	/**
+	 * Every time we add a new element to the recipe, we reset the stage that the recipe is at to reflect the new reality.
+	 * @param sdl
+	 */
 	public void setDocumentList(DocumentList sdl){
 		documentList = sdl;
 		resetStage();

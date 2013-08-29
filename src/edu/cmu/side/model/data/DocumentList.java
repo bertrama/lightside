@@ -47,18 +47,6 @@ public class DocumentList implements Serializable
 			filenameList.add("Document");
 	}
 	
-
-//	public void setClassValueType(Feature.Type t)
-//	{
-////		System.out.println("DL 48: setting class value type for "+currentAnnotation+" to "+t);
-//		if(t != type)
-//		{
-//			new Exception("tracing setClassValueType").printStackTrace(System.out);
-//			type = t;
-//			labelArray = null;
-//			getLabelArray();
-//		}
-//	}
 	
 	public Feature.Type getValueType(String label)
 	{

@@ -73,10 +73,8 @@ public class Chef
 
 		for (SIDEPlugin plug : extractors.keySet())
 		{
-			//System.out.println("Extractor Settings: "+extractors.get(plug));
 			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
 			hits.addAll(extractorHits);
-			//System.out.println(extractorHits.size()+" hits for "+plug);
 		}
 		FeatureTable ft = new FeatureTable(corpus, hits, threshold, annotation, type);
 		recipe.setFeatureTable(ft);

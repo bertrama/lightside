@@ -88,7 +88,7 @@
 		<version>1.0</version>
 		<description><![CDATA[Build DocumentList From CSV file]]></description>
 		<jarfile>genesis.jar</jarfile>
-		<classname>plugins.fileParsing.CSVParser</classname>
+		<classname>plugins.input.CSVParser</classname>
 	</plugin>
 
 	<!-- <plugin> <name>Predicted Annotation Feature</name> <author>David Adamson</author> 

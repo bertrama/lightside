@@ -1,10 +1,6 @@
 package edu.cmu.side.view.predict;
 
-import java.awt.Component;
-import java.awt.Container;
 import java.util.Collections;
-
-import javax.swing.JScrollPane;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
@@ -14,7 +10,6 @@ import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.generic.GenericLoadCSVPanel;
-import edu.cmu.side.view.util.SelectPluginList;
 
 public class PredictNewDataPanel extends GenericLoadCSVPanel
 {

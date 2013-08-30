@@ -102,6 +102,7 @@ public class PredictOutputPanel extends AbstractListPanel
 		add("br hfill vfill", tableScroll);
 	}
 
+	@Override
 	public void refreshPanel()
 	{
 		refreshPanel(PredictLabelsControl.getHighlightedUnlabeledData());

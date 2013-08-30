@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
@@ -114,7 +115,7 @@ public class Recipe implements Serializable
 		}
 		else
 		{
-			out = ""+stage;
+			out = getRecipeName();
 		}
 		if (out == null) out = stage.toString();
 		return out;
@@ -266,6 +267,39 @@ public class Recipe implements Serializable
 	{
 		Recipe newRecipe = fetchRecipe();
 		
+		DocumentList dummyDocs = createDummyDocs(prior);
+		
+		newRecipe.setDocumentList(dummyDocs);
+		
+		for (SIDEPlugin plugin : prior.getExtractors().keySet())
+		{
+			newRecipe.addExtractor((FeaturePlugin) plugin, prior.getExtractors().get(plugin));
+		}
+		
+		FeatureTable dummyTable = prior.getTrainingTable().predictionClone(dummyDocs);
+		
+		newRecipe.setFeatureTable(dummyTable);
+		
+		for (SIDEPlugin plugin : prior.getFilters().keySet())
+		{
+			newRecipe.addFilter((RestructurePlugin) plugin, prior.getFilters().get(plugin));
+		}
+		
+		for (SIDEPlugin plugin : prior.getWrappers().keySet()){
+			newRecipe.addWrapper((WrapperPlugin) plugin, prior.getWrappers().get(plugin));
+		}
+		newRecipe.setLearner(prior.getLearner());
+		newRecipe.setLearnerSettings(prior.getLearnerSettings());
+		newRecipe.setValidationSettings(prior.getValidationSettings());
+		
+		newRecipe.recipeName = prior.getRecipeName()+" (prediction only)";
+		newRecipe.stage = Stage.PREDICTION_ONLY;
+		
+		return newRecipe;
+	}
+
+	protected static DocumentList createDummyDocs(Recipe prior)
+	{
 		Map<String, List<String>> textColumns = new HashMap<String, List<String>>();
 		Map<String, List<String>> columns = new HashMap<String, List<String>>();
 		DocumentList originalDocs = prior.getDocumentList();
@@ -282,33 +316,7 @@ public class Recipe implements Serializable
 		
 		DocumentList newDocs = new DocumentList(emptyList, textColumns, columns, prior.getFeatureTable().getAnnotation());
 		newDocs.setLabelArray(prior.getFeatureTable().getLabelArray());
-		
-		
-		newRecipe.setDocumentList(newDocs);
-		
-		for (SIDEPlugin plugin : prior.getExtractors().keySet())
-		{
-			newRecipe.addExtractor((FeaturePlugin) plugin, prior.getExtractors().get(plugin));
-		}
-		
-		FeatureTable dummyTable = prior.getTrainingTable().predictionClone();
-		
-		newRecipe.setFeatureTable(dummyTable);
-		
-		for (SIDEPlugin plugin : prior.getFilters().keySet())
-		{
-			newRecipe.addFilter((RestructurePlugin) plugin, prior.getFilters().get(plugin));
-		}
-		
-		for (SIDEPlugin plugin : prior.getWrappers().keySet()){
-			newRecipe.addWrapper((WrapperPlugin) plugin, prior.getWrappers().get(plugin));
-		}
-		newRecipe.setLearner(prior.getLearner());
-		newRecipe.setLearnerSettings(prior.getLearnerSettings());
-		newRecipe.setValidationSettings(prior.getValidationSettings());
-		newRecipe.setRecipeName(prior.getRecipeName());
-
-		return newRecipe;
+		return newDocs;
 	}
 	
 	public static Recipe copyEmptyRecipe(Recipe prior)
@@ -375,7 +383,11 @@ public class Recipe implements Serializable
 	}
 	public Set<String> getTextColumns(){
 		FeatureTable table = getTrainingTable();
-		return table==null?null:table.getDocumentList().getTextColumns();
+		if(table != null && table.getDocumentList() != null)
+			table.getDocumentList().getTextColumns();
+		if(getDocumentList() != null)
+			return getDocumentList().getTextColumns();
+		return null;
 	}
 
 

@@ -116,14 +116,6 @@ public class PredictActionBar extends ActionBar
 			name.setText(getColumnNameSuggestion());
 		}
 		checkColumnName();
-		
-		if(trainRecipe != null && unlabeledRecipe != null)
-		{
-			DocumentList evalList = trainRecipe.getTrainingResult().getEvaluationTable().getDocumentList();
-			DocumentList labelList = unlabeledRecipe.getDocumentList();
-			
-			setPredictOnTrain(evalList.equals(labelList));
-		}
 	}
 
 	protected boolean isPredictionPossible()
@@ -149,12 +141,6 @@ public class PredictActionBar extends ActionBar
 			warn.clearWarning();
 			actionButton.setEnabled(isPredictionPossible());
 		}
-	}
-	
-	public void setPredictOnTrain(boolean matchingDocs)
-	{
-//		useEvaluationBox.setEnabled(matchingDocs);
-//		useEvaluationBox.setSelected(matchingDocs);
 	}
 
 	protected String getColumnNameSuggestion()

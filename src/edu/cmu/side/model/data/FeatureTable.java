@@ -581,12 +581,17 @@ public class FeatureTable implements Serializable
 		this.type = type;
 	}
 
-	public FeatureTable predictionClone()
+	/**
+	 * Produces a feature-table suitable only for prediction, not analysis. 
+	 * @param dummyDocs might be null. If not null, pass in a proxy for the original DocumentList.
+	 * @return
+	 */
+	public FeatureTable predictionClone(DocumentList dummyDocs)
 	{
 		FeatureTable ft = new FeatureTable();
 	    ft.setName(getName()+" (prediction clone)");
 
-//	    ft.documents = documents;
+	    ft.documents = dummyDocs;
 		ft.type = type;
 		ft.threshold = threshold;
 		ft.annotation = annotation;

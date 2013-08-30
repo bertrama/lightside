@@ -111,13 +111,11 @@ public class TrainedModelExporter
 		FileOutputStream fout = new FileOutputStream(target);
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(recipe);
-
 	}
 
 	public static void exportForPrediction(Recipe recipe, File target) throws IOException
 	{
 		Recipe dupe = Recipe.copyPredictionRecipe(recipe);
-		dupe.setRecipeName(target.getName());
 		FileOutputStream fout = new FileOutputStream(target);
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(dupe);

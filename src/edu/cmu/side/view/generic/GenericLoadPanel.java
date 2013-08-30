@@ -48,7 +48,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	public static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
 	public static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff");
 	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "model.side");
-	public static FileNameExtensionFilter trainedFilter = new FileNameExtensionFilter("Predict-Only", "side", "predict.side");
+	public static FileNameExtensionFilter trainedFilter = new FileNameExtensionFilter("Predict-Only", "predict", "predict.side");
 
 	protected GenericLoadPanel()
 	{
@@ -304,6 +304,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		checkChooser();
 		
 		Recipe recipe = (Recipe) combo.getSelectedItem();
+		System.out.println("saving "+recipe+" ("+recipe.getStage()+")");
 
 		if (recipe.getStage() == Stage.FEATURE_TABLE || recipe.getStage() == Stage.MODIFIED_TABLE)
 		{

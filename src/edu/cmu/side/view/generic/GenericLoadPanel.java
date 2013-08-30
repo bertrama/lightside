@@ -48,8 +48,9 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	public static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
 	public static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff");
-	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "side", "model.side");
-	public static FileNameExtensionFilter trainedFilter = new FileNameExtensionFilter("Predict-Only", "side", "predict.side");
+	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSide", "side");
+	public static FileNameExtensionFilter modelFilter = new FileNameExtensionFilter("LightSide Trained Model", "model.side");
+	public static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only Model", "predict", "predict.side");
 
 	protected GenericLoadPanel()
 	{

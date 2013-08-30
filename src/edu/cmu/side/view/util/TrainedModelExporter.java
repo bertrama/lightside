@@ -20,8 +20,8 @@ public class TrainedModelExporter
 
 	static JFileChooser chooser;
 
-	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSIDE", "model.side", "side");
-	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict.side", "side");
+	static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSide Trained Model", "model.side", "side");
+	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only Model", "predict", "model.predict");
 
 	public static void setUpChooser()
 	{
@@ -78,7 +78,7 @@ public class TrainedModelExporter
 		{
 			chooser.setSelectedFile(new File(result.getName() + "." + ((FileNameExtensionFilter) chooser.getFileFilter()).getExtensions()[0]));
 
-			int state = chooser.showDialog(null, "Save Feature Table");
+			int state = chooser.showDialog(null, "Save Trained Model");
 			if (state == JFileChooser.APPROVE_OPTION)
 			{
 				File f = chooser.getSelectedFile();

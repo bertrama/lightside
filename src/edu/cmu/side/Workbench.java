@@ -72,7 +72,7 @@ public class Workbench{
 		//		pane = new GlassPane(frame.getContentPane());
 		//		frame.setGlassPane(pane);
 		frame.setSize(new Dimension(1024,768));
-		frame.setTitle("LightSIDE");
+		frame.setTitle("LightSide");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);

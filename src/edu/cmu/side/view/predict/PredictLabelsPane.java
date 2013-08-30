@@ -31,7 +31,9 @@ public class PredictLabelsPane extends JPanel implements Refreshable
 
 		{
 			checkChooser();
-			chooser.addChoosableFileFilter(GenericLoadPanel.trainedFilter);
+			chooser.resetChoosableFileFilters();
+			chooser.addChoosableFileFilter(GenericLoadPanel.modelFilter);
+			chooser.addChoosableFileFilter(GenericLoadPanel.predictFilter);
 		}
 
 		@Override

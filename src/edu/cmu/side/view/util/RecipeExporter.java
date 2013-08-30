@@ -33,8 +33,8 @@ public class RecipeExporter
 
 	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV (Excel)", "csv", "CSV");
 	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
-	static FileNameExtensionFilter sideTableFilter = new FileNameExtensionFilter("LightSIDE Feature Table", "table.side", "side");
-	static FileNameExtensionFilter sideModelFilter = new FileNameExtensionFilter("LightSIDE Trained Model", "model.side", "side");
+	static FileNameExtensionFilter sideTableFilter = new FileNameExtensionFilter("LightSide Feature Table", "table.side", "side");
+	static FileNameExtensionFilter sideModelFilter = new FileNameExtensionFilter("LightSide Trained Model", "model.side", "side");
 	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict", "model.predict");
 
 	

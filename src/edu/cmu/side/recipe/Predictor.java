@@ -211,7 +211,7 @@ public class Predictor
 		return result;
 	}
 
-	public PredictionResult predictFromTable(FeatureTable predictTable)
+	public PredictionResult predictFromTable(FeatureTable predictTable) throws Exception
 	{
 		PredictionResult result = null;
 		FeatureTable trainingTable = recipe.getTrainingTable();

@@ -265,6 +265,7 @@ public class BuildModelControl extends GenesisControl{
 	{
 		Recipe plan;
 		String name;
+		Exception ex;
 
 
 		public BuildModelTask(ActionBar action, Recipe newRecipe, String n)
@@ -279,12 +280,23 @@ public class BuildModelControl extends GenesisControl{
 		protected void finishTask()
 		{
 			super.finishTask();
-			BuildModelControl.setHighlightedTrainedModelRecipe(plan);
-			Workbench.getRecipeManager().addRecipe(plan);
-			ExploreResultsControl.setHighlightedTrainedModelRecipe(plan);
-			CompareModelsControl.setCompetingTrainedModelRecipe(plan);
-			PredictLabelsControl.setHighlightedTrainedModelRecipe(plan);
-			Workbench.update(Stage.TRAINED_MODEL);
+			if(ex != null)
+			{
+				if(ex.getMessage().equals("User Canceled"))
+					JOptionPane.showMessageDialog(null, "Model Training Canceled.", "Train Stop", JOptionPane.INFORMATION_MESSAGE);
+				
+				else
+					JOptionPane.showMessageDialog(null, "Model Training Failed.\n"+ex.getLocalizedMessage(), "Train Wreck", JOptionPane.ERROR_MESSAGE);
+			}
+			else if(plan != null)
+			{
+				BuildModelControl.setHighlightedTrainedModelRecipe(plan);
+				Workbench.getRecipeManager().addRecipe(plan);
+				ExploreResultsControl.setHighlightedTrainedModelRecipe(plan);
+				CompareModelsControl.setCompetingTrainedModelRecipe(plan);
+				PredictLabelsControl.setHighlightedTrainedModelRecipe(plan);
+				Workbench.update(Stage.TRAINED_MODEL);
+			}
 		}
 
 		@Override
@@ -316,8 +328,9 @@ public class BuildModelControl extends GenesisControl{
 			catch (Exception e)
 			{
 				e.printStackTrace();
+				plan = null;
+				ex = e;
 			}
-			finishTask();
 		}
 
 		@Override

@@ -29,6 +29,7 @@ import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.recipe.converters.ConverterControl;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.RecipeExporter;
 
@@ -289,9 +290,10 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 				try
 				{
-					FileOutputStream fout = new FileOutputStream(target);
-					ObjectOutputStream oos = new ObjectOutputStream(fout);
-					oos.writeObject(recipe);
+//					FileOutputStream fout = new FileOutputStream(target);
+//					ObjectOutputStream oos = new ObjectOutputStream(fout);
+//					oos.writeObject(recipe);
+					ConverterControl.writeToXML(target, recipe);
 
 				}
 				catch (Exception e)
@@ -329,10 +331,11 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 			try
 			{
-				FileInputStream fout = new FileInputStream(target);
-				ObjectInputStream in = new ObjectInputStream(fout);
-				Recipe recipe = (Recipe) in.readObject(); // TODO: should this
-															// be more generic?
+//				FileInputStream fout = new FileInputStream(target);
+//				ObjectInputStream in = new ObjectInputStream(fout);
+//				Recipe recipe = (Recipe) in.readObject(); // TODO: should this
+//															// be more generic?
+				Recipe recipe = ConverterControl.readFromXML(target);
 				Workbench.getRecipeManager().addRecipe(recipe);
 				setHighlight(recipe);
 				Workbench.update(this);

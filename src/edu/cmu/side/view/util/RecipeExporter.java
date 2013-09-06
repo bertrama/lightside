@@ -24,6 +24,7 @@ import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.recipe.converters.ConverterControl;
 
 public class RecipeExporter
 {
@@ -155,10 +156,12 @@ public class RecipeExporter
 
 	public static void exportToSerialized(Recipe recipe, File target) throws IOException
 	{
-		FileOutputStream fout = new FileOutputStream(target);
-		ObjectOutputStream oos = new ObjectOutputStream(fout);
-		oos.writeObject(recipe);
+//		//TODO: write out here
+//		FileOutputStream fout = new FileOutputStream(target);
+//		ObjectOutputStream oos = new ObjectOutputStream(fout);
+//		oos.writeObject(recipe);
 
+		ConverterControl.writeToXML(target, recipe);
 	}
 
 	public static void exportToARFF(FeatureTable ft, File out) throws IOException
@@ -284,9 +287,11 @@ public class RecipeExporter
 
 	public static void exportForPrediction(Recipe recipe, File target) throws IOException
 	{
+		//TODO: Setup Rewrite Here
 		Recipe dupe = Recipe.copyPredictionRecipe(recipe);
-		FileOutputStream fout = new FileOutputStream(target);
-		ObjectOutputStream oos = new ObjectOutputStream(fout);
-		oos.writeObject(dupe);
+//		FileOutputStream fout = new FileOutputStream(target);
+//		ObjectOutputStream oos = new ObjectOutputStream(fout);
+//		oos.writeObject(dupe);
+		ConverterControl.writeToXML(target, dupe);
 	}
 }

@@ -21,6 +21,10 @@ public class ConverterControl {
 	
 	public static void writeToXML(String fileName, Recipe recipe){
 		File file = createFile(fileName);
+		writeToXML(file, recipe);
+	}
+	
+	public static void writeToXML(File file, Recipe recipe){
 		XStream stream = new XStream();
 		stream.registerConverter(new FeatureTableConverter());
 		try {
@@ -32,13 +36,19 @@ public class ConverterControl {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.out.println("Writing file complete");
 	}
 	
 	public static Recipe readFromXML(String fileName){
 		File file = createFile(fileName);
+		
+		return readFromXML(file);
+	}
+	public static Recipe readFromXML(File file){
 		XStream stream = new XStream();
 		stream.registerConverter(new FeatureTableConverter());
 		Recipe r =(Recipe) stream.fromXML(file);
+		System.out.println("Reading file complete");
 		return r;
 	}
 	

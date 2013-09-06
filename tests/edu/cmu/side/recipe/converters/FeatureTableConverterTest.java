@@ -63,10 +63,10 @@ public class FeatureTableConverterTest {
 		assertNull(afterObj);
 		assertNull(ftBefore);
 	}
-	@Test
-	public void testPredictOnlyParse(){
-		XStream streamer = new XStream();
-		streamer.registerConverter(new FeatureTableConverter());
-		streamer.fromXML(predictFile);
-	}
+//	@Test
+//	public void testPredictOnlyParse(){
+//		XStream streamer = new XStream();
+//		streamer.registerConverter(new FeatureTableConverter());
+//		streamer.fromXML(predictFile);
+//	}
 }

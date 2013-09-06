@@ -1,7 +1,9 @@
 package edu.cmu.side.recipe.converters;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Set;
 
 import plugins.features.BasicFeatures;
@@ -30,21 +32,117 @@ public class FeatureTableConverter implements Converter{
 	@Override
 	public void marshal(Object obj, HierarchicalStreamWriter writer,
 			MarshallingContext context) {
-		
+		if(obj==null){
+			return;
+		}
 		FeatureTable table = (FeatureTable) obj;
+		DocumentList docList = table.getDocumentList();
+		if(docList!=null){
+			convertModel(table,writer,context);
+		}
+			//If we need more models in the future, put them here
+		//Obviously the docList null check is a short-sighted, quickfix.
+		//In the future we should TODO: make an identifiable save type located in the object.
+		else{
+			convertPrediction(table,writer,context);
+		}
+	}
+	public void convertPrediction(FeatureTable table, HierarchicalStreamWriter writer, MarshallingContext context){
+		writer.addAttribute("type", "prediction");
+		writer.startNode("name");
+		writer.setValue(table.getName());
+		writer.endNode();
+		
+		writer.startNode("Threshold");
+		writer.setValue(((Integer)table.getThreshold()).toString());
+		writer.endNode();
+		
+		writer.startNode("Annotation");
+		writer.setValue(table.getAnnotation());
+		writer.endNode();
+		
+		writer.startNode("Type");
+		writer.setValue(table.getClassValueType().toString());
+		writer.endNode();
+		
+		writer.startNode("LabelArray");
+		for(String label: table.getLabelArray()){
+			writer.startNode("Label");
+			writer.setValue(label);
+			writer.endNode();
+		}
+		writer.endNode();
+		
+		writer.startNode("Features");
+		Set<Feature> featureSet = table.getFeatureSet();
+		ArrayList<Feature> featureList = new ArrayList<Feature>(featureSet);
+		for (Feature feat : featureList) {
+			writer.startNode("Feature");
+			writer.addAttribute("Type", feat.getFeatureType().toString());
+			writer.addAttribute("Prefix", feat.getExtractorPrefix());
+			if(feat.getFeatureType().equals(Feature.Type.NOMINAL)){
+				for(String value: feat.getNominalValues()){
+					writer.startNode("Value");
+					writer.setValue(value);
+					writer.endNode();
+				}
+			}
+			writer.startNode("FeatureValue");
+			writer.setValue(feat.toString());
+			writer.endNode();
+
+			writer.endNode();
+		}
+		writer.endNode();
+		
+		writer.startNode("NumericClassValues");
+		
+		HashMap<String, double[]> numericCV = (HashMap<String, double[]>)table.getNumericClassValues();
+		writer.addAttribute("size", ((Integer)table.getNominalClassValues().size()).toString());
+		for(String str: numericCV.keySet()){
+			writer.startNode("label");
+			writer.addAttribute("name", str);
+			writer.startNode("values");
+			for(double val: numericCV.get(str)){
+				writer.startNode("value");
+				writer.setValue(((Double)val).toString());
+				writer.endNode();
+			}
+			writer.endNode();
+			writer.endNode();
+		}
+		writer.endNode();
+		
+		writer.startNode("NominalClassValues");
+		ArrayList<String> nomVals = (ArrayList<String>) table.getNominalClassValues();
+		for(String value: nomVals){
+			writer.startNode("value");
+			writer.setValue(value);
+			writer.endNode();
+		}
+		writer.endNode();
+		
+		
+	}
+	public void convertModel(FeatureTable table, HierarchicalStreamWriter writer, MarshallingContext context){
+		writer.addAttribute("type", "default");
 		DocumentList docList = table.getDocumentList();
 		writer.startNode("DocumentList");
 		context.convertAnother(docList);
 		writer.endNode();
+		
 		writer.startNode("Threshold");
 		writer.setValue(((Integer)table.getThreshold()).toString());
 		writer.endNode();
+		
 		writer.startNode("Annotation");
 		writer.setValue(table.getAnnotation());
 		writer.endNode();
+		
 		writer.startNode("Type");
 		writer.setValue(table.getClassValueType().toString());
 		writer.endNode();
+		
 		writer.startNode("Features");
 		Set<Feature> featureSet = table.getFeatureSet();
 		ArrayList<Feature> featureList = new ArrayList<Feature>(featureSet);
@@ -88,6 +186,7 @@ public class FeatureTableConverter implements Converter{
 
 
 
+
 	}
 	//DocumentList sdl, 
 	//Collection<FeatureHit> hits, int thresh, 
@@ -95,10 +194,102 @@ public class FeatureTableConverter implements Converter{
 	@Override
 	public Object unmarshal(HierarchicalStreamReader reader,
 			UnmarshallingContext context) {
+		Object toReturn = null;
+		if(reader.getAttribute("type").equals("default")){
+			toReturn = readDefault(reader,context);
+		} else if (reader.getAttribute("type").equals("prediction")){
+			toReturn = readPrediction(reader,context);
+		} else {
+			throw new UnsupportedOperationException("XML file cannot be parsed");
+		}
+		return toReturn;
+	}
+	
+	private Object readPrediction(HierarchicalStreamReader reader, UnmarshallingContext context){
+		reader.moveDown();
+		String tableName = reader.getValue();
+		reader.moveUp();
+		reader.moveDown();
+		Integer threshold = Integer.parseInt(reader.getValue());
+		reader.moveUp();
+		reader.moveDown();
+		String currentAnnotation = reader.getValue();
+		reader.moveUp();
+		reader.moveDown();
+		String typeString = reader.getValue();
+		Feature.Type featTypeTotal = Feature.Type.valueOf(typeString);
+		reader.moveUp();
+		ArrayList<String> labelArrayList = new ArrayList<String>();
+		reader.moveDown();
+		while(reader.hasMoreChildren()){
+			reader.moveDown();
+			labelArrayList.add(reader.getValue());
+			reader.moveUp();
+		}
+		reader.moveUp();
+		String[] labelArray = Arrays.copyOf(labelArrayList.toArray(), labelArrayList.size(),String[].class);
+		
+		
+		reader.moveDown();
+		ArrayList<Feature> features = new ArrayList<Feature>();
+		while(reader.hasMoreChildren()){
+			reader.moveDown();
+			String type = reader.getAttribute("Type");
+			Feature.Type featType = Feature.Type.valueOf(type);
+			String prefix = reader.getAttribute("Prefix");
+			reader.moveDown();
+
+			String value = reader.getValue();
+			FeatureFetcher fetcher = new BasicFeatures();
+			Feature toAdd = Feature.fetchFeature(prefix, value, featType, fetcher);
+			features.add(toAdd);
+			reader.moveUp();
+			reader.moveUp();
+		}
+		reader.moveUp();
+		HashMap<String, double[]> numClassValues = new HashMap<String, double[]>();
+		reader.moveDown();
+		Integer size = Integer.parseInt(reader.getAttribute("size"));
+		while(reader.hasMoreChildren()){
+			reader.moveDown();
+			String name = reader.getAttribute("name");
+			reader.moveDown();
+			
+			double[] valuesArray = new double[size];
+			int currentValue = 0;
+			while(reader.hasMoreChildren()){
+				reader.moveDown();
+				valuesArray[currentValue]=Double.parseDouble(reader.getValue());
+				currentValue++;
+				reader.moveUp();
+			}
+			numClassValues.put(name, valuesArray);
+			reader.moveUp();
+			reader.moveUp();
+		}
+		
+		reader.moveUp();
+		
+		reader.moveDown();
+		ArrayList<String> nominalClassValues = new ArrayList<String>();
+		while(reader.hasMoreChildren()){
+			reader.moveDown();
+			nominalClassValues.add(reader.getValue());
+			reader.moveUp();
+		}
+		reader.moveUp();
+		
+		
+		return null;
+	}
+	
+	private Object readDefault(HierarchicalStreamReader reader, UnmarshallingContext context){
 		reader.moveDown();
 		ArrayList<Feature> features = new ArrayList<Feature>();
 		ArrayList<FeatureHit> hits = new ArrayList<FeatureHit>();
-		DocumentList docList = (DocumentList)context.convertAnother(null, DocumentList.class);
+		//Need to do a null check here
+		DocumentList docList =(DocumentList)context.convertAnother(null, DocumentList.class);
+		
 		reader.moveUp();
 		reader.moveDown();
 		Integer threshold = Integer.parseInt(reader.getValue());

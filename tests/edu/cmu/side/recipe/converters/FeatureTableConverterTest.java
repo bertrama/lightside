@@ -17,16 +17,22 @@ import edu.cmu.side.model.data.FeatureTable;
 
 public class FeatureTableConverterTest {
 	Recipe recipe;
+	String delim = System.getProperty("file.separator");
+	File predictFile = new File("testData"+delim+"testPrediction.xml");
 	@Before
 	public void setUp(){
-		String delim = System.getProperty("file.separator");
+		
 		File file = new File("testData"+delim+"test.model.side");
-
+		
+		
 		try {
 			FileInputStream in = new FileInputStream(file);
 			ObjectInputStream stream = new ObjectInputStream(in);
+			
 			recipe = (Recipe)stream.readObject();
 			stream.close();
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -56,5 +62,11 @@ public class FeatureTableConverterTest {
 		Object afterObj = streamer.fromXML(XML);
 		assertNull(afterObj);
 		assertNull(ftBefore);
+	}
+	@Test
+	public void testPredictOnlyParse(){
+		XStream streamer = new XStream();
+		streamer.registerConverter(new FeatureTableConverter());
+		streamer.fromXML(predictFile);
 	}
 }

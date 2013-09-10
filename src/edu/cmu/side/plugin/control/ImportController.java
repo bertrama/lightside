@@ -29,6 +29,8 @@ public class ImportController {
 	
 	public static DocumentList makeDocumentList(TreeSet<String> fileNames) throws Exception, IOException, FileNotFoundException{
 		if(fileNames.size()==0) return null;
+		
+		String nameBuilder = "";
 		fileChunks = new HashMap<FileParser, HashSet<String>>();
 		if(parsers.length==0){
 			throw new Exception("There are no parsers");
@@ -44,6 +46,7 @@ public class ImportController {
 			else if(!getValidPlugin(fileName)){
 				throw new Exception("File: " + fileName.toString() + " could not be parsed.");
 			}
+			nameBuilder += (nameBuilder.isEmpty()?"":" ")+file.getName();
 		}
 		ArrayList<DocumentList> toAggregate = new ArrayList<DocumentList>();
 		for(SIDEPlugin parser : parsers){
@@ -53,6 +56,7 @@ public class ImportController {
 		if(!toAggregate.isEmpty()){
 			aggregatedDocumentList.combine(toAggregate);
 		}
+		aggregatedDocumentList.setName(nameBuilder);
 		return aggregatedDocumentList;
 	}
 }

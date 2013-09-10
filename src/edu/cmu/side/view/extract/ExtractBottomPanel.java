@@ -68,8 +68,7 @@ public class ExtractBottomPanel extends AbstractListPanel{
 			{
 				if (ExtractFeaturesControl.hasHighlightedFeatureTable())
 				{
-					FeatureTable table = ExtractFeaturesControl.getHighlightedFeatureTableRecipe().getFeatureTable();
-					refreshPanel(table);
+					refreshPanel(ExtractFeaturesControl.getHighlightedFeatureTableRecipe());
 				}
 				else
 				{

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 
 import edu.cmu.side.control.ExploreResultsControl;
+import edu.cmu.side.model.Recipe;
 import edu.cmu.side.plugin.ModelFeatureMetricPlugin;
 import edu.cmu.side.view.generic.GenericMetricChecklistPanel;
 
@@ -36,11 +37,12 @@ public class ExploreMetricChecklistPanel extends GenericMetricChecklistPanel<Mod
 	{
 		if (ExploreResultsControl.hasHighlightedTrainedModelRecipe())
 		{
-			refreshPanel(ExploreResultsControl.getHighlightedTrainedModelRecipe().getTrainingTable());
+			Recipe highlight = ExploreResultsControl.getHighlightedTrainedModelRecipe();
+			refreshPanel(highlight);
 		}
 		else
 		{
-			//refreshPanel(null);
+//			refreshPanel(null);
 		}
 	}
 	

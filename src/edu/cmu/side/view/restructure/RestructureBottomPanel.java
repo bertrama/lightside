@@ -65,8 +65,8 @@ public class RestructureBottomPanel extends AbstractListPanel{
 			@Override
 			public void refreshPanel(){
 				if(RestructureTablesControl.hasHighlightedFilterTable()){
-					FeatureTable table = RestructureTablesControl.getHighlightedFilterTableRecipe().getFilteredTable();
-					refreshPanel(table);
+					
+					refreshPanel(RestructureTablesControl.getHighlightedFilterTableRecipe());
 				}else{
 					refreshPanel(null);
 				}

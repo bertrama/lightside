@@ -72,13 +72,14 @@ public class SelectPluginList extends JList {
 					Object obj = ((FastListModel)getModel()).get(index);
 					if (obj instanceof JCheckBox) {
 						JCheckBox checkbox = (JCheckBox) obj;
-
-						checkbox.setSelected(!checkbox.isSelected());
+						if(checkbox.isEnabled())
+							checkbox.setSelected(!checkbox.isSelected());
 						repaint();
 					}
 					if(obj instanceof JRadioButton){
 						JRadioButton radio = (JRadioButton) obj;
-						radio.setSelected(!radio.isSelected());
+						if(radio.isEnabled())
+							radio.setSelected(!radio.isSelected());
 						repaint();
 					}
 				}
@@ -164,7 +165,6 @@ public class SelectPluginList extends JList {
  */
 class SelectPluginCellRenderer extends DefaultListCellRenderer {
 	protected static Border noFocusBorder = new EmptyBorder(1, 1, 1, 1);
-	private int cutoff = 30;
 
 	public Component getListCellRendererComponent(JList list, Object value, int index,
 			boolean isSelected, boolean cellHasFocus) {
@@ -173,14 +173,14 @@ class SelectPluginCellRenderer extends DefaultListCellRenderer {
 			return label;
 		}else if (value instanceof CheckBoxListEntry) {
 			CheckBoxListEntry checkbox = (CheckBoxListEntry) value;
-			checkbox.setEnabled(isEnabled());
 			checkbox.setFont(getFont());
 			checkbox.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
-			checkbox.setText(abbreviate(checkbox.getText()));
+			checkbox.setEnabled(checkbox.isEnabled());
+			checkbox.setSelected(checkbox.isSelected());
+			
 			return checkbox;
 		} else if(value instanceof RadioButtonListEntry){
 			RadioButtonListEntry radioButton = (RadioButtonListEntry) value;
-			radioButton.setEnabled(isEnabled());
 			radioButton.setFont(getFont());
 			radioButton.setBorder(isSelected ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 			return radioButton;
@@ -193,14 +193,6 @@ class SelectPluginCellRenderer extends DefaultListCellRenderer {
 		}
 	}
 
-	private String abbreviate(String text)
-	{
-		if(text.length() > cutoff)
-		{
-			return text.substring(0, cutoff)+"...";
-		}
-		return text;
-	}
 }
 
 /*

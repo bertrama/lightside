@@ -14,6 +14,7 @@ public abstract class ModelFeatureMetricPlugin<E extends Comparable<E>> extends 
 	
 	public static String type = "model_feature_evaluation";
 	
+	
 	public String getType() {
 		return type;	
 	}

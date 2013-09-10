@@ -31,4 +31,5 @@ public abstract class FeatureMetricPlugin<E extends Comparable<E>> extends SIDEP
 
 	public abstract Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target, StatusUpdater update);
 	
+	public abstract boolean canEvaluateRecipe(Recipe r, String evaluationKey);
 }

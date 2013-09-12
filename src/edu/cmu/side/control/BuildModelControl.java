@@ -15,10 +15,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import plugins.learning.WekaCore;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
@@ -281,13 +281,16 @@ public class BuildModelControl extends GenesisControl{
 		protected void finishTask()
 		{
 			super.finishTask();
+			
 			if(ex != null)
 			{
-				if(ex.getMessage().equals("User Canceled"))
+				Exception exception = ex;
+				ex = null;
+				if(exception.getMessage().equals("User Canceled"))
 					JOptionPane.showMessageDialog(null, "Model Training Canceled.", "Train Stop", JOptionPane.INFORMATION_MESSAGE);
 				
 				else
-					JOptionPane.showMessageDialog(null, "Model Training Failed.\n"+ex.getLocalizedMessage(), "Train Wreck", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null, "Model Training Failed.\n"+exception.getLocalizedMessage(), "Train Wreck", JOptionPane.ERROR_MESSAGE);
 			}
 			else if(plan != null)
 			{
@@ -298,6 +301,14 @@ public class BuildModelControl extends GenesisControl{
 				PredictLabelsControl.setHighlightedTrainedModelRecipe(plan);
 				Workbench.update(Stage.TRAINED_MODEL);
 			}
+		}
+		
+		@Override
+		public void forceCancel()
+		{
+			ex = new RuntimeException("User Canceled");
+			plan = null;
+			super.forceCancel();
 		}
 
 		@Override

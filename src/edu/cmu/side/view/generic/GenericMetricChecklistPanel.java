@@ -70,8 +70,15 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 
 	public void refreshPanel(Recipe recipe)
 	{
+		
 		super.refreshPanel();
-		FeatureTable table = recipe.getTrainingTable();
+		FeatureTable table = null;
+		
+		if(recipe != null)
+		{
+			table = recipe.getTrainingTable();
+		}
+		
 		if(recipe != localRecipe){
 			localRecipe = recipe;
 			Set<String> keysNew = new TreeSet<String>();

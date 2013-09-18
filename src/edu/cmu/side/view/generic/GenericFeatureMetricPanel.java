@@ -352,6 +352,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 			}
 			catch (Exception e)
 			{
+				System.err.println("Generic Feature Metric Panel: Error while updating metrics.");
 				e.printStackTrace();
 			}
 		}

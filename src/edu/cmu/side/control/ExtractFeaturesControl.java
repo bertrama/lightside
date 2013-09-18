@@ -294,14 +294,25 @@ public class ExtractFeaturesControl extends GenesisControl{
 		protected void doTask(){
 			try
 			{
-//				System.out.println("EFC 289: extracting features for new feature table. Annotation "+selectedClassAnnotation+", type "+selectedClassType);
+				// System.out.println("EFC 289: extracting features for new feature table. Annotation "+selectedClassAnnotation+", type "+selectedClassType);
 				Collection<FeatureHit> hits = new HashSet<FeatureHit>();
 				for (SIDEPlugin plug : plan.getExtractors().keySet())
 				{
-					if(!halt)
+					if (!halt)
 					{
-						activeExtractor = (FeaturePlugin) plug;
-						hits.addAll(activeExtractor.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
+						try
+						{
+
+							activeExtractor = (FeaturePlugin) plug;
+							hits.addAll(activeExtractor.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
+
+						}
+						catch (Exception e)
+						{
+							JOptionPane.showMessageDialog(null, plug+" wasn't able to extract features from this document list.\nSee lightsidelog.log for more details.\n"+e.getLocalizedMessage(), plug+": Extraction Failure", JOptionPane.ERROR_MESSAGE);
+							System.err.println("Feature Extraction Failed");
+							e.printStackTrace();
+						}
 					}
 				}
 				if(!halt)
@@ -313,11 +324,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 			catch (Exception e)
 			{
-				// JTextArea text = new JTextArea();
-				// text.setText(e.toString());
-				// JOptionPane.showMessageDialog(FeaturePluginPanel.this, new
-				// JScrollPane(text), "Feature Extraction Failed",
-				// JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(null, "LightSide couldn't finalize the feature table.\nSee lightsidelog.log for more details.\n"+e.getLocalizedMessage(),"Extraction Failure",JOptionPane.ERROR_MESSAGE);
+				System.err.println("Feature Extraction Failed");
 				e.printStackTrace();
 			}
 		}

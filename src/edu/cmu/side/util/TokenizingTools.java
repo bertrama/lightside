@@ -22,20 +22,21 @@ public class TokenizingTools
 	private static MaxentTagger tagger;
 	private static PTBTokenizerFactory<CoreLabel> factory;
 
-	static
+	protected static PTBTokenizerFactory<CoreLabel> getTokenizerFactory()
 	{
-		try
+		if (factory == null)
 		{
-//			TaggerConfig config = new TaggerConfig(args);
-			tagger = new MaxentTagger("toolkits/maxent/english-caseless-left3words-distsim.tagger");
-//			tagger = new MaxentTagger("toolkits/maxent/wsj-0-18-caseless-left3words-distsim.tagger");
-//			tagger = new MaxentTagger("toolkits/maxent/wsj-0-18-left3words.tagger");
 			factory = PTBTokenizerFactory.newPTBTokenizerFactory(false, true);
-//			factory = PTBTokenizerFactory.newTokenizerFactory();
-			// check if we are to use a custom stoplist
-			//
-			// this should be only a file name with the file being present in
-			// the etc/ directory of TagHelperTools2
+			
+		}
+		return factory;
+	}
+
+	protected static MaxentTagger getTagger()
+	{
+		if (tagger == null) try
+		{
+			tagger = new MaxentTagger("toolkits/maxent/english-caseless-left3words-distsim.tagger");
 		}
 		catch (Exception e)
 		{
@@ -43,36 +44,65 @@ public class TokenizingTools
 			JOptionPane.showMessageDialog(null, "Could not find MaxentTagger files", "ERROR", JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
+		return tagger;
 	}
-	
+
+	// static
+	// {
+	// try
+	// {
+	// // TaggerConfig config = new TaggerConfig(args);
+	// tagger = new
+	// MaxentTagger("toolkits/maxent/english-caseless-left3words-distsim.tagger");
+	// // tagger = new
+	// //
+	// MaxentTagger("toolkits/maxent/wsj-0-18-caseless-left3words-distsim.tagger");
+	// // tagger = new
+	// // MaxentTagger("toolkits/maxent/wsj-0-18-left3words.tagger");
+	// factory = PTBTokenizerFactory.newPTBTokenizerFactory(false, true);
+	// // factory = PTBTokenizerFactory.newTokenizerFactory();
+	// // check if we are to use a custom stoplist
+	// //
+	// // this should be only a file name with the file being present in
+	// // the etc/ directory of TagHelperTools2
+	// }
+	// catch (Exception e)
+	// {
+	// e.printStackTrace();
+	// JOptionPane.showMessageDialog(null, "Could not find MaxentTagger files",
+	// "ERROR", JOptionPane.ERROR_MESSAGE);
+	// System.exit(0);
+	// }
+	// }
+
 	public static List<CoreLabel> tokenizeInvertible(String s)
 	{
 		StringReader reader = new StringReader(s.toLowerCase());
-		Tokenizer<CoreLabel> tokenizer = factory.getTokenizer(reader);
-		
+		Tokenizer<CoreLabel> tokenizer = getTokenizerFactory().getTokenizer(reader);
+
 		List<CoreLabel> tokens = tokenizer.tokenize();
 		return tokens;
 	}
-	
+
 	public static List<CoreLabel> tagInvertible(List<CoreLabel> tokens)
 	{
 
-		tagger.tagCoreLabels(tokens);
-		
+		getTagger().tagCoreLabels(tokens);
+
 		return tokens;
 	}
-	
+
 	public static List<List<CoreLabel>> splitSentences(String s)
 	{
 		DocumentPreprocessor p = new DocumentPreprocessor(new StringReader(s));
-		p.setTokenizerFactory(factory);
-		
+		p.setTokenizerFactory(getTokenizerFactory());
+
 		List<List<CoreLabel>> sentences = new ArrayList<List<CoreLabel>>();
 		Iterator<?> pit = p.iterator();
-		
-		while(pit.hasNext())
+
+		while (pit.hasNext())
 		{
-			List<CoreLabel> sentence = (List<CoreLabel>)pit.next();
+			List<CoreLabel> sentence = (List<CoreLabel>) pit.next();
 			sentences.add(sentence);
 		}
 		return sentences;
@@ -81,34 +111,34 @@ public class TokenizingTools
 	public static List<String> tokenize(String s)
 	{
 		StringReader reader = new StringReader(s.toLowerCase());
-		Tokenizer<CoreLabel> tokenizer = factory.getTokenizer(reader);
+		Tokenizer<CoreLabel> tokenizer = getTokenizerFactory().getTokenizer(reader);
 		List<String> tokens = new ArrayList<String>();
 
 		while (tokenizer.hasNext())
 		{
 			CoreLabel token = tokenizer.next();
-			
+
 			tokens.add(token.word());
 		}
 		return tokens;
 	}
-	
+
 	public static Map<String, List<String>> tagAndTokenize(String s)
 	{
-		
+
 		Map<String, List<String>> tagsAndTokens = new HashMap<String, List<String>>();
 		List<String> posTags = new ArrayList<String>();
 		List<String> surfaceTokens = tokenize(s);
-		
+
 		String tokenized = StringUtils.join(surfaceTokens, " ");
-		String tagged = tagger.tagTokenizedString(tokenized);
-		
-//		String tagged = tagger.tagString(s);
+		String tagged = getTagger().tagTokenizedString(tokenized);
+
+		// String tagged = tagger.tagString(s);
 
 		String[] taggedTokens = tagged.split("\\s+");
 		tagsAndTokens.put("tokens", surfaceTokens);
 		tagsAndTokens.put("POS", posTags);
-		
+
 		for (String t : taggedTokens)
 		{
 			if (t.contains("_"))
@@ -118,30 +148,29 @@ public class TokenizingTools
 			}
 			else
 			{
-				System.out.println("TT 84: no POS tag? "+t);
+				System.out.println("TT 84: no POS tag? " + t);
 				posTags.add(t);
 			}
 		}
-		
+
 		return tagsAndTokens;
 	}
-	
+
 	public static void main(String[] args)
 	{
 		Scanner skinner = new Scanner(System.in);
-		
-		while(skinner.hasNextLine())
+
+		while (skinner.hasNextLine())
 		{
 			String line = skinner.nextLine();
-			if(line.equals("q"))
-				return;
-			
+			if (line.equals("q")) return;
+
 			List<String> tokenized = tokenize(line);
 			List<CoreLabel> tokenizedToo = tagInvertible(tokenizeInvertible(line));
 			Map<String, List<String>> posTokens = tagAndTokenize(line);
 
-			System.out.println(tokenized.size()+":\t"+tokenized);
-			System.out.println(posTokens.get("POS").size()+":\t"+posTokens);
+			System.out.println(tokenized.size() + ":\t" + tokenized);
+			System.out.println(posTokens.get("POS").size() + ":\t" + posTokens);
 
 			System.out.println(tokenizedToo.size());
 			System.out.println(tokenizedToo);

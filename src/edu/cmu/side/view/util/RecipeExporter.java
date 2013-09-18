@@ -16,6 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import plugins.learning.WekaTools;
 import weka.core.Instances;
+import weka.core.converters.ArffSaver;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
@@ -163,7 +164,6 @@ public class RecipeExporter
 
 	public static void exportToARFF(FeatureTable ft, File out) throws IOException
 	{
-		FileWriter outf = new FileWriter(out);
 
 		boolean[] mask = new boolean[ft.getSize()];
 		for (int i = 0; i < mask.length; i++)
@@ -172,17 +172,10 @@ public class RecipeExporter
 		}
 
 		Instances instances = WekaTools.getInstances(ft, mask);
-		outf.write(instances.toString());
-
-		// for (int i = 0; i < ft.getDocumentList().getSize(); i++)
-		// {
-		// Collection<FeatureHit> hits = ft.getHitsForDocument(i);
-		// for (FeatureHit hit : hits)
-		// outf.write(hit.getFeature().toString() + ": " +
-		// hit.getValue().toString() + "\t");
-		// outf.write("\n");
-		// }
-		outf.close();
+		ArffSaver arffSaver = new ArffSaver();
+		arffSaver.setInstances(instances);
+		arffSaver.setFile(out);
+		arffSaver.writeBatch();
 	}
 
 	public static void exportToCSV(FeatureTable ft, File file) throws IOException

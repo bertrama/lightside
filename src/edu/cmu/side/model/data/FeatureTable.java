@@ -6,8 +6,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -47,50 +49,107 @@ public class FeatureTable implements Serializable
 		this.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>(); //Rough guess at capacity requirement.
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 	}
-
+	
 	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type)
 	{
 		this();
 		setAnnotation(annotation);
 		this.type = type;
 		
-		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
 		this.threshold = thresh;
 		this.documents = sdl;
+		long hitCount = 0;
 
 		generateConvertedClassValues();
 
-//		System.out.println("FT 74: " + hits.size() + "total incoming hits");
+		System.out.println("FT 65: " + hits.size() + " total incoming hits, "+sdl.getSize()+ " instances");
 
 		for (int i = 0; i < sdl.getSize(); i++)
 		{
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
 		}
-		for (FeatureHit hit : hits)
+		Iterator<FeatureHit> hiterator = hits.iterator();
+		while(hiterator.hasNext())
 		{
+			FeatureHit hit = hiterator.next();
 			Feature f = hit.getFeature();
-			if (!localFeatures.containsKey(f))
+			if (!hitsPerFeature.containsKey(f))
 			{
-				localFeatures.put(f, new TreeSet<Integer>());
+				hitsPerFeature.put(f, new TreeSet<FeatureHit>());
 			}
-			localFeatures.get(f).add(hit.getDocumentIndex());
+			hitsPerFeature.get(f).add(hit);
+			hiterator.remove(); //TODO: does emptying the hitlist while populating the table actually make a practical memory difference?
 		}
+		System.out.println("All features added to table. Thresholding...");
 
-		for (FeatureHit hit : hits)
+		Iterator<Entry<Feature, Collection<FeatureHit>>> fiterator = hitsPerFeature.entrySet().iterator();
+		
+		while(fiterator.hasNext())
 		{
-			if (localFeatures.get(hit.getFeature()).size() >= threshold)
+			Entry<Feature, Collection<FeatureHit>> entry = fiterator.next();
+			
+			int numHitsForThisFeature = hitsPerFeature.get(entry.getKey()).size();
+			if(numHitsForThisFeature >= threshold)
 			{
-				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
-				if (!hitsPerFeature.containsKey(hit.getFeature()))
+				hitCount += numHitsForThisFeature;
+				for(FeatureHit hit : entry.getValue())
 				{
-					hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
+					hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
 				}
-				hitsPerFeature.get(hit.getFeature()).add(hit);
+			}
+			else
+			{
+				fiterator.remove();
 			}
 		}
 
-//		System.out.println("FT 74: "+hitsPerDocument.get(0).size()+" thresholded hits for doc 0");
+		System.out.println("FT 99: "+hitsPerFeature.size()+ " features, "+hitCount+" hits remaining (threshold "+threshold+")");
 	}
+	
+//	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type)
+//	{
+//		this();
+//		setAnnotation(annotation);
+//		this.type = type;
+//		
+//		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000); //?
+//		this.threshold = thresh;
+//		this.documents = sdl;
+//
+//		generateConvertedClassValues();
+//
+//		System.out.println("FT 63: " + hits.size() + " total incoming hits, "+sdl.getSize()+ " instances");
+//
+//		for (int i = 0; i < sdl.getSize(); i++)
+//		{
+//			hitsPerDocument.add(new TreeSet<FeatureHit>());
+//		}
+//		for (FeatureHit hit : hits)
+//		{
+//			Feature f = hit.getFeature();
+//			if (!localFeatures.containsKey(f))
+//			{
+//				localFeatures.put(f, new TreeSet<Integer>());
+//			}
+//			localFeatures.get(f).add(hit.getDocumentIndex());
+//		}
+//		System.out.println("magic done.");
+//
+//		for (FeatureHit hit : hits)
+//		{
+//			if (localFeatures.get(hit.getFeature()).size() >= threshold)
+//			{
+//				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
+//				if (!hitsPerFeature.containsKey(hit.getFeature()))
+//				{
+//					hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
+//				}
+//				hitsPerFeature.get(hit.getFeature()).add(hit);
+//			}
+//		}
+//
+//		System.out.println("FT 92: "+hitsPerFeature.size()+ " features.");
+//	}
 
 //	@Deprecated
 //	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh){

@@ -21,6 +21,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import plugins.learning.WekaTools;
+
 public class MemoryMonitorPanel extends JPanel
 {
 	JLabel textMonitor = new JLabel();
@@ -137,6 +139,7 @@ public class MemoryMonitorPanel extends JPanel
 
 		System.out.println(String.format("MMP 137: %.1f GB used now... attempting GC", beanUsed, beanMax));
 
+		WekaTools.invalidateCache();
 		System.gc();
 
 		usage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();

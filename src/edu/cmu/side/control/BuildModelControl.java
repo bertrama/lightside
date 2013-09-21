@@ -256,7 +256,7 @@ public class BuildModelControl extends GenesisControl{
 			ft = ((RestructurePlugin) plug).filterTestSet(originalTable, ft, recipe.getFilters().get(plug), updater);
 		}
 		
-		ft.reconcileFeatures(originalTable);
+		ft.reconcileFeatures(originalTable.getFeatureSet());
 		
 		return ft;
 

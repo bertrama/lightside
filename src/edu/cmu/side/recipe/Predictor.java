@@ -215,7 +215,7 @@ public class Predictor
 	{
 		PredictionResult result = null;
 		FeatureTable trainingTable = recipe.getTrainingTable();
-		predictTable.reconcileFeatures(trainingTable);
+		predictTable.reconcileFeatures(trainingTable.getFeatureSet());
 
 		if (!isQuiet())
 		{

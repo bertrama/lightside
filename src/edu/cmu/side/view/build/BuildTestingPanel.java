@@ -280,7 +280,6 @@ public class BuildTestingPanel extends AbstractListPanel {
 		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
 		if(recipe != null)
 		{
-			System.out.println("BTP 283: I exist! "+recipe);
 			DocumentList documentList = recipe.getDocumentList();
 			String[] annotationNames = documentList.getAnnotationNames();
 			Arrays.sort(annotationNames);

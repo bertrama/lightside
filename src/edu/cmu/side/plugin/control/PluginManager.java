@@ -183,6 +183,6 @@ public class PluginManager {
 	
 	public static SIDEPlugin getPluginByClassname(String classname)
 	{
-		 return pluginManager.getPluginWrapperByPluginClassName(classname).getSIDEPlugin();
+		 return getSharedPluginManager().getPluginWrapperByPluginClassName(classname).getSIDEPlugin();
 	}
 }

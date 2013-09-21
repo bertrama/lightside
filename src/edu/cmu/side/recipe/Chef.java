@@ -6,21 +6,21 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
-
-import javax.swing.JOptionPane;
 
 import plugins.metrics.models.BasicModelEvaluations;
 
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
+import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
@@ -41,10 +41,11 @@ import edu.cmu.side.plugin.SIDEPlugin;
  */
 public class Chef
 {
-    static { 
-        System.setProperty("java.awt.headless", "true");
-        System.out.println(java.awt.GraphicsEnvironment.isHeadless()?"Running in headless mode.":"Not actually headless");
-      }
+	static
+	{
+		System.setProperty("java.awt.headless", "true");
+		System.out.println(java.awt.GraphicsEnvironment.isHeadless() ? "Running in headless mode." : "Not actually headless");
+	}
     
 	static boolean quiet = false;
 

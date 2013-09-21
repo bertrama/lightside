@@ -52,6 +52,24 @@ public class Feature implements Serializable, Comparable<Feature>
 		return null;
 	}
 	
+	public String encode()
+	{
+		return getExtractorPrefix()+"_"+getFeatureName()+"_"+getFeatureType();
+	}
+	
+	public static Feature fetchFeature(String encoded) throws IllegalStateException
+	{
+		String[] split = encoded.split("_", 2);
+
+		if(featureCache.containsKey(split[0]) && featureCache.get(split[0]).containsKey(split[1]))
+		{
+			return featureCache.get(split[0]).get(split[1]);
+		}
+		
+		throw new IllegalStateException("Requested feature "+encoded+" is not cached.");
+		
+	}
+	
 	public static Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
 		if(!featureCache.containsKey(prefix)){
 			featureCache.put(prefix, new HashMap<String, Feature>(100000));

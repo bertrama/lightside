@@ -486,6 +486,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 			if (learn)
 			{
 				((WrapperPlugin) wrapper).learnFromTrainingData(newData, fold, foldsMap, progressIndicator);
+				//whatever the wrapper has learned is stored in configuration settings.
+				wrappers.put(wrapper, wrapper.generateConfigurationSettings());
 			}
 
 			newData = ((WrapperPlugin) wrapper).wrapTableBefore(newData, fold, foldsMap, progressIndicator);

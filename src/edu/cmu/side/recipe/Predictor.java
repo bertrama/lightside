@@ -84,25 +84,27 @@ public class Predictor
 		loadModel();
 	}
 
-//	@Deprecated //nobody calls this?
-//	protected FeatureTable prepareTestSet(DocumentList test)
-//	{
-//		test.setLabelArray(recipe.getTrainingTable().getLabelArray());
-//
-//		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-//		OrderedPluginMap extractors = recipe.getExtractors();
-//		for (SIDEPlugin plug : extractors.keySet())
-//		{
-//			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(test, extractors.get(plug), textUpdater);
-//			hits.addAll(extractorHits);
-//		}
-//		FeatureTable ft = new FeatureTable(test, hits, 0);
-//		for (SIDEPlugin plug : recipe.getFilters().keySet())
-//		{
-//			ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(), ft, recipe.getFilters().get(plug), textUpdater);
-//		}
-//		return ft;
-//	}
+	// @Deprecated //nobody calls this?
+	// protected FeatureTable prepareTestSet(DocumentList test)
+	// {
+	// test.setLabelArray(recipe.getTrainingTable().getLabelArray());
+	//
+	// Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
+	// OrderedPluginMap extractors = recipe.getExtractors();
+	// for (SIDEPlugin plug : extractors.keySet())
+	// {
+	// Collection<FeatureHit> extractorHits = ((FeaturePlugin)
+	// plug).extractFeatureHits(test, extractors.get(plug), textUpdater);
+	// hits.addAll(extractorHits);
+	// }
+	// FeatureTable ft = new FeatureTable(test, hits, 0);
+	// for (SIDEPlugin plug : recipe.getFilters().keySet())
+	// {
+	// ft = ((RestructurePlugin) plug).filterTestSet(recipe.getTrainingTable(),
+	// ft, recipe.getFilters().get(plug), textUpdater);
+	// }
+	// return ft;
+	// }
 
 	/**
 	 * 
@@ -155,22 +157,26 @@ public class Predictor
 			}
 
 			result = predictFromTable(predictTable);
-			
+
 			DocumentList newDocs = newRecipe.getDocumentList().clone();
-			//newDocs = new DocumentList(new ArrayList(newDocs.getFilenameList()), new TreeMap<String, List<String>>(newDocs.getCoveredTextList()), new TreeMap<String, List<String>>(newDocs.allAnnotations()), predictTable.getAnnotation());
-			
+			// newDocs = new DocumentList(new
+			// ArrayList(newDocs.getFilenameList()), new TreeMap<String,
+			// List<String>>(newDocs.getCoveredTextList()), new TreeMap<String,
+			// List<String>>(newDocs.allAnnotations()),
+			// predictTable.getAnnotation());
+
 			newDocs.addAnnotation(predictionColumn, (List<String>) result.getPredictions(), overWrite);
-			if(addDistributionColumns)
+			if (addDistributionColumns)
 			{
 				Map<String, List<Double>> distributions = result.getDistributions();
-				for(String label : distributions.keySet())
+				for (String label : distributions.keySet())
 				{
 					List<String> stringDists = new ArrayList<String>(newDocs.getSize());
-					for(Double d : distributions.get(label))
+					for (Double d : distributions.get(label))
 					{
-					   stringDists.add(d.toString());
+						stringDists.add(d.toString());
 					}
-					newDocs.addAnnotation(predictionColumn+"_"+label, stringDists, overWrite);
+					newDocs.addAnnotation(predictionColumn + "_" + label, stringDists, overWrite);
 				}
 			}
 			return newDocs;
@@ -181,7 +187,7 @@ public class Predictor
 		}
 		return null;
 	}
-	
+
 	/**
 	 * @param corpus
 	 * @return
@@ -318,31 +324,32 @@ public class Predictor
 		// e.printStackTrace();
 		// }
 
-		System.out.println("loading predictor from "+modelPath);
+		System.out.println("loading predictor from " + modelPath);
 		Predictor predictor = new Predictor(modelPath, annotation);
 		predictor.setQuiet(false);
 
-		System.out.println("loading docs from "+unlabeledData);
+		System.out.println("loading docs from " + unlabeledData);
 		DocumentList docs = new DocumentList(new HashSet<String>(Arrays.asList(unlabeledData)));
 
 		System.out.println("predicting...");
 		PredictionResult predicted = predictor.predict(docs);
 		List<? extends Comparable<?>> predictions = predicted.getPredictions();
-		for(int i = 0; i < docs.getSize(); i++)
+		for (int i = 0; i < docs.getSize(); i++)
 		{
 			String text = docs.getPrintableTextAt(i);
-			System.out.println(predictions.get(i) + "\t"+text.substring(0, Math.min(100, text.length())));
+			System.out.println(predictions.get(i) + "\t" + text.substring(0, Math.min(100, text.length())));
 		}
-		
-//		Scanner input = new Scanner(System.in);
-//
-//		while (input.hasNextLine())
-//		{
-//			String sentence = input.nextLine();
-//			String answer = predictor.prettyPredict(sentence);
-//			// actualOut.println(answer);
-//			System.out.println(answer + "\t" + sentence.substring(0, Math.min(sentence.length(), 100)));
-//		}
+
+		// Scanner input = new Scanner(System.in);
+		//
+		// while (input.hasNextLine())
+		// {
+		// String sentence = input.nextLine();
+		// String answer = predictor.prettyPredict(sentence);
+		// // actualOut.println(answer);
+		// System.out.println(answer + "\t" + sentence.substring(0,
+		// Math.min(sentence.length(), 100)));
+		// }
 	}
 
 	public boolean isQuiet()
@@ -360,7 +367,7 @@ public class Predictor
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	public String[] getLabelArray()
 	{
 		return recipe.getTrainingTable().getLabelArray();

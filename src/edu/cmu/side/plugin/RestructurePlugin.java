@@ -6,6 +6,7 @@ import java.util.Map;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.plugin.FeatureFetcher.AbstractFeatureFetcherPlugin;
+import edu.cmu.side.plugin.control.PluginManager;
 
 /**
  * Filter plugins are used in the Modify Features panel. Given a feature table,
@@ -23,11 +24,15 @@ public abstract class RestructurePlugin extends AbstractFeatureFetcherPlugin imp
 		return "restructure_table";
 	}
 	
-	public FeatureTable restructure(FeatureTable original, Map<String, String> configuration, StatusUpdater progressIndicator){
-		this.configureFromSettings(configuration);
-		boolean[] allTrue = new boolean[original.getSize()];
-		for(int i = 0; i < allTrue.length; i++){ allTrue[i] = true; }
-		return restructureWithMaskForSubclass(original, allTrue, progressIndicator);
+	public FeatureTable restructure(FeatureTable original, Map<String, String> configuration, StatusUpdater progressIndicator)
+	{
+		synchronized(this)
+		{
+			this.configureFromSettings(configuration);
+			boolean[] allTrue = new boolean[original.getSize()];
+			for(int i = 0; i < allTrue.length; i++){ allTrue[i] = true; }
+			return restructureWithMaskForSubclass(original, allTrue, progressIndicator);
+		}
 	}
 	
 	public FeatureTable filterTestSet(FeatureTable original, FeatureTable test, Map<String, String> configuration, StatusUpdater progressIndicator){

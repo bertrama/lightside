@@ -183,7 +183,7 @@ public class Chef
 		}
 		else
 		{
-			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
+			//System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
 		}
 		corpus.setLabelArray(originalRecipe.getLabelArray());
 		corpus.setTextColumns(new HashSet<String>(originalRecipe.getTextColumns()));
@@ -200,7 +200,6 @@ public class Chef
 		}
 		else
 		{
-
 			try
 			{
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(recipeFile));

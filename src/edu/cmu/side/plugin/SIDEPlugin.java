@@ -115,12 +115,15 @@ public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 	
 	public static SIDEPlugin fromSerializable(Serializable pug)
 	{
-		//System.out.println("loading plugin "+pug);
-		if(pug == null) 
-			return null;
-		
-		SIDEPlugin plugin = PluginManager.getSharedPluginManager().getPluginWrapperByPluginClassName((String) pug).getSIDEPlugin();
-		return plugin;
+		synchronized(SIDEPlugin.class)
+		{
+			//System.out.println("loading plugin "+pug);
+			if(pug == null) 
+				return null;
+			
+			SIDEPlugin plugin = PluginManager.getPluginByClassname((String) pug);
+			return plugin;
+		}
 	}
 	
 	public Serializable toSerializable() throws IOException

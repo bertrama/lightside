@@ -8,6 +8,7 @@ import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeatureFetcher.AbstractFeatureFetcherPlugin;
+import edu.cmu.side.plugin.control.PluginManager;
 
 public abstract class FeaturePlugin extends AbstractFeatureFetcherPlugin implements Serializable{
 	private static final long serialVersionUID = -2856017007104452008L;
@@ -26,9 +27,12 @@ public abstract class FeaturePlugin extends AbstractFeatureFetcherPlugin impleme
 	 */
 	public Collection<FeatureHit> extractFeatureHits(DocumentList documents, Map<String, String> configuration, StatusUpdater update)
 	{
-		halt = false;
-		this.configureFromSettings(configuration);
-		return extractFeatureHitsForSubclass(documents, update);
+		synchronized(this)
+		{
+			halt = false;
+			this.configureFromSettings(configuration);
+			return extractFeatureHitsForSubclass(documents, update);
+		}
 	}
 	
 	/**

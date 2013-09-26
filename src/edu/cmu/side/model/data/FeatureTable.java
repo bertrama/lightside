@@ -50,6 +50,22 @@ public class FeatureTable implements Serializable
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 	}
 	
+
+	/**
+	 * Appropriate when reconciling with an exisiting feature table, or with unlabeled data.
+	 * @param sdl
+	 * @param hits
+	 * @param thresh
+	 * @param annotation
+	 * @param type
+	 * @param labels the label array to use - the new doclist may not have all the possible labels in it.
+	 */
+	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type, String[] labels)
+	{
+		this(sdl, hits, thresh, annotation, type);
+		labelArray = labels;
+	}
+	
 	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type)
 	{
 		this();
@@ -566,7 +582,47 @@ public class FeatureTable implements Serializable
 		}
 	}
 
-	public void reconcileFeatures(FeatureTable train)
+//	public void reconcileFeatures(FeatureTable train)
+//	{
+//		//TODO: decide if this removal step is neccessary - it may be un-needful, but could save space.
+//		Collection<Feature> toRemove = new ArrayList<Feature>();
+//
+////		System.out.println("FT 480: Unreconciled feature table has "+this.getFeatureSet().size() + " features, vs. "+train.getFeatureSet().size()+" in target");
+//		
+//		for(Feature f : this.hitsPerFeature.keySet())
+//		{
+//			if(!train.hitsPerFeature.containsKey(f))
+//			{
+//				Collection<FeatureHit> hits = this.hitsPerFeature.get(f);
+//				toRemove.add(f);
+//				
+//				for(FeatureHit h : hits)
+//				{
+//					hitsPerDocument.get(h.getDocumentIndex()).remove(h);
+//				}
+//			}
+//		}
+//		for(Feature f : toRemove)
+//		{
+//			this.hitsPerFeature.remove(f);
+//		}
+////		System.out.println("FT 487: removed "+toRemove.size() + " features. "+this.getFeatureSet().size() + " features remain.");
+//		
+//		
+//		//add empty feature map entries so all training features are accounted for in this new feature table.
+//		for(Feature f : train.hitsPerFeature.keySet())
+//		{
+//			if(!this.hitsPerFeature.containsKey(f))
+//			{
+//				this.hitsPerFeature.put(f, new ArrayList<FeatureHit>());
+//			}
+//		}
+//		
+////		System.out.println("FT 511: Reconciled table has "+this.getFeatureSet().size() + " features");
+//		
+//	}
+	
+	public void reconcileFeatures(Set<Feature> guaranteedFeatures)
 	{
 		//TODO: decide if this removal step is neccessary - it may be un-needful, but could save space.
 		Collection<Feature> toRemove = new ArrayList<Feature>();
@@ -575,7 +631,7 @@ public class FeatureTable implements Serializable
 		
 		for(Feature f : this.hitsPerFeature.keySet())
 		{
-			if(!train.hitsPerFeature.containsKey(f))
+			if(!guaranteedFeatures.contains(f))
 			{
 				Collection<FeatureHit> hits = this.hitsPerFeature.get(f);
 				toRemove.add(f);
@@ -594,7 +650,7 @@ public class FeatureTable implements Serializable
 		
 		
 		//add empty feature map entries so all training features are accounted for in this new feature table.
-		for(Feature f : train.hitsPerFeature.keySet())
+		for(Feature f : guaranteedFeatures)
 		{
 			if(!this.hitsPerFeature.containsKey(f))
 			{

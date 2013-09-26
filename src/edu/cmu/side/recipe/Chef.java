@@ -1,6 +1,7 @@
 package edu.cmu.side.recipe;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -9,14 +10,12 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import javax.swing.JOptionPane;
 import plugins.metrics.models.BasicModelEvaluations;
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
@@ -41,10 +40,11 @@ import edu.cmu.side.plugin.SIDEPlugin;
  */
 public class Chef
 {
-    static { 
-        System.setProperty("java.awt.headless", "true");
-        System.out.println(java.awt.GraphicsEnvironment.isHeadless()?"Running in headless mode.":"Not actually headless");
-      }
+	static
+	{
+		System.setProperty("java.awt.headless", "true");
+		System.out.println(java.awt.GraphicsEnvironment.isHeadless() ? "Running in headless mode." : "Not actually headless");
+	}
     
 	static boolean quiet = false;
 
@@ -106,7 +106,8 @@ public class Chef
 
 		prepareDocumentList(originalRecipe, corpus);
 		newRecipe.setDocumentList(corpus);
-
+		printMemoryUsage();
+		
 		if(finalStage == Stage.DOCUMENT_LIST)
 			return newRecipe;
 
@@ -139,24 +140,8 @@ public class Chef
 	//TODO: be more consistent in parameters to recipe stages
 	public static Recipe followRecipe(Recipe originalRecipe, DocumentList corpus, Stage finalStage, int newThreshold) throws Exception
 	{
-		Recipe newRecipe = Recipe.copyEmptyRecipe(originalRecipe);
-		
-		prepareDocumentList(originalRecipe, corpus);
-		newRecipe.setDocumentList(corpus);
-		printMemoryUsage();
-		
-		if(finalStage == Stage.DOCUMENT_LIST)
-			return newRecipe;
-		
-		FeatureTable originalFeatures = originalRecipe.getFeatureTable();
-		String annotation = originalFeatures.getAnnotation();
-		
-		if(!corpus.allAnnotations().containsKey(annotation))
-			annotation = null;
-		
-		simmerFeatures(newRecipe, newThreshold, annotation, originalFeatures.getClassValueType());
-		printMemoryUsage();
-		
+		Recipe newRecipe = followSimmerSteps(originalRecipe, corpus, finalStage, newThreshold);
+
 		if(finalStage.compareTo(Stage.TRAINED_MODEL) < 0)
 			return newRecipe;
 
@@ -196,7 +181,7 @@ public class Chef
 		}
 		else
 		{
-			System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
+			//System.err.println("Warning: data has no "+currentAnnotation+" annotation. You can't train a new model on this data (only predict)");
 		}
 		corpus.setLabelArray(originalRecipe.getLabelArray());
 		corpus.setTextColumns(new HashSet<String>(originalRecipe.getTextColumns()));
@@ -213,7 +198,6 @@ public class Chef
 		}
 		else
 		{
-
 			try
 			{
 				ObjectInputStream in = new ObjectInputStream(new FileInputStream(recipeFile));

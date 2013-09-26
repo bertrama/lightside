@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -11,9 +12,12 @@ import java.util.TreeMap;
 
 import edu.cmu.side.plugin.FeatureFetcher;
 import edu.cmu.side.plugin.control.PluginManager;
+import edu.stanford.nlp.util.StringUtils;
 
 public class Feature implements Serializable, Comparable<Feature>
 {
+	private static final String FEATURE_JOIN = "_";
+	private static final String LABEL_JOIN = "Nominal Label: \t";
 	private static final long serialVersionUID = -7567947807818964630L;
 
 	/**
@@ -44,7 +48,7 @@ public class Feature implements Serializable, Comparable<Feature>
 	
 	public static Feature fetchFeature(String prefix, String name, Feature.Type type)
 	{
-		String featureName = name+"_"+type;
+		String featureName = name+FEATURE_JOIN+type;
 		if(featureCache.containsKey(prefix) && featureCache.get(prefix).containsKey(featureName))
 		{
 			return featureCache.get(prefix).get(featureName);
@@ -52,16 +56,62 @@ public class Feature implements Serializable, Comparable<Feature>
 		return null;
 	}
 	
+	public String encode()
+	{
+		String typeString = getFeatureType().toString();
+		if(getFeatureType() == Type.NOMINAL)
+		{
+			typeString+=LABEL_JOIN+StringUtils.join(getNominalValues(), LABEL_JOIN);
+		}
+		return getExtractor().getClass().getName()+FEATURE_JOIN+getExtractorPrefix()+FEATURE_JOIN+getFeatureName()+FEATURE_JOIN+getFeatureType();
+	}
+	
+	public static Feature fetchFeature(String encoded) throws IllegalStateException
+	{
+//		System.out.println("fetching "+encoded);
+		String[] split = encoded.split(FEATURE_JOIN, 3);
+
+		String extractorName = split[0];
+		String prefix = split[1];
+		String nameAndType = split[2];
+		
+		if(featureCache.containsKey(prefix) && featureCache.get(prefix).containsKey(nameAndType))
+		{
+			return featureCache.get(prefix).get(nameAndType);
+		}
+		else
+		{
+//			System.out.println("creating "+extractorName + " " + nameAndType);
+			FeatureFetcher extractor = (FeatureFetcher) PluginManager.getPluginByClassname(extractorName);
+			int typeSplit = nameAndType.lastIndexOf(FEATURE_JOIN);
+			String featureName = nameAndType.substring(0, typeSplit);
+			String typeString = nameAndType.substring(typeSplit+FEATURE_JOIN.length());
+			if(typeString.startsWith(Type.NOMINAL.toString()))
+			{
+				typeString = typeString.substring(Type.NOMINAL.toString().length()+LABEL_JOIN.length());
+				String[] labels = typeString.split(LABEL_JOIN);
+				
+				return fetchFeature(prefix, featureName, Arrays.asList(labels), extractor);
+			}
+			else
+			{
+				return fetchFeature(prefix, featureName, Type.valueOf(typeString), extractor);
+			}
+		}
+		
+		
+	}
+	
 	public static Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
 		if(!featureCache.containsKey(prefix)){
 			featureCache.put(prefix, new HashMap<String, Feature>(100000));
 		}
-		if(!featureCache.get(prefix).containsKey(name+"_"+type.toString())){
+		if(!featureCache.get(prefix).containsKey(name+FEATURE_JOIN+type.toString())){
 			Feature newFeat = new Feature(prefix, name, type, extractorPlugin);
-			featureCache.get(prefix).put(name+"_"+type.toString(), newFeat);
+			featureCache.get(prefix).put(name+FEATURE_JOIN+type.toString(), newFeat);
 			return newFeat;			
 		}else{
-			return featureCache.get(prefix).get(name+"_"+type.toString());
+			return featureCache.get(prefix).get(name+FEATURE_JOIN+type.toString());
 		}
 	}
 	

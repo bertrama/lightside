@@ -21,6 +21,7 @@ import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.util.DefaultMap;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable
@@ -42,6 +43,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 	public TrainingResult train(FeatureTable table, Map<String, String> configuration, Map<String, Serializable> validationSettings, OrderedPluginMap wrappers,
 			StatusUpdater progressIndicator) throws Exception
 	{
+		synchronized(this)
+		{
 		halt = false;
 		if (table == null) { return null; }
 		updater = progressIndicator;
@@ -148,6 +151,7 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 		}
 		result.setLongDescriptionString(getLongDescriptionString());
 		return result;
+		}
 	}
 
 	/**
@@ -341,15 +345,19 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 	public PredictionResult predict(FeatureTable originalData, FeatureTable newData, Map<String, String> configuration, StatusUpdater progressIndicator,
 			OrderedPluginMap wrappers) throws Exception
 	{
-
-		FeatureTable wrappedTrain = wrapTableBefore(originalData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers, false);
-		this.loadClassifierFromSettings(configuration);
-		return predictOnFold(wrappedTrain, newData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers);
+		synchronized(this)
+		{
+//			System.out.println("LP 344: wrap original table (for reconciliation)");
+			FeatureTable wrappedTrain = wrapTableBefore(originalData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers, false);
+			this.loadClassifierFromSettings(configuration);
+			return predictOnFold(wrappedTrain, newData, 0, new DefaultMap<Integer, Integer>(0), progressIndicator, wrappers);
+		}
 	}
 
 	public PredictionResult predictOnFold(FeatureTable originalData, FeatureTable newData, int fold, Map<Integer, Integer> foldsMap,
 			StatusUpdater progressIndicator, OrderedPluginMap wrappers) throws Exception
 	{
+//		System.out.println("LP 353: wrap new table (for classification)");
 		newData = wrapTableBefore(newData, fold, foldsMap, progressIndicator, wrappers, false);
 
 		Object predictionContext = prepareToPredict(originalData, newData, fold, foldsMap);
@@ -486,6 +494,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 			if (learn)
 			{
 				((WrapperPlugin) wrapper).learnFromTrainingData(newData, fold, foldsMap, progressIndicator);
+				//whatever the wrapper has learned is stored in configuration settings.
+				wrappers.put(wrapper, wrapper.generateConfigurationSettings());
 			}
 
 			newData = ((WrapperPlugin) wrapper).wrapTableBefore(newData, fold, foldsMap, progressIndicator);

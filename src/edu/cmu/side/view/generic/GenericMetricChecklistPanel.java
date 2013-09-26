@@ -10,11 +10,13 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
+import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.plugin.FeatureMetricPlugin;
@@ -28,7 +30,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 	FastListModel pluginsModel = new FastListModel();
 	SelectPluginList pluginsList = new SelectPluginList();
 
-	FeatureTable localTable;
+	Recipe localRecipe;
 	
 	public GenericMetricChecklistPanel(){
 		setLayout(new RiverLayout());
@@ -66,9 +68,19 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 		add("br hfill vfill", describeScroll);
 	}
 
-	public void refreshPanel(FeatureTable table){
-		if(table != localTable){
-			localTable = table;
+	public void refreshPanel(Recipe recipe)
+	{
+		
+		super.refreshPanel();
+		FeatureTable table = null;
+		
+		if(recipe != null)
+		{
+			table = recipe.getTrainingTable();
+		}
+		
+		if(recipe != localRecipe){
+			localRecipe = recipe;
 			Set<String> keysNew = new TreeSet<String>();
 			if(table != null)
 			{
@@ -77,20 +89,25 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 					keysNew.add(s);
 				}
 			}
-			Feature.Type activeType = (localTable == null?null: localTable.getClassValueType());
+			Feature.Type activeType = (table == null?null: table.getClassValueType());
 			Workbench.reloadComboBoxContent(combo, keysNew, (keysNew.size()>0?keysNew.toArray(new String[0])[0]:null));
-			for(int i = 0; i < pluginsModel.getSize(); i++){
-				if(pluginsModel.get(i) instanceof CheckBoxListEntry)
+			E plug = null;
+			for(int i = 0; i < pluginsModel.getSize(); i++)
+			{
+				if(pluginsModel.get(i) instanceof FeatureMetricPlugin)
+					plug = (E)pluginsModel.get(i);
+				
+				if(plug != null && pluginsModel.get(i) instanceof CheckBoxListEntry)
 				{
 
 					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
 					String label = check.getValue().toString();
-					Map<E, Map<String, Boolean>> evalPlugins = getEvaluationPlugins();
-					for (E plug : evalPlugins.keySet())
+					//Map<E, Map<String, Boolean>> evalPlugins = getEvaluationPlugins();
+					//for (E plug : evalPlugins.keySet())
 					{
 						Collection<Feature.Type> types = (Collection<Feature.Type>) plug.getAvailableEvaluations().get(label);
 						
-						if (types != null && activeType != null && !types.contains(activeType))
+						if (types != null && activeType != null && !plug.canEvaluateRecipe(recipe, label))
 						{
 							check.setSelected(false);
 							check.setEnabled(false);
@@ -103,12 +120,8 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 					}
 				}
 			}
-//			for(int i = 0; i < pluginsModel.getSize(); i++){
-//				if(pluginsModel.get(i) instanceof CheckBoxListEntry){
-//					CheckBoxListEntry check = ((CheckBoxListEntry)pluginsModel.get(i));
-//				}
-//			}
-			pluginsList.setModel(pluginsModel);
+			
+			pluginsModel.fireContentsChanged(this, 0, pluginsModel.size());
 			revalidate();
 			repaint();
 		}

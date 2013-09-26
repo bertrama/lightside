@@ -32,7 +32,8 @@ public abstract class GenericPluginConfigPanel<E extends SIDEPlugin> extends Abs
 
 	public void refreshPanel(Map<E, Boolean> plugins){
 		this.removeAll();
-		for(E plugin : plugins.keySet()){
+		TreeSet<E> pluginSet = new TreeSet<E>(plugins.keySet()); //sort by plugin key
+		for(E plugin : pluginSet){
 			if(plugins.get(plugin))
 			{
 				if(showLabels)

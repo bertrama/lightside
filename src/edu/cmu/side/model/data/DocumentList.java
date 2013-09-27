@@ -1,11 +1,17 @@
 package edu.cmu.side.model.data;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -13,12 +19,19 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import com.thoughtworks.xstream.XStream;
 import com.yerihyo.yeritools.csv.CSVReader;
 import com.yerihyo.yeritools.swing.AlertDialog;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
+
+import com.thoughtworks.xstream.converters.Converter;
+import com.thoughtworks.xstream.converters.MarshallingContext;
+import com.thoughtworks.xstream.converters.UnmarshallingContext;
+import com.thoughtworks.xstream.io.HierarchicalStreamReader;
+import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
 
 public class DocumentList implements Serializable
 {
@@ -310,7 +323,9 @@ public class DocumentList implements Serializable
 
                 totalLines += lineID;
         }
-        setName(localName.trim());
+//      consolidateFileStructures(annotationList);
+        localName.trim();
+        setName(localName);
 	}
 	
 	public void combine(DocumentList other){
@@ -687,6 +702,21 @@ public class DocumentList implements Serializable
 	}
 
 
+	public String getCurrentAnnotation(){
+		return this.currentAnnotation;
+	}
+	
+	public boolean equals(DocumentList other){
+		boolean toReturn = true;
+		toReturn=this.getFilenameList().equals(other.getFilenameList())?toReturn:false;
+		toReturn=this.allAnnotations().equals(other.allAnnotations())?toReturn:false;
+		toReturn=this.getTextColumns().equals(other.getTextColumns())?toReturn:false;
+		toReturn=(this.textColumnsAreDifferentiated()==other.textColumnsAreDifferentiated())?toReturn:false;
+		toReturn=(this.getCurrentAnnotation().equals(other.getCurrentAnnotation()))?toReturn:false;
+		toReturn=(this.getName().equals(other.getName()))?toReturn:false;
+		toReturn=(this.getEmptyAnnotationString().equals(other.getEmptyAnnotationString()))?toReturn:false;
+		return toReturn;
+	}
 	public String getEmptyAnnotationString()
 	{
 		return emptyAnnotationString;
@@ -697,7 +727,6 @@ public class DocumentList implements Serializable
 	{
 		this.emptyAnnotationString = emptyAnnotationString;
 	}
-	
 	@Override
 	public DocumentList clone()
 	{

@@ -16,8 +16,15 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import com.thoughtworks.xstream.XStream;
+
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.model.feature.LocalFeatureHit;
+import edu.cmu.side.model.feature.LocalFeatureHit.HitLocation;
 import edu.cmu.side.model.feature.RegroupFeatureHit;
 
 /**
@@ -31,47 +38,56 @@ public class FeatureTable implements Serializable
 
 	private Map<Feature, Collection<FeatureHit>> hitsPerFeature;
 	private List<Collection<FeatureHit>> hitsPerDocument;
-	
+
 	private Map<String, double[]> numericConvertedClassValues = new HashMap<String, double[]>();
 	private List<String> nominalConvertedClassValues = new ArrayList<String>();
-	
+
 	//For numeric class values to convert to quintiles
 	ArrayList<Double> numericBreakpoints = new ArrayList<Double>();
-	
+
 	private Feature.Type type = null;
 	private Integer threshold = 5;
 	private String annotation;
 	private String name = "no name set";
-	
+
 	private String[] labelArray;
 
 	private FeatureTable(){
 		this.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>(); //Rough guess at capacity requirement.
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
 	}
-	
 
-	/**
-	 * Appropriate when reconciling with an exisiting feature table, or with unlabeled data.
-	 * @param sdl
-	 * @param hits
-	 * @param thresh
-	 * @param annotation
-	 * @param type
-	 * @param labels the label array to use - the new doclist may not have all the possible labels in it.
-	 */
-	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type, String[] labels)
-	{
-		this(sdl, hits, thresh, annotation, type);
-		labelArray = labels;
+	public FeatureTable(String name, int thresh, String currentAnnotation, Feature.Type type, String[] labelArray,
+			ArrayList<Feature> featureList, List<String> nomCV, Map<String, double[]>numCV){
+		this.name=name;
+		this.threshold = thresh;
+		this.annotation=currentAnnotation;
+		this.type=type;
+		this.labelArray = labelArray;
+		this.nominalConvertedClassValues = nomCV;
+		this.numericConvertedClassValues = numCV;
+		this.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
+		Collection<FeatureHit> emptyHits = new ArrayList<FeatureHit>(0);
+		for(Feature f : featureList)
+		{
+			this.hitsPerFeature.put(f, emptyHits);
+		}
+
+		for(int i = 0; i < getSize(); i++)
+		{
+			this.hitsPerDocument.add(emptyHits);
+		}
 	}
+
 	
 	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type)
 	{
 		this();
+		Boolean docExists = true;
+		if(sdl==null) docExists=false;
 		setAnnotation(annotation);
 		this.type = type;
-		
+		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
 		this.threshold = thresh;
 		this.documents = sdl;
 		long hitCount = 0;
@@ -118,88 +134,9 @@ public class FeatureTable implements Serializable
 				fiterator.remove();
 			}
 		}
-
-		System.out.println("FT 99: "+hitsPerFeature.size()+ " features, "+hitCount+" hits remaining (threshold "+threshold+")");
 	}
-	
-//	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type)
-//	{
-//		this();
-//		setAnnotation(annotation);
-//		this.type = type;
-//		
-//		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000); //?
-//		this.threshold = thresh;
-//		this.documents = sdl;
-//
-//		generateConvertedClassValues();
-//
-//		System.out.println("FT 63: " + hits.size() + " total incoming hits, "+sdl.getSize()+ " instances");
-//
-//		for (int i = 0; i < sdl.getSize(); i++)
-//		{
-//			hitsPerDocument.add(new TreeSet<FeatureHit>());
-//		}
-//		for (FeatureHit hit : hits)
-//		{
-//			Feature f = hit.getFeature();
-//			if (!localFeatures.containsKey(f))
-//			{
-//				localFeatures.put(f, new TreeSet<Integer>());
-//			}
-//			localFeatures.get(f).add(hit.getDocumentIndex());
-//		}
-//		System.out.println("magic done.");
-//
-//		for (FeatureHit hit : hits)
-//		{
-//			if (localFeatures.get(hit.getFeature()).size() >= threshold)
-//			{
-//				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
-//				if (!hitsPerFeature.containsKey(hit.getFeature()))
-//				{
-//					hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
-//				}
-//				hitsPerFeature.get(hit.getFeature()).add(hit);
-//			}
-//		}
-//
-//		System.out.println("FT 92: "+hitsPerFeature.size()+ " features.");
-//	}
 
-//	@Deprecated
-//	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh){
-//		this();
-//		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
-//		this.threshold = thresh;
-//		this.documents = sdl;
-//		this.annotation = sdl.getCurrentAnnotation();
-//		this.type = sdl.getValueType(annotation);
-//		generateConvertedClassValues();
-//		
-//		for(int i = 0; i < sdl.getSize(); i++){
-//			hitsPerDocument.add(new TreeSet<FeatureHit>());
-//		}
-//		for(FeatureHit hit : hits){
-//			Feature f = hit.getFeature();
-//			if(!localFeatures.containsKey(f)){
-//				localFeatures.put(f, new TreeSet<Integer>());
-//			}
-//			localFeatures.get(f).add(hit.getDocumentIndex());
-//		}
-//
-//		for(FeatureHit hit : hits){
-//			if(localFeatures.get(hit.getFeature()).size() >= threshold){
-//				hitsPerDocument.get(hit.getDocumentIndex()).add(hit);
-//				if(!hitsPerFeature.containsKey(hit.getFeature())){
-//					hitsPerFeature.put(hit.getFeature(), new TreeSet<FeatureHit>());
-//				}
-//				hitsPerFeature.get(hit.getFeature()).add(hit);
-//			}
-//		}
-//	}
-	
-	
+
 	public FeatureTable cloneTrainingFold(Map<Integer, Integer> foldMap, int fold, boolean train){
 		List<Integer> indices = getFoldIndices(foldMap, fold, train);
 		List<String> newFilenames = new ArrayList<String>();
@@ -225,7 +162,7 @@ public class FeatureTable implements Serializable
 			newFilenames.add(origDocs.getFilename(index));
 		}
 		DocumentList docs = new DocumentList(newFilenames, newText, newAnnots, annotation);
-//		docs.setClassValueType(origDocs.type);
+		//		docs.setClassValueType(origDocs.type);
 		//TODO: figure out why the second cloneTraining on the final pass of wrapperthingy is empty/numeric, and why it wasn't before
 		Collection<FeatureHit> newHits = new HashSet<FeatureHit>();
 		for(int index : indices){
@@ -239,12 +176,12 @@ public class FeatureTable implements Serializable
 		}
 		return new FeatureTable(docs, newHits, 1, this.getAnnotation(), this.getClassValueType());
 	}
-	
+
 	public void generateConvertedClassValues()
 	{
 		if(annotation == null || type == null)
 			return;
-		
+
 		numericConvertedClassValues.clear();
 		nominalConvertedClassValues.clear();
 		DocumentList localDocuments = getDocumentList();
@@ -292,11 +229,15 @@ public class FeatureTable implements Serializable
 			break;
 		}
 	}
-	
+
 	public ArrayList<Double> getNumericBreakpoints(){
 		return numericBreakpoints;
 	}
-	
+
+	public Map<String, double[]> getNumericClassValues(){
+		return this.numericConvertedClassValues;
+	}
+
 	public double[] getNumericClassValues(String target){
 		double[] out = null;
 		switch(getClassValueType()){
@@ -310,7 +251,7 @@ public class FeatureTable implements Serializable
 		}
 		return out;	
 	}
-	
+
 	public List<String> getNominalClassValues(){
 		return nominalConvertedClassValues;
 	}
@@ -321,7 +262,7 @@ public class FeatureTable implements Serializable
 			return documents.getSize();
 		else return hitsPerDocument.size();
 	}
-	
+
 	public void setName(String n){
 		name = n;
 	}
@@ -329,7 +270,7 @@ public class FeatureTable implements Serializable
 	public void setThreshold(int n){
 		threshold = n;
 	}
-	
+
 	public int getThreshold(){
 		return threshold;
 	}
@@ -343,14 +284,14 @@ public class FeatureTable implements Serializable
 			documents.setCurrentAnnotation(annotation, type);
 		return documents;
 	}
-	
+
 	// Does not ensure that the class value has been updated - 
 	// should only be used inside a loop and only when, as a precondition, 
 	// getDocumentList() has been called at least once.
 	public DocumentList getDocumentListQuickly(){
 		return documents;
 	}
-	
+
 	/**
 	 * @return the set of features extracted from the documents.
 	 */
@@ -371,58 +312,58 @@ public class FeatureTable implements Serializable
 	public Collection<FeatureHit> getHitsForDocument(int index) {
 		return hitsPerDocument.get(index);
 	}
-	
+
 
 	/**
 	 * When creating feature hits, they're done on a per-feature basis. This fills the data structure
-     * that maps those hits per document instead.
-    */
+	 * that maps those hits per document instead.
+	 */
 	private void fillHitsPerDocument(FeatureTable ft) {
 		ft.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
-	    for(int i = 0; i < hitsPerDocument.size(); i++)
-	    	ft.hitsPerDocument.add(new ArrayList<FeatureHit>());
-	    
-	    for(Feature f : hitsPerFeature.keySet()){
-	    	Collection<FeatureHit> hitsPerF = hitsPerFeature.get(f);
+		for(int i = 0; i < hitsPerDocument.size(); i++)
+			ft.hitsPerDocument.add(new ArrayList<FeatureHit>());
+
+		for(Feature f : hitsPerFeature.keySet()){
+			Collection<FeatureHit> hitsPerF = hitsPerFeature.get(f);
 			ft.hitsPerFeature.put(f, new TreeSet<FeatureHit>(hitsPerF));
-	        for(FeatureHit fh : hitsPerF)
-	        	ft.hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
-	    }
+			for(FeatureHit fh : hitsPerF)
+				ft.hitsPerDocument.get(fh.getDocumentIndex()).add(fh);
+		}
 	}
-	
+
 	@Override
 	public FeatureTable clone()
 	{
 		FeatureTable ft = new FeatureTable();
-	    ft.setName(getName()+" (clone)");
+		ft.setName(getName()+" (clone)");
 
-	    ft.documents = documents;
+		ft.documents = documents;
 		ft.type = type;
 		ft.threshold = threshold;
 		ft.annotation = annotation;
-	    
-	    ft.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
-	    ft.threshold = threshold;
-	    ft.numericConvertedClassValues = new HashMap<String, double[]>(numericConvertedClassValues);
-	    ft.nominalConvertedClassValues = new ArrayList<String>(nominalConvertedClassValues);
-	    
-	    fillHitsPerDocument(ft);
-	    
-	    
-	    return ft;
+
+		ft.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
+		ft.threshold = threshold;
+		ft.numericConvertedClassValues = new HashMap<String, double[]>(numericConvertedClassValues);
+		ft.nominalConvertedClassValues = new ArrayList<String>(nominalConvertedClassValues);
+
+		fillHitsPerDocument(ft);
+
+
+		return ft;
 	}
-	
-    public void deleteFeatureSet(Set<Feature> f){
-    	for(int i = 0; i < hitsPerDocument.size(); i++){
-    		Collection<FeatureHit> tmphits = new ArrayList<FeatureHit>();
-	        for(FeatureHit hit : hitsPerDocument.get(i))
-	        	if(!f.contains(hit.getFeature())) tmphits.add(hit);
-	        hitsPerDocument.set(i, tmphits);
-	     }
-	     for (Feature fe : f)
-	    	 hitsPerFeature.remove(fe);
-    }
-	
+
+	public void deleteFeatureSet(Set<Feature> f){
+		for(int i = 0; i < hitsPerDocument.size(); i++){
+			Collection<FeatureHit> tmphits = new ArrayList<FeatureHit>();
+			for(FeatureHit hit : hitsPerDocument.get(i))
+				if(!f.contains(hit.getFeature())) tmphits.add(hit);
+			hitsPerDocument.set(i, tmphits);
+		}
+		for (Feature fe : f)
+			hitsPerFeature.remove(fe);
+	}
+
 	public Double getNumericConvertedClassValue(int i, String target)
 	{
 		if (getClassValueType() == Feature.Type.NUMERIC)
@@ -438,7 +379,7 @@ public class FeatureTable implements Serializable
 			return (documents.getAnnotationArray(annotation).get(i).equals(target)) ? 1.0 : 0.0;
 		}
 	}
-	
+
 	public List<Integer> getFoldIndices(Map<Integer, Integer> foldMap, int fold, boolean train){
 		ArrayList<Integer> indices = new ArrayList<Integer>();
 		for(int i = 0; i < getSize(); i++){
@@ -448,12 +389,12 @@ public class FeatureTable implements Serializable
 		}
 		return indices;
 	}
-	
+
 	public String[] getNominalLabelArray()
 	{
 		return getLabelArray();//documents.getLabelArray(annotation, type);
 	}
-	
+
 	public String[] getLabelArray()
 	{
 
@@ -462,29 +403,29 @@ public class FeatureTable implements Serializable
 			Set<String> labelSet = new TreeSet<String>();
 			switch (type)
 			{
-				case NOMINAL:
-				case BOOLEAN:
-					List<String> labels = documents.getAnnotationArray(annotation);
-					if (labels != null)
+			case NOMINAL:
+			case BOOLEAN:
+				List<String> labels = documents.getAnnotationArray(annotation);
+				if (labels != null)
+				{
+					for (String s : labels)
 					{
-						for (String s : labels)
-						{
-							labelSet.add(s);
-						}
+						labelSet.add(s);
 					}
-					break;
-				case NUMERIC:
-					for (int i = 0; i < 5; i++)
-					{
-						labelSet.add("Q" + (i + 1));
-					}
-					break;
+				}
+				break;
+			case NUMERIC:
+				for (int i = 0; i < 5; i++)
+				{
+					labelSet.add("Q" + (i + 1));
+				}
+				break;
 			}
 			labelArray = labelSet.toArray(new String[0]);
 		}
 		return labelArray;
 	}
-	
+
 	public String[] getFeatureTableLabelArray(){
 		String[] result = null;
 		switch(getClassValueType()){
@@ -505,16 +446,16 @@ public class FeatureTable implements Serializable
 		//documents = sdl;
 		//		annotation = sdl.getCurrentAnnotation();
 		//		generateConvertedClassValues();
-		
+
 
 		this.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>(); //Rough guess at capacity requirement.
 		this.hitsPerDocument  = new ArrayList<Collection<FeatureHit>>();
-		
+
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(2000);
-		
+
 		hitsPerDocument.clear();
 		hitsPerFeature.clear();
-		
+
 		for(int i = 0; i < documents.getSize(); i++){
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
 		}
@@ -536,7 +477,7 @@ public class FeatureTable implements Serializable
 			}
 		}
 	}
-	
+
 	public void setHitsIgnoreThreshold(Collection<FeatureHit> hits)
 	{
 		this.hitsPerFeature.clear();
@@ -562,7 +503,7 @@ public class FeatureTable implements Serializable
 	public void addFeatureHits(Collection<FeatureHit> hits)
 	{
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(10000);
-		
+
 		for(FeatureHit hit : hits){
 			Feature f = hit.getFeature();
 			if(!localFeatures.containsKey(f)){
@@ -627,15 +568,15 @@ public class FeatureTable implements Serializable
 		//TODO: decide if this removal step is neccessary - it may be un-needful, but could save space.
 		Collection<Feature> toRemove = new ArrayList<Feature>();
 
-//		System.out.println("FT 480: Unreconciled feature table has "+this.getFeatureSet().size() + " features, vs. "+train.getFeatureSet().size()+" in target");
-		
+		//		System.out.println("FT 480: Unreconciled feature table has "+this.getFeatureSet().size() + " features, vs. "+train.getFeatureSet().size()+" in target");
+
 		for(Feature f : this.hitsPerFeature.keySet())
 		{
 			if(!guaranteedFeatures.contains(f))
 			{
 				Collection<FeatureHit> hits = this.hitsPerFeature.get(f);
 				toRemove.add(f);
-				
+
 				for(FeatureHit h : hits)
 				{
 					hitsPerDocument.get(h.getDocumentIndex()).remove(h);
@@ -646,9 +587,9 @@ public class FeatureTable implements Serializable
 		{
 			this.hitsPerFeature.remove(f);
 		}
-//		System.out.println("FT 487: removed "+toRemove.size() + " features. "+this.getFeatureSet().size() + " features remain.");
-		
-		
+		//		System.out.println("FT 487: removed "+toRemove.size() + " features. "+this.getFeatureSet().size() + " features remain.");
+
+
 		//add empty feature map entries so all training features are accounted for in this new feature table.
 		for(Feature f : guaranteedFeatures)
 		{
@@ -657,23 +598,23 @@ public class FeatureTable implements Serializable
 				this.hitsPerFeature.put(f, new ArrayList<FeatureHit>());
 			}
 		}
-		
-//		System.out.println("FT 511: Reconciled table has "+this.getFeatureSet().size() + " features");
-		
+
+		//		System.out.println("FT 511: Reconciled table has "+this.getFeatureSet().size() + " features");
+
 	}
 
 	public List<String> getAnnotations()
 	{
 		return documents.getAnnotationArray(annotation);
 	}
-	
+
 	public void setAnnotation(String annotation)
 	{
 		if(annotation != null && !annotation.equals(this.annotation))
 			labelArray = null;
 		this.annotation = annotation;
 	}
-	
+
 	/**
 	 * Uses a sort of shoddy and roundabout catch-exception way of figuring out if the data type is nominal or numeric.
 	 * @return
@@ -692,7 +633,7 @@ public class FeatureTable implements Serializable
 	{
 		if(this.type != type)
 			labelArray = null;
-		
+
 		this.type = type;
 	}
 
@@ -704,35 +645,35 @@ public class FeatureTable implements Serializable
 	public FeatureTable predictionClone(DocumentList dummyDocs)
 	{
 		FeatureTable ft = new FeatureTable();
-	    ft.setName(getName()+" (prediction clone)");
+		ft.setName(getName()+" (prediction clone)");
 
 	    ft.documents = dummyDocs;
 		ft.type = type;
+		//Why two threshold assignments
 		ft.threshold = threshold;
 		ft.annotation = annotation;
 		ft.labelArray = labelArray;
-	    
-	    ft.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
-	    ft.threshold = threshold;
-	    ft.numericConvertedClassValues = new HashMap<String, double[]>(numericConvertedClassValues);
-	    ft.nominalConvertedClassValues = new ArrayList<String>(nominalConvertedClassValues);
-	    
-	    Collection<FeatureHit> emptyHits = new ArrayList<FeatureHit>(0);
-	    
-	    for(Feature f : hitsPerFeature.keySet())
-	    {
-	    	ft.hitsPerFeature.put(f, emptyHits);
-	    }
-	    
-	    for(int i = 0; i < getSize(); i++)
-	    {
-	    	ft.hitsPerDocument.add(emptyHits);
-	    }
-	    
-	    
-	    return ft;
+
+		ft.hitsPerFeature = new TreeMap<Feature, Collection<FeatureHit>>();
+		ft.threshold = threshold;
+		ft.numericConvertedClassValues = new HashMap<String, double[]>(numericConvertedClassValues);
+		ft.nominalConvertedClassValues = new ArrayList<String>(nominalConvertedClassValues);
+
+		Collection<FeatureHit> emptyHits = new ArrayList<FeatureHit>(0);
+
+		for(Feature f : hitsPerFeature.keySet())
+		{
+			ft.hitsPerFeature.put(f, emptyHits);
+		}
+
+		for(int i = 0; i < getSize(); i++)
+		{
+			ft.hitsPerDocument.add(emptyHits);
+		}
+
+
+		return ft;
 	}
-	
 
 	public boolean isWeighted()
 	{
@@ -747,4 +688,32 @@ public class FeatureTable implements Serializable
 		}
 		return true;
 	}
+	
+    public boolean equals(FeatureTable other){
+        boolean returnStatement = true;
+        if(this.documents!=null){
+                returnStatement=this.documents.equals(other.getDocumentList())?returnStatement:false;
+        } else {
+                returnStatement=other.getDocumentList()==null?returnStatement:false;
+        }
+
+        returnStatement=this.threshold.equals(other.threshold)?returnStatement:false;
+        returnStatement=this.getAnnotation().equals(other.getAnnotation())?returnStatement:false;
+        returnStatement=this.getClassValueType().equals(other.getClassValueType())?returnStatement:false;
+        if(this.getFeatureSet().equals(other.getFeatureSet())){
+                for(Feature feat: this.getFeatureSet()){
+                        returnStatement=this.getHitsForFeature(feat).equals(other.getHitsForFeature(feat))?returnStatement:false;
+                }
+        } else {
+                returnStatement=false;
+        }
+        if(this.getDocumentList().equals(other.getDocumentList())){
+                for(int i = 0; i< this.hitsPerDocument.size(); i++){
+                        returnStatement=this.getHitsForDocument(i).equals(other.getHitsForDocument(i))?returnStatement:false;
+                }
+        } else {
+                returnStatement=false;
+        }
+        return returnStatement;
+}
 }

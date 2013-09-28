@@ -186,7 +186,7 @@ public class OrderedPluginMap implements SortedMap<SIDEPlugin, Map<String, Strin
 	}
 
 	
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException
 	{
 
 		ordering = new ArrayList<SIDEPlugin>();

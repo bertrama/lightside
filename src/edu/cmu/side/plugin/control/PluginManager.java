@@ -41,7 +41,7 @@ public class PluginManager {
 		return  getPluginTypeMap().keySet();
 	}
 
-	public PluginWrapper getPluginWrapperByPluginClassName(String pluginClassName) {
+	synchronized public PluginWrapper getPluginWrapperByPluginClassName(String pluginClassName) {
 		PluginWrapper result = null;
 
 		for (Iterator<PluginWrapper> iTemp = getAllPlugins().iterator(); iTemp.hasNext();) {

@@ -416,7 +416,7 @@ public class Recipe implements Serializable
 		this.recipeName = recipeName;
 	}
 	
-	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException, InstantiationException, IllegalAccessException
 	{
 		//System.out.println("reading "+this + " from "+in);
 		stage = (RecipeManager.Stage) in.readObject();

@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,69 +15,80 @@ public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 	private transient File rootFolder;
 
 	protected boolean halt;
-	
-	private Map<String,String> aboutMap = new HashMap<String,String>();
-	public Map<String, String> getAboutMap() {
+	private static boolean useSharedPluginsInDeserializedRecipes = true;
+
+	private Map<String, String> aboutMap = new HashMap<String, String>();
+
+	public Map<String, String> getAboutMap()
+	{
 		return aboutMap;
 	}
-	
+
 	public abstract String getOutputName();
 
-	
 	public static String classnameXMLKey = "classname";
 
-	protected StringBuilder wrapSIDEPluginOption(CharSequence cs){
+	protected StringBuilder wrapSIDEPluginOption(CharSequence cs)
+	{
 		StringBuilder builder = new StringBuilder();
-		builder.append("<").append(this.getType()).append(" "+classnameXMLKey+"=\"").append(this.getClass().getName()).append("\">");
+		builder.append("<").append(this.getType()).append(" " + classnameXMLKey + "=\"").append(this.getClass().getName()).append("\">");
 		builder.append(cs);
 		builder.append("</").append(this.getType()).append(">");
 		return builder;
 	}
-	
-	public SIDEPlugin() {
+
+	public SIDEPlugin()
+	{
 	}
 
-	public SIDEPlugin(File rootFolder) {
+	public SIDEPlugin(File rootFolder)
+	{
 		this.rootFolder = rootFolder;
 	}
 
-	public void setRootFolder(File rootFolder) {
+	public void setRootFolder(File rootFolder)
+	{
 		this.rootFolder = rootFolder;
 	}
 
-	public File PluginFolder() {
+	public File PluginFolder()
+	{
 		return this.rootFolder;
 	}
 
 	/**
-	 * return a string which indicates the type of functionality
-	 * provided by the pluginWrapper; pluginManager are grouped by type
-	 * for example: "segmenter", "summarization", etc.
+	 * return a string which indicates the type of functionality provided by the
+	 * pluginWrapper; pluginManager are grouped by type for example:
+	 * "segmenter", "summarization", etc.
 	 * 
 	 * @return
 	 */
 	public abstract String getType();
 
 	/**
-	 * LightSIDE Genesis will remind the user, at many places, what options they selected.
-	 * This method will be called to get that string.
+	 * LightSIDE Genesis will remind the user, at many places, what options they
+	 * selected. This method will be called to get that string.
+	 * 
 	 * @return
 	 */
-	public String getDescription(){
+	public String getDescription()
+	{
 		return "No description available.";
 	}
+
 	/**
-	 * This method is provided to give you a way to make sure that the pluginWrapper
-	 * has been installed properly. The default implementation prints the name
-	 * and version of the pluginWrapper and a 'success' message. If your implementation
-	 * requires more sophisitcated error checking, you should overload this
-	 * method. For example, if there are any external resources which you need
-	 * access to, this is the time to check and make sure you can get to them.
-	 * If you encounter any error or 'warning' conditions, append the relevant
-	 * messages to the 'msg' buffer which was passed in.
+	 * This method is provided to give you a way to make sure that the
+	 * pluginWrapper has been installed properly. The default implementation
+	 * prints the name and version of the pluginWrapper and a 'success' message.
+	 * If your implementation requires more sophisitcated error checking, you
+	 * should overload this method. For example, if there are any external
+	 * resources which you need access to, this is the time to check and make
+	 * sure you can get to them. If you encounter any error or 'warning'
+	 * conditions, append the relevant messages to the 'msg' buffer which was
+	 * passed in.
 	 */
 	public boolean validatePlugin(StringBuffer msg)
-	
+
 	{
 		boolean result = true;
 		msg.append(this.aboutMap.get("title") + " " + this.aboutMap.get("version") + "\n");
@@ -84,7 +96,8 @@ public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 		return result;
 	}
 
-	public void stopWhenPossible(){
+	public void stopWhenPossible()
+	{
 		halt = true;
 	}
 
@@ -92,9 +105,11 @@ public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 	/*--------------------------------- OVERLOADABLE METHODS -------------------------- */
 	/*--------------------------------------------------------------------------------- */
 
-	public boolean doValidation(StringBuffer msg){
+	public boolean doValidation(StringBuffer msg)
+	{
 		return true;
 	}
+
 	// Perform whatever pluginWrapper-specific validation is necessary
 	// to ensure that the pluginWrapper can run
 
@@ -105,40 +120,64 @@ public abstract class SIDEPlugin implements Cloneable, Comparable<SIDEPlugin>
 		return false;
 	}
 
-	public Component getConfigurationUI(){
+	public Component getConfigurationUI()
+	{
 		return this.getConfigurationUIForSubclass();
 	}
-	
+
 	protected abstract Component getConfigurationUIForSubclass();
+
 	public abstract Map<String, String> generateConfigurationSettings();
+
 	public abstract void configureFromSettings(Map<String, String> settings);
-	
-	public static SIDEPlugin fromSerializable(Serializable pug)
+
+	public static SIDEPlugin fromSerializable(Serializable pug) throws InstantiationException, IllegalAccessException, ClassNotFoundException
 	{
-		synchronized(SIDEPlugin.class)
-		{
-			//System.out.println("loading plugin "+pug);
-			if(pug == null) 
-				return null;
-			
-			SIDEPlugin plugin = PluginManager.getPluginByClassname((String) pug);
-			return plugin;
-		}
-	}
+		SIDEPlugin plugin;
 	
+		System.out.println(new Date()+"\tSidePlugin: loading plugin "+pug+"...");
+		
+		if(pug == null) 
+		{
+			return null;
+		}
+		
+		String classname = pug.toString();
+		if(!useSharedPluginsInDeserializedRecipes)
+		{
+			plugin = (SIDEPlugin) Class.forName(classname).newInstance();
+		}
+		else
+		{
+			plugin = PluginManager.getPluginByClassname(classname);
+		}
+		return plugin;
+	}
+
 	public Serializable toSerializable() throws IOException
 	{
-		return this.getClass().getName();
+		String classname = this.getClass().getName();
+		return classname;
 	}
-	
+
 	public boolean isStopped()
 	{
 		return halt;
 	}
-	
+
 	@Override
 	public int compareTo(SIDEPlugin p)
 	{
 		return this.getOutputName().compareTo(p.getOutputName());
+	}
+
+	public static boolean useSharedPluginsInDeserializedRecipes()
+	{
+		return useSharedPluginsInDeserializedRecipes;
+	}
+
+	public static void setUseSharedPluginsWhenDeserializing(boolean singletons)
+	{
+		SIDEPlugin.useSharedPluginsInDeserializedRecipes = singletons;
 	}
 }

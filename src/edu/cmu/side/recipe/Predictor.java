@@ -1,11 +1,13 @@
 package edu.cmu.side.recipe;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
 import edu.cmu.side.model.Recipe;
@@ -64,7 +66,7 @@ public class Predictor
 		setQuiet(true);
 	}
 
-	public Predictor(Map<String, String> params) throws DeserializationException, FileNotFoundException
+	public Predictor(Map<String, String> params) throws IOException, FileNotFoundException
 	{
 
 		if (!isQuiet()) System.out.println(params);
@@ -75,7 +77,7 @@ public class Predictor
 		loadModel();
 	}
 
-	public Predictor(String modelPath, String annotationName) throws DeserializationException, FileNotFoundException
+	public Predictor(String modelPath, String annotationName) throws IOException, FileNotFoundException
 	{
 		this.modelPath = modelPath;
 		this.predictionAnnotation = "predicted";
@@ -142,6 +144,7 @@ public class Predictor
 	 */
 	public DocumentList predict(DocumentList corpus, String predictionColumn, boolean addDistributionColumns, boolean overWrite)
 	{
+
 		PredictionResult result = null;
 		Recipe newRecipe = null;
 		try
@@ -271,7 +274,7 @@ public class Predictor
 	 * @throws FileNotFoundException
 	 * 
 	 */
-	protected void loadModel() throws DeserializationException, FileNotFoundException
+	protected void loadModel() throws IOException, FileNotFoundException
 	{
 		recipe = Chef.loadRecipe(modelPath);
 	}

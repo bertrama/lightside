@@ -1,10 +1,9 @@
 package edu.cmu.side.recipe;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
@@ -33,6 +32,7 @@ import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
+import edu.cmu.side.recipe.converters.ConverterControl;
 
 /**
  * loads a model trained using lightSIDE uses it to label new instances.
@@ -148,7 +148,6 @@ public class Chef
 
 		broilModel(newRecipe);
 		printMemoryUsage();
-		
 		return newRecipe;
 	}
 
@@ -190,9 +189,8 @@ public class Chef
 	}
 
 
-	public static Recipe loadRecipe(String recipePath) throws DeserializationException, FileNotFoundException
+	public static Recipe loadRecipe(String recipePath) throws IOException, FileNotFoundException
 	{
-		//System.out.println("loading recipe from "+recipePath);
 		File recipeFile = new File(recipePath);
 		if (!recipeFile.exists())
 		{
@@ -202,14 +200,12 @@ public class Chef
 		{
 			try
 			{
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream(recipeFile));
-				Recipe recipe = (Recipe) in.readObject();
+				Recipe recipe = ConverterControl.readFromXML(recipeFile);
 				return recipe;
 			}
 			catch (Exception e)
 			{
-
-				throw new DeserializationException(e);
+				throw new IOException("Attempted to read malformed XML file.");
 			}
 		}
 	}
@@ -244,7 +240,7 @@ public class Chef
 		outPath = args[1];
 
 		Set<String> corpusFiles = new HashSet<String>();
-		
+
 		String dataFile = "data/MovieReviews.csv";
 		if (args.length < 3) corpusFiles.add(dataFile);
 		else for(int i = 2; i < args.length; i++)
@@ -261,14 +257,11 @@ public class Chef
 		
 		if(result.getStage().compareTo(Stage.TRAINED_MODEL) >= 0)
 		{
-
 			displayTrainingResults(result);
 		}
 
-
 		System.out.println("Saving finished recipe to "+outPath);
 		saveRecipe(result, new File(outPath));
-		
 	}
 
 	protected static void printMemoryUsage()

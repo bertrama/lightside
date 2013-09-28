@@ -236,4 +236,15 @@ public class TrainingResult implements Serializable{
 			cachedEvaluations = new HashMap<String, String>();
 		return cachedEvaluations;
 	}
+	public Boolean equals(TrainingResult other){
+		Boolean toReturn = true;
+		toReturn=this.name.equals(other.getName())?toReturn:false;
+		toReturn=this.longDescriptionString.equals(other.getLongDescriptionString())?toReturn:false;
+		toReturn=(this.train==null?other.getTrainingTable()==null:this.train.equals(other.getTrainingTable())&&toReturn);
+		toReturn=(this.test==null?other.getEvaluationTable()==null:this.test.equals(other.getEvaluationTable())&&toReturn);
+		toReturn=(this.predictions==null?other.getPredictions()==null:this.predictions.equals(other.getPredictions())&&toReturn);
+		toReturn=(this.confusionMatrix==null?other.getConfusionMatrix()==null:this.confusionMatrix.equals(other.getConfusionMatrix())&&toReturn);
+		toReturn=(this.distributions==null?other.getDistributions()==null:this.distributions.equals(other.getDistributions())&&toReturn);
+		return toReturn;
+	}
 }

@@ -25,6 +25,7 @@ import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.recipe.converters.ConverterControl;
 
 public class RecipeExporter
 {
@@ -37,6 +38,8 @@ public class RecipeExporter
 	static FileNameExtensionFilter sideTableFilter = new FileNameExtensionFilter("LightSide Feature Table", "table.side", "side");
 	static FileNameExtensionFilter sideModelFilter = new FileNameExtensionFilter("LightSide Trained Model", "model.side", "side");
 	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict", "model.predict");
+	static FileNameExtensionFilter serializedFilter = new FileNameExtensionFilter("Ye Olde S.I.D.E. Serialized Format", "ser");
+	static FileNameExtensionFilter serializedPredictFilter = new FileNameExtensionFilter("Ye Olde S.I.D.E. Predicte-Only Serialized Format", "predict.ser");
 
 	
 	public static JFileChooser setUpChooser(JFileChooser chooser, FileNameExtensionFilter... filters)
@@ -119,7 +122,7 @@ public class RecipeExporter
 
 	public static void exportFeatures(Recipe tableRecipe)
 	{
-		tableChooser = setUpChooser(tableChooser, sideTableFilter, csvFilter, arffFilter);
+		tableChooser = setUpChooser(tableChooser, sideTableFilter, csvFilter, arffFilter, serializedFilter);
 		FeatureTable table = tableRecipe.getTrainingTable();
 		try
 		{
@@ -135,11 +138,10 @@ public class RecipeExporter
 					if (confirm != JOptionPane.YES_OPTION) return;
 				}
 
-				if (tableChooser.getFileFilter() == csvFilter)
-					exportToCSV(table, f);
-				else if (tableChooser.getFileFilter() == arffFilter)
-					exportToARFF(table, f);
-				else if (tableChooser.getFileFilter() == sideTableFilter) exportToSerialized(tableRecipe, f);
+				if (tableChooser.getFileFilter() == csvFilter) exportToCSV(table, f);
+				else if (tableChooser.getFileFilter() == arffFilter) exportToARFF(table, f);
+				else if (tableChooser.getFileFilter() == sideTableFilter) exportToXML(tableRecipe, f);
+				else if (modelChooser.getFileFilter() == serializedFilter) exportToSerialized(tableRecipe, f);
 			}
 		}
 		catch (Exception e)
@@ -154,12 +156,19 @@ public class RecipeExporter
 
 	}
 
+	public static void exportToXML(Recipe recipe, File target) throws IOException
+	{
+
+		ConverterControl.writeToXML(target, recipe);
+	}
+	
+	@Deprecated
 	public static void exportToSerialized(Recipe recipe, File target) throws IOException
 	{
+		//TODO: write out here
 		FileOutputStream fout = new FileOutputStream(target);
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(recipe);
-
 	}
 
 	public static void exportToARFF(FeatureTable ft, File out) throws IOException
@@ -239,7 +248,7 @@ public class RecipeExporter
 	public static void exportTrainedModel(Recipe tableRecipe)
 	{
 		if(tableRecipe.getStage() == Stage.TRAINED_MODEL)
-			modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter);
+			modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter, serializedFilter, serializedPredictFilter);
 		else
 			modelChooser = setUpChooser(modelChooser, predictFilter);
 			
@@ -248,7 +257,7 @@ public class RecipeExporter
 		{
 			modelChooser.setSelectedFile(new File((result == null ? tableRecipe.getRecipeName() : result.getName()) + "." + ((FileNameExtensionFilter) modelChooser.getFileFilter()).getExtensions()[0]));
 
-			int state = modelChooser.showDialog(null, "Save Feature Table");
+			int state = modelChooser.showDialog(null, "Save Trained Model");
 			if (state == JFileChooser.APPROVE_OPTION)
 			{
 				File f = modelChooser.getSelectedFile();
@@ -258,9 +267,10 @@ public class RecipeExporter
 					if (confirm != JOptionPane.YES_OPTION) return;
 				}
 
-				if (modelChooser.getFileFilter() == predictFilter)
-					exportForPrediction(tableRecipe, f);
-				else if (modelChooser.getFileFilter() == sideModelFilter) exportToSerialized(tableRecipe, f);
+				if (modelChooser.getFileFilter() == predictFilter) exportToXMLForPrediction(tableRecipe, f);
+				else if (modelChooser.getFileFilter() == sideModelFilter) exportToXML(tableRecipe, f);
+				else if (modelChooser.getFileFilter() == serializedFilter) exportToSerialized(tableRecipe, f);
+				else if (modelChooser.getFileFilter() == serializedPredictFilter) exportToSerializedForPrediction(tableRecipe, f);
 			}
 		}
 		catch (Exception e)
@@ -275,11 +285,19 @@ public class RecipeExporter
 
 	}
 
-	public static void exportForPrediction(Recipe recipe, File target) throws IOException
+	@Deprecated
+	public static void exportToSerializedForPrediction(Recipe recipe, File target) throws IOException
 	{
 		Recipe dupe = Recipe.copyPredictionRecipe(recipe);
 		FileOutputStream fout = new FileOutputStream(target);
 		ObjectOutputStream oos = new ObjectOutputStream(fout);
 		oos.writeObject(dupe);
+	}
+	
+	public static void exportToXMLForPrediction(Recipe recipe, File target) throws IOException
+	{
+		//TODO: Setup Rewrite Here
+		Recipe dupe = Recipe.copyPredictionRecipe(recipe);
+		ConverterControl.writeToXML(target, dupe);
 	}
 }

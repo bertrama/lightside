@@ -1,0 +1,3875 @@
+<edu.cmu.side.model.Recipe serialization="custom">
+  <edu.cmu.side.model.Recipe>
+    <edu.cmu.side.model.RecipeManager_-Stage>TRAINED_MODEL</edu.cmu.side.model.RecipeManager_-Stage>
+    <string></string>
+    <edu.cmu.side.model.OrderedPluginMap serialization="custom">
+      <edu.cmu.side.model.OrderedPluginMap>
+        <list>
+          <string>plugins.features.RegexFeatures</string>
+          <string>plugins.features.BasicFeatures</string>
+        </list>
+        <map>
+          <entry>
+            <string>plugins.features.BasicFeatures</string>
+            <tree-map>
+              <entry>
+                <string>Bigrams</string>
+                <string>true</string>
+              </entry>
+              <entry>
+                <string>Contains Non-Stopwords</string>
+                <string>false</string>
+              </entry>
+              <entry>
+                <string>Count Occurences</string>
+                <string>false</string>
+              </entry>
+              <entry>
+                <string>Include Punctuation</string>
+                <string>true</string>
+              </entry>
+              <entry>
+                <string>Line Length</string>
+                <string>true</string>
+              </entry>
+              <entry>
+                <string>POS Bigrams</string>
+                <string>false</string>
+              </entry>
+              <entry>
+                <string>Remove Stopwords</string>
+                <string>false</string>
+              </entry>
+              <entry>
+                <string>Stem N-Grams</string>
+                <string>false</string>
+              </entry>
+              <entry>
+                <string>Track Feature Hit Location</string>
+                <string>true</string>
+              </entry>
+              <entry>
+                <string>Trigrams</string>
+                <string>false</string>
+              </entry>
+              <entry>
+                <string>Unigrams</string>
+                <string>true</string>
+              </entry>
+              <entry>
+                <string>Word/POS Pairs</string>
+                <string>false</string>
+              </entry>
+            </tree-map>
+          </entry>
+          <entry>
+            <string>plugins.features.RegexFeatures</string>
+            <tree-map>
+              <entry>
+                <string>Count Regex Occurrences</string>
+                <string>false</string>
+              </entry>
+              <entry>
+                <string>num_patterns</string>
+                <string>1</string>
+              </entry>
+              <entry>
+                <string>pattern_0</string>
+                <string>emu|peacock|robin|duck</string>
+              </entry>
+            </tree-map>
+          </entry>
+        </map>
+      </edu.cmu.side.model.OrderedPluginMap>
+    </edu.cmu.side.model.OrderedPluginMap>
+    <edu.cmu.side.model.OrderedPluginMap serialization="custom">
+      <edu.cmu.side.model.OrderedPluginMap>
+        <list>
+          <string>plugins.restructure.filter.FeatureValueFilter</string>
+        </list>
+        <map>
+          <entry>
+            <string>plugins.restructure.filter.FeatureValueFilter</string>
+            <tree-map>
+              <entry>
+                <string>basic_BOOLEAN_and</string>
+                <string>hits_remove_0_null</string>
+              </entry>
+              <entry>
+                <string>basic_BOOLEAN_are</string>
+                <string>hits_remove_0_null</string>
+              </entry>
+              <entry>
+                <string>basic_BOOLEAN_the</string>
+                <string>hits_remove_0_null</string>
+              </entry>
+            </tree-map>
+          </entry>
+        </map>
+      </edu.cmu.side.model.OrderedPluginMap>
+    </edu.cmu.side.model.OrderedPluginMap>
+    <edu.cmu.side.model.OrderedPluginMap serialization="custom">
+      <edu.cmu.side.model.OrderedPluginMap>
+        <list>
+          <string>plugins.wrappers.FeatureSelection</string>
+        </list>
+        <map>
+          <entry>
+            <string>plugins.wrappers.FeatureSelection</string>
+            <map>
+              <entry>
+                <string>num</string>
+                <string>25</string>
+              </entry>
+              <entry>
+                <string>features</string>
+                <string>plugins.features.BasicFeatures_basic_of_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_have_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_the_forest_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_milk_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_birds_BOOLEAN	Feature_Selected,	plugins.features.RegexFeatures_regex_emu|peacock|robin|duck__rx_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_&lt;PERIOD&gt;_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_BOL_furry_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_&lt;EXCLAMATIONMARK&gt;_EOL_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_in_the_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_feathers_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_a_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_furry_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_in_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_&lt;QUESTIONMARK&gt;_EOL_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_&lt;EXCLAMATIONMARK&gt;_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_sea_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_is_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_with_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_&lt;QUESTIONMARK&gt;_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_to_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_swim_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_forest_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_delicious_BOOLEAN	Feature_Selected,	plugins.features.BasicFeatures_basic_&lt;PERIOD&gt;_EOL_BOOLEAN	Feature_Selected,	</string>
+              </entry>
+              <entry>
+                <string>active</string>
+                <string>true</string>
+              </entry>
+            </map>
+          </entry>
+        </map>
+      </edu.cmu.side.model.OrderedPluginMap>
+    </edu.cmu.side.model.OrderedPluginMap>
+    <string>plugins.learning.WekaSVM</string>
+    <tree-map>
+      <entry>
+        <string>classifier</string>
+        <string>rO0ABXNyACR3ZWthLmNsYXNzaWZpZXJzLmZ1bmN0aW9ucy5MaWJMSU5FQVIAAAAADb05BwIAD0QA
+Bm1fQmlhc0QABm1fQ29zdFoAC21fTm9ybWFsaXplWgAWbV9Qcm9iYWJpbGl0eUVzdGltYXRlc0QA
+BW1fZXBzWgAYbV9ub1JlcGxhY2VNaXNzaW5nVmFsdWVzWgARbV9ub21pbmFsVG9CaW5hcnlMAA5E
+RUZBVUxUX1NPTFZFUnQAJExkZS9id2FsZHZvZ2VsL2xpYmxpbmVhci9Tb2x2ZXJUeXBlO0wACG1f
+RmlsdGVydAAVTHdla2EvZmlsdGVycy9GaWx0ZXI7TAAHbV9Nb2RlbHQAH0xkZS9id2FsZHZvZ2Vs
+L2xpYmxpbmVhci9Nb2RlbDtMABFtX05vbWluYWxUb0JpbmFyeXQANUx3ZWthL2ZpbHRlcnMvdW5z
+dXBlcnZpc2VkL2F0dHJpYnV0ZS9Ob21pbmFsVG9CaW5hcnk7TAAWbV9SZXBsYWNlTWlzc2luZ1Zh
+bHVlc3QAOkx3ZWthL2ZpbHRlcnMvdW5zdXBlcnZpc2VkL2F0dHJpYnV0ZS9SZXBsYWNlTWlzc2lu
+Z1ZhbHVlcztMAAxtX1NvbHZlclR5cGVxAH4AAVsACG1fV2VpZ2h0dAACW0RbAA1tX1dlaWdodExh
+YmVsdAACW0l4cgAjd2VrYS5jbGFzc2lmaWVycy5BYnN0cmFjdENsYXNzaWZpZXJaPoQhvSYjTQIA
+AVoAB21fRGVidWd4cAA/8AAAAAAAAD/wAAAAAAAAAAA/hHrhR64UewABfnIAImRlLmJ3YWxkdm9n
+ZWwubGlibGluZWFyLlNvbHZlclR5cGUAAAAAAAAAABIAAHhyAA5qYXZhLmxhbmcuRW51bQAAAAAA
+AAAAEgAAeHB0ABNMMlJfTDJMT1NTX1NWQ19EVUFMcHNyAB1kZS5id2FsZHZvZ2VsLmxpYmxpbmVh
+ci5Nb2RlbKZngu8/R8GOAgAGRAAEYmlhc0kACG5yX2NsYXNzSQAKbnJfZmVhdHVyZVsABWxhYmVs
+cQB+AAdMAApzb2x2ZXJUeXBlcQB+AAFbAAF3cQB+AAZ4cD/wAAAAAAAAAAAABAAAABp1cgACW0lN
+umAmduqypQIAAHhwAAAABAAAAAEAAAAAAAAAAgAAAANxAH4ADHVyAAJbRD6mjBSrY1oeAgAAeHAA
+AABsv7iRAcSFXVG/xCmogOM5i7/aC3U3C/JbP+K8VN+tzMC/uJEBxIVdTT++6Whihz73P9BNr6Zt
+Yle/1uVL6pJsiD/EQHJOCB3tv7qbaRcwNo2/1wDa22arqT/N3uUmeNC6P8RAck4IHe2/uptpFzA2
+jb/XANrbZqupP83e5SZ40Lq/zK334otZwr+uqGWwc0dyP9oComcvcy2/2tI2Z8W5lb/Mrffii1nC
+v66oZbBzR3I/2gKiZy9zLb/a0jZnxbmVv8LLEHu0/IG/v7Z6ILguvD/pXgJLMhYQv+JaK72ak2G/
+on5Tl8tJZr+ijVX0AF9jv+oJaJ+xMxY/2el1ULEvqL/mwJfUXLH8P/Zgj6cWMiS/4VKBpTcYFL/u
+E5tl/my6P+Gbx6Itm4s/x40f/37xuL/ZBWALFJowv9SqwsXKcbq/vTPB81ZdZz/iAk4hE1Hdv6qn
+lvRI3IC/05gLo5WrA7/ZbYAXKiVcv5b5T6uB3zs/1pHYfnx1Uj/GI0jZnqJ5v8LLEHu0/IG/v7Z6
+ILguvD/pXgJLMhYQv+JaK72ak2E/1A+Zyt6cED/ssRW3SMDbv+WxV/R/KyS/5sVmf8BMQj+KVJYs
+XnsgP8pe804gwQA/oeLQIjHhCr/R4njBZWxuP+D8oMIX0HK/3JDUvnVC+D/r2WXPwyTcv/B58VrX
+1RA/5lJMKKJWwz+njvfpwIyYv9wQlbtjYLy/2jkOOEzi+b/s7sg5cj0AvHwAAAAAAAA/6HPPmkW9
+Rb/YrgDkobKqP/MjVCGj83+/qcZXVbdKzT/FQE8RAJ45v/ecyukoKT4/9Sl22ibDhb/lBjCeiJRC
+v+LTw16odUq/5aHZrzMziD/7o+EoggUiv8qWiT8v2uK/4NpfrUvgRL/xXCnbBg7Mv9ltgBcqJVy/
+lvlPq4HfOz/Wkdh+fHVSP8YjSNmeonm/5fcKzP1MgL+wUuBXr3SGv9KVRFc7E1w/1/zRImD7G7/s
+7sg5cj0Av85jUTwNw+Y/8psY1BmbmL/qnIO28C6uv/DFi/XaYIE//GyAWHdp+b/xn6sTY2wov/WA
+tm+kxGoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL/uYVARFvWWv+Z/Saq8mFi/0MxB
+KiB/xL+tFaLnfZUtc3IAM3dla2EuZmlsdGVycy51bnN1cGVydmlzZWQuYXR0cmlidXRlLk5vbWlu
+YWxUb0JpbmFyefBPJlclrcduAgADWgAJbV9OdW1lcmljWgAObV9UcmFuc2Zvcm1BbGxMAAltX0Nv
+bHVtbnN0ABFMd2VrYS9jb3JlL1JhbmdlO3hyABN3ZWthLmZpbHRlcnMuRmlsdGVyhWOMUv4jQC4C
+AAlaABBtX0ZpcnN0QmF0Y2hEb25lWgAKbV9OZXdCYXRjaEwADW1fSW5wdXRGb3JtYXR0ABVMd2Vr
+YS9jb3JlL0luc3RhbmNlcztMAA5tX0lucHV0UmVsQXR0c3QAHUx3ZWthL2NvcmUvUmVsYXRpb25h
+bExvY2F0b3I7TAARbV9JbnB1dFN0cmluZ0F0dHN0ABlMd2VrYS9jb3JlL1N0cmluZ0xvY2F0b3I7
+TAAObV9PdXRwdXRGb3JtYXRxAH4AF0wADW1fT3V0cHV0UXVldWV0ABFMd2VrYS9jb3JlL1F1ZXVl
+O0wAD21fT3V0cHV0UmVsQXR0c3EAfgAYTAASbV9PdXRwdXRTdHJpbmdBdHRzcQB+ABl4cAEBc3IA
+E3dla2EuY29yZS5JbnN0YW5jZXP/uwiTNGWppAIABUkADG1fQ2xhc3NJbmRleEkAB21fTGluZXNM
+AAxtX0F0dHJpYnV0ZXN0ABVMamF2YS91dGlsL0FycmF5TGlzdDtMAAttX0luc3RhbmNlc3EAfgAd
+TAAObV9SZWxhdGlvbk5hbWV0ABJMamF2YS9sYW5nL1N0cmluZzt4cAAAABkAAAAAc3IAFHdla2Eu
+Y29yZS5GYXN0VmVjdG9y4dWyXE3jIQcCAAB4cgATamF2YS51dGlsLkFycmF5TGlzdHiB0h2Zx2Gd
+AwABSQAEc2l6ZXhwAAAAGncEAAAAJnNyABN3ZWthLmNvcmUuQXR0cmlidXRl9bM+tHl6JWECABFa
+AA5tX0hhc1plcm9wb2ludEkAB21fSW5kZXhaAA5tX0lzQXZlcmFnYWJsZVoAC21fSXNSZWd1bGFy
+RAAMbV9Mb3dlckJvdW5kWgASbV9Mb3dlckJvdW5kSXNPcGVuSQAKbV9PcmRlcmluZ0kABm1fVHlw
+ZUQADG1fVXBwZXJCb3VuZFoAEm1fVXBwZXJCb3VuZElzT3BlbkQACG1fV2VpZ2h0TAAMbV9EYXRl
+Rm9ybWF0dAAcTGphdmEvdGV4dC9TaW1wbGVEYXRlRm9ybWF0O0wAC21fSGFzaHRhYmxldAAVTGph
+dmEvdXRpbC9IYXNodGFibGU7TAAIbV9IZWFkZXJxAH4AF0wACm1fTWV0YWRhdGF0AB9Md2VrYS9j
+b3JlL1Byb3RlY3RlZFByb3BlcnRpZXM7TAAGbV9OYW1lcQB+AB5MAAhtX1ZhbHVlc3EAfgAdeHAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAA/8AAAAAAAAHBzcgATamF2YS51dGlsLkhh
+c2h0YWJsZRO7DyUhSuS4AwACRgAKbG9hZEZhY3RvckkACXRocmVzaG9sZHhwP0AAAAAAAAN3CAAA
+AAUAAAACdAAEdHJ1ZXNyABFqYXZhLmxhbmcuSW50ZWdlchLioKT3gYc4AgABSQAFdmFsdWV4cgAQ
+amF2YS5sYW5nLk51bWJlcoaslR0LlOCLAgAAeHAAAAABdAAFZmFsc2VzcQB+ACsAAAAAeHBzcgAd
+d2VrYS5jb3JlLlByb3RlY3RlZFByb3BlcnRpZXM1zKiF+y1X0QIAAVoABmNsb3NlZHhyABRqYXZh
+LnV0aWwuUHJvcGVydGllczkS0HpwNj6YAgABTAAIZGVmYXVsdHN0ABZMamF2YS91dGlsL1Byb3Bl
+cnRpZXM7eHEAfgAoP0AAAAAAAAh3CAAAAAsAAAAAeHABdAARPEVYQ0xBTUFUSU9OTUFSSz5zcQB+
+ACEAAAACdwQAAAACcQB+AC5xAH4AKnhzcQB+ACMAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAEAAAAA
+AAAAAAA/8AAAAAAAAHBzcQB+ACg/QAAAAAAAA3cIAAAABQAAAAJxAH4AKnNxAH4AKwAAAAFxAH4A
+LnNxAH4AKwAAAAB4cHNxAH4AMD9AAAAAAAAIdwgAAAALAAAAAHhwAXQAFTxFWENMQU1BVElPTk1B
+Uks+X0VPTHNxAH4AIQAAAAJ3BAAAAAJxAH4ALnEAfgAqeHNxAH4AIwAAAAACAAAAAAAAAAAAAAAA
+AAAAAAAAAQAAAAAAAAAAAD/wAAAAAAAAcHNxAH4AKD9AAAAAAAADdwgAAAAFAAAAAnEAfgAqc3EA
+fgArAAAAAXEAfgAuc3EAfgArAAAAAHhwc3EAfgAwP0AAAAAAAAh3CAAAAAsAAAAAeHABdAAIPFBF
+UklPRD5zcQB+ACEAAAACdwQAAAACcQB+AC5xAH4AKnhzcQB+ACMAAAAAAwAAAAAAAAAAAAAAAAAA
+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
+AH4AIQAAAAJ3BAAAAAJxAH4ALnEAfgAqeHNxAH4AIwAAAAAZAAAAAAAAAAAAAAAAAAAAAAAAAQAA
+AAAAAAAAAD/wAAAAAAAAcHNxAH4AKD9AAAAAAAAGdwgAAAAJAAAABHQABGZpc2hzcQB+ACsAAAAB
+dAAGbWFtbWFsc3EAfgArAAAAAnQABGJpcmRzcQB+ACsAAAAAdAAKbm90X2FuaW1hbHNxAH4AKwAA
+AAN4cHNxAH4AMD9AAAAAAAAIdwgAAAALAAAAAHhwAXQABUNMQVNTc3EAfgAhAAAABHcEAAAABHEA
+fgDkcQB+AOBxAH4A4nEAfgDmeHhzcQB+ACEAAAAAdwQAAAAKeHQARG5vIG5hbWUgc2V0LXdla2Eu
+ZmlsdGVycy51bnN1cGVydmlzZWQuYXR0cmlidXRlLlJlcGxhY2VNaXNzaW5nVmFsdWVzc3IAG3dl
+a2EuY29yZS5SZWxhdGlvbmFsTG9jYXRvckB9AbdEPzCMAgAAeHIAGndla2EuY29yZS5BdHRyaWJ1
+dGVMb2NhdG9y10xth7YmIvcCAAdJAAZtX1R5cGVbABBtX0FsbG93ZWRJbmRpY2VzcQB+AAdMAAxt
+X0F0dHJpYnV0ZXN0ABJMamF2YS91dGlsL1ZlY3RvcjtMAAZtX0RhdGFxAH4AF1sACW1fSW5kaWNl
+c3EAfgAHWwAQbV9Mb2NhdG9ySW5kaWNlc3EAfgAHTAAKbV9Mb2NhdG9yc3EAfgDveHAAAAAEdXEA
+fgAQAAAAGgAAAAAAAAABAAAAAgAAAAMAAAAEAAAABQAAAAYAAAAHAAAACAAAAAkAAAAKAAAACwAA
+AAwAAAANAAAADgAAAA8AAAAQAAAAEQAAABIAAAATAAAAFAAAABUAAAAWAAAAFwAAABgAAAAZc3IA
+EGphdmEudXRpbC5WZWN0b3LZl31bgDuvAQMAA0kAEWNhcGFjaXR5SW5jcmVtZW50SQAMZWxlbWVu
+dENvdW50WwALZWxlbWVudERhdGF0ABNbTGphdmEvbGFuZy9PYmplY3Q7eHAAAAAAAAAAGnVyABNb
+TGphdmEubGFuZy5PYmplY3Q7kM5YnxBzKWwCAAB4cAAAAChzcgARamF2YS5sYW5nLkJvb2xlYW7N
+IHKA1Zz67gIAAVoABXZhbHVleHAAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBz
+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
+AAAXAQH/8AAAAAAAAAAAAAABAAAAAH/wAAAAAAAAAD/wAAAAAAAAcHBwc3EAfgAwP0AAAAAAAAh3
+CAAAAAsAAAAAeHABcQB+ANVwc3EAfgAjAQAAABgBAf/wAAAAAAAAAAAAAAEAAAAAf/AAAAAAAAAA
+P/AAAAAAAABwcHBzcQB+ADA/QAAAAAAACHcIAAAACwAAAAB4cAFxAH4A3HBzcQB+ACMAAAAAGQAA
+//AAAAAAAAAAAAAAAAAAAAF/8AAAAAAAAAA/8AAAAAAAAHBxAH4A33BxAH4A6HEAfgDpcQB+AOp4
+c3EAfgAhAAAAAHcEAAAAAHh0AIRubyBuYW1lIHNldC13ZWthLmZpbHRlcnMudW5zdXBlcnZpc2Vk
+LmF0dHJpYnV0ZS5SZXBsYWNlTWlzc2luZ1ZhbHVlcy13ZWthLmZpbHRlcnMudW5zdXBlcnZpc2Vk
+LmF0dHJpYnV0ZS5Ob21pbmFsVG9CaW5hcnktUmZpcnN0LWxhc3RzcgAPd2VrYS5jb3JlLlF1ZXVl
+8ClaERUfWuwCAANJAAZtX1NpemVMAAZtX0hlYWR0ABtMd2VrYS9jb3JlL1F1ZXVlJFF1ZXVlTm9k
+ZTtMAAZtX1RhaWxxAH4BdXhwAAAAAHBwc3EAfgDtAAAABHVxAH4AEAAAABoAAAAAAAAAAQAAAAIA
+AAADAAAABAAAAAUAAAAGAAAABwAAAAgAAAAJAAAACgAAAAsAAAAMAAAADQAAAA4AAAAPAAAAEAAA
+ABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGXNxAH4A8gAAAAAAAAAadXEAfgD1AAAA
+KHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcA
+c3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBz
+cQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNx
+AH4A9wBzcQB+APcAcHBwcHBwcHBwcHBwcHB4c3EAfgAcAAAAGQAAAABxAH4BPnNxAH4AIQAAAAB3
+BAAAAAB4cQB+AOx1cQB+ABAAAAAAdXEAfgAQAAAAAHNxAH4A8gAAAAAAAAAadXEAfgD1AAAAKHBw
+cHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHB4c3EAfgEYAAAAAnVxAH4AEAAA
+ABoAAAAAAAAAAQAAAAIAAAADAAAABAAAAAUAAAAGAAAABwAAAAgAAAAJAAAACgAAAAsAAAAMAAAA
+DQAAAA4AAAAPAAAAEAAAABEAAAASAAAAEwAAABQAAAAVAAAAFgAAABcAAAAYAAAAGXNxAH4A8gAA
+AAAAAAAadXEAfgD1AAAAKHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3
+AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcA
+c3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAc3EAfgD3AHNxAH4A9wBz
+cQB+APcAc3EAfgD3AHNxAH4A9wBzcQB+APcAcHBwcHBwcHBwcHBwcHB4c3EAfgAcAAAAGQAAAABx
+AH4BPnNxAH4AIQAAAAB3BAAAAAB4cQB+AOx1cQB+ABAAAAAAdXEAfgAQAAAAAHNxAH4A8gAAAAAA
+AAAadXEAfgD1AAAAKHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHB4AQBz
+cgAPd2VrYS5jb3JlLlJhbmdlMuT/oK6syTwCAARaAAhtX0ludmVydEkAB21fVXBwZXJMAA5tX1Jh
+bmdlU3RyaW5nc3EAfgDvWwANbV9TZWxlY3RGbGFnc3QAAltaeHAAAAAAGXNxAH4A8gAAAAAAAAAB
+dXEAfgD1AAAACnQACmZpcnN0LWxhc3RwcHBwcHBwcHB4dXIAAltaV48gORS4XeICAAB4cAAAABoB
+AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAXNyADh3ZWthLmZpbHRlcnMudW5zdXBlcnZpc2VkLmF0
+dHJpYnV0ZS5SZXBsYWNlTWlzc2luZ1ZhbHVlc3PfoCQUg2ALAgABWwAPbV9Nb2Rlc0FuZE1lYW5z
+cQB+AAZ4cgA5d2VrYS5maWx0ZXJzLnVuc3VwZXJ2aXNlZC5hdHRyaWJ1dGUuUG90ZW50aWFsQ2xh
+c3NJZ25vcmVyd7N5VXRo6Y4CAAJJAAxtX0NsYXNzSW5kZXhaAA1tX0lnbm9yZUNsYXNzeHEAfgAW
+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
+AAAAAHVxAH4AEAAAAAA=</string>
+      </entry>
+      <entry>
+        <string>type</string>
+        <string>liblinear</string>
+      </entry>
+    </tree-map>
+    <edu.cmu.side.model.data.DocumentList>
+      <filenameList>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+      </filenameList>
+      <allAnnotations>
+        <entry>
+          <string>class</string>
+          <list>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>mammal</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>fish</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>bird</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+            <string>not_animal</string>
+          </list>
+        </entry>
+      </allAnnotations>
+      <textColumns>
+        <entry>
+          <string>text</string>
+          <list>
+            <string>a koi in the pool has golden scales.</string>
+            <string>eel is less eatable</string>
+            <string>pike swim out to sea.</string>
+            <string>the fish swim upstream!</string>
+            <string>sea creatures</string>
+            <string>fresh swordfish is delicious!</string>
+            <string>pike swim out to sea?</string>
+            <string>the salmon swim upstream.</string>
+            <string>this is a duck in the air?</string>
+            <string>chicken is delicious!</string>
+            <string>peacocks are beautiful.</string>
+            <string>birds have feathers.</string>
+            <string>our nests have eggs in them!</string>
+            <string>fossils in amber have shown protofeathers in nonavian species</string>
+            <string>shaggy dog?</string>
+            <string>dog with brown fur</string>
+            <string>deer with hooves</string>
+            <string>buffalo stampede</string>
+            <string>furry creature!</string>
+            <string>mammals feed their young with milk.</string>
+            <string>bear in the forest.</string>
+            <string>cow in the field?</string>
+            <string>furry creature.</string>
+            <string>mammals feed their young with milk?</string>
+            <string>bear in the forest</string>
+            <string>cow in the field</string>
+            <string>this animal is a halibut in the water.</string>
+            <string>trout is delicious!</string>
+            <string>carp swim out to sea.</string>
+            <string>the salmon swim upstream!</string>
+            <string>this is a duck in the air.</string>
+            <string>chicken</string>
+            <string>peacocks are beautiful?</string>
+            <string>we have feathers!</string>
+            <string>emu stampedes are dangerous!</string>
+            <string>hairy beast?</string>
+            <string>furry animals feed their young with milk.</string>
+            <string>a bear in the forest!</string>
+            <string>cow in the field</string>
+            <string>I am a person.</string>
+            <string>hello!</string>
+            <string>this is a sentence.</string>
+            <string>???</string>
+            <string>colon:awesome</string>
+            <string>nobody knows</string>
+            <string>rocks are not edible.</string>
+            <string>a tree grows in the forest.</string>
+            <string>apples and _mangoes_ are delicious!</string>
+            <string>mountains are for roaming.</string>
+            <string>pittsburgh pennsylvania</string>
+            <string>new delhi is relatively near to the taj mahal.</string>
+            <string>backpacks contain many objects!</string>
+            <string>horrible terrible robots</string>
+            <string>doors tables and windows</string>
+            <string>laptops and thermonuclear weapons.</string>
+            <string>archibald was a vacuum salesman.</string>
+            <string>nice to meet you.</string>
+            <string>she was fluid in her grace.</string>
+            <string>aribtirary words in a sentence.</string>
+            <string>politics</string>
+            <string>midas had a golden touch.</string>
+            <string>moose are large hulking beasts!</string>
+            <string>furry chinchillas are nice pets</string>
+            <string>hair grows on most mammals</string>
+            <string>milk is the stuff of mother cows and other creatures with fur.</string>
+            <string>bears eat fish</string>
+            <string>wolf packs hunt together</string>
+            <string>mouse bones are found within owl stomachs</string>
+            <string>salmon are a favorite food of cats.</string>
+            <string>trout are large freshwater swimmers.</string>
+            <string>bass have big mouths and are favored by fishermen on the sea.</string>
+            <string>eel is found in sushi and can be electric.</string>
+            <string>manta rays are a kind of ocean animal.</string>
+            <string>koi are a kind of goldfish in Japan.</string>
+            <string>swordfish have blue scales and long pointy noses and live in the water.</string>
+            <string>emu are dinosaurs</string>
+            <string>chicken are dinosaurs but smaller</string>
+            <string>kite are small birds of prey and attack other animals in flight!</string>
+            <string>feathers keep birds warm and help them in flight!</string>
+            <string>wing design makes some birds fly differently.</string>
+            <string>most avians hatch from eggs.</string>
+            <string>a robin feathering his nest has very little time to rest!</string>
+            <string>peacock feathers are bright and beautiful displays.</string>
+            <string>computer machines are not alive.</string>
+            <string>cello music is lovely!</string>
+            <string>I love the moun\tains! :-) happy :-P</string>
+          </list>
+        </entry>
+      </textColumns>
+      <differentiateTextColumns>false</differentiateTextColumns>
+      <currentAnnotation>class</currentAnnotation>
+      <name>Filtered animal.csv</name>
+      <emptyAnnotationString></emptyAnnotationString>
+      <labelArray>
+        <string>bird</string>
+        <string>fish</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+      </labelArray>
+    </edu.cmu.side.model.data.DocumentList>
+    <edu.cmu.side.model.data.FeatureTable type="default">
+      <name>features</name>
+      <DocumentList>
+        <filenameList>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+          <string>/Users/dadamson/Laboratory/lightside/data/animal.csv</string>
+        </filenameList>
+        <allAnnotations class="tree-map">
+          <entry>
+            <string>class</string>
+            <list>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>mammal</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>fish</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>bird</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+              <string>not_animal</string>
+            </list>
+          </entry>
+        </allAnnotations>
+        <textColumns class="tree-map">
+          <entry>
+            <string>text</string>
+            <list>
+              <string>a koi in the pool has golden scales.</string>
+              <string>eel is less eatable</string>
+              <string>pike swim out to sea.</string>
+              <string>the fish swim upstream!</string>
+              <string>sea creatures</string>
+              <string>fresh swordfish is delicious!</string>
+              <string>pike swim out to sea?</string>
+              <string>the salmon swim upstream.</string>
+              <string>this is a duck in the air?</string>
+              <string>chicken is delicious!</string>
+              <string>peacocks are beautiful.</string>
+              <string>birds have feathers.</string>
+              <string>our nests have eggs in them!</string>
+              <string>fossils in amber have shown protofeathers in nonavian species</string>
+              <string>shaggy dog?</string>
+              <string>dog with brown fur</string>
+              <string>deer with hooves</string>
+              <string>buffalo stampede</string>
+              <string>furry creature!</string>
+              <string>mammals feed their young with milk.</string>
+              <string>bear in the forest.</string>
+              <string>cow in the field?</string>
+              <string>furry creature.</string>
+              <string>mammals feed their young with milk?</string>
+              <string>bear in the forest</string>
+              <string>cow in the field</string>
+              <string>this animal is a halibut in the water.</string>
+              <string>trout is delicious!</string>
+              <string>carp swim out to sea.</string>
+              <string>the salmon swim upstream!</string>
+              <string>this is a duck in the air.</string>
+              <string>chicken</string>
+              <string>peacocks are beautiful?</string>
+              <string>we have feathers!</string>
+              <string>emu stampedes are dangerous!</string>
+              <string>hairy beast?</string>
+              <string>furry animals feed their young with milk.</string>
+              <string>a bear in the forest!</string>
+              <string>cow in the field</string>
+              <string>I am a person.</string>
+              <string>hello!</string>
+              <string>this is a sentence.</string>
+              <string>???</string>
+              <string>colon:awesome</string>
+              <string>nobody knows</string>
+              <string>rocks are not edible.</string>
+              <string>a tree grows in the forest.</string>
+              <string>apples and _mangoes_ are delicious!</string>
+              <string>mountains are for roaming.</string>
+              <string>pittsburgh pennsylvania</string>
+              <string>new delhi is relatively near to the taj mahal.</string>
+              <string>backpacks contain many objects!</string>
+              <string>horrible terrible robots</string>
+              <string>doors tables and windows</string>
+              <string>laptops and thermonuclear weapons.</string>
+              <string>archibald was a vacuum salesman.</string>
+              <string>nice to meet you.</string>
+              <string>she was fluid in her grace.</string>
+              <string>aribtirary words in a sentence.</string>
+              <string>politics</string>
+              <string>midas had a golden touch.</string>
+              <string>moose are large hulking beasts!</string>
+              <string>furry chinchillas are nice pets</string>
+              <string>hair grows on most mammals</string>
+              <string>milk is the stuff of mother cows and other creatures with fur.</string>
+              <string>bears eat fish</string>
+              <string>wolf packs hunt together</string>
+              <string>mouse bones are found within owl stomachs</string>
+              <string>salmon are a favorite food of cats.</string>
+              <string>trout are large freshwater swimmers.</string>
+              <string>bass have big mouths and are favored by fishermen on the sea.</string>
+              <string>eel is found in sushi and can be electric.</string>
+              <string>manta rays are a kind of ocean animal.</string>
+              <string>koi are a kind of goldfish in Japan.</string>
+              <string>swordfish have blue scales and long pointy noses and live in the water.</string>
+              <string>emu are dinosaurs</string>
+              <string>chicken are dinosaurs but smaller</string>
+              <string>kite are small birds of prey and attack other animals in flight!</string>
+              <string>feathers keep birds warm and help them in flight!</string>
+              <string>wing design makes some birds fly differently.</string>
+              <string>most avians hatch from eggs.</string>
+              <string>a robin feathering his nest has very little time to rest!</string>
+              <string>peacock feathers are bright and beautiful displays.</string>
+              <string>computer machines are not alive.</string>
+              <string>cello music is lovely!</string>
+              <string>I love the moun\tains! :-) happy :-P</string>
+            </list>
+          </entry>
+        </textColumns>
+        <differentiateTextColumns>false</differentiateTextColumns>
+        <currentAnnotation>class</currentAnnotation>
+        <name>animal.csv</name>
+        <emptyAnnotationString></emptyAnnotationString>
+        <labelArray>
+          <string>bird</string>
+          <string>fish</string>
+          <string>mammal</string>
+          <string>not_animal</string>
+        </labelArray>
+      </DocumentList>
+      <Threshold>4</Threshold>
+      <Annotation>class</Annotation>
+      <Type>NOMINAL</Type>
+      <Features>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;EXCLAMATIONMARK&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="3" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,28,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="29" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="34" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="40" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="51" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="61" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,63,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,48,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,56,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="84" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="85" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;EXCLAMATIONMARK&gt;_EOL</FeatureValue>
+          <FeatureHits DocumentIndex="3" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,28,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="29" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="34" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="40" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="51" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="61" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,63,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,48,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,56,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="84" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;PERIOD&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="7" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="10" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,40,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="39" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="45" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="48" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,45,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="54" Value="true">
+            <Locations>text,33,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="55" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="56" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="57" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="60" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,61,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="69" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,60,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,41,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,70,7</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="79" Value="true">
+            <Locations>text,44,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="80" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,50,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="83" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;PERIOD&gt;_EOL</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="7" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="10" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,40,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="39" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="45" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="48" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,45,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="54" Value="true">
+            <Locations>text,33,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="55" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="56" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="57" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="60" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,61,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="69" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,60,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,41,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,70,7</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="79" Value="true">
+            <Locations>text,44,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="80" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,50,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="83" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;QUESTIONMARK&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="14" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="32" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="35" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;QUESTIONMARK&gt;_EOL</FeatureValue>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="14" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="32" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="35" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>BOL_a</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>BOL_furry</FeatureValue>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="62" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>BOL_this</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>a</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="39" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="55" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="60" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>and</FeatureValue>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="53" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="54" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,33,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,27,30;text,49,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,29,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,28,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>are</FeatureValue>
+          <FeatureHits DocumentIndex="10" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="32" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="34" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="45" Value="true">
+            <Locations>text,6,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="48" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="61" Value="true">
+            <Locations>text,6,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="62" Value="true">
+            <Locations>text,18,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="67" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="69" Value="true">
+            <Locations>text,6,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="75" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="76" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="83" Value="true">
+            <Locations>text,18,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>birds</FeatureValue>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,15,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="79" Value="true">
+            <Locations>text,23,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>delicious</FeatureValue>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,11,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,25,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>delicious_&lt;EXCLAMATIONMARK&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,11,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,25,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>feathers</FeatureValue>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>forest</FeatureValue>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,14,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>furry</FeatureValue>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="62" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>have</FeatureValue>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,6,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="13" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,3,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>in</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,6,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="13" Value="true">
+            <Locations>text,8,10;text,42,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="25" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,7,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="38" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="57" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,17,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,58,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,54,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,39,4</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>in_the</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,6,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,15,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,5,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,4,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,5,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="25" Value="true">
+            <Locations>text,4,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,25,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,15,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="38" Value="true">
+            <Locations>text,4,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,58,6</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>is</FeatureValue>
+          <FeatureHits DocumentIndex="1" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,6,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="84" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>is_a</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>milk</FeatureValue>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,36,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>of</FeatureValue>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,18,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>sea</FeatureValue>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="4" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,57,6</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>swim</FeatureValue>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="3" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="7" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="29" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="NUMERIC" Prefix="basic">
+          <FeatureValue>textNUM_TOKENS</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="9.0"/>
+          <FeatureHits DocumentIndex="1" Value="4.0"/>
+          <FeatureHits DocumentIndex="2" Value="6.0"/>
+          <FeatureHits DocumentIndex="3" Value="5.0"/>
+          <FeatureHits DocumentIndex="4" Value="2.0"/>
+          <FeatureHits DocumentIndex="5" Value="5.0"/>
+          <FeatureHits DocumentIndex="6" Value="6.0"/>
+          <FeatureHits DocumentIndex="7" Value="5.0"/>
+          <FeatureHits DocumentIndex="8" Value="8.0"/>
+          <FeatureHits DocumentIndex="9" Value="4.0"/>
+          <FeatureHits DocumentIndex="10" Value="4.0"/>
+          <FeatureHits DocumentIndex="11" Value="4.0"/>
+          <FeatureHits DocumentIndex="12" Value="7.0"/>
+          <FeatureHits DocumentIndex="13" Value="9.0"/>
+          <FeatureHits DocumentIndex="14" Value="3.0"/>
+          <FeatureHits DocumentIndex="15" Value="4.0"/>
+          <FeatureHits DocumentIndex="16" Value="3.0"/>
+          <FeatureHits DocumentIndex="17" Value="2.0"/>
+          <FeatureHits DocumentIndex="18" Value="3.0"/>
+          <FeatureHits DocumentIndex="19" Value="7.0"/>
+          <FeatureHits DocumentIndex="20" Value="5.0"/>
+          <FeatureHits DocumentIndex="21" Value="5.0"/>
+          <FeatureHits DocumentIndex="22" Value="3.0"/>
+          <FeatureHits DocumentIndex="23" Value="7.0"/>
+          <FeatureHits DocumentIndex="24" Value="4.0"/>
+          <FeatureHits DocumentIndex="25" Value="4.0"/>
+          <FeatureHits DocumentIndex="26" Value="9.0"/>
+          <FeatureHits DocumentIndex="27" Value="4.0"/>
+          <FeatureHits DocumentIndex="28" Value="6.0"/>
+          <FeatureHits DocumentIndex="29" Value="5.0"/>
+          <FeatureHits DocumentIndex="30" Value="8.0"/>
+          <FeatureHits DocumentIndex="31" Value="1.0"/>
+          <FeatureHits DocumentIndex="32" Value="4.0"/>
+          <FeatureHits DocumentIndex="33" Value="4.0"/>
+          <FeatureHits DocumentIndex="34" Value="5.0"/>
+          <FeatureHits DocumentIndex="35" Value="3.0"/>
+          <FeatureHits DocumentIndex="36" Value="8.0"/>
+          <FeatureHits DocumentIndex="37" Value="6.0"/>
+          <FeatureHits DocumentIndex="38" Value="4.0"/>
+          <FeatureHits DocumentIndex="39" Value="5.0"/>
+          <FeatureHits DocumentIndex="40" Value="2.0"/>
+          <FeatureHits DocumentIndex="41" Value="5.0"/>
+          <FeatureHits DocumentIndex="42" Value="1.0"/>
+          <FeatureHits DocumentIndex="43" Value="3.0"/>
+          <FeatureHits DocumentIndex="44" Value="2.0"/>
+          <FeatureHits DocumentIndex="45" Value="5.0"/>
+          <FeatureHits DocumentIndex="46" Value="7.0"/>
+          <FeatureHits DocumentIndex="47" Value="8.0"/>
+          <FeatureHits DocumentIndex="48" Value="5.0"/>
+          <FeatureHits DocumentIndex="49" Value="2.0"/>
+          <FeatureHits DocumentIndex="50" Value="10.0"/>
+          <FeatureHits DocumentIndex="51" Value="5.0"/>
+          <FeatureHits DocumentIndex="52" Value="3.0"/>
+          <FeatureHits DocumentIndex="53" Value="4.0"/>
+          <FeatureHits DocumentIndex="54" Value="5.0"/>
+          <FeatureHits DocumentIndex="55" Value="6.0"/>
+          <FeatureHits DocumentIndex="56" Value="5.0"/>
+          <FeatureHits DocumentIndex="57" Value="7.0"/>
+          <FeatureHits DocumentIndex="58" Value="6.0"/>
+          <FeatureHits DocumentIndex="59" Value="1.0"/>
+          <FeatureHits DocumentIndex="60" Value="6.0"/>
+          <FeatureHits DocumentIndex="61" Value="6.0"/>
+          <FeatureHits DocumentIndex="62" Value="5.0"/>
+          <FeatureHits DocumentIndex="63" Value="5.0"/>
+          <FeatureHits DocumentIndex="64" Value="13.0"/>
+          <FeatureHits DocumentIndex="65" Value="3.0"/>
+          <FeatureHits DocumentIndex="66" Value="4.0"/>
+          <FeatureHits DocumentIndex="67" Value="7.0"/>
+          <FeatureHits DocumentIndex="68" Value="8.0"/>
+          <FeatureHits DocumentIndex="69" Value="6.0"/>
+          <FeatureHits DocumentIndex="70" Value="13.0"/>
+          <FeatureHits DocumentIndex="71" Value="10.0"/>
+          <FeatureHits DocumentIndex="72" Value="9.0"/>
+          <FeatureHits DocumentIndex="73" Value="9.0"/>
+          <FeatureHits DocumentIndex="74" Value="14.0"/>
+          <FeatureHits DocumentIndex="75" Value="3.0"/>
+          <FeatureHits DocumentIndex="76" Value="5.0"/>
+          <FeatureHits DocumentIndex="77" Value="13.0"/>
+          <FeatureHits DocumentIndex="78" Value="10.0"/>
+          <FeatureHits DocumentIndex="79" Value="8.0"/>
+          <FeatureHits DocumentIndex="80" Value="6.0"/>
+          <FeatureHits DocumentIndex="81" Value="12.0"/>
+          <FeatureHits DocumentIndex="82" Value="8.0"/>
+          <FeatureHits DocumentIndex="83" Value="6.0"/>
+          <FeatureHits DocumentIndex="84" Value="5.0"/>
+          <FeatureHits DocumentIndex="85" Value="12.0"/>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>the</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="3" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="7" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,18,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="25" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,28,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="29" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,18,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="38" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,32,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,53,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,61,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="85" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>the_forest</FeatureValue>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,10,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,16,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>this</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>to</FeatureValue>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,29,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="56" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,49,5</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>with</FeatureValue>
+          <FeatureHits DocumentIndex="15" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="16" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,53,5</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="regex">
+          <FeatureValue>emu|peacock|robin|duck__rx</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="10" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="32" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="34" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="75" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,2,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+      </Features>
+    </edu.cmu.side.model.data.FeatureTable>
+    <edu.cmu.side.model.data.FeatureTable type="default">
+      <name>restructure</name>
+      <DocumentList reference="../../edu.cmu.side.model.data.DocumentList"/>
+      <Threshold>4</Threshold>
+      <Annotation>class</Annotation>
+      <Type>NOMINAL</Type>
+      <Features>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;EXCLAMATIONMARK&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="3" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,28,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="29" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="34" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="40" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="51" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="61" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,63,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,48,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,56,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="84" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="85" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;EXCLAMATIONMARK&gt;_EOL</FeatureValue>
+          <FeatureHits DocumentIndex="3" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,28,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="29" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="34" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="40" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="51" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="61" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,63,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,48,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,56,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="84" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;PERIOD&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="7" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="10" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,40,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="39" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="45" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="48" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,45,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="54" Value="true">
+            <Locations>text,33,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="55" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="56" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="57" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="60" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,61,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="69" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,60,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,41,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,70,7</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="79" Value="true">
+            <Locations>text,44,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="80" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,50,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="83" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;PERIOD&gt;_EOL</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="7" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="10" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,40,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="39" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,18,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="45" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="48" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,45,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="54" Value="true">
+            <Locations>text,33,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="55" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="56" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="57" Value="true">
+            <Locations>text,26,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="60" Value="true">
+            <Locations>text,24,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,61,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="69" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,60,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,41,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,37,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,35,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,70,7</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="79" Value="true">
+            <Locations>text,44,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="80" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,50,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="83" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;QUESTIONMARK&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="14" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="32" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="35" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>&lt;QUESTIONMARK&gt;_EOL</FeatureValue>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="14" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,34,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="32" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="35" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>BOL_a</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>BOL_furry</FeatureValue>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="62" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>BOL_this</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>a</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="39" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="55" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="60" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,8,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>birds</FeatureValue>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,15,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="79" Value="true">
+            <Locations>text,23,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>delicious</FeatureValue>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,11,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,25,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>delicious_&lt;EXCLAMATIONMARK&gt;</FeatureValue>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,19,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,11,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="47" Value="true">
+            <Locations>text,25,3</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>feathers</FeatureValue>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>forest</FeatureValue>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,14,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>furry</FeatureValue>
+          <FeatureHits DocumentIndex="18" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="22" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="62" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>have</FeatureValue>
+          <FeatureHits DocumentIndex="11" Value="true">
+            <Locations>text,6,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="13" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="33" Value="true">
+            <Locations>text,3,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>in</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,6,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="12" Value="true">
+            <Locations>text,20,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="13" Value="true">
+            <Locations>text,8,10;text,42,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="25" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,7,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="38" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="57" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="58" Value="true">
+            <Locations>text,17,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,58,6</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,54,5</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="78" Value="true">
+            <Locations>text,39,4</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>in_the</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="true">
+            <Locations>text,6,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,15,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,5,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="21" Value="true">
+            <Locations>text,4,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,5,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="25" Value="true">
+            <Locations>text,4,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,25,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,15,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,7,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="38" Value="true">
+            <Locations>text,4,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,13,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="74" Value="true">
+            <Locations>text,58,6</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>is</FeatureValue>
+          <FeatureHits DocumentIndex="1" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="5" Value="true">
+            <Locations>text,16,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="9" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="27" Value="true">
+            <Locations>text,6,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="71" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="84" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>is_a</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,12,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>milk</FeatureValue>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,30,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,36,4</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>of</FeatureValue>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,18,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="68" Value="true">
+            <Locations>text,27,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="72" Value="true">
+            <Locations>text,22,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="73" Value="true">
+            <Locations>text,15,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="77" Value="true">
+            <Locations>text,21,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>sea</FeatureValue>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="4" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,17,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="70" Value="true">
+            <Locations>text,57,6</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>swim</FeatureValue>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="3" Value="true">
+            <Locations>text,9,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="7" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="29" Value="true">
+            <Locations>text,11,1</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="NUMERIC" Prefix="basic">
+          <FeatureValue>textNUM_TOKENS</FeatureValue>
+          <FeatureHits DocumentIndex="0" Value="9.0"/>
+          <FeatureHits DocumentIndex="1" Value="4.0"/>
+          <FeatureHits DocumentIndex="2" Value="6.0"/>
+          <FeatureHits DocumentIndex="3" Value="5.0"/>
+          <FeatureHits DocumentIndex="4" Value="2.0"/>
+          <FeatureHits DocumentIndex="5" Value="5.0"/>
+          <FeatureHits DocumentIndex="6" Value="6.0"/>
+          <FeatureHits DocumentIndex="7" Value="5.0"/>
+          <FeatureHits DocumentIndex="8" Value="8.0"/>
+          <FeatureHits DocumentIndex="9" Value="4.0"/>
+          <FeatureHits DocumentIndex="10" Value="4.0"/>
+          <FeatureHits DocumentIndex="11" Value="4.0"/>
+          <FeatureHits DocumentIndex="12" Value="7.0"/>
+          <FeatureHits DocumentIndex="13" Value="9.0"/>
+          <FeatureHits DocumentIndex="14" Value="3.0"/>
+          <FeatureHits DocumentIndex="15" Value="4.0"/>
+          <FeatureHits DocumentIndex="16" Value="3.0"/>
+          <FeatureHits DocumentIndex="17" Value="2.0"/>
+          <FeatureHits DocumentIndex="18" Value="3.0"/>
+          <FeatureHits DocumentIndex="19" Value="7.0"/>
+          <FeatureHits DocumentIndex="20" Value="5.0"/>
+          <FeatureHits DocumentIndex="21" Value="5.0"/>
+          <FeatureHits DocumentIndex="22" Value="3.0"/>
+          <FeatureHits DocumentIndex="23" Value="7.0"/>
+          <FeatureHits DocumentIndex="24" Value="4.0"/>
+          <FeatureHits DocumentIndex="25" Value="4.0"/>
+          <FeatureHits DocumentIndex="26" Value="9.0"/>
+          <FeatureHits DocumentIndex="27" Value="4.0"/>
+          <FeatureHits DocumentIndex="28" Value="6.0"/>
+          <FeatureHits DocumentIndex="29" Value="5.0"/>
+          <FeatureHits DocumentIndex="30" Value="8.0"/>
+          <FeatureHits DocumentIndex="31" Value="1.0"/>
+          <FeatureHits DocumentIndex="32" Value="4.0"/>
+          <FeatureHits DocumentIndex="33" Value="4.0"/>
+          <FeatureHits DocumentIndex="34" Value="5.0"/>
+          <FeatureHits DocumentIndex="35" Value="3.0"/>
+          <FeatureHits DocumentIndex="36" Value="8.0"/>
+          <FeatureHits DocumentIndex="37" Value="6.0"/>
+          <FeatureHits DocumentIndex="38" Value="4.0"/>
+          <FeatureHits DocumentIndex="39" Value="5.0"/>
+          <FeatureHits DocumentIndex="40" Value="2.0"/>
+          <FeatureHits DocumentIndex="41" Value="5.0"/>
+          <FeatureHits DocumentIndex="42" Value="1.0"/>
+          <FeatureHits DocumentIndex="43" Value="3.0"/>
+          <FeatureHits DocumentIndex="44" Value="2.0"/>
+          <FeatureHits DocumentIndex="45" Value="5.0"/>
+          <FeatureHits DocumentIndex="46" Value="7.0"/>
+          <FeatureHits DocumentIndex="47" Value="8.0"/>
+          <FeatureHits DocumentIndex="48" Value="5.0"/>
+          <FeatureHits DocumentIndex="49" Value="2.0"/>
+          <FeatureHits DocumentIndex="50" Value="10.0"/>
+          <FeatureHits DocumentIndex="51" Value="5.0"/>
+          <FeatureHits DocumentIndex="52" Value="3.0"/>
+          <FeatureHits DocumentIndex="53" Value="4.0"/>
+          <FeatureHits DocumentIndex="54" Value="5.0"/>
+          <FeatureHits DocumentIndex="55" Value="6.0"/>
+          <FeatureHits DocumentIndex="56" Value="5.0"/>
+          <FeatureHits DocumentIndex="57" Value="7.0"/>
+          <FeatureHits DocumentIndex="58" Value="6.0"/>
+          <FeatureHits DocumentIndex="59" Value="1.0"/>
+          <FeatureHits DocumentIndex="60" Value="6.0"/>
+          <FeatureHits DocumentIndex="61" Value="6.0"/>
+          <FeatureHits DocumentIndex="62" Value="5.0"/>
+          <FeatureHits DocumentIndex="63" Value="5.0"/>
+          <FeatureHits DocumentIndex="64" Value="13.0"/>
+          <FeatureHits DocumentIndex="65" Value="3.0"/>
+          <FeatureHits DocumentIndex="66" Value="4.0"/>
+          <FeatureHits DocumentIndex="67" Value="7.0"/>
+          <FeatureHits DocumentIndex="68" Value="8.0"/>
+          <FeatureHits DocumentIndex="69" Value="6.0"/>
+          <FeatureHits DocumentIndex="70" Value="13.0"/>
+          <FeatureHits DocumentIndex="71" Value="10.0"/>
+          <FeatureHits DocumentIndex="72" Value="9.0"/>
+          <FeatureHits DocumentIndex="73" Value="9.0"/>
+          <FeatureHits DocumentIndex="74" Value="14.0"/>
+          <FeatureHits DocumentIndex="75" Value="3.0"/>
+          <FeatureHits DocumentIndex="76" Value="5.0"/>
+          <FeatureHits DocumentIndex="77" Value="13.0"/>
+          <FeatureHits DocumentIndex="78" Value="10.0"/>
+          <FeatureHits DocumentIndex="79" Value="8.0"/>
+          <FeatureHits DocumentIndex="80" Value="6.0"/>
+          <FeatureHits DocumentIndex="81" Value="12.0"/>
+          <FeatureHits DocumentIndex="82" Value="8.0"/>
+          <FeatureHits DocumentIndex="83" Value="6.0"/>
+          <FeatureHits DocumentIndex="84" Value="5.0"/>
+          <FeatureHits DocumentIndex="85" Value="12.0"/>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>the_forest</FeatureValue>
+          <FeatureHits DocumentIndex="20" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="24" Value="true">
+            <Locations>text,8,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="37" Value="true">
+            <Locations>text,10,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="46" Value="true">
+            <Locations>text,16,2</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>this</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="26" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="41" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>to</FeatureValue>
+          <FeatureHits DocumentIndex="2" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="6" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="28" Value="true">
+            <Locations>text,14,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="50" Value="true">
+            <Locations>text,29,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="56" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,49,5</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="basic">
+          <FeatureValue>with</FeatureValue>
+          <FeatureHits DocumentIndex="15" Value="true">
+            <Locations>text,4,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="16" Value="true">
+            <Locations>text,5,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="19" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="23" Value="true">
+            <Locations>text,25,2</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="36" Value="true">
+            <Locations>text,31,3</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="64" Value="true">
+            <Locations>text,53,5</Locations>
+          </FeatureHits>
+        </Feature>
+        <Feature Type="BOOLEAN" Prefix="regex">
+          <FeatureValue>emu|peacock|robin|duck__rx</FeatureValue>
+          <FeatureHits DocumentIndex="8" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="10" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="30" Value="true">
+            <Locations>text,10,1</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="32" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="34" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="75" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="81" Value="true">
+            <Locations>text,2,</Locations>
+          </FeatureHits>
+          <FeatureHits DocumentIndex="82" Value="true">
+            <Locations>text,0,</Locations>
+          </FeatureHits>
+        </Feature>
+      </Features>
+    </edu.cmu.side.model.data.FeatureTable>
+    <edu.cmu.side.model.data.TrainingResult>
+      <name>svm</name>
+      <longDescriptionString>LibLINEAR wrapper</longDescriptionString>
+      <train reference="../../edu.cmu.side.model.data.FeatureTable[2]"/>
+      <test reference="../../edu.cmu.side.model.data.FeatureTable[2]"/>
+      <predictions>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>fish</string>
+        <string>fish</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>fish</string>
+        <string>bird</string>
+        <string>fish</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>fish</string>
+        <string>fish</string>
+        <string>bird</string>
+        <string>not_animal</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>mammal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>bird</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>fish</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>mammal</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>fish</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>not_animal</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>not_animal</string>
+        <string>bird</string>
+        <string>bird</string>
+        <string>not_animal</string>
+        <string>fish</string>
+        <string>not_animal</string>
+      </predictions>
+      <confusionMatrix class="tree-map">
+        <entry>
+          <string>bird</string>
+          <tree-map>
+            <entry>
+              <string>bird</string>
+              <list>
+                <int>8</int>
+                <int>10</int>
+                <int>11</int>
+                <int>12</int>
+                <int>13</int>
+                <int>30</int>
+                <int>32</int>
+                <int>33</int>
+                <int>34</int>
+                <int>75</int>
+                <int>77</int>
+                <int>78</int>
+                <int>79</int>
+                <int>81</int>
+                <int>82</int>
+              </list>
+            </entry>
+            <entry>
+              <string>fish</string>
+              <list>
+                <int>74</int>
+              </list>
+            </entry>
+            <entry>
+              <string>mammal</string>
+              <list/>
+            </entry>
+            <entry>
+              <string>not_animal</string>
+              <list>
+                <int>47</int>
+              </list>
+            </entry>
+          </tree-map>
+        </entry>
+        <entry>
+          <string>fish</string>
+          <tree-map>
+            <entry>
+              <string>bird</string>
+              <list>
+                <int>9</int>
+              </list>
+            </entry>
+            <entry>
+              <string>fish</string>
+              <list>
+                <int>2</int>
+                <int>3</int>
+                <int>4</int>
+                <int>6</int>
+                <int>7</int>
+                <int>27</int>
+                <int>28</int>
+                <int>29</int>
+                <int>68</int>
+                <int>70</int>
+                <int>72</int>
+                <int>73</int>
+              </list>
+            </entry>
+            <entry>
+              <string>mammal</string>
+              <list>
+                <int>64</int>
+              </list>
+            </entry>
+            <entry>
+              <string>not_animal</string>
+              <list>
+                <int>50</int>
+                <int>84</int>
+              </list>
+            </entry>
+          </tree-map>
+        </entry>
+        <entry>
+          <string>mammal</string>
+          <tree-map>
+            <entry>
+              <string>bird</string>
+              <list/>
+            </entry>
+            <entry>
+              <string>fish</string>
+              <list/>
+            </entry>
+            <entry>
+              <string>mammal</string>
+              <list>
+                <int>14</int>
+                <int>15</int>
+                <int>16</int>
+                <int>18</int>
+                <int>19</int>
+                <int>20</int>
+                <int>21</int>
+                <int>22</int>
+                <int>23</int>
+                <int>24</int>
+                <int>25</int>
+                <int>35</int>
+                <int>36</int>
+                <int>38</int>
+                <int>62</int>
+              </list>
+            </entry>
+            <entry>
+              <string>not_animal</string>
+              <list>
+                <int>42</int>
+                <int>46</int>
+                <int>49</int>
+                <int>52</int>
+                <int>59</int>
+              </list>
+            </entry>
+          </tree-map>
+        </entry>
+        <entry>
+          <string>not_animal</string>
+          <tree-map>
+            <entry>
+              <string>bird</string>
+              <list>
+                <int>31</int>
+                <int>76</int>
+                <int>80</int>
+              </list>
+            </entry>
+            <entry>
+              <string>fish</string>
+              <list>
+                <int>0</int>
+                <int>1</int>
+                <int>5</int>
+                <int>26</int>
+                <int>69</int>
+                <int>71</int>
+              </list>
+            </entry>
+            <entry>
+              <string>mammal</string>
+              <list>
+                <int>17</int>
+                <int>37</int>
+                <int>61</int>
+                <int>63</int>
+                <int>65</int>
+                <int>66</int>
+                <int>67</int>
+              </list>
+            </entry>
+            <entry>
+              <string>not_animal</string>
+              <list>
+                <int>39</int>
+                <int>40</int>
+                <int>41</int>
+                <int>43</int>
+                <int>44</int>
+                <int>45</int>
+                <int>48</int>
+                <int>51</int>
+                <int>53</int>
+                <int>54</int>
+                <int>55</int>
+                <int>56</int>
+                <int>57</int>
+                <int>58</int>
+                <int>60</int>
+                <int>83</int>
+                <int>85</int>
+              </list>
+            </entry>
+          </tree-map>
+        </entry>
+      </confusionMatrix>
+      <distributions>
+        <entry>
+          <string>bird</string>
+          <list>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+          </list>
+        </entry>
+        <entry>
+          <string>not_animal</string>
+          <list>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+          </list>
+        </entry>
+        <entry>
+          <string>fish</string>
+          <list>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+          </list>
+        </entry>
+        <entry>
+          <string>mammal</string>
+          <list>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>1.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+            <double>0.0</double>
+          </list>
+        </entry>
+      </distributions>
+    </edu.cmu.side.model.data.TrainingResult>
+    <null/>
+    <tree-map>
+      <entry>
+        <string>foldMethod</string>
+        <string>AUTO</string>
+      </entry>
+      <entry>
+        <string>numFolds</string>
+        <string>10</string>
+      </entry>
+      <entry>
+        <string>source</string>
+        <string>RANDOM</string>
+      </entry>
+      <entry>
+        <string>test</string>
+        <string>true</string>
+      </entry>
+      <entry>
+        <string>testRecipe</string>
+        <edu.cmu.side.model.Recipe serialization="custom">
+          <edu.cmu.side.model.Recipe>
+            <edu.cmu.side.model.RecipeManager_-Stage>DOCUMENT_LIST</edu.cmu.side.model.RecipeManager_-Stage>
+            <string></string>
+            <edu.cmu.side.model.OrderedPluginMap serialization="custom">
+              <edu.cmu.side.model.OrderedPluginMap>
+                <list/>
+                <map/>
+              </edu.cmu.side.model.OrderedPluginMap>
+            </edu.cmu.side.model.OrderedPluginMap>
+            <edu.cmu.side.model.OrderedPluginMap serialization="custom">
+              <edu.cmu.side.model.OrderedPluginMap>
+                <list/>
+                <map/>
+              </edu.cmu.side.model.OrderedPluginMap>
+            </edu.cmu.side.model.OrderedPluginMap>
+            <edu.cmu.side.model.OrderedPluginMap serialization="custom">
+              <edu.cmu.side.model.OrderedPluginMap>
+                <list/>
+                <map/>
+              </edu.cmu.side.model.OrderedPluginMap>
+            </edu.cmu.side.model.OrderedPluginMap>
+            <null/>
+            <null/>
+            <edu.cmu.side.model.data.DocumentList reference="../../../../../edu.cmu.side.model.data.FeatureTable/DocumentList"/>
+            <null/>
+            <null/>
+            <null/>
+            <null/>
+            <null/>
+          </edu.cmu.side.model.Recipe>
+        </edu.cmu.side.model.Recipe>
+      </entry>
+      <entry>
+        <string>testSet</string>
+        <edu.cmu.side.model.data.DocumentList reference="../../../edu.cmu.side.model.data.DocumentList"/>
+      </entry>
+      <entry>
+        <string>type</string>
+        <string>CV</string>
+      </entry>
+    </tree-map>
+  </edu.cmu.side.model.Recipe>
+</edu.cmu.side.model.Recipe>

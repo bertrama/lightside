@@ -127,14 +127,14 @@ public class FeatureTableTest extends TestCase{
 		String annotation = docList.currentAnnotation;
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
-		System.out.println(ft.getNumericClassValues("D")[115]);
-		int numberOfDs = 0;
-		for(Double dub: ft.getNumericClassValues("D")){
+		int numberOfPOS = 0;
+		
+		for(Double dub: ft.getNumericClassValues(" NEG")){
 			if(!dub.equals(1.0)){
-				numberOfDs++;
+				numberOfPOS++;
 			}
 		}
-		assertEquals(ft.getNumericClassValues("D").length-numberOfDs, 240);
+		assertEquals(ft.getNumericClassValues(" NEG").length-numberOfPOS, 150);
 	}
 	*/
 	@Test

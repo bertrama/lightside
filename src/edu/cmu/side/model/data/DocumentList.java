@@ -14,7 +14,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import com.yerihyo.yeritools.csv.CSVReader;
-import com.yerihyo.yeritools.swing.AlertDialog;
 
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.feature.Feature;
@@ -304,13 +303,18 @@ public class DocumentList implements Serializable
                                 allAnnotations.get(emptyAnnotation).addAll(Arrays.asList(empty));
                         }
                 }catch(Exception e){
-                        AlertDialog.show("Error!", "Failed to load CSV into memory.", null);
+                	
+                		System.err.println("Error! Failed to load CSV into memory.");
+                    
+                		//AlertDialog.show("Error!", "Failed to load CSV into memory.", null);
                         e.printStackTrace();
                 }
 
                 totalLines += lineID;
         }
-        setName(localName.trim());
+//      consolidateFileStructures(annotationList);
+        localName.trim();
+        setName(localName);
 	}
 	
 	public void combine(DocumentList other){
@@ -687,6 +691,21 @@ public class DocumentList implements Serializable
 	}
 
 
+	public String getCurrentAnnotation(){
+		return this.currentAnnotation;
+	}
+	
+	public boolean equals(DocumentList other){
+		boolean toReturn = true;
+		toReturn=this.getFilenameList().equals(other.getFilenameList())?toReturn:false;
+		toReturn=this.allAnnotations().equals(other.allAnnotations())?toReturn:false;
+		toReturn=this.getTextColumns().equals(other.getTextColumns())?toReturn:false;
+		toReturn=(this.textColumnsAreDifferentiated()==other.textColumnsAreDifferentiated())?toReturn:false;
+		toReturn=(this.getCurrentAnnotation().equals(other.getCurrentAnnotation()))?toReturn:false;
+		toReturn=(this.getName().equals(other.getName()))?toReturn:false;
+		toReturn=(this.getEmptyAnnotationString().equals(other.getEmptyAnnotationString()))?toReturn:false;
+		return toReturn;
+	}
 	public String getEmptyAnnotationString()
 	{
 		return emptyAnnotationString;
@@ -697,7 +716,6 @@ public class DocumentList implements Serializable
 	{
 		this.emptyAnnotationString = emptyAnnotationString;
 	}
-	
 	@Override
 	public DocumentList clone()
 	{

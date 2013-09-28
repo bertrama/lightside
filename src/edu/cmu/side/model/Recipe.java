@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -36,6 +38,8 @@ import edu.cmu.side.plugin.WrapperPlugin;
 public class Recipe implements Serializable
 {
 	
+	public static final String PREDICTION_SUFFIX = ".predict";
+
 	private static final long serialVersionUID = 1L;
 	
 	RecipeManager.Stage stage = null;
@@ -48,7 +52,9 @@ public class Recipe implements Serializable
 	Map<String, Serializable> validationSettings;
 
 	DocumentList documentList;
+	@XStreamAlias("FeatureTable")
 	FeatureTable featureTable;
+	@XStreamAlias("FilteredTable")
 	FeatureTable filteredTable;
 	TrainingResult trainedModel;
 	PredictionResult predictionResult;
@@ -227,6 +233,18 @@ public class Recipe implements Serializable
 		wrappers = new OrderedPluginMap();
 		getStage();
 	}
+	
+	public void setExtractors(OrderedPluginMap extract){
+		this.extractors = extract;
+	}
+	
+	public void setFilters(OrderedPluginMap filter){
+		this.filters = filter;
+	}
+	
+	public void setWrappers(OrderedPluginMap wrappers){
+		this.wrappers = wrappers;
+	}
 
 	public static Recipe fetchRecipe(){
 		return new Recipe();
@@ -290,9 +308,21 @@ public class Recipe implements Serializable
 		}
 		newRecipe.setLearner(prior.getLearner());
 		newRecipe.setLearnerSettings(prior.getLearnerSettings());
-		newRecipe.setValidationSettings(prior.getValidationSettings());
 		
-		newRecipe.recipeName = prior.getRecipeName()+" (prediction only)";
+		//these are not needed for prediction, and  redundantly include the document list
+//		newRecipe.setValidationSettings(prior.getValidationSettings());
+		
+		String newRecipeName = prior.getRecipeName();
+		if(newRecipeName.endsWith(".side"))
+			newRecipeName = newRecipeName.substring(0, newRecipeName.lastIndexOf(".side"));
+		
+		if(!newRecipeName.endsWith(PREDICTION_SUFFIX))
+		{
+			newRecipeName +=PREDICTION_SUFFIX;
+		}
+		
+		newRecipe.recipeName = newRecipeName;
+		
 		newRecipe.stage = Stage.PREDICTION_ONLY;
 		
 		return newRecipe;
@@ -451,5 +481,70 @@ public class Recipe implements Serializable
 		out.writeObject(predictionResult);
 		out.writeObject(validationSettings);
 	}
-
+	//TODO: handle nullchecks more gracefully?
+	//Deep equals for testing
+	public boolean equals(Recipe other){
+		
+		boolean toReturn = true;
+		
+		//Check basics
+		if(this.stage!=other.getStage() || !this.getRecipeName().equals(other.getRecipeName())) toReturn=false;
+		
+		//OrderedPluginMaps
+		if(!xorNull(this.extractors, other.getExtractors())){
+			toReturn=!this.extractors.equals(other.getExtractors())?false:toReturn;
+		}
+		if(!xorNull(this.wrappers, other.getWrappers())){
+			toReturn=!this.wrappers.equals(other.getWrappers())?false:toReturn;
+		}
+		if(!xorNull(this.filters, other.getFilters())){
+			toReturn=!this.filters.equals(other.getFilters())?false:toReturn;
+		}
+		
+		//learner
+		if(!xorNull(this.getLearner(), other.getLearner())){
+			toReturn=!this.learner.equals(other.getLearner())?false:toReturn;
+		}
+		
+		//Learner Settings
+		if(!xorNull(this.learnerSettings, other.getLearnerSettings())){
+			toReturn=!this.learnerSettings.equals(other.getLearnerSettings())?false:toReturn;
+		}
+		//Validation Settings
+		//Serializable equality isn't working due to it using Serializable.equals rather than the
+		//Individual class'.equals
+//		Map<String, Serializable> otherValidationSettings = other.getValidationSettings();
+//		if(!this.validationSettings.keySet().equals(otherValidationSettings.keySet())) toReturn = false;
+//		for(String str: this.validationSettings.keySet()){
+//			if(!this.validationSettings.get(str).equals(otherValidationSettings.get(str))){
+//				
+//				toReturn=false;
+//			}
+//		}
+		//DocumentList
+		if(!xorNull(this.documentList,other.getDocumentList())){
+			toReturn=this.documentList==null?toReturn:this.documentList.equals(other.getDocumentList());
+		}
+		//FeatureTables
+		if(!xorNull(this.featureTable,other.getFeatureTable())){
+			toReturn=this.featureTable==null?toReturn:this.featureTable.equals(other.getFeatureTable());
+		}
+		
+		if(!xorNull(this.filteredTable, other.getFilteredTable())){
+			toReturn=this.filteredTable==null?toReturn:this.filteredTable.equals(other.getFilteredTable());
+		}
+		//TrainedModel
+		if(!xorNull(this.trainedModel,other.getTrainingResult())){
+			toReturn = this.trainedModel==null?toReturn:this.trainedModel.equals(other.getTrainingResult());
+		}
+		//PredictionResult
+		if(!xorNull(this.predictionResult,other.getPredictionResult())){
+			toReturn=this.predictionResult==null?toReturn:this.predictionResult.equals(other.getPredictionResult());
+		}
+		return toReturn;
+	}
+	//TODO: This really shouldn't live here...
+	private boolean xorNull(Object a, Object b){
+		return((a==null||b==null)&&!(a==null&&b==null));
+	}
 }

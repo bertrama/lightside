@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.StringWriter;
@@ -29,11 +30,10 @@ public class ConverterControl {
 		XStream stream = new XStream();
 		stream.registerConverter(new FeatureTableConverter());
 		try {
-			FileOutputStream out = new FileOutputStream(file);
-			PrintStream printStream = new PrintStream(out);
-			printStream.print(stream.toXML(recipe));
-			printStream.close();
-		} catch (FileNotFoundException e) {
+			FileWriter writer = new FileWriter(file);
+			stream.toXML(recipe, writer);
+			writer.close();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -66,7 +66,6 @@ public class ConverterControl {
 		XStream stream = new XStream();
 		stream.registerConverter(new FeatureTableConverter());
 		Recipe r =(Recipe) stream.fromXML(file);
-		System.out.println("Reading file complete");
 		return r;
 	}
 	

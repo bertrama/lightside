@@ -75,7 +75,7 @@ public class ConverterControl
 	{
 		XStream stream = new XStream();
 		stream.registerConverter(new FeatureTableConverter());
-		Recipe r = (Recipe) stream.fromXML(file);
+		Recipe r =(Recipe) stream.fromXML(file);
 		return r;
 	}
 

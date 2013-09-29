@@ -44,11 +44,10 @@ import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.feature.Feature;
 
 public class ConverterControlTest
-{
-	
+{	
 	Recipe predictRecipe;
 	Recipe wholeRecipe;
-	String delim = File.pathSeparator;
+	String delim = File.separator;
 	File xmlPredictFile = new File("testData"+delim+"test.predict.xml");
 	File xmlWholeModelFile = new File("testData"+delim+"test.model.side.xml");
 	

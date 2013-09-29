@@ -116,7 +116,7 @@ public class FeatureTable implements Serializable
 
 		generateConvertedClassValues();
 
-		System.out.println("FT 65: " + hits.size() + " total incoming hits, "+sdl.getSize()+ " instances");
+//		System.out.println("FT 65: " + hits.size() + " total incoming hits, "+sdl.getSize()+ " instances");
 
 		for (int i = 0; i < sdl.getSize(); i++)
 		{
@@ -134,7 +134,7 @@ public class FeatureTable implements Serializable
 			hitsPerFeature.get(f).add(hit);
 			hiterator.remove(); //TODO: does emptying the hitlist while populating the table actually make a practical memory difference?
 		}
-		System.out.println("All features added to table. Thresholding...");
+//		System.out.println("All features added to table. Thresholding...");
 
 		Iterator<Entry<Feature, Collection<FeatureHit>>> fiterator = hitsPerFeature.entrySet().iterator();
 		

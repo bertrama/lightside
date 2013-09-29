@@ -47,7 +47,7 @@ public class Chef
 		System.out.println(java.awt.GraphicsEnvironment.isHeadless() ? "Running in headless mode." : "Not actually headless");
 	}
     
-	static boolean quiet = false;
+	static boolean quiet = true;
 
 	static StatusUpdater textUpdater = new StatusUpdater()
 	{
@@ -56,14 +56,14 @@ public class Chef
 		public void update(String updateSlot, int slot1, int slot2)
 		{
 			if(!quiet)
-				System.err.println(updateSlot+": "+slot1 + "/"+slot2);
+				System.out.println(updateSlot+": "+slot1 + "/"+slot2);
 		}
 
 		@Override
 		public void update(String update)
 		{
 			if(!quiet)
-				System.err.println(update);	
+				System.out.println(update);	
 		}
 
 		@Override
@@ -100,6 +100,7 @@ public class Chef
 			}
 			recipe.setFilteredTable(ft);
 		}
+		ft.setName(recipe.getRecipeName()+" features");
 	}
 
 	public static Recipe followSimmerSteps(Recipe originalRecipe, DocumentList corpus, Stage finalStage, int newThreshold){
@@ -205,7 +206,7 @@ public class Chef
 			}
 			catch (Exception e)
 			{
-				throw new IOException("Attempted to read malformed XML file.");
+				throw new IOException("Failed to read XML recipe at "+recipePath, e);
 			}
 		}
 	}

@@ -50,7 +50,7 @@ public class XMLSaveLoadControl {
 		try {
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			File toMake = new File("saved"+ File.pathSeparator + fileName +".xml");
+			File toMake = new File("saved"+ File.separator + fileName +".xml");
 			if(!toMake.exists()){
 				toMake.createNewFile();
 			}

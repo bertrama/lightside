@@ -18,7 +18,7 @@ import edu.cmu.side.model.data.FeatureTable;
 public class FeatureTableConverterTest {
 	Recipe predictRecipe;
 	Recipe wholeRecipe;
-	String delim = File.pathSeparator;
+	String delim = File.separator;
 	File xmlPredictFile = new File("testData"+delim+"test.predict.xml");
 	File xmlWholeModelFile = new File("testData"+delim+"test.model.side.xml");
 	@Before

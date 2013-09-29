@@ -27,11 +27,11 @@ public abstract class WrapperPlugin extends AbstractFeatureFetcherPlugin
 	
 	public abstract void learnFromTrainingData(FeatureTable train, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update);
 
-	public FeatureTable wrapTableBefore(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
+	synchronized public FeatureTable wrapTableBefore(FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
 		return wrapTableForSubclass(table, fold, foldsMap, update);
 	}
 	
-	public PredictionResult wrapResultAfter(PredictionResult predict, FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
+	synchronized public PredictionResult wrapResultAfter(PredictionResult predict, FeatureTable table, int fold, Map<Integer, Integer> foldsMap, StatusUpdater update){
 		return wrapResultForSubclass(predict, fold, foldsMap, update);
 	}
 	

@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.JOptionPane;
+
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
@@ -48,15 +50,13 @@ public class PredictLabelsControl extends GenesisControl{
 		}
 	}
 	
-	public static boolean hasHighlightedUnlabeledData(){
+	public static boolean hasHighlightedUnlabeledData()
+	{
 		return highlightedUnlabeledData != null;
 	}
 	
 	public static Recipe getHighlightedUnlabeledData()
 	{
-//		if(useValidationResults)
-//			return trainedModel;
-//		else
 			return highlightedUnlabeledData;
 	}
 	
@@ -73,11 +73,12 @@ public class PredictLabelsControl extends GenesisControl{
 		new ActionBarTask(predictActionBar)
 		{
 			DocumentList newDocs = null;
+			Exception ex = null;
 
 			@Override
 			public void requestCancel()
 			{
-				//TODO: halt nicely.
+				halt = true; //not presently respected by the Predictor
 			}
 			
 			@Override
@@ -85,35 +86,63 @@ public class PredictLabelsControl extends GenesisControl{
 			{
 				super.finishTask();
 
-				RecipeManager manager = Workbench.getRecipeManager();
-				Recipe fetched = manager.fetchDocumentListRecipe(newDocs);
-				newDocs.setName(newDocs.getName() + " (" + name + ")");
-				
-				setHighlightedUnlabeledData(fetched);
-				Workbench.update(Stage.DOCUMENT_LIST);
-				
+				if(ex == null && newDocs != null)
+				{
+					RecipeManager manager = Workbench.getRecipeManager();
+					Recipe fetched = manager.fetchDocumentListRecipe(newDocs);
+					newDocs.setName(newDocs.getName() + " (" + name + ")");
+					
+					setHighlightedUnlabeledData(fetched);
+					Workbench.update(Stage.DOCUMENT_LIST);
+					predictActionBar.setEnabled(true);
+				}
+				else
+				{
+					if(ex == null) //something outside of the thread canceled the prediction
+					{
+						JOptionPane.showMessageDialog(null, "Prediction has been stopped.", "Prediction Stopped", JOptionPane.ERROR_MESSAGE);
+					}
+//					else if(ex.getMessage().equals("User Canceled"))
+//					{
+//						JOptionPane.showMessageDialog(null, "Prediction has been canceled.", "Prediction Canceled", JOptionPane.INFORMATION_MESSAGE);
+//					}
+					else
+					{
+						JOptionPane.showMessageDialog(null, "Couldn't finish the prediction.\n"+ex.getLocalizedMessage(), "Prediction Error", JOptionPane.ERROR_MESSAGE);
+					}
+
+					Workbench.update(Stage.DOCUMENT_LIST);
+				}
 			}
 			
 			@Override
 			protected void doTask()
 			{
 				DocumentList originalDocs;
-				if(useEvaluation)
+				ex = null;
+				try
 				{
-					originalDocs = trainedModel.getTrainingResult().getEvaluationTable().getDocumentList();
-
-					TrainingResult results = trainedModel.getTrainingResult();
-					List<String> predictions = (List<String>) results.getPredictions();
-					newDocs = addLabelsToDocs(name, showDists, overwrite, originalDocs, results, predictions);
+					if(useEvaluation)
+					{
+						originalDocs = trainedModel.getTrainingResult().getEvaluationTable().getDocumentList();
+	
+						TrainingResult results = trainedModel.getTrainingResult();
+						List<String> predictions = (List<String>) results.getPredictions();
+						newDocs = addLabelsToDocs(name, showDists, overwrite, originalDocs, results, predictions);
+					}
+					else
+					{
+						originalDocs = highlightedUnlabeledData.getDocumentList();
+	
+						Predictor predictor = new Predictor(trainedModel, name);
+						newDocs = predictor.predict(originalDocs, name, showDists, overwrite);
+					}
 				}
-				else
+				catch(Exception e)
 				{
-					originalDocs = highlightedUnlabeledData.getDocumentList();
-
-					Predictor predictor = new Predictor(trainedModel, name);
-					newDocs = predictor.predict(originalDocs, name, showDists, overwrite);
+					ex = e;
+					
 				}
-				
 				
 				/*PredictionResult results;
 				

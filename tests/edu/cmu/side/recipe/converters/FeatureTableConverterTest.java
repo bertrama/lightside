@@ -19,13 +19,13 @@ public class FeatureTableConverterTest {
 	Recipe predictRecipe;
 	Recipe wholeRecipe;
 	String delim = File.separator;
-	File xmlPredictFile = new File("testData"+delim+"test.predict.xml");
-	File xmlWholeModelFile = new File("testData"+delim+"test.model.side.xml");
+	File xmlPredictFile = new File("testData/test.predict.xml");
+	File xmlWholeModelFile = new File("testData/test.model.side.xml");
 	@Before
 	public void setUp(){
 		
-		File serializedWholeModelFile = new File("testData"+delim+"test.model.side.ser");
-		File serializedPredictFile = new File("testData"+delim+"test.predict.ser");
+		File serializedWholeModelFile = new File("testData/test.model.side.ser");
+		File serializedPredictFile = new File("testData/test.predict.ser");
 		
 		
 		try {
@@ -58,8 +58,7 @@ public class FeatureTableConverterTest {
 	@Test
 	public void testConvertExistantPredict(){
 		FeatureTable ftBefore = predictRecipe.getFeatureTable();
-		XStream streamer = new XStream();
-		streamer.registerConverter(new FeatureTableConverter());
+		XStream streamer = getXStream();
 		String xml = streamer.toXML(ftBefore);
 		Object afterObj = streamer.fromXML(xml);
 		FeatureTable ftAfter = (FeatureTable) afterObj;
@@ -69,8 +68,7 @@ public class FeatureTableConverterTest {
 	@Test
 	public void testConvertExistantModel(){
 		FeatureTable ftBefore = wholeRecipe.getFeatureTable();
-		XStream streamer = new XStream();
-		streamer.registerConverter(new FeatureTableConverter());
+		XStream streamer = getXStream();
 		String xml = streamer.toXML(ftBefore);
 		Object afterObj = streamer.fromXML(xml);
 		FeatureTable ftAfter = (FeatureTable) afterObj;
@@ -79,16 +77,21 @@ public class FeatureTableConverterTest {
 	@Test
 	public void testConvertNull(){
 		FeatureTable ftBefore = null;
-		XStream streamer = new XStream();
-		streamer.registerConverter(new FeatureTableConverter());
+		XStream streamer = getXStream();
 		String XML = streamer.toXML(ftBefore);
 		Object afterObj = streamer.fromXML(XML);
 		assertNull(afterObj);
 	}
-	@Test
-	public void testPredictOnlyParse(){
-		XStream streamer = new XStream();
-		streamer.registerConverter(new FeatureTableConverter());
-		streamer.fromXML(xmlPredictFile);
+
+	
+	static XStream xStream = null;
+	protected static XStream getXStream()
+	{
+		if(xStream == null)
+		{
+			XStream streamer = new XStream();
+			streamer.registerConverter(new FeatureTableConverter());
+		}
+		return xStream;
 	}
 }

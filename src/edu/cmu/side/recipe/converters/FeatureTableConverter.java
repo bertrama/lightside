@@ -93,7 +93,8 @@ public class FeatureTableConverter implements Converter{
 		ArrayList<Feature> featureList = new ArrayList<Feature>(featureSet);
 		for (Feature feat : featureList) {
 			writer.startNode("Feature");
-			writer.addAttribute("Type", feat.getFeatureType().toString());
+			writer.addAttribute("value", feat.encode());
+			/*writer.addAttribute("Type", feat.getFeatureType().toString());
 			writer.addAttribute("Prefix", feat.getExtractorPrefix());
 			if(feat.getFeatureType().equals(Feature.Type.NOMINAL)){
 				for(String value: feat.getNominalValues()){
@@ -104,7 +105,7 @@ public class FeatureTableConverter implements Converter{
 			}
 			writer.startNode("FeatureValue");
 			writer.setValue(feat.toString());
-			writer.endNode();
+			writer.endNode();*/
 
 			writer.endNode();
 		}
@@ -141,7 +142,8 @@ public class FeatureTableConverter implements Converter{
 		ArrayList<Feature> featureList = new ArrayList<Feature>(featureSet);
 		for (Feature feat : featureList) {
 			writer.startNode("Feature");
-			writer.addAttribute("Type", feat.getFeatureType().toString());
+			writer.addAttribute("value", feat.encode());
+			/*writer.addAttribute("Type", feat.getFeatureType().toString());
 			writer.addAttribute("Prefix", feat.getExtractorPrefix());
 			if(feat.getFeatureType().equals(Feature.Type.NOMINAL)){
 				for(String value: feat.getNominalValues()){
@@ -152,16 +154,16 @@ public class FeatureTableConverter implements Converter{
 			}
 			writer.startNode("FeatureValue");
 			writer.setValue(feat.toString());
-			writer.endNode();
+			writer.endNode();*/
 
 
 			for(FeatureHit hit: table.getHitsForFeature(feat)){
-				writer.startNode("FeatureHits");
-				writer.addAttribute("DocumentIndex", ((Integer)hit.getDocumentIndex()).toString());
-				writer.addAttribute("Value", hit.getValue().toString());
+				writer.startNode("Hit");
+				writer.addAttribute("doc", ((Integer)hit.getDocumentIndex()).toString());
+				writer.addAttribute("value", hit.getValue().toString());
 				if(hit.getClass().equals(LocalFeatureHit.class))
 				{
-					writer.startNode("Locations");
+					writer.startNode("loc");
 					String hitLocs= "";
 					for(HitLocation hitLoc: ((LocalFeatureHit) hit).getHits()){
 						hitLocs+=hitLoc.getColumn() +",";
@@ -235,7 +237,9 @@ public class FeatureTableConverter implements Converter{
 		ArrayList<Feature> features = new ArrayList<Feature>();
 		while(reader.hasMoreChildren()){
 			reader.moveDown();
-			String type = reader.getAttribute("Type");
+			String encoded = reader.getAttribute("value");
+			features.add(Feature.fetchFeature(encoded));
+			/*String type = reader.getAttribute("Type");
 			Feature.Type featType = Feature.Type.valueOf(type);
 			String prefix = reader.getAttribute("Prefix");
 			reader.moveDown();
@@ -244,7 +248,7 @@ public class FeatureTableConverter implements Converter{
 			FeatureFetcher fetcher = new BasicFeatures();
 			Feature toAdd = Feature.fetchFeature(prefix, value, featType, fetcher);
 			features.add(toAdd);
-			reader.moveUp();
+			reader.moveUp();*/
 			reader.moveUp();
 		}
 		reader.moveUp();
@@ -283,7 +287,9 @@ public class FeatureTableConverter implements Converter{
 		reader.moveDown();
 		while(reader.hasMoreChildren()){
 			reader.moveDown();
-			String type = reader.getAttribute("Type");
+			String encoded = reader.getAttribute("value");
+			Feature feature = Feature.fetchFeature(encoded);
+			/*String type = reader.getAttribute("Type");
 			Feature.Type featType = Feature.Type.valueOf(type);
 			String prefix = reader.getAttribute("Prefix");
 			
@@ -292,15 +298,15 @@ public class FeatureTableConverter implements Converter{
 			FeatureFetcher fetcher = new BasicFeatures();
 			Feature toAdd = Feature.fetchFeature(prefix, featureName, featType, fetcher);
 			features.add(toAdd);
-			reader.moveUp();
+			reader.moveUp();*/
 			
 //			ArrayList<FeatureHit> localFeatureHits = new ArrayList<FeatureHit>();
 			while(reader.hasMoreChildren()){
 				reader.moveDown();
-				Integer docIndex = Integer.parseInt(reader.getAttribute("DocumentIndex"));
+				Integer docIndex = Integer.parseInt(reader.getAttribute("doc"));
 				Object finalValue = "";
-				String stringValue = reader.getAttribute("Value");
-				switch(featType){
+				String stringValue = reader.getAttribute("value");
+				switch(feature.getFeatureType()){
 				case BOOLEAN:
 					Boolean boolValue = Boolean.valueOf(stringValue);
 					finalValue = (Object) boolValue;
@@ -332,14 +338,14 @@ public class FeatureTableConverter implements Converter{
 								hitLoc.add(new HitLocation(column,start,end));
 							}
 						}
-						hits.add(new LocalFeatureHit(toAdd, finalValue, docIndex, hitLoc));
+						hits.add(new LocalFeatureHit(feature, finalValue, docIndex, hitLoc));
 					}
 					reader.moveUp();
 				}
 				else	
 				{
 					//this is not a local feature hit.
-					hits.add(new FeatureHit(toAdd, finalValue, docIndex));
+					hits.add(new FeatureHit(feature, finalValue, docIndex));
 				}
 				reader.moveUp();
 			}

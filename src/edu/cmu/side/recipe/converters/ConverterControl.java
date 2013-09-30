@@ -1,70 +1,38 @@
 package edu.cmu.side.recipe.converters;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.StringWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+import com.sun.tools.hat.internal.parser.Reader;
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
+import com.thoughtworks.xstream.io.xml.Xpp3DomDriver;
+import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 
 import edu.cmu.side.model.Recipe;
 
 public class ConverterControl
 {
+	private static XStream xStream;
+	
 	private ConverterControl()
 	{
 
 	}
 
-	public static void writeToXML(String fileName, Recipe recipe)
-	{
-		File file = createFile(fileName);
-		writeToXML(file, recipe);
-	}
 
-	public static void writeToXML(File file, Recipe recipe)
-	{
-		XStream stream = new XStream();
-		stream.registerConverter(new FeatureTableConverter());
-		try
-		{
-			FileWriter writer = new FileWriter(file);
-			stream.toXML(recipe, writer);
-			writer.close();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println("Writing file complete");
-	}
-
-	public static String getXMLString(Recipe recipe)
-	{
-		XStream stream = new XStream();
-		stream.registerConverter(new FeatureTableConverter());
-
-		return stream.toXML(recipe);
-	}
-
-	public static Recipe getRecipeFromXMLString(String recipeXML)
-	{
-		XStream stream = new XStream();
-		stream.registerConverter(new FeatureTableConverter());
-
-		return (Recipe) stream.fromXML(recipeXML);
-
-	}
-
-	public static Recipe readFromXML(String fileName)
+	public static Recipe readFromXML(String fileName) throws IOException
 	{
 		File file = createFile(fileName);
 
@@ -73,83 +41,155 @@ public class ConverterControl
 
 	public static Recipe readFromXML(File file)
 	{
-		XStream stream = new XStream();
-		stream.registerConverter(new FeatureTableConverter());
+		XStream stream = getXStream();
 		Recipe r =(Recipe) stream.fromXML(file);
+        
 		return r;
 	}
+	
+	public static void writeToXML(String fileName, Recipe recipe) throws IOException
+	{
+		File file = createFile(fileName);
+		writeToXML(file, recipe);
+	}
 
-	private static File createFile(String name)
+	public static void writeToXML(File file, Recipe recipe) throws IOException
+	{
+		XStream stream = getXStream();
+		FileWriter writer = new FileWriter(file);
+		stream.toXML(recipe, writer);
+		writer.close();
+		System.out.println("Wrote XML recipe for "+recipe.getRecipeName()+" to "+file.getPath());
+	}
+
+	public static String getXMLString(Recipe recipe)
+	{
+		XStream stream = getXStream();
+
+		return stream.toXML(recipe);
+	}
+
+	public static Recipe getRecipeFromXMLString(String recipeXML)
+	{
+		XStream stream = getXStream();
+
+		return (Recipe) stream.fromXML(recipeXML);
+
+	}
+
+	public static Recipe getRecipeFromZippedXMLString(String zippedRecipeXML) throws IOException
+	{
+		InputStream stringIn = new ByteArrayInputStream(zippedRecipeXML.getBytes());
+		
+		Recipe recipe = streamInZippedXML(stringIn);
+		
+		stringIn.close();
+		return recipe;
+	}
+
+	public static Recipe readFromZippedXML(File file) throws IOException
+	{
+		InputStream fileIn = new FileInputStream(file);
+		
+		Recipe recipe = streamInZippedXML(fileIn);
+		
+		fileIn.close();
+		return recipe;
+	}	
+	
+	public static void writeToZippedXML(File file, Recipe recipe) throws IOException
+	{
+		FileOutputStream fileOut = new FileOutputStream(file);
+		
+		streamOutZippedXML(recipe, fileOut);
+		
+		fileOut.close();
+		System.out.println("Wrote zipped XML recipe for "+recipe.getRecipeName()+" to "+file.getPath());
+	}
+
+	public static String getZippedXMLString(Recipe recipe) throws IOException
+	{
+		ByteArrayOutputStream stringOut = new ByteArrayOutputStream();
+		
+		streamOutZippedXML(recipe, stringOut);
+		String zippedString = stringOut.toString();
+		
+		stringOut.close();
+		return zippedString;
+	}
+
+
+	private static File createFile(String name) throws IOException
 	{
 		File file = new File(name);
-		if (!file.exists()) try
+		if (!file.exists())
 		{
 			file.createNewFile();
 		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		return file;
 	}
-
-	// Let's hook these up
-	private void zipUp(String xmlFileName)
+	
+	protected static void streamOutZippedXML(Recipe r, OutputStream out) throws IOException
 	{
-		long start = System.currentTimeMillis();
-		byte[] buff = new byte[1000];
-		FileOutputStream stream;
-		try
-		{
-			stream = new FileOutputStream(xmlFileName + ".zip");
-			ZipOutputStream zipper = new ZipOutputStream(stream);
-			ZipEntry entr = new ZipEntry(xmlFileName);
-			zipper.putNextEntry(entr);
-			FileInputStream in = new FileInputStream(xmlFileName);
-			int len;
-			while ((len = in.read(buff)) > 0)
-			{
-				zipper.write(buff, 0, len);
-			}
-			in.close();
-			zipper.closeEntry();
-			zipper.close();
-		}
-		catch (IOException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		long end = System.currentTimeMillis();
-		System.out.println("ziptime : " + (end - start));
+		ZipOutputStream zipper = new ZipOutputStream(out);
+		zipper.putNextEntry(new ZipEntry(r.getRecipeName()));
+		XStream stream = getXStream();
+		stream.toXML(r, zipper);
+		zipper.closeEntry();
+		zipper.close();
+	}
+	
+	protected static Recipe streamInZippedXML(InputStream in) throws IOException
+	{
+		ZipInputStream unzipper = new ZipInputStream(in);
+		ZipEntry entry = unzipper.getNextEntry();
+		System.out.println("Getting Zipped "+entry.getName());
+		
+		XStream stream = getXStream();
+		Recipe r = (Recipe) stream.fromXML(unzipper);
+		unzipper.close();
+		
+		return r;
 	}
 
-	private void unZip(String zipFileName) throws IOException
+
+	protected static XStream getXStream()
 	{
-		long start = System.currentTimeMillis();
-		byte[] buffer = new byte[1000];
-		File zipFile = new File(zipFileName);
-		ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile));
-		ZipEntry entr = zis.getNextEntry();
-		File newXMLFile = new File(zipFile.getParent()+File.separator+new File(entr.getName()).getName());
-		if (!newXMLFile.exists())
+		if(xStream == null)
 		{
-			newXMLFile.createNewFile();
+			xStream = new XStream();
+			xStream.registerConverter(new FeatureTableConverter());
 		}
-		FileOutputStream fos = new FileOutputStream(newXMLFile);
-
-		int len;
-		while ((len = zis.read(buffer)) > 0)
-		{
-			fos.write(buffer, 0, len);
-		}
-
-		fos.close();
-		zis.closeEntry();
-		zis.close();
-		long end = System.currentTimeMillis();
-		System.out.println("unziptime : " + (end - start));
+		return xStream;
 	}
 
+
+	public static void main(String[] args) throws IOException, ClassNotFoundException
+	{
+		long start, end;
+//		start = System.currentTimeMillis();
+//		Recipe rs = (Recipe) new ObjectInputStream(new FileInputStream(new File("saved/essay_source.ser"))).readObject();
+//		
+//		end = System.currentTimeMillis();
+//		System.out.println("loaded super large serialized recipe in "+(end - start)+"ms.");
+		
+		start = System.currentTimeMillis();
+		Recipe rx = ConverterControl.readFromXML(new File("saved/movies.side.xml"));
+		
+		end = System.currentTimeMillis();
+		System.out.println("loaded medium XML recipe in "+(end - start)+"ms.");
+//		
+//		start = System.currentTimeMillis();
+//		Recipe rx = ConverterControl.readFromXML(new File("saved/essay_source.side.xml"));
+//		
+//		end = System.currentTimeMillis();
+//		System.out.println("loaded super large plain XML in "+(end - start)+"ms.");
+//		
+//		start = System.currentTimeMillis();
+//		Recipe rz = ConverterControl.readFromZippedXML(new File("saved/essay_source.side.xml.zip"));
+//		
+//		end = System.currentTimeMillis();
+//		System.out.println("loaded super large zipped XML in "+(end - start)+"ms.");
+//		System.out.println("recipes match? "+(rx.equals(rz)));
+	}
 }

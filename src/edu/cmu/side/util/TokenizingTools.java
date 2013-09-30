@@ -86,9 +86,11 @@ public class TokenizingTools
 
 	public static List<CoreLabel> tagInvertible(List<CoreLabel> tokens)
 	{
-
+		
+		if(tokens.isEmpty())
+			return tokens;
+		
 		getTagger().tagCoreLabels(tokens);
-
 		return tokens;
 	}
 

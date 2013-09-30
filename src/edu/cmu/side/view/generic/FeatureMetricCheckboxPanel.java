@@ -191,4 +191,14 @@ public abstract class FeatureMetricCheckboxPanel extends GenericFeatureMetricPan
 		}
 		super.refreshPanel(recipe, tableEvaluationPlugins, mask);
 	}
+	
+	public void clearSelection()
+	{
+		selectedFeatures.clear();
+		for(int row = 0; row < featureTable.getRowCount(); row++)
+		{
+			CheckBoxListEntry entry = (CheckBoxListEntry)featureTable.getValueAt(row, 0);
+			entry.setSelected(false);
+		}
+	}
 }

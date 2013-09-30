@@ -28,7 +28,8 @@ public class ExtractActionPanel extends ActionBar{
 	@Override
 	public void refreshPanel(){
 		super.refreshPanel();
-		actionButton.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList() && ExtractFeaturesControl.getSelectedClassAnnotation() != null);
+		String annotation = ExtractFeaturesControl.getSelectedClassAnnotation();
+		actionButton.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList() && annotation != null);
 	}
 
 	@Override

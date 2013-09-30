@@ -32,6 +32,7 @@ public class RecipeExporter
 
 	static JFileChooser tableChooser;
 	static JFileChooser modelChooser;
+	static JFileChooser predictChooser;
 
 	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV (Excel)", "csv", "CSV");
 	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
@@ -93,6 +94,7 @@ public class RecipeExporter
 					super.setSelectedFile(f);
 				}
 			};
+
 			
 			for (FileNameExtensionFilter filter : filters)
 			{
@@ -122,7 +124,8 @@ public class RecipeExporter
 
 	public static void exportFeatures(Recipe tableRecipe)
 	{
-		tableChooser = setUpChooser(tableChooser, sideTableFilter, csvFilter, arffFilter, serializedFilter);
+		tableChooser = setUpChooser(tableChooser, sideTableFilter, csvFilter, arffFilter);
+//		tableChooser = setUpChooser(tableChooser, sideTableFilter, csvFilter, arffFilter, serializedFilter);
 		FeatureTable table = tableRecipe.getTrainingTable();
 		try
 		{
@@ -245,32 +248,38 @@ public class RecipeExporter
 
 	}
 
-	public static void exportTrainedModel(Recipe tableRecipe)
+	public static void exportTrainedModel(Recipe modelRecipe)
 	{
-		if(tableRecipe.getStage() == Stage.TRAINED_MODEL)
-			modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter, serializedFilter, serializedPredictFilter);
+		JFileChooser chooser;
+		if(modelRecipe.getStage() == Stage.TRAINED_MODEL)
+		{
+			chooser = modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter);
+//			modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter, serializedFilter, serializedPredictFilter);	
+		}
 		else
-			modelChooser = setUpChooser(modelChooser, predictFilter);
+		{
+			chooser = predictChooser = setUpChooser(predictChooser, predictFilter);
+		}
 			
-		TrainingResult result = tableRecipe.getTrainingResult();
+		TrainingResult result = modelRecipe.getTrainingResult();
 		try
 		{
-			modelChooser.setSelectedFile(new File((result == null ? tableRecipe.getRecipeName() : result.getName()) + "." + ((FileNameExtensionFilter) modelChooser.getFileFilter()).getExtensions()[0]));
+			chooser.setSelectedFile(new File((result == null ? modelRecipe.getRecipeName() : result.getName()) + "." + ((FileNameExtensionFilter) modelChooser.getFileFilter()).getExtensions()[0]));
 
-			int state = modelChooser.showDialog(null, "Save Trained Model");
+			int state = chooser.showDialog(null, "Save Trained Model");
 			if (state == JFileChooser.APPROVE_OPTION)
 			{
-				File f = modelChooser.getSelectedFile();
+				File f = chooser.getSelectedFile();
 				if (f.exists())
 				{
 					int confirm = JOptionPane.showConfirmDialog(null, f.getName() + " already exists. Do you want to overwrite it?");
 					if (confirm != JOptionPane.YES_OPTION) return;
 				}
 
-				if (modelChooser.getFileFilter() == predictFilter) exportToXMLForPrediction(tableRecipe, f);
-				else if (modelChooser.getFileFilter() == sideModelFilter) exportToXML(tableRecipe, f);
-				else if (modelChooser.getFileFilter() == serializedFilter) exportToSerialized(tableRecipe, f);
-				else if (modelChooser.getFileFilter() == serializedPredictFilter) exportToSerializedForPrediction(tableRecipe, f);
+				if (chooser.getFileFilter() == predictFilter) exportToXMLForPrediction(modelRecipe, f);
+				else if (chooser.getFileFilter() == sideModelFilter) exportToXML(modelRecipe, f);
+				else if (chooser.getFileFilter() == serializedFilter) exportToSerialized(modelRecipe, f);
+				else if (chooser.getFileFilter() == serializedPredictFilter) exportToSerializedForPrediction(modelRecipe, f);
 			}
 		}
 		catch (Exception e)

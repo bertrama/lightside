@@ -2,6 +2,9 @@ package edu.cmu.side.view.predict;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
@@ -13,7 +16,6 @@ import edu.cmu.side.control.PredictLabelsControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
-import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.util.WarningButton;
 
@@ -22,7 +24,6 @@ public class PredictActionBar extends ActionBar
 	JCheckBox showMaxScoreBox = new JCheckBox("Show Predicted Label's Score");
 	JCheckBox showDistsBox = new JCheckBox("Show Label Distribution");
 	JCheckBox overwriteBox = new JCheckBox("Overwrite Columns");
-//	JCheckBox useEvaluationBox = new JCheckBox("Use Model Validation Results");
 	WarningButton warn = new WarningButton();
 
 	Recipe lastRecipe = null;
@@ -120,7 +121,28 @@ public class PredictActionBar extends ActionBar
 
 	protected boolean isPredictionPossible()
 	{
-		return PredictLabelsControl.hasHighlightedTrainedModelRecipe() && (PredictLabelsControl.shouldUseValidationResults() || PredictLabelsControl.hasHighlightedUnlabeledData());
+		if( PredictLabelsControl.hasHighlightedTrainedModelRecipe() )
+		{
+			if(PredictLabelsControl.shouldUseValidationResults()) return true;
+			if(!Workbench.getRecipesByPane(Stage.DOCUMENT_LIST).isEmpty())
+			{
+				Recipe docs = PredictLabelsControl.getHighlightedUnlabeledData();
+				if(docs != null)
+				{
+					Collection<String> docsColumns = new HashSet<String>();
+					docsColumns.addAll(docs.getDocumentList().allAnnotations().keySet());
+					docsColumns.addAll(docs.getDocumentList().getTextColumns());
+					Set<String> modelTextColumns = PredictLabelsControl.getHighlightedTrainedModelRecipe().getDocumentList().getTextColumns();
+					if(!docsColumns.containsAll(modelTextColumns))
+					{
+						warn.setWarning("This data doesn't have the neccessary columns for text prediction:\n"+modelTextColumns );
+						return false;
+					}
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	protected void checkColumnName()
@@ -130,16 +152,22 @@ public class PredictActionBar extends ActionBar
 			warn.setWarning("You need to provide a name for the predicted label.");
 			actionButton.setEnabled(false);
 		}
-		else if(isPredictionPossible() && 
-				PredictLabelsControl.getHighlightedUnlabeledData().getDocumentList().allAnnotations().containsKey(name.getText()))
-		{
-			warn.setWarning("This will over-write an existing column.");
-//			actionButton.setEnabled(overwriteBox.isSelected());
-		}
 		else
 		{
-			warn.clearWarning();
-			actionButton.setEnabled(isPredictionPossible());
+			boolean possible = isPredictionPossible();
+			if(possible)
+			{
+				if(PredictLabelsControl.hasHighlightedUnlabeledData() &&
+					PredictLabelsControl.getHighlightedUnlabeledData().getDocumentList().allAnnotations().containsKey(name.getText()))
+				{
+					warn.setWarning("This will over-write an existing column.");
+				}
+				else
+				{
+					warn.clearWarning();
+				}
+			}
+			actionButton.setEnabled(possible);
 		}
 	}
 

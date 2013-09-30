@@ -25,14 +25,13 @@ import edu.cmu.side.view.util.Refreshable;
 public class PredictLabelsPane extends JPanel implements Refreshable
 {
 
-	JCheckBox useValidationBox = new JCheckBox("Add Validation Results to Test Data");
+	JCheckBox useValidationBox = new JCheckBox("Add Validation Results to Copy of Test Data");
 	GenericLoadPanel load = new GenericLoadPanel("Model to Apply:")
 	{
 
 		{
 			checkChooser();
 			chooser.resetChoosableFileFilters();
-			chooser.addChoosableFileFilter(GenericLoadPanel.modelFilter);
 			chooser.addChoosableFileFilter(GenericLoadPanel.predictFilter);
 		}
 

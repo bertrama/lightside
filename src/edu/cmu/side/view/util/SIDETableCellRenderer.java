@@ -12,7 +12,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 public class SIDETableCellRenderer extends DefaultTableCellRenderer{
 
 	DecimalFormat decimalFormat = new DecimalFormat("#.####");
-	private int cutoff = 25;
+	private int cutoff = 100;
 
 	public SIDETableCellRenderer(int cutoff)
 	{

@@ -108,4 +108,13 @@ public abstract class ActionBar extends AbstractListPanel{
 	public abstract void startedTask();
 
 	public abstract void endedTask();
+	
+	public void enable(boolean enabled)
+	{
+		actionButton.setEnabled(enabled);
+	}
+	public boolean isEnabled()
+	{
+		return actionButton.isEnabled();
+	}
 }

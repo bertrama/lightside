@@ -45,7 +45,6 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	public static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
 	public static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff");
 	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSide", "side");
-	public static FileNameExtensionFilter modelFilter = new FileNameExtensionFilter("LightSide Trained Model", "model.side");
 	public static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only Model", "predict", "predict.side");
 
 	protected GenericLoadPanel()
@@ -356,8 +355,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	public void loadNewItem()
 	{
 		checkChooser();
-		
 		chooser.setFileFilter(sideFilter);
+		
 		int response = chooser.showOpenDialog(this);
 		if (response == JFileChooser.APPROVE_OPTION)
 		{
@@ -371,12 +370,12 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			{
 //				FileInputStream fout = new FileInputStream(target);
 //				ObjectInputStream in = new ObjectInputStream(fout);
-//				Recipe recipe = (Recipe) in.readObject(); // TODO: should this
-//															// be more generic?
+//				Recipe recipe = (Recipe) in.readObject();
 				Recipe recipe = ConverterControl.readFromXML(target);
 				Workbench.getRecipeManager().addRecipe(recipe);
 				setHighlight(recipe);
 				Workbench.update(this);
+				Workbench.update(recipe.getStage());
 			}
 			catch (Exception e)
 			{

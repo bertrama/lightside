@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import plugins.learning.WekaTools;
 import weka.core.Instances;
@@ -33,17 +32,60 @@ public class RecipeExporter
 	static JFileChooser tableChooser;
 	static JFileChooser modelChooser;
 	static JFileChooser predictChooser;
-
-	static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV (Excel)", "csv", "CSV");
-	static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff", "ARFF");
-	static FileNameExtensionFilter sideTableFilter = new FileNameExtensionFilter("LightSide Feature Table", "table.side", "side");
-	static FileNameExtensionFilter sideModelFilter = new FileNameExtensionFilter("LightSide Trained Model", "model.side", "side");
-	static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only", "predict", "model.predict");
-	static FileNameExtensionFilter serializedFilter = new FileNameExtensionFilter("Ye Olde S.I.D.E. Serialized Format", "ser");
-	static FileNameExtensionFilter serializedPredictFilter = new FileNameExtensionFilter("Ye Olde S.I.D.E. Predicte-Only Serialized Format", "predict.ser");
-
 	
-	public static JFileChooser setUpChooser(JFileChooser chooser, FileNameExtensionFilter... filters)
+	static class EndsWithFileFilter extends FileFilter
+	{
+		String[] extensions;
+		String description;
+		
+		
+		public EndsWithFileFilter(String description, String... ext)
+		{
+			super();
+			this.extensions = ext;
+			this.description = description;
+		}
+		
+		public String[] getExtensions()
+		{
+			return extensions;
+		}
+
+		@Override
+		public boolean accept(File file)
+		{
+			String fileName = file.getName();
+			for(String ext : extensions)
+			{
+				if(fileName.endsWith(ext))
+					return true;
+			}
+			return false;
+		}
+
+		@Override
+		public String getDescription()
+		{
+			return description;
+		}
+		
+	}
+
+	//TODO: multi-extension names aren't detected correctly by FileNameExtensionFilter
+	public final static FileFilter csvFilter = new EndsWithFileFilter("CSV (Excel)", "csv", "CSV");
+	public final static FileFilter arffFilter = new EndsWithFileFilter("ARFF (Weka)", "arff", "ARFF");
+	public final static FileFilter xmlTableFilter = new EndsWithFileFilter("LightSide Feature Table XML", "table.side.xml");
+	public final static FileFilter xmlModelFilter = new EndsWithFileFilter("LightSide Trained Model XML", "model.side.xml");
+	public final static FileFilter xmlPredictFilter = new EndsWithFileFilter("Predict-Only", "predict.xml", "xml");
+	public final static FileFilter xmlGenericFilter = new EndsWithFileFilter("LightSide XML", "xml");
+	public final static FileFilter serializedTableFilter = new EndsWithFileFilter("LightSide Feature Table", "table.side");
+	public final static FileFilter serializedModelFilter = new EndsWithFileFilter("LightSide Trained Model", "model.side");
+	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
+	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only", "predict");
+
+	protected static boolean useXML = false;
+	
+	public static JFileChooser setUpChooser(JFileChooser chooser, FileFilter... filters)
 	{
 		if (chooser == null)
 		{
@@ -64,11 +106,11 @@ public class RecipeExporter
 						String name = f.getName();
 						String extension = "";
 
-						List<String> extensions = Arrays.asList(((FileNameExtensionFilter) filter).getExtensions());
+						List<String> extensions = Arrays.asList(((EndsWithFileFilter) filter).getExtensions());
 //						System.out.println(extensions);
 
 						boolean changed = false;
-						for (String ext : ((FileNameExtensionFilter) this.getFileFilter()).getExtensions())
+						for (String ext : ((EndsWithFileFilter) this.getFileFilter()).getExtensions())
 						{
 							if (name.endsWith("." + ext))
 							{
@@ -96,7 +138,7 @@ public class RecipeExporter
 			};
 
 			
-			for (FileNameExtensionFilter filter : filters)
+			for (FileFilter filter : filters)
 			{
 				if (filter == arffFilter)
 				{
@@ -124,12 +166,15 @@ public class RecipeExporter
 
 	public static void exportFeatures(Recipe tableRecipe)
 	{
-		tableChooser = setUpChooser(tableChooser, sideTableFilter, csvFilter, arffFilter);
-//		tableChooser = setUpChooser(tableChooser, sideTableFilter, csvFilter, arffFilter, serializedFilter);
+		if(useXML)
+			tableChooser = setUpChooser(tableChooser, xmlTableFilter, csvFilter, arffFilter);
+		else
+			tableChooser = setUpChooser(tableChooser, serializedTableFilter, csvFilter, arffFilter);
+		
 		FeatureTable table = tableRecipe.getTrainingTable();
 		try
 		{
-			tableChooser.setSelectedFile(new File(table.getName() + "." + ((FileNameExtensionFilter) tableChooser.getFileFilter()).getExtensions()[0]));
+			tableChooser.setSelectedFile(new File(table.getName() + "." + ((EndsWithFileFilter) tableChooser.getFileFilter()).getExtensions()[0]));
 
 			int state = tableChooser.showDialog(null, "Save Feature Table");
 			if (state == JFileChooser.APPROVE_OPTION)
@@ -143,8 +188,8 @@ public class RecipeExporter
 
 				if (tableChooser.getFileFilter() == csvFilter) exportToCSV(table, f);
 				else if (tableChooser.getFileFilter() == arffFilter) exportToARFF(table, f);
-				else if (tableChooser.getFileFilter() == sideTableFilter) exportToXML(tableRecipe, f);
-				else if (modelChooser.getFileFilter() == serializedFilter) exportToSerialized(tableRecipe, f);
+				else if (tableChooser.getFileFilter() == xmlTableFilter) exportToXML(tableRecipe, f);
+				else if (tableChooser.getFileFilter() == serializedTableFilter) exportToSerialized(tableRecipe, f);
 			}
 		}
 		catch (Exception e)
@@ -253,18 +298,24 @@ public class RecipeExporter
 		JFileChooser chooser;
 		if(modelRecipe.getStage() == Stage.TRAINED_MODEL)
 		{
-			chooser = modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter);
-//			modelChooser = setUpChooser(modelChooser, sideModelFilter, predictFilter, serializedFilter, serializedPredictFilter);	
+			if(useXML)
+				chooser = modelChooser = setUpChooser(modelChooser, xmlModelFilter, xmlPredictFilter);
+			else
+				chooser = modelChooser = setUpChooser(modelChooser, serializedModelFilter, serializedPredictFilter);
+				
 		}
 		else
 		{
-			chooser = predictChooser = setUpChooser(predictChooser, predictFilter);
+			if(useXML)
+				chooser = predictChooser = setUpChooser(predictChooser, xmlPredictFilter);
+			else
+				chooser = modelChooser = setUpChooser(predictChooser, serializedPredictFilter);
 		}
 			
 		TrainingResult result = modelRecipe.getTrainingResult();
 		try
 		{
-			chooser.setSelectedFile(new File((result == null ? modelRecipe.getRecipeName() : result.getName()) + "." + ((FileNameExtensionFilter) modelChooser.getFileFilter()).getExtensions()[0]));
+			chooser.setSelectedFile(new File((result == null ? modelRecipe.getRecipeName() : result.getName()) + "." + ((EndsWithFileFilter) modelChooser.getFileFilter()).getExtensions()[0]));
 
 			int state = chooser.showDialog(null, "Save Trained Model");
 			if (state == JFileChooser.APPROVE_OPTION)
@@ -276,9 +327,9 @@ public class RecipeExporter
 					if (confirm != JOptionPane.YES_OPTION) return;
 				}
 
-				if (chooser.getFileFilter() == predictFilter) exportToXMLForPrediction(modelRecipe, f);
-				else if (chooser.getFileFilter() == sideModelFilter) exportToXML(modelRecipe, f);
-				else if (chooser.getFileFilter() == serializedFilter) exportToSerialized(modelRecipe, f);
+				if (chooser.getFileFilter() == xmlPredictFilter) exportToXMLForPrediction(modelRecipe, f);
+				else if (chooser.getFileFilter() == xmlModelFilter) exportToXML(modelRecipe, f);
+				else if (chooser.getFileFilter() == serializedModelFilter) exportToSerialized(modelRecipe, f);
 				else if (chooser.getFileFilter() == serializedPredictFilter) exportToSerializedForPrediction(modelRecipe, f);
 			}
 		}
@@ -308,5 +359,75 @@ public class RecipeExporter
 		//TODO: Setup Rewrite Here
 		Recipe dupe = Recipe.copyPredictionRecipe(recipe);
 		ConverterControl.writeToXML(target, dupe);
+	}
+
+	public static FileFilter getTrainedModelFilter()
+	{
+		if(useXML())
+		{
+			return xmlModelFilter;
+		}
+		else
+		{
+			return serializedModelFilter;
+		}
+	}
+	
+	public static FileFilter getPredictModelFilter()
+	{
+
+		if(useXML())
+		{
+			return xmlPredictFilter;
+		}
+		else
+		{
+			return serializedPredictFilter;
+		}
+	}
+	
+	public static FileFilter getFeatureTableFilter()
+	{
+
+		if(useXML())
+		{
+			return xmlTableFilter;
+		}
+		else
+		{
+			return serializedTableFilter;
+		}
+	}
+	
+	public static FileFilter getGenericFilter()
+	{
+		if(useXML())
+		{
+			return xmlGenericFilter;
+		}
+		else
+		{
+			return serializedGenericFilter;
+		}
+	}
+	
+	public static FileFilter getARFFFilter()
+	{
+		return arffFilter;
+	}
+	
+	public static FileFilter getCSVFilter()
+	{
+		return csvFilter;
+	}
+	
+	public static boolean useXML()
+	{
+		return useXML;
+	}
+
+	public static void setUseXML(boolean useXML)
+	{
+		RecipeExporter.useXML = useXML;
 	}
 }

@@ -6,7 +6,11 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.TreeSet;
 
@@ -19,12 +23,12 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.plugin.control.ImportController;
@@ -42,10 +46,12 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	protected JFileChooser chooser;
 	protected JPanel buttons = new JPanel(new RiverLayout(0, 0));
 
-	public static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
-	public static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff");
-	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSide", "side");
-	public static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only Model", "predict", "predict.side");
+
+	//TODO: reconcile this with RecipeExporter.
+//	public static FileNameExtensionFilter csvFilter = new FileNameExtensionFilter("CSV", "csv", "CSV");
+//	public static FileNameExtensionFilter arffFilter = new FileNameExtensionFilter("ARFF (Weka)", "arff");
+//	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSide", "side");
+//	public static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only Model", "predict", "predict.side");
 
 	protected GenericLoadPanel()
 	{
@@ -313,7 +319,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		}
 		else
 		{
-			chooser.setFileFilter(sideFilter);
+			chooser.setFileFilter(RecipeExporter.getGenericFilter());
 			chooser.setSelectedFile(new File("saved/" + recipe.getRecipeName()));
 			int response = chooser.showSaveDialog(this);
 			if (response == JFileChooser.APPROVE_OPTION)
@@ -327,10 +333,16 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 				try
 				{
-//					FileOutputStream fout = new FileOutputStream(target);
-//					ObjectOutputStream oos = new ObjectOutputStream(fout);
-//					oos.writeObject(recipe);
-					ConverterControl.writeToXML(target, recipe);
+					if(!RecipeExporter.useXML())
+					{
+						FileOutputStream fout = new FileOutputStream(target);
+						ObjectOutputStream oos = new ObjectOutputStream(fout);
+						oos.writeObject(recipe);
+					}
+					else
+					{
+						ConverterControl.writeToXML(target, recipe);
+					}
 
 				}
 				catch (Exception e)
@@ -355,7 +367,23 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	public void loadNewItem()
 	{
 		checkChooser();
-		chooser.setFileFilter(sideFilter);
+		
+		switch(getLoadableStage())
+		{
+			case TRAINED_MODEL:
+			case PREDICTION_RESULT:
+				chooser.setFileFilter(RecipeExporter.getTrainedModelFilter());
+				break;
+			case FEATURE_TABLE:
+			case MODIFIED_TABLE:
+				chooser.setFileFilter(RecipeExporter.getFeatureTableFilter());
+				break;
+			case PREDICTION_ONLY:
+				chooser.setFileFilter(RecipeExporter.getPredictModelFilter());
+				break;
+			default:
+				chooser.setFileFilter(RecipeExporter.getGenericFilter());
+		}
 		
 		int response = chooser.showOpenDialog(this);
 		if (response == JFileChooser.APPROVE_OPTION)
@@ -368,10 +396,17 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 			try
 			{
-//				FileInputStream fout = new FileInputStream(target);
-//				ObjectInputStream in = new ObjectInputStream(fout);
-//				Recipe recipe = (Recipe) in.readObject();
-				Recipe recipe = ConverterControl.readFromXML(target);
+				Recipe recipe;
+				if(RecipeExporter.useXML())
+				{
+					recipe = ConverterControl.readFromXML(target);
+				}
+				else
+				{
+					FileInputStream fout = new FileInputStream(target);
+					ObjectInputStream in = new ObjectInputStream(fout);
+					recipe = (Recipe) in.readObject();
+				}
 				Workbench.getRecipeManager().addRecipe(recipe);
 				setHighlight(recipe);
 				Workbench.update(this);
@@ -390,7 +425,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	{
 		checkChooser();
 		
-		chooser.setFileFilter(csvFilter);
+		chooser.setFileFilter(RecipeExporter.getCSVFilter());
 		chooser.setMultiSelectionEnabled(true);
 		int result = chooser.showOpenDialog(GenericLoadPanel.this);
 		if (result != JFileChooser.APPROVE_OPTION) { return; }
@@ -457,4 +492,6 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			}
 		}
 	}
+	
+	public abstract Stage getLoadableStage();
 }

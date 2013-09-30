@@ -12,6 +12,7 @@ import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.control.RestructureTablesControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericPluginChecklistPanel;
@@ -73,6 +74,12 @@ public class RestructureFeaturesPane extends JPanel{
 						}
 					}
 				}
+			}
+
+			@Override
+			public Stage getLoadableStage()
+			{
+				return Stage.FEATURE_TABLE;
 			}
 			
 		};

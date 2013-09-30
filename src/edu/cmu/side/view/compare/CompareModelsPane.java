@@ -12,6 +12,7 @@ import edu.cmu.side.control.CompareModelsControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.util.AbstractListPanel;
@@ -37,6 +38,12 @@ public class CompareModelsPane extends AbstractListPanel{
 			refreshPanel(GenesisControl.getTrainedModels());
 		}
 
+		@Override
+		public Stage getLoadableStage()
+		{
+			return Stage.TRAINED_MODEL;
+		}
+
 	};
 	
 	GenericLoadPanel loadCompetitor = new GenericLoadPanel("Competing Model:"){
@@ -56,6 +63,12 @@ public class CompareModelsPane extends AbstractListPanel{
 		@Override
 		public void refreshPanel() {
 			refreshPanel(GenesisControl.getTrainedModels());
+		}
+
+		@Override
+		public Stage getLoadableStage()
+		{
+			return Stage.TRAINED_MODEL;
 		}
 	};
 	

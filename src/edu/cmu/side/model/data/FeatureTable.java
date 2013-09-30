@@ -234,6 +234,9 @@ public class FeatureTable implements Serializable
 			for(int i = 0; i < convertedClassValues.length; i++){
 				values.add(convertedClassValues[i]);
 			}
+			
+			if(values.size() < 5)
+				throw new RuntimeException(values.size()+" is too few data points for numeric analysis!\nPlease come back with more data.");
 			Collections.sort(values);
 			for(double i = 1; i <= 4; i++){
 				numericBreakpoints.add(values.get(((Double)(values.size()*(i/5.0))).intValue()-1));

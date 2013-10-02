@@ -270,6 +270,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		String name;
 		Integer threshold;
 		FeaturePlugin activeExtractor =  null;
+		Exception ex;
 		
 		public BuildTableTask(ActionBar action, Recipe newRecipe, String n, int t){
 			super(action);
@@ -284,10 +285,21 @@ public class ExtractFeaturesControl extends GenesisControl{
 		{
 			super.finishTask();
 
-			setHighlightedFeatureTableRecipe(plan);
-			RestructureTablesControl.setHighlightedFeatureTableRecipe(plan);
-			BuildModelControl.setHighlightedFeatureTableRecipe(plan);
-			Workbench.getRecipeManager().addRecipe(plan);
+			if(ex == null && !halt)
+			{
+				setHighlightedFeatureTableRecipe(plan);
+				RestructureTablesControl.setHighlightedFeatureTableRecipe(plan);
+				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
+				Workbench.getRecipeManager().addRecipe(plan);
+			}
+			else if(ex != null && ex.getMessage().equals("User Canceled"))
+			{
+				JOptionPane.showMessageDialog(null, "Feature Extraction Canceled.", "User Cancelled", JOptionPane.INFORMATION_MESSAGE);
+			}
+			else
+			{
+				JOptionPane.showMessageDialog(null, "Feature Extraction Stopped.\n"+((ex==null)?"":ex.getLocalizedMessage()), "User Cancelled", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 		
 		@Override
@@ -300,20 +312,10 @@ public class ExtractFeaturesControl extends GenesisControl{
 				{
 					if (!halt)
 					{
-						try
-						{
-
 							activeExtractor = (FeaturePlugin) plug;
 							hits.addAll(activeExtractor.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
-
-						}
-						catch (Exception e)
-						{
-							JOptionPane.showMessageDialog(null, plug+" wasn't able to extract features from this document list.\nSee lightsidelog.log for more details.\n"+e.getLocalizedMessage(), plug+": Extraction Failure", JOptionPane.ERROR_MESSAGE);
-							System.err.println("Feature Extraction Failed");
-							e.printStackTrace();
-						}
 					}
+					
 				}
 				if(!halt)
 				{
@@ -324,9 +326,10 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 			catch (Exception e)
 			{
-				JOptionPane.showMessageDialog(null, "LightSide couldn't finalize the feature table.\nSee lightsidelog.log for more details.\n"+e.getLocalizedMessage(),"Extraction Failure",JOptionPane.ERROR_MESSAGE);
+				//JOptionPane.showMessageDialog(null, "LightSide couldn't finalize the feature table.\nSee lightsidelog.log for more details.\n"+e.getLocalizedMessage(),"Extraction Failure",JOptionPane.ERROR_MESSAGE);
 				System.err.println("Feature Extraction Failed");
 				e.printStackTrace();
+				ex = e;
 			}
 		}
 

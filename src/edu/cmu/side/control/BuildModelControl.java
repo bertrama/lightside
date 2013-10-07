@@ -227,7 +227,7 @@ public class BuildModelControl extends GenesisControl{
 //				}
 				
 				BuildModelControl.BuildModelTask task = new BuildModelControl.BuildModelTask(action, newRecipe, name.getText());
-				task.execute();
+				task.executeActionBarTask();
 			}
 			catch(Exception e)
 			{

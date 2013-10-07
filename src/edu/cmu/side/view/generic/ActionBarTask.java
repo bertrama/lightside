@@ -54,11 +54,15 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 		}
 	}
 	
+	public void executeActionBarTask()
+	{
+		beginTask();
+		super.execute();
+	}
+	
 	@Override
 	public Void doInBackground()
 	{	
-		beginTask(); //FIXME: this should be done in the Event thread, not the background thread. wrap execute()?
-
 		workerThread = Thread.currentThread();
 		try
 		{

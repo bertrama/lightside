@@ -127,7 +127,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		{
 			localTable = newTable;
 			EvaluateFeaturesTask task = new EvaluateFeaturesTask(getActionBar(), recipe, tableEvaluationPlugins, mask, getTargetAnnotation());
-			task.execute();
+			task.executeActionBarTask();
 		}
 		
 		exportButton.setEnabled(recipe != null);

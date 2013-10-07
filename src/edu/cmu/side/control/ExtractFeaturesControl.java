@@ -258,7 +258,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedDocumentListRecipe(), plugins);
 			ExtractFeaturesControl.BuildTableTask task = new ExtractFeaturesControl.BuildTableTask(actionBar, newRecipe, name.getText(), thresh);
-			task.execute();
+			task.executeActionBarTask();
 		}
 		
 	}

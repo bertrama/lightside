@@ -89,8 +89,8 @@ public class FeatureTableConverterTest {
 	{
 		if(xStream == null)
 		{
-			XStream streamer = new XStream();
-			streamer.registerConverter(new FeatureTableConverter());
+			xStream = new XStream();
+			xStream.registerConverter(new FeatureTableConverter());
 		}
 		return xStream;
 	}

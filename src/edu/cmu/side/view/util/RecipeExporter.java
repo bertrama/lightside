@@ -33,44 +33,6 @@ public class RecipeExporter
 	static JFileChooser modelChooser;
 	static JFileChooser predictChooser;
 	
-	static class EndsWithFileFilter extends FileFilter
-	{
-		String[] extensions;
-		String description;
-		
-		
-		public EndsWithFileFilter(String description, String... ext)
-		{
-			super();
-			this.extensions = ext;
-			this.description = description;
-		}
-		
-		public String[] getExtensions()
-		{
-			return extensions;
-		}
-
-		@Override
-		public boolean accept(File file)
-		{
-			String fileName = file.getName();
-			for(String ext : extensions)
-			{
-				if(fileName.endsWith(ext))
-					return true;
-			}
-			return false;
-		}
-
-		@Override
-		public String getDescription()
-		{
-			return description;
-		}
-		
-	}
-
 	//TODO: multi-extension names aren't detected correctly by FileNameExtensionFilter
 	public final static FileFilter csvFilter = new EndsWithFileFilter("CSV (Excel)", "csv", "CSV");
 	public final static FileFilter arffFilter = new EndsWithFileFilter("ARFF (Weka)", "arff", "ARFF");

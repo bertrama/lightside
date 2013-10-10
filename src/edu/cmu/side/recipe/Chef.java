@@ -1,9 +1,11 @@
 package edu.cmu.side.recipe;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.management.ManagementFactory;
@@ -16,9 +18,6 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 import plugins.metrics.models.BasicModelEvaluations;
-
-import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
-
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;
@@ -33,6 +32,7 @@ import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.plugin.RestructurePlugin;
 import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.recipe.converters.ConverterControl;
+import edu.cmu.side.recipe.converters.ConverterControl.RecipeFileFormat;
 
 /**
  * loads a model trained using lightSIDE uses it to label new instances.
@@ -189,42 +189,16 @@ public class Chef
 		corpus.setTextColumns(new HashSet<String>(originalRecipe.getTextColumns()));
 	}
 
-
 	public static Recipe loadRecipe(String recipePath) throws IOException, FileNotFoundException
 	{
-		File recipeFile = new File(recipePath);
-		if (!recipeFile.exists())
-		{
-			throw new FileNotFoundException("No model file at " + recipeFile.getPath());
-		}
-		else
-		{
-			try
-			{
-				Recipe recipe = ConverterControl.readFromXML(recipeFile);
-				return recipe;
-			}
-			catch (Exception e)
-			{
-				throw new IOException("Failed to read XML recipe at "+recipePath, e);
-			}
-		}
+
+		return ConverterControl.loadRecipe(recipePath);
 	}
 
 
-	public static void saveRecipe(Recipe newRecipe, File target)
+	public static void saveRecipe(Recipe recipe, File target, RecipeFileFormat exportFormat) throws IOException
 	{
-		try
-		{
-			FileOutputStream fout = new FileOutputStream(target);
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(newRecipe);
-			oos.close();
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		ConverterControl.writeRecipeToFile(target.getPath(), recipe, exportFormat);
 	}
 
 	public static void main(String[] args) throws Exception
@@ -262,7 +236,7 @@ public class Chef
 		}
 
 		System.out.println("Saving finished recipe to "+outPath);
-		saveRecipe(result, new File(outPath));
+		saveRecipe(result, new File(outPath), RecipeFileFormat.XML);
 	}
 
 	protected static void printMemoryUsage()

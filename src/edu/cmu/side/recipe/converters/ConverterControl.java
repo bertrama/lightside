@@ -4,21 +4,19 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
-import com.sun.tools.hat.internal.parser.Reader;
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.StaxDriver;
-import com.thoughtworks.xstream.io.xml.Xpp3DomDriver;
-import com.thoughtworks.xstream.io.xml.xppdom.Xpp3Dom;
 
 import edu.cmu.side.model.Recipe;
 
@@ -26,11 +24,93 @@ public class ConverterControl
 {
 	private static XStream xStream;
 	
+	public enum RecipeFileFormat {XML, ZIPPED_XML, SERIALIZED};
+	
 	private ConverterControl()
+	{}
+ 
+	public static void writeRecipeToFile(String recipeOutFile, Recipe recipe, RecipeFileFormat exportFormat) throws IOException
 	{
 
+		if(exportFormat == RecipeFileFormat.XML)
+		{
+			ConverterControl.writeToXML(recipeOutFile, recipe);
+		}
+		else if(exportFormat == RecipeFileFormat.ZIPPED_XML)
+		{
+			ConverterControl.writeToZippedXML(new File(recipeOutFile), recipe);
+		}
+		else
+		{
+			ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(recipeOutFile));
+			oos.writeObject(recipe);
+			oos.close();
+		}
 	}
+	
+	public static Recipe loadRecipe(String recipePath) throws IOException, FileNotFoundException
+	{
 
+		File recipeFile = new File(recipePath);
+		if (!recipeFile.exists())
+		{
+			throw new FileNotFoundException("No model file at " + recipeFile.getPath());
+		}
+		
+		Exception ex = null;
+		for(RecipeFileFormat format : RecipeFileFormat.values())
+		{
+			try
+			{
+				Recipe loadedRecipe = ConverterControl.loadRecipe(recipePath, format);
+				System.out.println("ConverterControl: "+recipePath+"is"+format);
+				return loadedRecipe;
+			}
+			catch(IOException e)
+			{
+				ex = e;
+			}	
+		}
+		throw new IOException("Couldn't load recipe in any format: "+recipePath, ex);
+	}
+	
+	public static Recipe loadRecipe(String recipePath, RecipeFileFormat format) throws IOException, FileNotFoundException
+	{
+		File recipeFile = new File(recipePath);
+		if (!recipeFile.exists())
+		{
+			throw new FileNotFoundException("No model file at " + recipeFile.getPath());
+		}
+		else
+		{
+			try
+			{
+
+				Recipe recipe;
+				if (format == RecipeFileFormat.XML)
+				{
+					recipe = ConverterControl.readFromXML(recipeFile);
+				}
+				else if (format == RecipeFileFormat.ZIPPED_XML)
+				{
+					recipe = ConverterControl.readFromZippedXML(recipeFile);
+				}
+				else
+				{
+					ObjectInputStream ois = new ObjectInputStream(new FileInputStream(recipeFile));
+					recipe = (Recipe) ois.readObject();
+					ois.close();
+				}
+
+				return recipe;
+
+			}
+			catch (Exception e)
+			{
+				throw new IOException("Failed to read recipe: " + recipePath, e);
+			}
+		}
+	}
 
 	public static Recipe readFromXML(String fileName) throws IOException
 	{

@@ -9,9 +9,12 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -20,6 +23,7 @@ import com.thoughtworks.xstream.XStream;
 
 import edu.cmu.side.model.Recipe;
 
+//TODO: explicitly enable reading/writing of UTF-8 recipes. 
 public class ConverterControl
 {
 	private static XStream xStream;
@@ -119,10 +123,10 @@ public class ConverterControl
 		return readFromXML(file);
 	}
 
-	public static Recipe readFromXML(File file)
+	public static Recipe readFromXML(File file) throws IOException
 	{
 		XStream stream = getXStream();
-		Recipe r =(Recipe) stream.fromXML(file);
+		Recipe r =(Recipe) stream.fromXML(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")));
         
 		return r;
 	}
@@ -136,7 +140,8 @@ public class ConverterControl
 	public static void writeToXML(File file, Recipe recipe) throws IOException
 	{
 		XStream stream = getXStream();
-		FileWriter writer = new FileWriter(file);
+		FileOutputStream fileOut = new FileOutputStream(file);
+		OutputStreamWriter writer = new OutputStreamWriter(fileOut, Charset.forName("UTF-8"));
 		stream.toXML(recipe, writer);
 		writer.close();
 		System.out.println("Wrote XML recipe for "+recipe.getRecipeName()+" to "+file.getPath());
@@ -212,9 +217,10 @@ public class ConverterControl
 	protected static void streamOutZippedXML(Recipe r, OutputStream out) throws IOException
 	{
 		ZipOutputStream zipper = new ZipOutputStream(out);
+		OutputStreamWriter zipperWriter = new OutputStreamWriter(zipper, Charset.forName("UTF-8"));
 		zipper.putNextEntry(new ZipEntry(r.getRecipeName()));
 		XStream stream = getXStream();
-		stream.toXML(r, zipper);
+		stream.toXML(r, zipperWriter);
 		zipper.closeEntry();
 		zipper.close();
 	}
@@ -225,8 +231,11 @@ public class ConverterControl
 		ZipEntry entry = unzipper.getNextEntry();
 		System.out.println("Getting Zipped "+entry.getName());
 		
+
+		InputStreamReader unzipperReader = new InputStreamReader(unzipper, Charset.forName("UTF-8"));
+		
 		XStream stream = getXStream();
-		Recipe r = (Recipe) stream.fromXML(unzipper);
+		Recipe r = (Recipe) stream.fromXML(unzipperReader);
 		unzipper.close();
 		
 		return r;

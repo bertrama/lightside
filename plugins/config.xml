@@ -90,6 +90,14 @@
 		<jarfile>genesis.jar</jarfile>
 		<classname>plugins.input.CSVParser</classname>
 	</plugin>
+<!-- 	<plugin>
+		<name>CTB Parser</name>
+		<author>Elijah Mayfield</author>
+		<version>1.0</version>
+		<description><![CDATA[Build DocumentList From CTB file]]></description>
+		<jarfile>genesis.jar</jarfile>
+		<classname>plugins.input.CTBParser</classname>
+	</plugin> -->
 
 	<!-- <plugin> <name>Predicted Annotation Feature</name> <author>David Adamson</author> 
 		<version>1.0</version> <description><![CDATA[Extraction of (Predicted) Class 

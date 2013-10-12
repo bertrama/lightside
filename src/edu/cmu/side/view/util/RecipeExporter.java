@@ -45,7 +45,7 @@ public class RecipeExporter
 	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
 	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only", "predict");
 
-	protected static boolean useXML = false;
+	protected static boolean useXML = true;
 	
 	public static JFileChooser setUpChooser(JFileChooser chooser, FileFilter... filters)
 	{

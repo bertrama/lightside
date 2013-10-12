@@ -397,16 +397,17 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			try
 			{
 				Recipe recipe;
-				if(RecipeExporter.useXML())
-				{
-					recipe = ConverterControl.readFromXML(target);
-				}
-				else
-				{
-					FileInputStream fout = new FileInputStream(target);
-					ObjectInputStream in = new ObjectInputStream(fout);
-					recipe = (Recipe) in.readObject();
-				}
+				recipe = ConverterControl.loadRecipe(target.getPath());
+//				if(RecipeExporter.useXML())
+//				{
+//					recipe = ConverterControl.readFromXML(target);
+//				}
+//				else
+//				{
+//					FileInputStream fout = new FileInputStream(target);
+//					ObjectInputStream in = new ObjectInputStream(fout);
+//					recipe = (Recipe) in.readObject();
+//				}
 				Workbench.getRecipeManager().addRecipe(recipe);
 				setHighlight(recipe);
 				Workbench.update(this);

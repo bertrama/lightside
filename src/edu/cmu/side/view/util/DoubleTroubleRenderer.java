@@ -31,7 +31,7 @@ public class DoubleTroubleRenderer extends DefaultTableCellRenderer
 		}
 		else
 		{
-			System.out.println("DoubleTroubleRenderer: "+value+" is not a Double!");
+//			System.out.println("DoubleTroubleRenderer: "+value+" is not a Double!");
 			label.setText(value.toString());
 		}
         

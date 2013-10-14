@@ -45,7 +45,7 @@ public class RecipeExporter
 	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
 	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only", "predict");
 
-	protected static boolean useXML = true;
+	protected static boolean useXML = false;
 	
 	public static JFileChooser setUpChooser(JFileChooser chooser, FileFilter... filters)
 	{
@@ -119,10 +119,13 @@ public class RecipeExporter
 					chooser.addChoosableFileFilter(filter);
 			}
 			
-			chooser.setAcceptAllFileFilterUsed(false);
+			chooser.setAcceptAllFileFilterUsed(true);
 			chooser.setFileFilter(filters[0]);
 
 		}
+		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+		chooser.setFileHidingEnabled(false);
+		
 		return chooser;
 	}
 

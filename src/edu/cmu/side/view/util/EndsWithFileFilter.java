@@ -25,6 +25,9 @@ public class EndsWithFileFilter extends FileFilter
 	@Override
 	public boolean accept(File file)
 	{
+		if(file.isDirectory())
+			return true;
+		
 		String fileName = file.getName();
 		for(String ext : extensions)
 		{

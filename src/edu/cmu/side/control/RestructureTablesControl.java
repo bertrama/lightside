@@ -115,7 +115,7 @@ public class RestructureTablesControl extends GenesisControl{
 			}
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedFeatureTableRecipe(), plugins);
 			RestructureTablesControl.FilterTableTask task = new RestructureTablesControl.FilterTableTask(actionBar, newRecipe, name.getText());
-			task.execute();
+			task.executeActionBarTask();
 		}
 		
 	}

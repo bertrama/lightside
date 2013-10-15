@@ -2,10 +2,13 @@ package edu.cmu.side.model.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import edu.cmu.side.model.feature.Feature;
 
@@ -25,6 +28,8 @@ public class TrainingResult implements Serializable{
 	private Map<String, Map<String, List<Integer>>> confusionMatrix = new TreeMap<String, Map<String, List<Integer>>>();
 	private Map<String, List<Double>> distributions;
 	transient private Map<String, String> cachedEvaluations = new HashMap<String, String>();
+	
+	private Collection<String> possibleLabels = new TreeSet<String>();
 
 	@Override
 	public String toString(){
@@ -131,14 +136,18 @@ public class TrainingResult implements Serializable{
 	}
 
 	private void generateConfusionMatrix(Feature.Type type, List<String> actual, List<? extends Comparable<?>> predicted){
-		String[] poss = test.getLabelArray();
+		//String[] poss = train.getLabelArray();
+		
+		possibleLabels.addAll(Arrays.asList(train.getLabelArray()));
+		possibleLabels.addAll(Arrays.asList(test.getLabelArray()));
+		
 		switch(type){
 		case NOMINAL:
 		case STRING:
 		case BOOLEAN:
-			for(String p : poss){
+			for(String p : possibleLabels){
 				confusionMatrix.put(p, new TreeMap<String, List<Integer>>());
-				for(String a : poss){
+				for(String a : possibleLabels){
 					confusionMatrix.get(p).put(a, new ArrayList<Integer>());
 				}
 			}
@@ -164,7 +173,7 @@ public class TrainingResult implements Serializable{
 		case NUMERIC:
 			for(int i = 0; i < actual.size(); i++){
 				Double predDbl = Double.parseDouble(predicted.get(i).toString());
-				ArrayList<Double> breakpoints = getEvaluationTable().getNumericBreakpoints();
+				ArrayList<Double> breakpoints = getTrainingTable().getNumericBreakpoints();
 				int Qpred = -1;
 				int j = 0;
 				while(j < 4 && predDbl > breakpoints.get(j)) j++;
@@ -247,4 +256,11 @@ public class TrainingResult implements Serializable{
 		toReturn=(this.distributions==null?other.getDistributions()==null:this.distributions.equals(other.getDistributions())&&toReturn);
 		return toReturn;
 	}
+
+	public Collection<String> getPossibleLabels()
+	{
+		return possibleLabels;
+	}
+	
+	
 }

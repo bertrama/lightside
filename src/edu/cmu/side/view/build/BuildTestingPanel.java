@@ -33,6 +33,7 @@ import edu.cmu.side.view.util.AbstractListPanel;
 public class BuildTestingPanel extends AbstractListPanel {
 
 	static final int SOFT_MINIMUM = 20;
+	JLabel titleLabel = new JLabel("Evaluation Options:");
 	ButtonGroup highOptions = new ButtonGroup();
 	JRadioButton radioCV = new JRadioButton("Cross-Validation");
 	JRadioButton radioTestSet = new JRadioButton("Supplied Test Set");
@@ -91,7 +92,8 @@ public class BuildTestingPanel extends AbstractListPanel {
 		this.setBorder(new EmptyBorder(0,0,0,0));
 		selectPanel.setBorder(new EmptyBorder(0,0,0,0));
 		controlPanel.setBorder(new EmptyBorder(0,0,0,0));
-		selectPanel.add("vtop", radioCV);
+		selectPanel.add("vtop", titleLabel);
+		selectPanel.add("br vtop", radioCV);
 		selectPanel.add("br vtop", radioTestSet);
 		selectPanel.add("br vtop", radioNone);
 		

@@ -18,7 +18,7 @@ public abstract class TableFeatureMetricPlugin<E extends Comparable<E>> extends 
 		return type;	
 	}
 	
-	public abstract Map<Feature, E> evaluateTableFeatures(FeatureTable model, boolean[] mask, String eval, String target, StatusUpdater update);
+	protected abstract Map<Feature, E> evaluateTableFeatures(FeatureTable model, boolean[] mask, String eval, String target, StatusUpdater update);
 
 	@Override
 	public Map<Feature, E> evaluateFeatures(Recipe recipe, boolean[] mask, String eval, String target, StatusUpdater update){

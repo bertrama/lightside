@@ -14,6 +14,7 @@ import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericMatrixPanel;
 import edu.cmu.side.view.generic.GenericModelMetricPanel;
@@ -37,6 +38,12 @@ public class BuildBottomPanel extends AbstractListPanel {
 		@Override
 		public void refreshPanel() {
 			refreshPanel(GenesisControl.getTrainedModels());
+		}
+
+		@Override
+		public Stage getLoadableStage()
+		{
+			return Stage.TRAINED_MODEL;
 		}
 	};
 

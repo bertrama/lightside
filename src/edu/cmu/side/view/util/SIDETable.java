@@ -8,12 +8,13 @@ import javax.swing.JTable;
  *
  */
 public class SIDETable extends JTable{
-	static SIDETableCellRenderer renderer = new SIDETableCellRenderer();
+	static final private SIDETableCellRenderer renderer = new SIDETableCellRenderer();
+	static final private DoubleTroubleRenderer doubleRenderer = new DoubleTroubleRenderer();
 	public SIDETable(){
 		setDefaultRenderer(Object.class, renderer);
 //		setDefaultRenderer(String.class, renderer);
 //		setDefaultRenderer(Integer.class, renderer);
-//		setDefaultRenderer(Double.class, renderer);
+		setDefaultRenderer(Double.class, doubleRenderer);
 //		setDefaultRenderer(RadioButtonListEntry.class, renderer);
 //		setDefaultRenderer(CheckBoxListEntry.class, renderer);
 	}

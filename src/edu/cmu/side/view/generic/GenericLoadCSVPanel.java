@@ -87,4 +87,8 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 		}
 	}
 
+	public Stage getLoadableStage()
+	{
+		return Stage.DOCUMENT_LIST;
+	}
 }

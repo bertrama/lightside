@@ -20,6 +20,7 @@ import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.util.DocumentListTableModel;
+import edu.cmu.side.view.util.RecipeExporter;
 import edu.cmu.side.view.util.Refreshable;
 
 public class PredictLabelsPane extends JPanel implements Refreshable
@@ -32,7 +33,7 @@ public class PredictLabelsPane extends JPanel implements Refreshable
 		{
 			checkChooser();
 			chooser.resetChoosableFileFilters();
-			chooser.addChoosableFileFilter(GenericLoadPanel.predictFilter);
+			chooser.addChoosableFileFilter(RecipeExporter.getPredictModelFilter());
 		}
 
 		@Override
@@ -52,6 +53,12 @@ public class PredictLabelsPane extends JPanel implements Refreshable
 		public void refreshPanel()
 		{
 			refreshPanel(Workbench.getRecipesByPane(RecipeManager.Stage.TRAINED_MODEL, RecipeManager.Stage.PREDICTION_ONLY));
+		}
+
+		@Override
+		public Stage getLoadableStage()
+		{
+			return Stage.TRAINED_MODEL;
 		}
 
 	};

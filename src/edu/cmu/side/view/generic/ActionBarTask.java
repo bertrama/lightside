@@ -25,6 +25,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	
 	protected abstract void doTask();
 	protected boolean halt = false;
+	protected Thread workerThread = null;
 	
 	protected static Icon dangerIcon = new ImageIcon("toolkits/icons/exclamation.png");
 	
@@ -33,6 +34,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 	public void forceCancel()
 	{
 		boolean cancelled = this.cancel(true);
+		workerThread.stop();
 		finishTask();
 	}
 	
@@ -52,12 +54,25 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 		}
 	}
 	
+	public void executeActionBarTask()
+	{
+		beginTask();
+		super.execute();
+	}
+	
 	@Override
 	public Void doInBackground()
 	{	
-		beginTask(); //FIXME: this should be done in the Event thread, not the background thread. wrap execute()?
-
-		doTask();
+		workerThread = Thread.currentThread();
+		try
+		{
+			doTask();
+		}
+		catch(Throwable terrible)
+		{
+			System.out.println("UNEXPECTED STOP!");
+			terrible.printStackTrace();
+		}
 		
 		return null;
 	}

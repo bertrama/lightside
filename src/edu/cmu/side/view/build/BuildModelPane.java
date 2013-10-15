@@ -12,6 +12,7 @@ import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.plugin.LearningPlugin;
 import edu.cmu.side.plugin.WrapperPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
@@ -53,6 +54,12 @@ public class BuildModelPane extends JPanel{
 				recipes.addAll(GenesisControl.getFilterTables());
 				recipes.addAll(GenesisControl.getFeatureTables());
 				refreshPanel(recipes);
+			}
+
+			@Override
+			public Stage getLoadableStage()
+			{
+				return Stage.FEATURE_TABLE;
 			}
 		};
 		

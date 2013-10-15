@@ -219,7 +219,7 @@ public class PredictLabelsControl extends GenesisControl{
 				}
 				return newDocs;
 			}
-		}.execute();
+		}.executeActionBarTask();
 	}
 	
 	public static String getColumnNameSuggestion()

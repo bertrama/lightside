@@ -43,7 +43,7 @@ public class FeatureTableTest extends TestCase{
 
 		}
 	};
-	static String[] files = {"Gallup.csv"};
+	static String[] files = {"testData/Gallup.csv"};
 //	static String[] numericFiles = {"heuristicTest.csv"};
 	static DocumentList docList;
 //	static DocumentList numericDocList;
@@ -187,7 +187,7 @@ public class FeatureTableTest extends TestCase{
 		int thresh = 5;
 		FeatureTable ft = new FeatureTable(docList, featureHits, thresh, annotation, Feature.Type.NOMINAL);
 		assertEquals(ft.getSortedFeatures().size(), NUM_GALLUP_FEATURES);
-		assertEquals(((TreeSet<Feature>) ft.getSortedFeatures()).first().toString(),"'ll");
+		assertEquals(((TreeSet<Feature>) ft.getSortedFeatures()).first().toString(),"<COMMA>");
 	}
 	@Test
 	public void testGetHitsForFeature(){
@@ -198,7 +198,7 @@ public class FeatureTableTest extends TestCase{
 		
 		Collection<FeatureHit> hitsForFeat = ft.getHitsForFeature(iter.next());
 		System.out.println(hitsForFeat.toString());
-		assertEquals(hitsForFeat.size(),6);
+		assertEquals(hitsForFeat.size(),274);
 	}
 	@Test
 	public void testGetHitsForDocument(){

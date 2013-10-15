@@ -127,7 +127,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 		{
 			localTable = newTable;
 			EvaluateFeaturesTask task = new EvaluateFeaturesTask(getActionBar(), recipe, tableEvaluationPlugins, mask, getTargetAnnotation());
-			task.execute();
+			task.executeActionBarTask();
 		}
 		
 		exportButton.setEnabled(recipe != null);
@@ -332,7 +332,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 							{
 								if (tableEvaluationPlugins.get(plug).get(s))
 								{
-									Object value = "";
+									Object value = Double.NaN;
 									if (evals.get(plug).containsKey(s) && evals.get(plug).get(s) != null)
 									{
 										Object tryVal = evals.get(plug).get(s).get(f);

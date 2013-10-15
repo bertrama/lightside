@@ -379,7 +379,7 @@ public class DocumentList implements Serializable
 					length += t.length();
 				}
 				length = length/getSize();
-				if(currentAnnotation == null && values.size() < (this.getSize() / 10.0))
+				if(currentAnnotation == null && values.size() > 1 && values.size() < (this.getSize() / 10.0))
 				{
 					this.setCurrentAnnotation(s);
 				}

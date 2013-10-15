@@ -11,9 +11,11 @@ import java.util.Scanner;
 import javax.swing.JOptionPane;
 
 import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.process.CoreLabelTokenFactory;
 import edu.stanford.nlp.process.DocumentPreprocessor;
 import edu.stanford.nlp.process.PTBTokenizer.PTBTokenizerFactory;
 import edu.stanford.nlp.process.Tokenizer;
+import edu.stanford.nlp.process.WhitespaceTokenizer.WhitespaceTokenizerFactory;
 import edu.stanford.nlp.tagger.maxent.MaxentTagger;
 import edu.stanford.nlp.util.StringUtils;
 
@@ -26,7 +28,8 @@ public class TokenizingTools
 	{
 		if (factory == null)
 		{
-			factory = PTBTokenizerFactory.newPTBTokenizerFactory(false, true);
+			//factory = PTBTokenizerFactory.newPTBTokenizerFactory(false, true);
+			factory = PTBTokenizerFactory.newPTBTokenizerFactory(new CoreLabelTokenFactory(true), "invertible,unicodeQuotes=true,untokenizable=firstKeep");
 			
 		}
 		return factory;

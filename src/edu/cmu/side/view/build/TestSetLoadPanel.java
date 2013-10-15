@@ -2,6 +2,7 @@ package edu.cmu.side.view.build;
 
 import java.awt.Dimension;
 import java.util.Collections;
+import java.util.Set;
 
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.control.GenesisControl;
@@ -87,7 +88,16 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 				else
 				{
 					testList.setCurrentAnnotation(annotation, trainRecipe.getTrainingTable().getClassValueType());
-					clearWarning();
+					Set<String> trainLabels = trainRecipe.getDocumentList().getPossibleAnn(annotation);
+					Set<String> testLabels = testList.getPossibleAnn(annotation);
+					if(!trainLabels.equals(testLabels))
+					{
+						setWarning("<html>Class labels in train and test data do not match:<br>Train="+trainLabels+"<br>Test="+testLabels+"</html>");
+					}
+					else
+					{
+						clearWarning();
+					}
 				}
 			}
 		}

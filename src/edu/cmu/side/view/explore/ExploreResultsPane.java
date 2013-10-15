@@ -12,6 +12,7 @@ import edu.cmu.side.control.ExploreResultsControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.plugin.EvaluateOneModelPlugin;
 import edu.cmu.side.view.generic.GenericLoadPanel;
 import edu.cmu.side.view.generic.GenericPluginConfigPanel;
@@ -39,6 +40,12 @@ public class ExploreResultsPane extends JPanel{
 				ExploreResultsControl.setHighlightedCell(null, null);
 			}
 			refreshPanel(GenesisControl.getTrainedModels());
+		}
+
+		@Override
+		public Stage getLoadableStage()
+		{
+			return Stage.TRAINED_MODEL;
 		}
 		
 	};

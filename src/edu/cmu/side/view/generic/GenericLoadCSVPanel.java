@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import edu.cmu.side.Workbench;
+import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.RecipeManager.Stage;
 
 public abstract class GenericLoadCSVPanel extends GenericLoadPanel
@@ -41,7 +42,27 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 				@Override
 				public void actionPerformed(ActionEvent arg0)
 				{
-//					COMMSDBWriter.loadDocumentsFromDB(ExtractFeaturesControl.getUpdater());
+
+					try
+					{
+//						COMMSDBWriter.loadDocumentsFromDB(ExtractFeaturesControl.getUpdater());
+						Class.forName("fr.emse.tatiana.corpus.COMMSDBWriter").getMethod("loadDocumentsFromDB", StatusUpdater.class);
+					}
+					catch (SecurityException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					catch (NoSuchMethodException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					catch (ClassNotFoundException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 				}
 			});
 

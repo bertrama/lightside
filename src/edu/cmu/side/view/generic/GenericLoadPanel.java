@@ -6,32 +6,40 @@ import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.SwingWorker;
+import javax.swing.filechooser.FileFilter;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
-import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.plugin.FileParser;
+import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.plugin.control.ImportController;
+import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.recipe.converters.ConverterControl;
 import edu.cmu.side.view.util.AbstractListPanel;
 import edu.cmu.side.view.util.RecipeExporter;
@@ -53,6 +61,8 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 //	public static FileNameExtensionFilter sideFilter = new FileNameExtensionFilter("LightSide", "side");
 //	public static FileNameExtensionFilter predictFilter = new FileNameExtensionFilter("Predict-Only Model", "predict", "predict.side");
 
+	protected static Map<FileFilter, FileParser> importMap = new HashMap<FileFilter, FileParser>();
+	
 	protected GenericLoadPanel()
 	{
 
@@ -422,15 +432,120 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		}
 	}
 
+	protected JComboBox characterEncodingCombo = null;
+	protected void makeCharacterEncodingCombo()
+	{
+		Set<String> charsetKeys = Charset.availableCharsets().keySet();
+		ArrayList<String> encodingChoices = new ArrayList<String>();
+		
+		encodingChoices.addAll(Arrays.asList("UTF-8", "ASCII", "windows-1252", "MacRoman", "---"));
+		encodingChoices.addAll(charsetKeys);
+		
+		JComboBox encodingCombo = new JComboBox(encodingChoices.toArray());
+		encodingCombo.setSelectedIndex(0);
+		characterEncodingCombo =  encodingCombo;
+	}
+	
+	protected <C> void collectComponentsOfClass(Container parent, Class<C> targetClass, ArrayList<C> collector)
+	{
+		for(Component c : parent.getComponents())
+		{
+			if(targetClass.isInstance(c))
+			{
+				collector.add((C) c);
+			}
+			
+			if(c instanceof Container)
+			{
+				collectComponentsOfClass((Container)c, targetClass, collector);
+			}
+		}
+	}
+	
+	
 	protected void loadNewDocumentsFromCSV()
 	{
-		checkChooser();
+		if(chooser == null)
+		{
+			checkChooser();		
+			JLabel label = new JLabel("Encoding:");
+			makeCharacterEncodingCombo();
+			
+			ArrayList<JComboBox> collector = new ArrayList<JComboBox>();
+			collectComponentsOfClass(chooser, JComboBox.class, collector);
+			
+			//add the encoding combobox next to the file type combobox.
+			//this works on Mac OS X 10.8, Windows 8, and an old-ish Fedora. Probably works elsewhere.
+			try 
+			{
+				Container parent = collector.get(collector.size()-1).getParent();
+	//			parent.setLayout(new FlowLayout());
+	//			parent.add(label);
+				parent.add(characterEncodingCombo);
+			}
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			
+			chooser.resetChoosableFileFilters();
+			chooser.setAcceptAllFileFilterUsed(true);
+			chooser.setMultiSelectionEnabled(true);
+
+			
+			SIDEPlugin[] importPlugins = PluginManager.getSIDEPluginArrayByType("file_parser");
+			
+			for(final SIDEPlugin plug : importPlugins)
+			{
+				FileFilter filterForPlug = new FileFilter()
+				{
+					@Override
+					public String getDescription()
+					{
+						return plug.getDescription();
+					}
+					
+					@Override
+					public boolean accept(File file)
+					{
+						return file.isDirectory() || ((FileParser) plug).canHandle(file.getPath());
+					}
+				};
+				chooser.addChoosableFileFilter(filterForPlug);
+				importMap.put(filterForPlug, (FileParser)plug);
+			}
+			
+			chooser.addChoosableFileFilter(new FileFilter()
+			{
+
+				@Override
+				public boolean accept(File f)
+				{
+					for(FileFilter filter : importMap.keySet())
+					{
+						if(filter.accept(f))
+						{
+							return true;
+						}
+					}
+					return false;
+				}
+
+				@Override
+				public String getDescription()
+				{
+					// TODO Auto-generated method stub
+					return "All Readable Formats";
+				}
+			});
+			
+		}
+
 		
-		chooser.setFileFilter(RecipeExporter.getCSVFilter());
-		chooser.setMultiSelectionEnabled(true);
 		int result = chooser.showOpenDialog(GenericLoadPanel.this);
 		if (result != JFileChooser.APPROVE_OPTION) { return; }
 
+		
 		File[] selectedFiles = chooser.getSelectedFiles();
 		TreeSet<String> docNames = new TreeSet<String>();
 
@@ -438,14 +553,42 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		{
 			docNames.add(f.getPath());
 		}
-		try{
-		DocumentList testDocs = ImportController.makeDocumentList(docNames);
-		testDocs.guessTextAndAnnotationColumns();
-		Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
-		setHighlight(r);
-		}catch(FileNotFoundException e){
+		try
+		{
+			
+
+			DocumentList testDocs;
+			
+			Charset encoding;
+			try
+			{
+				encoding = Charset.forName((String)characterEncodingCombo.getSelectedItem());
+			}
+			catch(IllegalArgumentException e)
+			{
+				encoding = Charset.forName("UTF-8");
+			}
+//			FileParser parser = importMap.get(chooser.getFileFilter());
+//			if(parser != null)
+//			{
+//				testDocs = parser.parseDocumentList(docNames, encoding);
+//			}
+//			else
+			{
+				testDocs= ImportController.makeDocumentList(docNames, encoding);
+			}
+			
+			//DocumentList testDocs = ImportController.makeDocumentList(docNames);
+			testDocs.guessTextAndAnnotationColumns();
+			Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
+			setHighlight(r);
+		}
+		catch (FileNotFoundException e)
+		{
 			JOptionPane.showMessageDialog(this, e.getMessage(), "File Not Found", JOptionPane.ERROR_MESSAGE);
-		}catch(Exception e){
+		}
+		catch (Exception e)
+		{
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}

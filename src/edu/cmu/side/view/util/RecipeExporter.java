@@ -34,7 +34,9 @@ public class RecipeExporter
 	static JFileChooser predictChooser;
 	
 	//TODO: multi-extension names aren't detected correctly by FileNameExtensionFilter
-	public final static FileFilter csvFilter = new EndsWithFileFilter("CSV (Excel)", "csv", "CSV");
+	public final static FileFilter csvFilter = new EndsWithFileFilter("CSV", "csv", "CSV");
+//	public final static FileFilter csvFilterMac = new EndsWithFileFilter("CSV (Mac Excel, MacRoman)", "csv", "CSV");
+//	public final static FileFilter csvFilterWindows = new EndsWithFileFilter("CSV (Windows Excel, CP1252)", "csv", "CSV");
 	public final static FileFilter arffFilter = new EndsWithFileFilter("ARFF (Weka)", "arff", "ARFF");
 	public final static FileFilter xmlTableFilter = new EndsWithFileFilter("LightSide Feature Table XML", "table.side.xml");
 	public final static FileFilter xmlModelFilter = new EndsWithFileFilter("LightSide Trained Model XML", "model.side.xml");
@@ -45,7 +47,7 @@ public class RecipeExporter
 	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
 	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only", "predict");
 
-	protected static boolean useXML = false;
+	protected static boolean useXML = true;
 	
 	public static JFileChooser setUpChooser(JFileChooser chooser, FileFilter... filters)
 	{

@@ -240,5 +240,11 @@ public class PredictLabelsControl extends GenesisControl{
 	{
 		useValidationResults = validate;
 	}
+
+	public static void setRetestModel(boolean selected)
+	{
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

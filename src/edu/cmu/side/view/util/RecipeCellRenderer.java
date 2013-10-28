@@ -44,6 +44,8 @@ public class RecipeCellRenderer extends DefaultTreeCellRenderer {
         }else if(nodeObj.toString().startsWith("Wrapper Plugins:")){
             setIcon(new ImageIcon("toolkits/icons/table_go.png"));           	
         }else if(nodeObj.toString().startsWith("Learning Plugin:")){
+            setIcon(new ImageIcon("toolkits/icons/table_gear.png"));           	
+        }else if(nodeObj.toString().startsWith("Validation:")){
             setIcon(new ImageIcon("toolkits/icons/table_gear.png"));       	
         }else{
         	setIcon(null);

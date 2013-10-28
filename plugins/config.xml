@@ -90,14 +90,14 @@
 		<jarfile>genesis.jar</jarfile>
 		<classname>plugins.input.CSVParser</classname>
 	</plugin>
-<!-- 	<plugin>
+	<plugin>
 		<name>CTB Parser</name>
 		<author>Elijah Mayfield</author>
 		<version>1.0</version>
 		<description><![CDATA[Build DocumentList From CTB file]]></description>
 		<jarfile>genesis.jar</jarfile>
 		<classname>plugins.input.CTBParser</classname>
-	</plugin> -->
+	</plugin>
 
 	<!-- <plugin> <name>Predicted Annotation Feature</name> <author>David Adamson</author> 
 		<version>1.0</version> <description><![CDATA[Extraction of (Predicted) Class 
@@ -178,7 +178,16 @@
 		</classname>
 	</plugin>
 
-
+<!-- 	<plugin>
+		<name>Feature Selection Indicator</name>
+		<author>David Adamson</author>
+		<version>0.5</version>
+		<description><![CDATA[Feature selection indicator]]></description>
+		<jarfile>genesis.jar</jarfile>
+		<classname>plugins.metrics.features.models.FeatureSelectionIndicator
+		</classname>
+	</plugin>
+ -->
 	<plugin>
 		<name>Feature Influence Evaluations</name>
 		<author>David Adamson</author>

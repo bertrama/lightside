@@ -3,6 +3,7 @@ package edu.cmu.side.control;
 import java.awt.Component;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -184,6 +185,11 @@ public abstract class GenesisControl {
 			top.add(getWrapperNodes(r));
 		}
 		
+
+		if(r.getValidationSettings() != null){
+			top.add(getValidationNode(r.getValidationSettings()));		
+		}
+		
 		if(r.getTrainingResult() != null){
 			top.add(getModelNode(r.getTrainingResult()));		
 		}
@@ -200,6 +206,40 @@ public abstract class GenesisControl {
 //		panel.setScrollableHeight(ScrollableSizeHint.STRETCH);
 		
 		return recipeComponent;
+	}
+
+	private static MutableTreeNode getValidationNode(Map<String, Serializable> validationSettings)
+	{
+		String type = (String) validationSettings.get("type");
+		String test = (String) validationSettings.get("test");
+		String testSet = ((DocumentList)validationSettings.get("testSet")).getName();
+		
+		
+		
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Validation: "+(test.equals("false")?"None":(type.equals("SUPPLY")?testSet:"CV")));
+		
+		//TODO: add nodes for test recipe in supplied test set case.
+		if(type.equals("CV"))
+		for(String key : validationSettings.keySet())
+		{
+			if(key.equals("type") || key.startsWith("test"))
+			{
+
+			}
+			else
+			{
+				String value = validationSettings.get(key).toString();
+				
+				if(value.length() > 30)
+					value = value.substring(0, 30)+"...";
+				
+				DefaultMutableTreeNode setting = new DefaultMutableTreeNode(key + ": " + value);	
+				node.add(setting);
+			}
+		}
+		
+		
+		return node;
 	}
 
 	public static MutableTreeNode getDocumentsNode(DocumentList docs){

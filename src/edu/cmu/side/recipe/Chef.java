@@ -41,11 +41,11 @@ import edu.cmu.side.recipe.converters.ConverterControl.RecipeFileFormat;
  */
 public class Chef
 {
-	static
-	{
-		System.setProperty("java.awt.headless", "true");
-		System.out.println(java.awt.GraphicsEnvironment.isHeadless() ? "Running in headless mode." : "Not actually headless");
-	}
+//	static
+//	{
+//		System.setProperty("java.awt.headless", "true");
+//		System.out.println(java.awt.GraphicsEnvironment.isHeadless() ? "Running in headless mode." : "Not actually headless");
+//	}
     
 	static boolean quiet = true;
 

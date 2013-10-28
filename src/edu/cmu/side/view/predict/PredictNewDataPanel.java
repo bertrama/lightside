@@ -19,7 +19,7 @@ public class PredictNewDataPanel extends GenericLoadCSVPanel
 
 	public PredictNewDataPanel()
 	{
-		super("Unlabeled Data (CSV):", true, true, false, true);
+		super("New Data:", true, true, false, true);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.TRAINED_MODEL, this);
 	}
 

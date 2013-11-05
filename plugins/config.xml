@@ -158,6 +158,16 @@
 		</classname>
 	</plugin>
 
+    <plugin>
+        <name>Consulting Error Analysis</name>
+        <author>Elijah Mayfield</author>
+        <version>1.0</version>
+        <description><![CDATA[Diagonal comparisons.]]></description>
+        <jarfile>warpcore.jar</jarfile>
+        <classname>com.lightsidelabs.plugins.metrics.features.ConsultingErrorAnalysis
+        </classname>
+    </plugin>
+
 	<plugin>
 		<name>Basic Feature Evaluations</name>
 		<author>Elijah Mayfield</author>

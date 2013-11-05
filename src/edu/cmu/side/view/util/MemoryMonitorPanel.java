@@ -1,6 +1,7 @@
 package edu.cmu.side.view.util;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.FlowLayout;

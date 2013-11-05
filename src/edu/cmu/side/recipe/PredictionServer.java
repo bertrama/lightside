@@ -5,6 +5,7 @@
 package edu.cmu.side.recipe;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -30,8 +31,6 @@ import org.simpleframework.http.core.ContainerServer;
 import org.simpleframework.transport.Server;
 import org.simpleframework.transport.connect.Connection;
 import org.simpleframework.transport.connect.SocketConnection;
-
-import plugins.learning.WekaCore;
 
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.PredictionResult;
@@ -457,8 +456,6 @@ public class PredictionServer implements Container
 	 */
 	protected static void initSIDE()
 	{
-		//remember already-loaded models.
-		WekaCore.setCaching(true);
 	}
 
 }

@@ -1,6 +1,7 @@
 package edu.cmu.side.control;
 
 import java.awt.event.ActionEvent;
+
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,7 +19,6 @@ import java.util.TreeSet;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-import plugins.learning.WekaCore;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.Recipe;

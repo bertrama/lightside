@@ -102,7 +102,7 @@ public class Feature implements Serializable, Comparable<Feature>
 		
 	}
 	
-	public static Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
+	public static synchronized Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
 		if(!featureCache.containsKey(prefix)){
 			featureCache.put(prefix, new HashMap<String, Feature>(100000));
 		}

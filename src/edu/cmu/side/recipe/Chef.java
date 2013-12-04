@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 import plugins.metrics.models.BasicModelEvaluations;
 import edu.cmu.side.control.BuildModelControl;
@@ -35,7 +36,7 @@ import edu.cmu.side.recipe.converters.ConverterControl;
 import edu.cmu.side.recipe.converters.ConverterControl.RecipeFileFormat;
 
 /**
- * loads a model trained using lightSIDE uses it to label new instances.
+ * loads a model trained using LightSide and uses it to label new instances.
  * 
  * @author dadamson
  */
@@ -77,17 +78,48 @@ public class Chef
 	//Extract Features
 	protected static void simmerFeatures(Recipe recipe, int threshold, String annotation, Type type)
 	{		
-		DocumentList corpus = recipe.getDocumentList();
-		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
-		OrderedPluginMap extractors = recipe.getExtractors();
-
-		for (SIDEPlugin plug : extractors.keySet())
+		final DocumentList corpus = recipe.getDocumentList();
+		final OrderedPluginMap extractors = recipe.getExtractors();
+		final ConcurrentSkipListSet<String> hitChunks = new ConcurrentSkipListSet<String>();
+		final Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
+		
+		for (final SIDEPlugin plug : extractors.keySet())
 		{
-			if(!quiet) System.out.println("Extracting features with "+plug+"...");
-			//System.out.println("Extractor Settings: "+extractors.get(plug));
-			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
-			hits.addAll(extractorHits);
+			new Thread()
+			{
+				public void run()
+				{
+					if(!quiet) System.out.println("Thread! Extracting features with "+plug+"...");
+					//System.out.println("Extractor Settings: "+extractors.get(plug));
+					Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
+					
+					synchronized(hits)
+					{
+						hitChunks.add(plug.toString());
+						hits.addAll(extractorHits);
+						hits.notifyAll();
+					}
+				}
+			}.start();	
 		}
+		
+		while(hitChunks.size() < extractors.size())
+		{
+			synchronized(hits)
+			{
+				try
+				{
+					hits.wait();
+				}
+				catch (InterruptedException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+
 		FeatureTable ft = new FeatureTable(corpus, hits, threshold, annotation, type);
 		recipe.setFeatureTable(ft);
 

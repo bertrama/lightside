@@ -95,6 +95,12 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 			{
 				allHits.addAll(result.get());
 			}
+			
+			pool.shutdown();
+			while(!pool.isShutdown())
+			{
+				Thread.sleep(500);
+			}
 		}
 		catch (InterruptedException e1)
 		{
@@ -108,6 +114,8 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 		}
 		
 		System.out.println("Parallel extraction complete in "+(System.currentTimeMillis()-start)/1000+" seconds.");
+		
+		update.update(this+" Extraction complete.");
 		
 		return allHits;
 	}

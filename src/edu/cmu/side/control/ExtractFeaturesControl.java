@@ -319,6 +319,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				}
 				if(!halt)
 				{
+					update.update("Building Feature Table");
 					FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold, selectedClassAnnotation, selectedClassType);
 					ft.setName(name);
 					plan.setFeatureTable(ft);

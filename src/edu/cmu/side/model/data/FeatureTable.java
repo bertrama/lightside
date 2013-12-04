@@ -123,6 +123,7 @@ public class FeatureTable implements Serializable
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
 		}
 		Iterator<FeatureHit> hiterator = hits.iterator();
+		System.out.println("adding feature hits");
 		while(hiterator.hasNext())
 		{
 			FeatureHit hit = hiterator.next();
@@ -137,7 +138,8 @@ public class FeatureTable implements Serializable
 //		System.out.println("All features added to table. Thresholding...");
 
 		Iterator<Entry<Feature, Collection<FeatureHit>>> fiterator = hitsPerFeature.entrySet().iterator();
-		
+
+		System.out.println("Adding hits per document");
 		while(fiterator.hasNext())
 		{
 			Entry<Feature, Collection<FeatureHit>> entry = fiterator.next();

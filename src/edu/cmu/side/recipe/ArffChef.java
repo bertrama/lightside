@@ -1,6 +1,7 @@
 package edu.cmu.side.recipe;
 
 import java.io.File;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -16,8 +17,6 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import javax.swing.JOptionPane;
-
-import plugins.metrics.models.BasicModelEvaluations;
 
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 

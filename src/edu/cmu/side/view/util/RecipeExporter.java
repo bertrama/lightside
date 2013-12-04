@@ -47,7 +47,7 @@ public class RecipeExporter
 	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
 	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only", "predict");
 
-	protected static boolean useXML = true;
+	protected static boolean useXML = false;
 	
 	public static JFileChooser setUpChooser(JFileChooser chooser, FileFilter... filters)
 	{
@@ -282,7 +282,7 @@ public class RecipeExporter
 		TrainingResult result = modelRecipe.getTrainingResult();
 		try
 		{
-			chooser.setSelectedFile(new File((result == null ? modelRecipe.getRecipeName() : result.getName()) + "." + ((EndsWithFileFilter) modelChooser.getFileFilter()).getExtensions()[0]));
+			chooser.setSelectedFile(new File(modelRecipe.getRecipeName() + "." + ((EndsWithFileFilter) modelChooser.getFileFilter()).getExtensions()[0]));
 
 			int state = chooser.showDialog(null, "Save Trained Model");
 			if (state == JFileChooser.APPROVE_OPTION)

@@ -81,7 +81,7 @@ public class PredictLabelsPane extends JPanel implements Refreshable
 		JPanel newDataPanel = new JPanel(new BorderLayout());
 		JPanel widgetPanel = new JPanel(new GridLayout(0,1));
 		widgetPanel.add(useValidationBox);
-		widgetPanel.add(retestBox);
+		//widgetPanel.add(retestBox);
 
 		useValidationBox.setEnabled(false);
 		retestBox.setEnabled(false);

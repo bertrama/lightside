@@ -31,6 +31,8 @@ import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
 
 import se.datadosen.component.RiverLayout;
+import weka.core.Instances;
+import weka.core.converters.ConverterUtils.DataSource;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
@@ -403,25 +405,29 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			{
 				JOptionPane.showMessageDialog(this, "The selected file does not exist. Where did it go?", "No Such File", JOptionPane.ERROR_MESSAGE);
 			}
-
+			
 			try
 			{
-				Recipe recipe;
-				recipe = ConverterControl.loadRecipe(target.getPath());
-//				if(RecipeExporter.useXML())
+//				if(target.getName().endsWith(".arff"))
 //				{
-//					recipe = ConverterControl.readFromXML(target);
+//					DataSource source = new DataSource(target.getPath());
+//					Instances data = source.getDataSet();
+//					 // setting class attribute if the data format does not provide this information
+//					 // For example, the XRFF format saves the class attribute information as well
+//					 if (data.classIndex() == -1)
+//					   data.setClassIndex(data.numAttributes() - 1);
+//					 TODO: does this even make sense? There's nothing we can really do with ARFF as a featuretable,
+//					 	maybe import it as a document list?
 //				}
 //				else
-//				{
-//					FileInputStream fout = new FileInputStream(target);
-//					ObjectInputStream in = new ObjectInputStream(fout);
-//					recipe = (Recipe) in.readObject();
-//				}
-				Workbench.getRecipeManager().addRecipe(recipe);
-				setHighlight(recipe);
-				Workbench.update(this);
-				Workbench.update(recipe.getStage());
+				{
+					Recipe recipe;
+					recipe = ConverterControl.loadRecipe(target.getPath());
+					Workbench.getRecipeManager().addRecipe(recipe);
+					setHighlight(recipe);
+					Workbench.update(this);
+					Workbench.update(recipe.getStage());
+				}
 			}
 			catch (Exception e)
 			{
@@ -462,8 +468,21 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		}
 	}
 	
-	
+
 	protected void loadNewDocumentsFromCSV()
+	{
+		DocumentList testDocs = chooseDocumentList();
+		if(testDocs != null)
+		{
+			testDocs.guessTextAndAnnotationColumns();
+			Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
+			setHighlight(r);
+			refreshPanel();
+			Workbench.update(this);
+		}
+	}
+	
+	public DocumentList chooseDocumentList()
 	{
 		if(chooser == null)
 		{
@@ -543,7 +562,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 		
 		int result = chooser.showOpenDialog(GenericLoadPanel.this);
-		if (result != JFileChooser.APPROVE_OPTION) { return; }
+		if (result != JFileChooser.APPROVE_OPTION) { return null; }
 
 		
 		File[] selectedFiles = chooser.getSelectedFiles();
@@ -579,9 +598,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			}
 			
 			//DocumentList testDocs = ImportController.makeDocumentList(docNames);
-			testDocs.guessTextAndAnnotationColumns();
-			Recipe r = Workbench.getRecipeManager().fetchDocumentListRecipe(testDocs);
-			setHighlight(r);
+			return testDocs;
 		}
 		catch (FileNotFoundException e)
 		{
@@ -592,8 +609,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 			JOptionPane.showMessageDialog(this, e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
 		}
-		refreshPanel();
-		Workbench.update(this);
+		return null;
 	}
 
 	protected void checkChooser()

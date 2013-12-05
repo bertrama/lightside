@@ -3,6 +3,7 @@ package edu.cmu.side.plugin;
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,6 @@ import edu.cmu.side.model.data.PredictionResult;
 import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.FeatureHit;
-import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.util.DefaultMap;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable
@@ -32,6 +32,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 	public static String type = "model_builder";
 
 	public static StatusUpdater updater;
+	
+	protected static DecimalFormat print = new DecimalFormat("#.###");
 
 	public String getType()
 	{
@@ -188,14 +190,106 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 		return wrapped;
 	}
 
+	public PredictionResult validateFold(int fold, FeatureTable table, Map<Integer, Integer> foldsMap, int numFolds, OrderedPluginMap wrappers,  StatusUpdater progressIndicator) throws Exception
+	{		
+		if (fold < 0)
+		{
+			System.err.println("LP 178: negative fold: " + fold + "!");
+			throw new Exception("Invalid Fold Number");
+		}
+		if (halt)
+		{
+			throw new Exception("User Canceled");
+		}
+
+//		double average = StatisticsToolkit.getAverage(times);
+//		double timeA = System.currentTimeMillis();
+		progressIndicator.update(/*(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") +*/ "Training fold", (fold + 1), numFolds);
+
+		FeatureTable wrappedTrain = table;
+
+		wrappedTrain = wrapAndTrain(table, wrappers, progressIndicator, foldsMap, fold);
+
+		if (halt)
+		{
+			throw new Exception("User Canceled");
+		}
+
+		progressIndicator.update(/*(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") +*/ "Testing fold", (fold + 1), numFolds);
+
+		// TODO: verify that passing the *unwrapped* table on to predict (as
+		// the test set) is the right thing to do - it was wrappedTrain
+		// before
+		PredictionResult predictionResult = predictOnFold(wrappedTrain, table, fold, foldsMap, updater, wrappers);
+
+//		double timeB = System.currentTimeMillis();
+//		times.add((timeB - timeA) / 1000.0);
+		return predictionResult;
+	}
+	
+	public void aggregateFoldEvaluation(int fold, PredictionResult predictionResult, Map<Integer, Integer> foldsMap, FeatureTable table, Map<String, List<Double>> distributions, Comparable[] predictions)
+	{
+		List<? extends Comparable<?>> predictionsList = predictionResult.getPredictions();
+
+		List<Comparable<?>> foldPredicted = new ArrayList<Comparable<?>>(500);
+		List<String> foldActual = new ArrayList<String>(500);
+
+		// int predictionIndex = 0;
+//		double correct = 0;
+//		double total = 0;
+
+		Map<String, List<Double>> predictedDistros = predictionResult.getDistributions();
+		if (distributions.isEmpty() && predictedDistros != null) distributions.putAll(predictedDistros);
+
+		String[] labelArray = table.getLabelArray();
+		
+		for (int i = 0; i < predictionsList.size(); i++)
+		{
+			if (foldsMap.get(i).equals(fold))
+			{
+				if (predictedDistros != null) // numeric classifiers don't
+												// produce distributions
+					for (String label : labelArray)
+					{
+						Double scoreForLabel;
+						if (i >= predictedDistros.get(label).size())
+						{
+							System.out.println("LP 273: prediction result distribution size does not match label/doc array size: " + i + " >= "
+									+ predictedDistros.get(label).size());
+							scoreForLabel = 0.0;
+							while (i >= predictedDistros.get(label).size())
+								distributions.get(label).add(scoreForLabel);
+						}
+						else
+							scoreForLabel = predictedDistros.get(label).get(i);
+						distributions.get(label).set(i, scoreForLabel);
+					}
+
+				predictions[i] = predictionsList.get(i);
+				foldPredicted.add(predictions[i]);
+				foldActual.add(table.getAnnotations().get(i));
+
+//				if (predictions[i].equals(table.getAnnotations().get(i))) correct++;
+//				total++;
+			}
+			// predictionIndex++;
+		}
+		// System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
+		// if(table.getClassValueType() != Type.NUMERIC)
+		// {
+		// String evaluation = EvaluationUtils.evaluate(foldActual,
+		// foldPredicted, labelArray,
+		// BuildModelControl.getNewName()+".fold"+fold+".eval");
+		// System.out.println(evaluation);
+		// if(out != null) out.println(evaluation);
+		// }
+	}
+	
 	public TrainingResult
 			evaluateCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, OrderedPluginMap wrappers, StatusUpdater progressIndicator)
 					throws Exception
 	{
 		DocumentList localDocuments = table.getDocumentList();
-		Comparable[] predictions = new Comparable[localDocuments.getSize()];
-		String[] labelArray = table.getLabelArray();
-		Map<String, List<Double>> distributions = null;
 
 		Set<Integer> folds = new TreeSet<Integer>();
 		for (Integer key : foldsMap.keySet())
@@ -203,98 +297,18 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 			folds.add(foldsMap.get(key));
 		}
 
-		ArrayList<Double> times = new ArrayList<Double>();
-		DecimalFormat print = new DecimalFormat("#.###");
+		int numFolds = folds.size();
+		List<PredictionResult> results = doCrossValidation(table, foldsMap, folds, wrappers, progressIndicator);
 
-		for(Integer fold : folds)
+		Comparable[] predictions = new Comparable[localDocuments.getSize()];
+		Map<String, List<Double>> distributions = new HashMap<String, List<Double>>();
+		
+		for(int fold = 0; fold < numFolds; fold++)
 		{
-			if (fold < 0)
-			{
-				System.err.println("LP 178: negative fold: " + fold + "!");
-				continue;
-			}
-			if (halt)
-			{
-				throw new Exception("User Canceled");
-			}
-
-			double average = StatisticsToolkit.getAverage(times);
-			double timeA = System.currentTimeMillis();
-			progressIndicator.update((times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") + "Training fold", (fold + 1), folds.size());
-
-			FeatureTable wrappedTrain = table;
-
-			wrappedTrain = wrapAndTrain(table, wrappers, progressIndicator, foldsMap, fold);
-
-			if (halt)
-			{
-				throw new Exception("User Canceled");
-			}
-
-			progressIndicator.update((times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") + "Testing fold", (fold + 1), folds.size());
-
-			// TODO: verify that passing the *unwrapped* table on to predict (as
-			// the test set) is the right thing to do - it was wrappedTrain
-			// before
-			PredictionResult predictionResult = predictOnFold(wrappedTrain, table, fold, foldsMap, updater, wrappers);
-
-			List<? extends Comparable<?>> predictionsList = predictionResult.getPredictions();
-
-			List<Comparable<?>> foldPredicted = new ArrayList<Comparable<?>>(500);
-			List<String> foldActual = new ArrayList<String>(500);
-
-			// int predictionIndex = 0;
-			double correct = 0;
-			double total = 0;
-
-			Map<String, List<Double>> predictedDistros = predictionResult.getDistributions();
-			if (distributions == null && predictedDistros != null) distributions = new HashMap<String, List<Double>>(predictedDistros);
-
-			for (int i = 0; i < predictionsList.size(); i++)
-			{
-				if (foldsMap.get(i).equals(fold))
-				{
-					if (predictedDistros != null) // numeric classifiers don't
-													// produce distributions
-						for (String label : labelArray)
-						{
-							Double scoreForLabel;
-							if (i >= predictedDistros.get(label).size())
-							{
-								System.out.println("LP 273: prediction result distribution size does not match label/doc array size: " + i + " >= "
-										+ predictedDistros.get(label).size());
-								scoreForLabel = 0.0;
-								while (i >= predictedDistros.get(label).size())
-									distributions.get(label).add(scoreForLabel);
-							}
-							else
-								scoreForLabel = predictedDistros.get(label).get(i);
-							distributions.get(label).set(i, scoreForLabel);
-						}
-
-					predictions[i] = predictionsList.get(i);
-					foldPredicted.add(predictions[i]);
-					foldActual.add(table.getAnnotations().get(i));
-
-					if (predictions[i].equals(table.getAnnotations().get(i))) correct++;
-					total++;
-				}
-				// predictionIndex++;
-			}
-			// System.out.println("accuracy for fold #"+fold+": "+(100*correct/total)+"%");
-			// if(table.getClassValueType() != Type.NUMERIC)
-			// {
-			// String evaluation = EvaluationUtils.evaluate(foldActual,
-			// foldPredicted, labelArray,
-			// BuildModelControl.getNewName()+".fold"+fold+".eval");
-			// System.out.println(evaluation);
-			// if(out != null) out.println(evaluation);
-			// }
-			double timeB = System.currentTimeMillis();
-			times.add((timeB - timeA) / 1000.0);
+			PredictionResult result = results.get(fold);
+			aggregateFoldEvaluation(fold, result, foldsMap, table, distributions, predictions);
 		}
-
-		// out.close();
+		
 
 		if (!halt)
 		{
@@ -315,6 +329,20 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 
 			throw new Exception("User Canceled");
 		}
+	}
+
+	public List<PredictionResult> doCrossValidation(FeatureTable table, Map<Integer, Integer> foldsMap, Set<Integer> folds, OrderedPluginMap wrappers,
+			StatusUpdater progressIndicator) throws Exception
+	{
+//		ArrayList<Double> times = new ArrayList<Double>(folds.size());
+		List<PredictionResult> results = new ArrayList<PredictionResult>();
+
+		for(Integer fold : folds)
+		{
+			PredictionResult result = validateFold(fold, table, foldsMap, folds.size(), wrappers, progressIndicator);
+			results.add(result);
+		}
+		return results;
 	}
 
 	protected TrainingResult evaluateTestSet(FeatureTable train, FeatureTable testSet, OrderedPluginMap wrappers, StatusUpdater updater) throws Exception

@@ -81,43 +81,48 @@ public class Chef
 		
 		for (final SIDEPlugin plug : extractors.keySet())
 		{
-			new Thread()
-			{
-				public void run()
-				{
-					if(!quiet) System.out.println("Thread! Extracting features with "+plug+"...");
+//			new Thread()
+//			{
+//				public void run()
+//				{
+					if(!quiet) System.out.println("Chef: Simmering features with "+plug+"...");
 					//System.out.println("Extractor Settings: "+extractors.get(plug));
 					Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
 					
-					synchronized(hits)
-					{
-						hitChunks.add(plug.toString());
+//					synchronized(hits)
+//					{
+//						hitChunks.add(plug.toString());
 						hits.addAll(extractorHits);
-						hits.notifyAll();
-					}
-				}
-			}.start();	
+//						hits.notifyAll();
+//					}
+//				}
+//			}.start();	
+			if (!quiet) System.out.println("Chef: Finished simmering with " + plug + "...");
 		}
-		
-		while(hitChunks.size() < extractors.size())
-		{
-			synchronized(hits)
-			{
-				try
-				{
-					hits.wait();
-				}
-				catch (InterruptedException e)
-				{
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-		
+
+		if (!quiet) System.out.println("Chef: Done simmering with plugins!");
+//		while(hitChunks.size() < extractors.size())
+//		{
+//			synchronized(hits)
+//			{
+//				try
+//				{
+//					hits.wait();
+//				}
+//				catch (InterruptedException e)
+//				{
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//		}
+
+		if (!quiet) System.out.println("Chef: Building feature table...");
 
 		FeatureTable ft = new FeatureTable(corpus, hits, threshold, annotation, type);
 		recipe.setFeatureTable(ft);
+
+		if (!quiet) System.out.println("Chef: Done building feature table!");
 
 		if(recipe.getStage().compareTo(Stage.MODIFIED_TABLE) >= 0) //recipe includes filtering
 		{

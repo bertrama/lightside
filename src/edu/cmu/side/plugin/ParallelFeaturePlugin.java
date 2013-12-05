@@ -2,6 +2,7 @@ package edu.cmu.side.plugin;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -16,7 +17,8 @@ import edu.cmu.side.model.feature.FeatureHit;
 
 public abstract class ParallelFeaturePlugin extends FeaturePlugin
 {
-	
+
+	final static ExecutorService EXTRACTOR_THREAD_POOL = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	/**
 	 * 
 	 * @param documents in a corpus
@@ -33,9 +35,8 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 	@Override
 	public Collection<FeatureHit> extractFeatureHitsForSubclass(final DocumentList documents, final StatusUpdater update)
 	{
-		final int maxThreads = Runtime.getRuntime().availableProcessors();
-		final ArrayList<FeatureHit> allHits = new ArrayList<FeatureHit>();
-		final ExecutorService pool = Executors.newFixedThreadPool(maxThreads);
+		final int maxThreads = Math.min(documents.getSize(), Runtime.getRuntime().availableProcessors());
+		final HashSet<FeatureHit> allHits = new HashSet<FeatureHit>();
 		
 		long start = System.currentTimeMillis();
 		
@@ -55,11 +56,12 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 				public Collection<FeatureHit> call()
 				{
 					String pluginName = ParallelFeaturePlugin.this.toString();
-					for(int index = offset; index < size && index < offset + chunk; index++)
+					for(int index = threadIndex; index < size; index += maxThreads)
+					//for(int index = offset; index < size && index < offset + chunk; index++)
 					{
 						if(halt)
 						{
-							pool.shutdownNow();
+							EXTRACTOR_THREAD_POOL.shutdownNow();
 							return hits;
 						}
 						
@@ -67,7 +69,7 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 						{
 							if((index+1)%50 == 0 || index == size)
 							{
-								System.out.println("Thread "+threadIndex+": Extracting doc "+(index)+"/"+(offset+chunk)+" for "+pluginName);
+								//System.out.println("Thread "+threadIndex+": Extracting doc "+(index+1)+"/"+(offset+chunk)+" for "+pluginName);
 								synchronized(update)
 								{update.update("Extracting " + pluginName, index+1, size);}
 							}
@@ -89,18 +91,18 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 		System.out.println("invoking "+tasks.size()+" tasks...");
 		try
 		{
-			List<Future<Collection<FeatureHit>>> results = pool.invokeAll(tasks);
-			System.out.println("tasks complete?");
+			List<Future<Collection<FeatureHit>>> results = EXTRACTOR_THREAD_POOL.invokeAll(tasks);
+
 			for(Future<Collection<FeatureHit>> result: results)
 			{
 				allHits.addAll(result.get());
 			}
 			
-			pool.shutdown();
-			while(!pool.isShutdown())
-			{
-				Thread.sleep(500);
-			}
+//			pool.shutdown();
+//			while(!pool.isShutdown())
+//			{
+//				Thread.sleep(50);
+//			}
 		}
 		catch (InterruptedException e1)
 		{
@@ -113,7 +115,7 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 			e.printStackTrace();
 		}
 		
-		System.out.println("Parallel extraction complete in "+(System.currentTimeMillis()-start)/1000+" seconds.");
+		System.out.printf("Parallel extraction complete in %.1f seconds.\n",(System.currentTimeMillis()-start)/1000.0);
 		
 		update.update(this+" Extraction complete.");
 		

@@ -26,10 +26,14 @@ public class TokenizingTools
 
 	protected static PTBTokenizerFactory<CoreLabel> getTokenizerFactory()
 	{
-		if (factory == null)
+		if (factory == null)//does this duplicated outer check save lock-time?
 		{
 			//factory = PTBTokenizerFactory.newPTBTokenizerFactory(false, true);
-			factory = PTBTokenizerFactory.newPTBTokenizerFactory(new CoreLabelTokenFactory(true), "invertible,unicodeQuotes=true,untokenizable=firstKeep");
+			synchronized(TokenizingTools.class)
+			{
+				if(factory == null) 
+				factory = PTBTokenizerFactory.newPTBTokenizerFactory(new CoreLabelTokenFactory(true), "invertible,unicodeQuotes=true,untokenizable=firstKeep");
+			}
 			
 		}
 		return factory;
@@ -37,9 +41,13 @@ public class TokenizingTools
 
 	protected static MaxentTagger getTagger()
 	{
-		if (tagger == null) try
+		if (tagger == null) try//does this duplicated outer check save lock-time?
 		{
-			tagger = new MaxentTagger("toolkits/maxent/english-caseless-left3words-distsim.tagger");
+			synchronized(TokenizingTools.class)
+			{
+				if(tagger == null)
+					tagger = new MaxentTagger("toolkits/maxent/english-caseless-left3words-distsim.tagger");
+			}
 		}
 		catch (Exception e)
 		{

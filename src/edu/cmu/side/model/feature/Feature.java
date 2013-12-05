@@ -102,17 +102,29 @@ public class Feature implements Serializable, Comparable<Feature>
 		
 	}
 	
-	public static synchronized Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
-		if(!featureCache.containsKey(prefix)){
-			featureCache.put(prefix, new HashMap<String, Feature>(100000));
+	public static Feature fetchFeature(String prefix, String name, Feature.Type type, FeatureFetcher extractorPlugin){
+		if(!featureCache.containsKey(prefix))
+		{
+			synchronized(Feature.class)
+			{
+				if(!featureCache.containsKey(prefix))
+					featureCache.put(prefix, new HashMap<String, Feature>(100000));
+			}
 		}
-		if(!featureCache.get(prefix).containsKey(name+FEATURE_JOIN+type.toString())){
-			Feature newFeat = new Feature(prefix, name, type, extractorPlugin);
-			featureCache.get(prefix).put(name+FEATURE_JOIN+type.toString(), newFeat);
-			return newFeat;			
-		}else{
-			return featureCache.get(prefix).get(name+FEATURE_JOIN+type.toString());
+		if(!featureCache.get(prefix).containsKey(name+FEATURE_JOIN+type.toString()))
+		{
+			synchronized(Feature.class)
+			{
+				if(!featureCache.get(prefix).containsKey(name+FEATURE_JOIN+type.toString()))
+				{
+					Feature newFeat = new Feature(prefix, name, type, extractorPlugin);
+					featureCache.get(prefix).put(name+FEATURE_JOIN+type.toString(), newFeat);
+					return newFeat;
+				}
+			}
 		}
+		return featureCache.get(prefix).get(name+FEATURE_JOIN+type.toString());
+		
 	}
 	
 	public static Feature fetchFeature(String prefix, String name, Collection<String> nominals, FeatureFetcher extractorPlugin){

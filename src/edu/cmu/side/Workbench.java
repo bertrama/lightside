@@ -102,7 +102,7 @@ public class Workbench{
 	}
 	
 	static long updateCount = 0;
-	public static void update(Object source){
+	public synchronized static void update(Object source){
 		if(!GenesisControl.isCurrentlyUpdating(source)){
 
 			Collection<Refreshable> listeners = GenesisControl.getListeners(source);

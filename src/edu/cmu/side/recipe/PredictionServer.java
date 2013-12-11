@@ -385,7 +385,7 @@ public class PredictionServer implements Container
 			printUsage();
 		}
 
-		initSIDE();
+//		initSIDE();
 		int port = 8000;
 
 		int start = 0;
@@ -449,13 +449,6 @@ public class PredictionServer implements Container
 			e.printStackTrace();
 			return false;
 		}
-	}
-
-	/**
-	 * 
-	 */
-	protected static void initSIDE()
-	{
 	}
 
 }

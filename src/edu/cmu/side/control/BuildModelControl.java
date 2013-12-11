@@ -270,7 +270,7 @@ public class BuildModelControl extends GenesisControl{
 		Recipe plan;
 		String name;
 		Exception ex;
-		private boolean audioEnabled;
+		private boolean audioEnabled = false;
 
 
 		public BuildModelTask(ActionBar action, Recipe newRecipe, String n)
@@ -305,7 +305,7 @@ public class BuildModelControl extends GenesisControl{
 				PredictLabelsControl.setHighlightedTrainedModelRecipe(plan);
 				Workbench.update(Stage.TRAINED_MODEL);
 				
-				if(audioEnabled == true)
+				if(audioEnabled)
 				try
 				{
 					AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("toolkits/train.wav"));
@@ -437,15 +437,16 @@ public class BuildModelControl extends GenesisControl{
 		prepareDocuments(rec, validationSettings, test);
 	}
 		
-	public static Map<String, Serializable> prepareDocuments(Recipe recipe, Map<String, Serializable> validation, DocumentList test) throws IllegalStateException{
+	public static Map<String, Serializable> prepareDocuments(Recipe recipe, Map<String, Serializable> validation, DocumentList test) throws IllegalStateException
+	{
 		DocumentList train = recipe.getDocumentList();
 
 		try
 		{
 			test.setCurrentAnnotation(recipe.getTrainingTable().getAnnotation(), recipe.getTrainingTable().getClassValueType());
 			test.setTextColumns(new HashSet<String>(train.getTextColumns()));
-
-
+			test.setDifferentiateTextColumns(train.textColumnsAreDifferentiated());
+			
 			Collection<String> trainColumns = train.allAnnotations().keySet();
 			Collection<String> testColumns = test.allAnnotations().keySet();
 			if(!testColumns.containsAll(trainColumns))
@@ -459,31 +460,11 @@ public class BuildModelControl extends GenesisControl{
 		}
 		catch(Exception e)
 		{
-			throw new java.lang.IllegalStateException("Test set annotations do not match training set.\nMissing ["+recipe.getTrainingTable().getAnnotation()+"] or "+train.getTextColumns()+" columns.");
+			e.printStackTrace();
+			throw new java.lang.IllegalStateException("Could not prepare test set.\n"+e.getMessage(), e);
 		}
 		return validationSettings;
 
 
-	}
-
-	/**
-	 * @param newRecipe
-	 * @param target
-	 */
-	protected static void saveBuildModelRecipe(Recipe newRecipe, File target)
-	{
-		try
-		{
-			FileOutputStream fout = new FileOutputStream(target);
-			ObjectOutputStream oos = new ObjectOutputStream(fout);
-			oos.writeObject(newRecipe);
-			oos.close();
-
-		}
-		catch (Exception e)
-		{
-			JOptionPane.showMessageDialog(null, "Error while saving:\n" + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
-			e.printStackTrace();
-		}
 	}
 }

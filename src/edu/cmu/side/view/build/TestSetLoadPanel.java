@@ -9,6 +9,7 @@ import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.model.data.DocumentList;
+import edu.cmu.side.model.feature.Feature.Type;
 import edu.cmu.side.view.generic.GenericLoadCSVPanel;
 
 public class TestSetLoadPanel extends GenericLoadCSVPanel
@@ -90,7 +91,7 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 					testList.setCurrentAnnotation(annotation, trainRecipe.getTrainingTable().getClassValueType());
 					Set<String> trainLabels = trainRecipe.getDocumentList().getPossibleAnn(annotation);
 					Set<String> testLabels = testList.getPossibleAnn(annotation);
-					if(!trainLabels.equals(testLabels))
+					if(trainRecipe.getClassValueType() == Type.NOMINAL && !trainLabels.equals(testLabels))
 					{
 						setWarning("<html>Class labels in train and test data do not match:<br>Train="+trainLabels+"<br>Test="+testLabels+"</html>");
 					}

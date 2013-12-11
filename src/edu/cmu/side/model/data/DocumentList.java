@@ -600,7 +600,9 @@ public class DocumentList implements Serializable
 	//TODO: use this in BuildModel and Chef and anywhere else we're translating a recipe to a new document list
 	public void setTextColumns(Set<String> columns)
 	{
-		for(String s : getTextColumns())
+		Set<String> oldColumns = new HashSet<String>(getTextColumns());
+		
+		for(String s : oldColumns)
 		{
 			setTextColumn(s, false);
 		}
@@ -611,7 +613,8 @@ public class DocumentList implements Serializable
 		}
 	}
 	
-	public void setTextColumn(String name, boolean isText){
+	public void setTextColumn(String name, boolean isText)
+	{
 		if (isText)
 		{
 			if (textColumns.containsKey(name))

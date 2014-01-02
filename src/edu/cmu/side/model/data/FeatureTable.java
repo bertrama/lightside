@@ -666,12 +666,11 @@ public class FeatureTable implements Serializable
 
 	public boolean isWeighted()
 	{
-		Pattern p = Pattern.compile("\\D*(\\d+)\\D*");
 		for(String s : getLabelArray())
 		{
-			Matcher m = p.matcher(s);
-			if(!m.matches())
-			{
+			try{
+				Double d = Double.parseDouble(s);
+			}catch(Exception e){
 				return false;
 			}
 		}

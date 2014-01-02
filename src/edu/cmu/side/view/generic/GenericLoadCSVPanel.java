@@ -37,6 +37,8 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 			if(showLoad)
 				buttons.add("right", load);
 			
+<<<<<<< local
+=======
 			bonus.addActionListener(new ActionListener()
 			{
 				@Override
@@ -65,6 +67,7 @@ public abstract class GenericLoadCSVPanel extends GenericLoadPanel
 					}
 				}
 			});
+>>>>>>> other
 
 		}
 		catch (ClassNotFoundException cnf)

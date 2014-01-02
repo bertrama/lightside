@@ -1,6 +1,10 @@
 package edu.cmu.side.recipe;
 
 import java.io.File;
+<<<<<<< local
+
+=======
+>>>>>>> other
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
@@ -74,13 +78,27 @@ public class Chef
 	//Extract Features
 	protected static void simmerFeatures(Recipe recipe, int threshold, String annotation, Type type)
 	{		
+<<<<<<< local
+		DocumentList corpus = recipe.getDocumentList();
+		Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
+		OrderedPluginMap extractors = recipe.getExtractors();
+
+		for (SIDEPlugin plug : extractors.keySet())
+=======
 		final DocumentList corpus = recipe.getDocumentList();
 		final OrderedPluginMap extractors = recipe.getExtractors();
 		final ConcurrentSkipListSet<String> hitChunks = new ConcurrentSkipListSet<String>();
 		final Collection<FeatureHit> hits = new TreeSet<FeatureHit>();
 		
 		for (final SIDEPlugin plug : extractors.keySet())
+>>>>>>> other
 		{
+<<<<<<< local
+			if(!quiet) System.out.println("Extracting features with "+plug+"...");
+			//System.out.println("Extractor Settings: "+extractors.get(plug));
+			Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
+			hits.addAll(extractorHits);
+=======
 //			new Thread()
 //			{
 //				public void run()
@@ -98,6 +116,7 @@ public class Chef
 //				}
 //			}.start();	
 			if (!quiet) System.out.println("Chef: Finished simmering with " + plug + "...");
+>>>>>>> other
 		}
 
 		if (!quiet) System.out.println("Chef: Done simmering with plugins!");
@@ -122,8 +141,11 @@ public class Chef
 		FeatureTable ft = new FeatureTable(corpus, hits, threshold, annotation, type);
 		recipe.setFeatureTable(ft);
 
+<<<<<<< local
+=======
 		if (!quiet) System.out.println("Chef: Done building feature table!");
 
+>>>>>>> other
 		if(recipe.getStage().compareTo(Stage.MODIFIED_TABLE) >= 0) //recipe includes filtering
 		{
 			for (SIDEPlugin plug : recipe.getFilters().keySet())

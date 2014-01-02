@@ -116,6 +116,23 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 				FeatureTable passTest = (FeatureTable) validationSettings.get("testFeatureTable");
 				result = evaluateTestSet(pass, passTest, wrappers, progressIndicator);
 			}
+			else if (validationSettings.get("type").equals("ALBERTA")){
+				progressIndicator.update("Training model");
+				String key = validationSettings.get("foldColumn").toString();
+				List<String> annotations = table.getDocumentListQuickly().getAnnotationArray(key);
+				Map<Integer, Integer> albertaFoldsMap = new TreeMap<Integer, Integer>();
+				for(int i = 0; i < annotations.size(); i++){
+					albertaFoldsMap.put(i, Integer.parseInt(annotations.get(i)));
+				}
+				FeatureTable albertaTrain = table.cloneTrainingFold(albertaFoldsMap, 0, true);
+				System.out.println("************************ Training set has " + albertaTrain.getSize() + " instances.");
+				FeatureTable pass = wrapAndTrain(albertaTrain, wrappers, progressIndicator, defaultFoldMapZero, 1);
+
+				progressIndicator.update("Testing model");
+				FeatureTable albertaTest = table.cloneTrainingFold(albertaFoldsMap, 0, false);
+				System.out.println("************************ Test set has " + albertaTest.getSize() + " instances.");
+				result = evaluateTestSet(pass, albertaTest, wrappers, progressIndicator);
+			}
 		}
 		else
 		{

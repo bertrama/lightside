@@ -7,7 +7,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.TreeSet;
+import java.util.Set;
 
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.plugin.FileParser;
@@ -31,7 +31,7 @@ public class ImportController {
 		return foundParser;
 	}
 	
-	public static DocumentList makeDocumentList(TreeSet<String> fileNames, Charset encoding) throws Exception, IOException, FileNotFoundException{
+	public static DocumentList makeDocumentList(Set<String> fileNames, Charset encoding) throws Exception, IOException, FileNotFoundException{
 		if(fileNames.size()==0) return null;
 		
 		String nameBuilder = "";

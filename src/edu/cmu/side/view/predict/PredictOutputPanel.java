@@ -76,12 +76,6 @@ public class PredictOutputPanel extends AbstractListPanel
 						selection.add(docTable.convertRowIndexToModel(i));
 					}
 					if (selection.isEmpty()) selection = null;
-<<<<<<< local
-=======
-
-//					COMMSDBUploader.uploadDocumentList(PredictLabelsControl.getHighlightedUnlabeledData().getDocumentList(), selection,
-//							PredictLabelsControl.getUpdater());
->>>>>>> other
 				}
 			});
 

@@ -694,40 +694,10 @@ public class DocumentList implements Serializable
 	}
 
 
-<<<<<<< local
-	
-	public void combine(DocumentList other){
-		this.getFilenameList().addAll(other.getFilenameList());
-		for(String ann : other.getAnnotationNames()){
-			if(!this.allAnnotations.containsKey(ann)){
-				String[] blankArray = new String[this.getSize()];
-				Arrays.fill(blankArray, emptyAnnotationString);
-				List<String> blanks = new ArrayList<String>(Arrays.asList(blankArray));
-				this.addAnnotation(ann,blanks,false);
-			}
-		}
-		for(String ann : allAnnotations.keySet()){
-			if(other.allAnnotations.containsKey(ann)){
-				this.allAnnotations.get(ann).addAll(other.allAnnotations.get(ann));
-			} else {
-				String[] blankArray = new String[other.getSize()];
-				Arrays.fill(blankArray, emptyAnnotationString);
-				List<String> blanks = new ArrayList<String>(Arrays.asList(blankArray));
-				this.allAnnotations.get(ann).addAll(blanks);
-			}
-		}
-=======
 	public String getCurrentAnnotation(){
 		return this.currentAnnotation;
->>>>>>> other
 	}
 	
-<<<<<<< local
-	public void combine(List<DocumentList> others){
-		for (DocumentList documentList : others) {
-			this.combine(documentList);
-		}
-=======
 	public boolean equals(DocumentList other){
 		boolean toReturn = true;
 		toReturn=this.getFilenameList().equals(other.getFilenameList())?toReturn:false;
@@ -738,14 +708,8 @@ public class DocumentList implements Serializable
 		toReturn=(this.getName().equals(other.getName()))?toReturn:false;
 		toReturn=(this.getEmptyAnnotationString().equals(other.getEmptyAnnotationString()))?toReturn:false;
 		return toReturn;
->>>>>>> other
 	}
-<<<<<<< local
 
-
-
-=======
->>>>>>> other
 	public String getEmptyAnnotationString()
 	{
 		return emptyAnnotationString;

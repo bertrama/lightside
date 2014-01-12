@@ -31,6 +31,7 @@ import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.extract.ExtractCombinedLoadPanel;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
+import edu.cmu.side.view.util.ParallelTaskUpdater;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
@@ -38,7 +39,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 
 	private static Recipe highlightedDocumentList;
 	private static Recipe highlightedFeatureTable;
-	private static StatusUpdater update = new SwingUpdaterLabel();
+	private static StatusUpdater update = new SwingUpdaterLabel();//new ParallelTaskUpdater(8);
 	private static Map<FeaturePlugin, Boolean> featurePlugins;
 	private static Map<TableFeatureMetricPlugin, Map<String, Boolean>> tableEvaluationPlugins;
 	private static String targetAnnotation;

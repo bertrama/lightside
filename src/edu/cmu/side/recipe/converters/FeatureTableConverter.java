@@ -155,8 +155,8 @@ public class FeatureTableConverter implements Converter{
 			writer.startNode("FeatureValue");
 			writer.setValue(feat.toString());
 			writer.endNode();*/
-
-
+			
+			
 			for(FeatureHit hit: table.getHitsForFeature(feat)){
 				writer.startNode("Hit");
 				writer.addAttribute("doc", ((Integer)hit.getDocumentIndex()).toString());
@@ -171,7 +171,7 @@ public class FeatureTableConverter implements Converter{
 						hitLocs+=((Integer) hitLoc.getEnd()).toString()+";";
 					}
 					if(!hitLocs.isEmpty())
-						hitLocs=hitLocs.substring(0,hitLocs.length()-2);
+						hitLocs=hitLocs.substring(0,hitLocs.length()-1);
 					writer.setValue(hitLocs);
 					writer.endNode();
 				}
@@ -289,6 +289,7 @@ public class FeatureTableConverter implements Converter{
 			reader.moveDown();
 			String encoded = reader.getAttribute("value");
 			Feature feature = Feature.fetchFeature(encoded);
+			
 			/*String type = reader.getAttribute("Type");
 			Feature.Type featType = Feature.Type.valueOf(type);
 			String prefix = reader.getAttribute("Prefix");
@@ -325,10 +326,10 @@ public class FeatureTableConverter implements Converter{
 					//there may be zero or more hit locations
 					reader.moveDown();
 					String locations = reader.getValue();
+					ArrayList<HitLocation> hitLoc = new ArrayList<HitLocation>();
 					if(!locations.isEmpty())
 					{
 						String[] parsed = locations.split(";");
-						ArrayList<HitLocation> hitLoc = new ArrayList<HitLocation>();
 						for(String str: parsed){
 							String[] information = str.split(",");
 							if(information.length==3){
@@ -338,8 +339,8 @@ public class FeatureTableConverter implements Converter{
 								hitLoc.add(new HitLocation(column,start,end));
 							}
 						}
-						hits.add(new LocalFeatureHit(feature, finalValue, docIndex, hitLoc));
 					}
+					hits.add(new LocalFeatureHit(feature, finalValue, docIndex, hitLoc));
 					reader.moveUp();
 				}
 				else	

@@ -105,14 +105,11 @@ public class FeatureTable implements Serializable
 	public FeatureTable(DocumentList sdl, Collection<FeatureHit> hits, int thresh, String annotation, Feature.Type type)
 	{
 		this();
-		Boolean docExists = true;
-		if(sdl==null) docExists=false;
 		setAnnotation(annotation);
 		this.type = type;
 		Map<Feature, Set<Integer>> localFeatures = new HashMap<Feature, Set<Integer>>(100000);
 		this.threshold = thresh;
 		this.documents = sdl;
-		long hitCount = 0;
 
 		generateConvertedClassValues();
 
@@ -122,6 +119,7 @@ public class FeatureTable implements Serializable
 		{
 			hitsPerDocument.add(new TreeSet<FeatureHit>());
 		}
+		
 		Iterator<FeatureHit> hiterator = hits.iterator();
 		//System.out.println("adding feature hits");
 		while(hiterator.hasNext())
@@ -147,7 +145,6 @@ public class FeatureTable implements Serializable
 			int numHitsForThisFeature = hitsPerFeature.get(entry.getKey()).size();
 			if(numHitsForThisFeature >= threshold)
 			{
-				hitCount += numHitsForThisFeature;
 				for(FeatureHit hit : entry.getValue())
 				{
 					hitsPerDocument.get(hit.getDocumentIndex()).add(hit);

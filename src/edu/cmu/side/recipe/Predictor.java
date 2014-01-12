@@ -169,12 +169,13 @@ public class Predictor
 			// predictTable.getAnnotation());
 
 			newDocs.addAnnotation(predictionColumn, (List<String>) result.getPredictions(), overWrite);
+			int size = newDocs.getSize();
 			if (addDistributionColumns)
 			{
 				Map<String, List<Double>> distributions = result.getDistributions();
 				for (String label : distributions.keySet())
 				{
-					List<String> stringDists = new ArrayList<String>(newDocs.getSize());
+					List<String> stringDists = new ArrayList<String>(size);
 					for (Double d : distributions.get(label))
 					{
 						stringDists.add(d.toString());
@@ -182,6 +183,8 @@ public class Predictor
 					newDocs.addAnnotation(predictionColumn + "_" + label, stringDists, overWrite);
 				}
 			}
+			
+			
 			return newDocs;
 		}
 		catch (Exception e)

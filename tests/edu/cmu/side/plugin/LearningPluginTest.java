@@ -1,6 +1,15 @@
 package edu.cmu.side.plugin;
 
-import org.junit.*;
+import java.io.IOException;
+
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import edu.cmu.side.model.Recipe;
+import edu.cmu.side.model.RecipeManager.Stage;
+import edu.cmu.side.model.data.FeatureTable;
+import edu.cmu.side.recipe.Chef;
+import edu.cmu.side.recipe.converters.ConverterControl;
 
 /* Things to test:
  * training models
@@ -27,17 +36,26 @@ import org.junit.*;
 
 public class LearningPluginTest
 {
-
+	
 	@BeforeClass
-	public static void setUp() throws Exception
+	public static void setUp()
 	{
-		
 	}
 
 	@Test
-	public void testTrain()
+	public void testTrainNominal() throws Exception
 	{
-		//TODO: choo choo
+		 Recipe wholeRecipe = ConverterControl.readFromXML("testData/test.model.side.xml");
+		 Recipe trained = Chef.followRecipe(wholeRecipe, wholeRecipe.getDocumentList(), Stage.TRAINED_MODEL, wholeRecipe.getFeatureTable().getThreshold());
+		 assert (trained.equals(wholeRecipe));
+	}
+	
+	@Test
+	public void testTrainNumeric() throws Exception
+	{
+		 Recipe wholeRecipe = ConverterControl.readFromXML("testData/test.numeric.model.side.xml");
+		 Recipe trained = Chef.followRecipe(wholeRecipe, wholeRecipe.getDocumentList(), Stage.TRAINED_MODEL, wholeRecipe.getFeatureTable().getThreshold());
+		 assert (trained.equals(wholeRecipe));
 	}
 
 }

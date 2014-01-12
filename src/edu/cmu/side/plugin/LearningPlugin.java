@@ -23,6 +23,8 @@ import edu.cmu.side.model.data.TrainingResult;
 import edu.cmu.side.model.feature.Feature;
 import edu.cmu.side.model.feature.FeatureHit;
 import edu.cmu.side.view.util.DefaultMap;
+import edu.cmu.side.view.util.ParallelTaskUpdater;
+import edu.cmu.side.view.util.ParallelTaskUpdater.Completion;
 
 public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 {
@@ -221,8 +223,8 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 
 //		double average = StatisticsToolkit.getAverage(times);
 //		double timeA = System.currentTimeMillis();
-		progressIndicator.update(/*(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") +*/ "Training fold", (fold + 1), numFolds);
 
+		
 		FeatureTable wrappedTrain = table;
 
 		wrappedTrain = wrapAndTrain(table, wrappers, progressIndicator, foldsMap, fold);
@@ -231,8 +233,15 @@ public abstract class LearningPlugin extends SIDEPlugin implements Serializable
 		{
 			throw new Exception("User Canceled");
 		}
-
-		progressIndicator.update(/*(times.size() > 0 ? print.format(average) + " sec per fold,\t" : "") +*/ "Testing fold", (fold + 1), numFolds);
+		
+		if(progressIndicator instanceof ParallelTaskUpdater)
+		{
+			((ParallelTaskUpdater)progressIndicator).updateCompletion("Testing fold", fold, Completion.PROGRESS);
+		} 
+		else
+		{
+			progressIndicator.update("Testing fold", (fold + 1), numFolds);
+		}
 
 		// TODO: verify that passing the *unwrapped* table on to predict (as
 		// the test set) is the right thing to do - it was wrappedTrain

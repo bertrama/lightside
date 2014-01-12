@@ -1,7 +1,6 @@
 package edu.cmu.side;
 
 import java.awt.BorderLayout;
-
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -107,7 +106,12 @@ public class Workbench{
 
 			Collection<Refreshable> listeners = GenesisControl.getListeners(source);
 
-
+			if(source == null)
+			{
+				System.out.println("Workbench 111: Warning: cannot update null object.");
+				return;
+			}
+			
 			String sourceName = source instanceof RecipeManager.Stage ? source.toString() : source.getClass().getName();
 			
 			if(!listeners.isEmpty())

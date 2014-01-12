@@ -40,14 +40,15 @@ public class RecipeExporter
 	public final static FileFilter arffFilter = new EndsWithFileFilter("ARFF (Weka)", "arff", "ARFF");
 	public final static FileFilter xmlTableFilter = new EndsWithFileFilter("LightSide Feature Table XML", "table.side.xml");
 	public final static FileFilter xmlModelFilter = new EndsWithFileFilter("LightSide Trained Model XML", "model.side.xml");
-	public final static FileFilter xmlPredictFilter = new EndsWithFileFilter("Predict-Only", "predict.xml", "xml");
+	public final static FileFilter xmlPredictFilter = new EndsWithFileFilter("Predict-Only XML", "predict.xml", "xml");
 	public final static FileFilter xmlGenericFilter = new EndsWithFileFilter("LightSide XML", "xml");
 	public final static FileFilter serializedTableFilter = new EndsWithFileFilter("LightSide Feature Table", "table.side");
 	public final static FileFilter serializedModelFilter = new EndsWithFileFilter("LightSide Trained Model", "model.side");
 	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
-	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only", "predict");
+	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only Serialized", "predict");
 
-	protected static boolean useXML = false;
+	protected static boolean useXML = true;
+	protected static boolean useSerialized = false;
 	
 	public static JFileChooser setUpChooser(JFileChooser chooser, FileFilter... filters)
 	{
@@ -133,10 +134,12 @@ public class RecipeExporter
 
 	public static void exportFeatures(Recipe tableRecipe)
 	{
-		if(useXML)
-			tableChooser = setUpChooser(tableChooser, xmlTableFilter, csvFilter, arffFilter);
-		else
+		if(useXML && useSerialized)
+			tableChooser = setUpChooser(tableChooser, xmlTableFilter, serializedTableFilter, csvFilter, arffFilter);
+		else if(useXML)
 			tableChooser = setUpChooser(tableChooser, serializedTableFilter, csvFilter, arffFilter);
+		else
+			tableChooser = setUpChooser(tableChooser, xmlTableFilter, csvFilter, arffFilter);
 		
 		FeatureTable table = tableRecipe.getTrainingTable();
 		try
@@ -265,7 +268,9 @@ public class RecipeExporter
 		JFileChooser chooser;
 		if(modelRecipe.getStage() == Stage.TRAINED_MODEL)
 		{
-			if(useXML)
+			if(useXML && useSerialized)
+				chooser = modelChooser = setUpChooser(modelChooser, xmlModelFilter, xmlPredictFilter, serializedModelFilter, serializedPredictFilter);
+			else if(useXML)
 				chooser = modelChooser = setUpChooser(modelChooser, xmlModelFilter, xmlPredictFilter);
 			else
 				chooser = modelChooser = setUpChooser(modelChooser, serializedModelFilter, serializedPredictFilter);
@@ -273,7 +278,9 @@ public class RecipeExporter
 		}
 		else
 		{
-			if(useXML)
+			if(useXML && useSerialized)
+				chooser = predictChooser = setUpChooser(predictChooser, xmlPredictFilter, serializedPredictFilter);
+			else if(useXML)
 				chooser = predictChooser = setUpChooser(predictChooser, xmlPredictFilter);
 			else
 				chooser = modelChooser = setUpChooser(predictChooser, serializedPredictFilter);

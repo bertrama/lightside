@@ -2,7 +2,6 @@ package edu.cmu.side.plugin;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -15,10 +14,12 @@ import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
+import edu.cmu.side.view.util.ParallelTaskUpdater;
+import edu.cmu.side.view.util.ParallelTaskUpdater.Completion;
 
 public abstract class ParallelLearningPlugin extends LearningPlugin
 {
-	final static ExecutorService LEARNER_THREAD_POOL = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+	final static ExecutorService LEARNER_THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors()-1));
 	
 	private static final long serialVersionUID = 1L;
 
@@ -28,11 +29,19 @@ public abstract class ParallelLearningPlugin extends LearningPlugin
 		final int numFolds = folds.size();
 		
 		List<Callable<PredictionResult>> tasks = new ArrayList<Callable<PredictionResult>>();
+
 		
 //		final ArrayList<Double> times = new ArrayList<Double>(numFolds);
 		List<PredictionResult> results = new ArrayList<PredictionResult>();
 
 		final Map<String, String> learnerSettings = ParallelLearningPlugin.this.generateConfigurationSettings();
+		
+
+		if(updater instanceof ParallelTaskUpdater)
+		{
+			((ParallelTaskUpdater)updater).setTasks(numFolds);
+		}
+		
 		
 		for(final int fold : folds)
 		{
@@ -66,16 +75,31 @@ public abstract class ParallelLearningPlugin extends LearningPlugin
 						clonedWrappers.put(clone, wrappers.get(key));
 					}
 
+					if(updater instanceof ParallelTaskUpdater)
+					{
+						((ParallelTaskUpdater)updater).updateCompletion("Starting fold", fold, Completion.STARTED);
+					}
+					
 					System.out.println(new Date()+"\tParallelLearningPlugin 57:\tstarting to validate fold "+fold);
 					PredictionResult result = clonedLearner.validateFold(fold, table, foldsMap, numFolds, clonedWrappers, progressIndicator);
 					System.out.println(new Date()+"\tParallelLearningPlugin 59:\tdone validating fold "+fold);
+					
+					if(updater instanceof ParallelTaskUpdater)
+					{
+						((ParallelTaskUpdater)updater).updateCompletion("Finished fold", fold, Completion.DONE);
+					} 
+					
 					return result;
 				}
 				
 			};
 			tasks.add(task);
+			if(updater instanceof ParallelTaskUpdater)
+			{
+				((ParallelTaskUpdater)updater).updateCompletion("Queueing fold", fold, Completion.WAITING);
+			}
 		}
-		
+
 		List<Future<PredictionResult>> futureResults = LEARNER_THREAD_POOL.invokeAll(tasks);
 		
 		for(Future<PredictionResult> future : futureResults)

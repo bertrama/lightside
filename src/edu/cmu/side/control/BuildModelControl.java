@@ -1,7 +1,6 @@
 package edu.cmu.side.control;
 
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,6 +39,7 @@ import edu.cmu.side.plugin.WrapperPlugin;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.view.generic.ActionBar;
 import edu.cmu.side.view.generic.ActionBarTask;
+import edu.cmu.side.view.util.ParallelTaskUpdater;
 import edu.cmu.side.view.util.SwingUpdaterLabel;
 
 public class BuildModelControl extends GenesisControl{
@@ -53,7 +53,7 @@ public class BuildModelControl extends GenesisControl{
 	private static LearningPlugin highlightedLearningPlugin;
 
 	private static Collection<ModelMetricPlugin> modelEvaluationPlugins;
-	private static StatusUpdater update = new SwingUpdaterLabel();
+	private static StatusUpdater update = new ParallelTaskUpdater(10);//new SwingUpdaterLabel();
 	private static String newName = "model";
 
 	static{
@@ -270,7 +270,7 @@ public class BuildModelControl extends GenesisControl{
 		Recipe plan;
 		String name;
 		Exception ex;
-		private boolean audioEnabled = false;
+		private boolean audioEnabled = true && new File("toolkits/train.wav").exists();
 
 
 		public BuildModelTask(ActionBar action, Recipe newRecipe, String n)

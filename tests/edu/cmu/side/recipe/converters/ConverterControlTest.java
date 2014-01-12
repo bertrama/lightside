@@ -9,6 +9,7 @@ import java.io.ObjectInputStream;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import edu.cmu.side.model.Recipe;
@@ -105,14 +106,14 @@ public class ConverterControlTest
 		assertTrue(r.equals(wholeRecipe));
 	}
 	
-	@Test
+	@Test @Ignore
 	public void testPredictionRecipeZippedXMLString() throws IOException
 	{
 		String zippedXML = ConverterControl.getZippedXMLString(predictRecipe);
 		Recipe r = ConverterControl.getRecipeFromZippedXMLString(zippedXML);
 		assertTrue(r.equals(predictRecipe));
 	}
-	@Test
+	@Test @Ignore
 	public void testWholeRecipeZippedXMLString() throws IOException
 	{
 		String zippedXML = ConverterControl.getZippedXMLString(wholeRecipe);

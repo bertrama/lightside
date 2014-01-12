@@ -502,12 +502,12 @@ public class Recipe implements Serializable
 		}
 		
 		//learner
-		if(!xorNull(this.getLearner(), other.getLearner())){
+		if(!xorNull(this.learner, other.getLearner())  && this.learner != null){
 			toReturn=!this.learner.equals(other.getLearner())?false:toReturn;
 		}
 		
 		//Learner Settings
-		if(!xorNull(this.learnerSettings, other.getLearnerSettings())){
+		if(!xorNull(this.learnerSettings, other.getLearnerSettings())  && this.learnerSettings != null){
 			toReturn=!this.learnerSettings.equals(other.getLearnerSettings())?false:toReturn;
 		}
 		//Validation Settings

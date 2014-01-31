@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.TreeSet;
 
 import javax.swing.ImageIcon;
-import javax.swing.JLabel;
 
 import edu.cmu.side.control.BuildModelControl;
 import edu.cmu.side.model.Recipe;
@@ -21,7 +20,7 @@ import edu.cmu.side.view.util.RadioButtonListEntry;
 
 public class BuildActionPanel extends ActionBar {
 
-	JLabel trainingLabel = new JLabel();
+	//JLabel trainingLabel = new JLabel();
 
 	public BuildActionPanel(StatusUpdater update){
 		super("model", Stage.TRAINED_MODEL, update);
@@ -35,13 +34,13 @@ public class BuildActionPanel extends ActionBar {
 			settings.add("left", wrapper.getConfigurationUI());
 		}
 
-		trainingLabel.setIcon(new ImageIcon("toolkits/icons/training.gif"));
-		trainingLabel.setVisible(false);
-		settings.add("left", trainingLabel);
+		//trainingLabel.setIcon(new ImageIcon("toolkits/icons/training.gif"));
+		//trainingLabel.setVisible(false);
+		//settings.add("left", trainingLabel);
 		
 		updaters.removeAll();
 		updaters.add("right", (Component) update);
-		updaters.add("right", trainingLabel);
+		//updaters.add("right", trainingLabel);
 		name.setText(getDefaultName());
 		
 		//right.remove(cancel);
@@ -54,7 +53,8 @@ public class BuildActionPanel extends ActionBar {
 			if(ae.getSource() instanceof RadioButtonListEntry){
 				Object o = ((RadioButtonListEntry)ae.getSource()).getValue();
 				if(o instanceof SIDEPlugin){
-					setDefaultName(((SIDEPlugin)o).getOutputName());
+					Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
+					setDefaultName(((SIDEPlugin)o).getOutputName() + (recipe==null?"":("__" + recipe.getTrainingTable().getName())));
 					refreshPanel();
 				}
 			}
@@ -65,21 +65,27 @@ public class BuildActionPanel extends ActionBar {
 	public void refreshPanel(){
 		super.refreshPanel();
 		
-		Recipe table = BuildModelControl.getHighlightedFeatureTableRecipe();
+		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
 		LearningPlugin learner = BuildModelControl.getHighlightedLearningPlugin();
-		actionButton.setEnabled(table != null && learner.supportsClassType(table.getTrainingTable().getClassValueType()));
+		
+		if(!BuildModelControl.isCurrentlyTraining())
+		actionButton.setEnabled(learner != null && recipe != null && learner.supportsClassType(recipe.getTrainingTable().getClassValueType()));
+		
+		setDefaultName((learner==null?"model":learner.getOutputName()) + (recipe==null?"":("__" + recipe.getTrainingTable().getName())));
 	}
 
 	@Override
 	public void startedTask()
 	{
-		trainingLabel.setVisible(true);
+		//trainingLabel.setVisible(true);
+		((Component)update).setVisible(true);
 	}
 
 	@Override
 	public void endedTask()
 	{
-		trainingLabel.setVisible(false);
+		//trainingLabel.setVisible(false);
+		((Component)update).setVisible(false);
 	}
 
 }

@@ -1,13 +1,18 @@
 package edu.cmu.side.view.extract;
 
+import java.util.ArrayList;
+import java.util.Map;
+
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import edu.cmu.side.control.ExtractFeaturesControl;
-import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.RecipeManager.Stage;
+import edu.cmu.side.model.StatusUpdater;
+import edu.cmu.side.plugin.FeaturePlugin;
 import edu.cmu.side.view.generic.ActionBar;
+import edu.stanford.nlp.util.StringUtils;
 
 public class ExtractActionPanel extends ActionBar{
 
@@ -26,10 +31,21 @@ public class ExtractActionPanel extends ActionBar{
 	}
 	
 	@Override
-	public void refreshPanel(){
+	public void refreshPanel()
+	{
 		super.refreshPanel();
 		String annotation = ExtractFeaturesControl.getSelectedClassAnnotation();
 		actionButton.setEnabled(ExtractFeaturesControl.hasHighlightedDocumentList() && annotation != null);
+		ArrayList<String> names = new ArrayList<String>();
+		Map<FeaturePlugin, Boolean> plugins = ExtractFeaturesControl.getFeaturePlugins();
+		for(FeaturePlugin p : plugins.keySet())
+		{
+			if(plugins.get(p))
+				names.add(p.getDefaultName());
+		}
+		if(names.isEmpty())
+			names.add("features");
+		setDefaultName(StringUtils.join(names, "_"));
 	}
 
 	@Override

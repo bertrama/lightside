@@ -1,11 +1,14 @@
 package edu.cmu.side.view.extract;
 
 import java.awt.BorderLayout;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.util.Map;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.control.ExtractFeaturesControl;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.RecipeManager;
@@ -30,7 +33,7 @@ public class ExtractFeaturesPane extends JPanel{
 			}
 		};
 		
-		GenericPluginConfigPanel<FeaturePlugin> pluginConfig = new GenericPluginConfigPanel<FeaturePlugin>(){
+		final GenericPluginConfigPanel<FeaturePlugin> pluginConfig = new GenericPluginConfigPanel<FeaturePlugin>(){
 			@Override
 			public void refreshPanel() {
 				refreshPanel(ExtractFeaturesControl.getFeaturePlugins());
@@ -40,6 +43,19 @@ public class ExtractFeaturesPane extends JPanel{
 		};
 		
 		pluginConfig.refreshPanel();
+		
+		MouseMotionAdapter motionListener = new MouseMotionAdapter()
+		{
+			@Override
+			public void mouseMoved(MouseEvent e)
+			{
+				Workbench.update(pluginConfig);
+			}
+			
+		};
+		pluginChecklist.addMouseMotionListener(motionListener);
+		pluginConfig.addMouseMotionListener(motionListener);
+		action.addMouseMotionListener(motionListener);
 		
 		ExtractCombinedLoadPanel load = new ExtractCombinedLoadPanel("CSV Files:");
 		top = new GenericTripleFrame(load, pluginChecklist, pluginConfig);
@@ -62,6 +78,8 @@ public class ExtractFeaturesPane extends JPanel{
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, action);
 		GenesisControl.addListenerToMap(RecipeManager.Stage.FEATURE_TABLE, bottom);
 		GenesisControl.addListenerToMap(pluginChecklist, pluginConfig);
+		GenesisControl.addListenerToMap(pluginConfig, action);
+		GenesisControl.addListenerToMap(pluginChecklist, action);
 		GenesisControl.addListenerToMap(load, action);
 		
 	}

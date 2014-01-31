@@ -48,6 +48,7 @@ public abstract class ActionBarTask extends SwingWorker<Void, Void> implements P
 			actionBar.cancel.setEnabled(false);
 			actionBar.cancel.removeActionListener(stopListener);
 			actionBar.cancel.setIcon(originalIcon);
+			actionBar.nameEdited = false;
 	
 			actionBar.endedTask();
 			Workbench.update(actionBar); //this is the only SIDE-specific code in this class...

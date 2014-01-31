@@ -207,10 +207,13 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 
 	public abstract Recipe getHighlight();
 
-	public void deleteHighlight()
+	public void deleteHighlight(Collection<Recipe> recipes)
 	{
 		describeScroll = new JScrollPane();
-		setHighlight(null);
+		Recipe[] options = recipes.toArray(new Recipe[0]);
+		if(options.length > 0)
+			setHighlight(options[options.length - 1]);
+		Workbench.reloadComboBoxContent(combo, recipes, getHighlight());
 	}
 
 	@Override
@@ -229,7 +232,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		}
 		if (getHighlight() != null && !Workbench.getRecipeManager().containsRecipe(getHighlight()))
 		{
-			deleteHighlight();
+			deleteHighlight(recipes);
 		}
 		if (getHighlight() != null)
 		{

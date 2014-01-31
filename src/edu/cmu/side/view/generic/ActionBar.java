@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -26,7 +28,7 @@ public abstract class ActionBar extends AbstractListPanel{
 	protected JButton cancel = new JButton();
 	
 	protected JProgressBar progressBar = new JProgressBar();
-	protected JTextField name = new JTextField(5);
+	protected JTextField name = new JTextField(15);
 	protected JLabel nameLabel = new JLabel("Name:");
 	protected JPanel settings = new JPanel(new RiverLayout());
 	protected JComboBox combo;
@@ -42,6 +44,8 @@ public abstract class ActionBar extends AbstractListPanel{
 	protected JPanel right = new JPanel(new RiverLayout());
 	
 	protected StatusUpdater update;
+	
+	protected boolean nameEdited = false;
 
 	public ActionBar(String def, Stage stage, StatusUpdater update){
 		this(update);
@@ -76,6 +80,16 @@ public abstract class ActionBar extends AbstractListPanel{
 		add("left", actionButton);
 		add("hfill", settings);
 		add("left", right);
+		
+		name.addKeyListener(new KeyAdapter()
+		{
+
+			@Override
+			public void keyReleased(KeyEvent e)
+			{
+				nameEdited = true;
+			}
+		});
 	}
 
 	
@@ -83,9 +97,10 @@ public abstract class ActionBar extends AbstractListPanel{
 	@Override
 	public void refreshPanel()
 	{
-		if(getDefaultName() != null)
+		if(getDefaultName() != null && !nameEdited)
 		{
-			name.setText(Workbench.getRecipeManager().getAvailableRecipeName(getDefaultName(), getRecipeStage()));			
+			name.setText(Workbench.getRecipeManager().getAvailableRecipeName(getDefaultName(), getRecipeStage()));		
+			name.setCaretPosition(0);
 		}
 	}
 

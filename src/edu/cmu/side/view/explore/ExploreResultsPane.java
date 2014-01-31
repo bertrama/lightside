@@ -36,7 +36,8 @@ public class ExploreResultsPane extends JPanel{
 
 		@Override
 		public void refreshPanel() {
-			if(!ExploreResultsControl.hasHighlightedTrainedModelRecipe()){
+			if(!ExploreResultsControl.hasHighlightedTrainedModelRecipe())
+			{
 				ExploreResultsControl.setHighlightedCell(null, null);
 			}
 			refreshPanel(GenesisControl.getTrainedModels());

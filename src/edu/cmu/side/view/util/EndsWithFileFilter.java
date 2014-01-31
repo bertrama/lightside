@@ -1,6 +1,7 @@
 package edu.cmu.side.view.util;
 
 import java.io.File;
+import java.util.Arrays;
 
 import javax.swing.filechooser.FileFilter;
 
@@ -41,6 +42,11 @@ public class EndsWithFileFilter extends FileFilter
 	public String getDescription()
 	{
 		return description;
+	}
+	
+	public String toString()
+	{
+		return getDescription()+": "+Arrays.toString(extensions);
 	}
 	
 }

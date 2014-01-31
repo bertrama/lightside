@@ -19,6 +19,7 @@ import javax.swing.JTextField;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
+import edu.cmu.side.model.RecipeManager.Stage;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.data.FeatureTable;
@@ -151,6 +152,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 			{
 				highlightedDocumentList.getDocumentList().setDifferentiateTextColumns(differentiate);
 			}
+			Workbench.update(Stage.DOCUMENT_LIST);
 		}
 		
 	};

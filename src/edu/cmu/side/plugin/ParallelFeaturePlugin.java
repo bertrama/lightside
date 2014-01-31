@@ -13,6 +13,7 @@ import edu.cmu.side.Workbench;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.feature.FeatureHit;
+import edu.cmu.side.util.ThreadPoolManager;
 import edu.cmu.side.view.util.ParallelTaskUpdater;
 import edu.cmu.side.view.util.ParallelTaskUpdater.Completion;
 
@@ -120,7 +121,7 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 		System.out.println("invoking "+tasks.size()+" tasks...");
 		try
 		{
-			ExecutorService pool = Workbench.getThreadPool();
+			ExecutorService pool = ThreadPoolManager.getThreadPool();
 			List<Future<Collection<FeatureHit>>> results = pool.invokeAll(tasks);
 
 			for(Future<Collection<FeatureHit>> result: results)

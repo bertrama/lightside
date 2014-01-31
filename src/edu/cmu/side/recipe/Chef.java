@@ -81,41 +81,16 @@ public class Chef
 		
 		for (final SIDEPlugin plug : extractors.keySet())
 		{
-//			new Thread()
-//			{
-//				public void run()
-//				{
+
 					if(!quiet) System.out.println("Chef: Simmering features with "+plug+"...");
 					//System.out.println("Extractor Settings: "+extractors.get(plug));
 					Collection<FeatureHit> extractorHits = ((FeaturePlugin) plug).extractFeatureHits(corpus, extractors.get(plug), textUpdater);
-					
-//					synchronized(hits)
-//					{
-//						hitChunks.add(plug.toString());
-						hits.addAll(extractorHits);
-//						hits.notifyAll();
-//					}
-//				}
-//			}.start();	
+					hits.addAll(extractorHits);
+
 			if (!quiet) System.out.println("Chef: Finished simmering with " + plug + "...");
 		}
 
 		if (!quiet) System.out.println("Chef: Done simmering with plugins!");
-//		while(hitChunks.size() < extractors.size())
-//		{
-//			synchronized(hits)
-//			{
-//				try
-//				{
-//					hits.wait();
-//				}
-//				catch (InterruptedException e)
-//				{
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//		}
 
 		if (!quiet) System.out.println("Chef: Building feature table...");
 

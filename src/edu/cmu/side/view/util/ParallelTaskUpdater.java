@@ -91,10 +91,9 @@ public class ParallelTaskUpdater extends JPanel implements StatusUpdater
 	
 	synchronized public void updateCompletion(String textSlot, int taskNumber, Completion state) 
 	{
-		System.out.println("Completion: " + textSlot+" "+taskNumber + "/"+completion.length+": "+state);
+		//System.out.println("Completion: " + textSlot+" "+taskNumber + "/"+completion.length+": "+state);
 		if(taskNumber < completion.length)
 		{
-			System.out.println("triggering completion update!");
 			completion[taskNumber] = state;
 			textLabel.setText(textSlot + " " + taskNumber+"/"+completion.length);
 			canvas.repaint();

@@ -47,6 +47,7 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 		{
 			((ParallelTaskUpdater)updater).setTasks(numTasks);
 		}
+		updater.update("Starting Extraction", 0, documents.getSize());
 		
 		final int size = documents.getSize();
 		final int chunk = size/numTasks;

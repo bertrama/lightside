@@ -97,7 +97,7 @@ public abstract class ActionBar extends AbstractListPanel{
 	@Override
 	public void refreshPanel()
 	{
-		if(getDefaultName() != null && !nameEdited)
+		if(getDefaultName() != null && !nameEdited || name.getText().trim().isEmpty())
 		{
 			name.setText(Workbench.getRecipeManager().getAvailableRecipeName(getDefaultName(), getRecipeStage()));		
 			name.setCaretPosition(0);

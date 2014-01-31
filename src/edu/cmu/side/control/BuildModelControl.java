@@ -55,6 +55,8 @@ public class BuildModelControl extends GenesisControl{
 	private static Collection<ModelMetricPlugin> modelEvaluationPlugins;
 	private static StatusUpdater update = new ParallelTaskUpdater(10);//new SwingUpdaterLabel();
 	private static String newName = "model";
+	
+	private static boolean currentlyTraining = false;
 
 	static{
 		validationSettings = new TreeMap<String, Serializable>();
@@ -290,7 +292,7 @@ public class BuildModelControl extends GenesisControl{
 			{
 				Exception exception = ex;
 				ex = null;
-				if(exception.getMessage().equals("User Canceled"))
+				if(exception.getMessage() != null && exception.getMessage().equals("User Canceled"))
 					JOptionPane.showMessageDialog(null, "Model Training Canceled.", "Train Stop", JOptionPane.INFORMATION_MESSAGE);
 				
 				else
@@ -319,6 +321,8 @@ public class BuildModelControl extends GenesisControl{
 					ex.printStackTrace();
 				}
 			}
+			
+			currentlyTraining = false;
 			
 		}
 		
@@ -466,5 +470,10 @@ public class BuildModelControl extends GenesisControl{
 		return validationSettings;
 
 
+	}
+
+	public static boolean isCurrentlyTraining()
+	{
+		return currentlyTraining;
 	}
 }

@@ -8,6 +8,8 @@ import java.io.ObjectOutputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -38,8 +40,8 @@ public class RecipeExporter
 //	public final static FileFilter csvFilterMac = new EndsWithFileFilter("CSV (Mac Excel, MacRoman)", "csv", "CSV");
 //	public final static FileFilter csvFilterWindows = new EndsWithFileFilter("CSV (Windows Excel, CP1252)", "csv", "CSV");
 	public final static FileFilter arffFilter = new EndsWithFileFilter("ARFF (Weka)", "arff", "ARFF");
-	public final static FileFilter xmlTableFilter = new EndsWithFileFilter("LightSide Feature Table XML", "table.side.xml");
-	public final static FileFilter xmlModelFilter = new EndsWithFileFilter("LightSide Trained Model XML", "model.side.xml");
+	public final static FileFilter xmlTableFilter = new EndsWithFileFilter("LightSide Feature Table XML", "table.side.xml", "xml");
+	public final static FileFilter xmlModelFilter = new EndsWithFileFilter("LightSide Trained Model XML", "model.side.xml", "xml");
 	public final static FileFilter xmlPredictFilter = new EndsWithFileFilter("Predict-Only XML", "predict.xml", "xml");
 	public final static FileFilter xmlGenericFilter = new EndsWithFileFilter("LightSide XML", "xml");
 	public final static FileFilter serializedTableFilter = new EndsWithFileFilter("LightSide Feature Table", "table.side");
@@ -47,60 +49,82 @@ public class RecipeExporter
 	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
 	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only Serialized", "predict");
 
+	protected final static Pattern extensionPattern = Pattern.compile(".*((?:\\.table|model)(?:\\.side|predict)?\\.[a-zA-Z]+)$");
+
 	protected static boolean useXML = true;
 	protected static boolean useSerialized = false;
 	
 	public static JFileChooser setUpChooser(JFileChooser chooser, FileFilter... filters)
 	{
+		//System.out.println("REx: setting up chooser for filters "+Arrays.toString(filters));
 		if (chooser == null)
 		{
-			chooser = new JFileChooser(new File("saved"))
-			{
+			//System.out.println("REx: making new chooser ");
+			chooser = new JFileChooser(new File("saved"));
+			/*{
 				String lastName = null;
 
 				@Override
 				public void setFileFilter(FileFilter filter)
 				{
+					//System.out.println("REx: setting file filter within special subclass: Filter="+filter);
+				
+					if(filter == null)
+						return;
+
+					//System.out.println("REx: calling super.setFileFilter");
+					super.setFileFilter(filter);
+					
 					File f = this.getSelectedFile();
 					if (f == null && lastName != null)
 					{
 						f = new File(lastName);
 					}
-					if (f != null)
+					if (f != null && filter instanceof EndsWithFileFilter)
 					{
 						String name = f.getName();
-						String extension = "";
 
 						List<String> extensions = Arrays.asList(((EndsWithFileFilter) filter).getExtensions());
-//						System.out.println(extensions);
 
-						boolean changed = false;
-						for (String ext : ((EndsWithFileFilter) this.getFileFilter()).getExtensions())
+						boolean validExtension = false;
+						for (String ext : extensions)
 						{
-							if (name.endsWith("." + ext))
+							//System.out.println("REx: looping over file extensions: "+ext);
+							if (name.endsWith("."+ext))
 							{
-								name = name.replace("." + ext, "." + extensions.get(0));
-								this.setSelectedFile(new File(name));
-								changed = true;
+								//System.out.println("REx: valid extension ."+ext);
+								validExtension = true;
 								break;
 							}
 						}
 
-						// if (!extensions.contains(extension))
-						// this.setSelectedFile(new File(name + "." +
-						// extensions.get(0)));
-						if (!changed) this.setSelectedFile(new File(name + "." + extensions.get(0)));
+						if (!validExtension)
+						{
+							Matcher match = extensionPattern.matcher(name);
+							if(match.matches())
+							{
+								name = match.replaceFirst("." + extensions.get(0));
+							}
+							else
+								name = name + "." + extensions.get(0);
+
+							//System.out.println("REx: I would like to rename this file to "+name);
+							this.setSelectedFile(new File(name));
+							
+						}
+							
 					}
-					super.setFileFilter(filter);
+
 				}
 
 				@Override
 				public void setSelectedFile(File f)
 				{
+					//System.out.println("REx: calling setSelectedFile: "+f);
 					if (f != null) lastName = f.getName();
 					super.setSelectedFile(f);
 				}
-			};
+			};*/
 
 			
 			for (FileFilter filter : filters)
@@ -124,10 +148,11 @@ public class RecipeExporter
 			
 			chooser.setAcceptAllFileFilterUsed(true);
 			chooser.setFileFilter(filters[0]);
-
 		}
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setFileHidingEnabled(false);
+
+		//System.out.println("REx: returning chooser for filter "+Arrays.toString(filters)+"\n"+Arrays.toString(chooser.getChoosableFileFilters()));
 		
 		return chooser;
 	}
@@ -270,6 +295,7 @@ public class RecipeExporter
 		{
 			if(useXML && useSerialized)
 				chooser = modelChooser = setUpChooser(modelChooser, xmlModelFilter, xmlPredictFilter, serializedModelFilter, serializedPredictFilter);
+				
 			else if(useXML)
 				chooser = modelChooser = setUpChooser(modelChooser, xmlModelFilter, xmlPredictFilter);
 			else
@@ -285,12 +311,20 @@ public class RecipeExporter
 			else
 				chooser = modelChooser = setUpChooser(predictChooser, serializedPredictFilter);
 		}
+		//System.out.println("REx: chooser has "+Arrays.toString(chooser.getChoosableFileFilters()));
+		
+		//System.out.println("REx: getting trained model...");
 			
 		TrainingResult result = modelRecipe.getTrainingResult();
 		try
 		{
-			chooser.setSelectedFile(new File(modelRecipe.getRecipeName() + "." + ((EndsWithFileFilter) modelChooser.getFileFilter()).getExtensions()[0]));
 
+			//System.out.println("REx: setting default name from selected filter...");
+			chooser.setSelectedFile(new File(modelRecipe.getTrainingResult().getName() + "." + ((EndsWithFileFilter) modelChooser.getFileFilter()).getExtensions()[0]));
+
+			////System.out.println("REx: selected file is "+chooser.getSelectedFile());
+			
+			//System.out.println("REx: showing dialogue...");
 			int state = chooser.showDialog(null, "Save Trained Model");
 			if (state == JFileChooser.APPROVE_OPTION)
 			{
@@ -312,7 +346,7 @@ public class RecipeExporter
 			String message = e.getMessage();
 			if (result == null)
 				message = "Training Result is null.";
-			else if (message == null || message.isEmpty()) message = "Couldn't save feature table.";
+			else if (message == null || message.isEmpty()) message = "Couldn't save trained model.";
 			JOptionPane.showMessageDialog(null, message);
 			e.printStackTrace();
 		}

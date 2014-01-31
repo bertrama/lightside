@@ -170,26 +170,42 @@ public class TrainingResult implements Serializable{
 				confusionMatrix.get(pred).get(act).add(i);
 			}
 			break;
-		case NUMERIC:
-			for(int i = 0; i < actual.size(); i++){
-				Double predDbl = Double.parseDouble(predicted.get(i).toString());
-				ArrayList<Double> breakpoints = getTrainingTable().getNumericBreakpoints();
-				int Qpred = -1;
-				int j = 0;
-				while(j < 4 && predDbl > breakpoints.get(j)) j++;
-				Qpred = j;
-				j = 0;
-				String pred = "Q"+(Qpred+1);
-				String act = getEvaluationTable().getNominalClassValues().get(i);
-				if(!confusionMatrix.containsKey(pred)){
-					confusionMatrix.put(pred, new TreeMap<String, List<Integer>>());
+			case NUMERIC:
+				
+				for(int i = 1; i <= 5; i++)
+				{
+					confusionMatrix.put("Q"+i, new TreeMap<String, List<Integer>>());
+					for(int j = 1; j <= 5; j++)
+					{
+						confusionMatrix.get("Q"+i).put("Q"+j, new ArrayList<Integer>());
+					}
 				}
-				if(!confusionMatrix.get(pred).containsKey(act)){
-					confusionMatrix.get(pred).put(act, new ArrayList<Integer>());
+				
+				for (int i = 0; i < actual.size(); i++)
+				{
+					Double predDbl = Double.parseDouble(predicted.get(i).toString());
+					ArrayList<Double> breakpoints = getTrainingTable().getNumericBreakpoints();
+					int Qpred = -1;
+					int j = 0;
+					while (j < 4 && predDbl > breakpoints.get(j))
+					{
+						j++;
+					}
+					Qpred = j;
+					
+					String pred = "Q" + (Qpred + 1);
+					String act = getEvaluationTable().getNominalClassValues().get(i);
+//					if (!confusionMatrix.containsKey(pred))
+//					{
+//						confusionMatrix.put(pred, new TreeMap<String, List<Integer>>());
+//					}
+//					if (!confusionMatrix.get(pred).containsKey(act))
+//					{
+//						confusionMatrix.get(pred).put(act, new ArrayList<Integer>());
+//					}
+					confusionMatrix.get(pred).get(act).add(i);
 				}
-				confusionMatrix.get(pred).get(act).add(i);
-			}
-			break;
+				break;
 		}
 
 	}

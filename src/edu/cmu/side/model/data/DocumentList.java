@@ -25,8 +25,12 @@ public class DocumentList implements Serializable
 	private static final long serialVersionUID = -5433699826930815886L;
 
 	List<String> filenameList = new ArrayList<String>();
+	
+	//the underlying lists of strings are rarely cloned, but the maps themselves are duplicated when a recipe is duplicated.
 	Map<String, List<String>> allAnnotations = new TreeMap<String, List<String>>();
 	Map<String, List<String>> textColumns = new TreeMap<String, List<String>>();
+	
+	
 	boolean differentiateTextColumns = false;
 	String currentAnnotation; 
 //	Feature.Type type;
@@ -424,10 +428,6 @@ public class DocumentList implements Serializable
 		else throw new NoSuchElementException("Document List "+this.getName()+" has no column named "+name + ": "+allAnnotations.keySet());
 	}
 
-//	public List<String> getAnnotationArray() {
-//		if (currentAnnotation == null) return null;
-//		return allAnnotations.get(currentAnnotation);
-//	}
 
 	public Map<String, List<String>> getCoveredTextList() {
 		return textColumns;
@@ -461,7 +461,7 @@ public class DocumentList implements Serializable
 	
 	
 	
-	public boolean textColumnsAreDifferentiated()
+	public boolean getTextColumnsAreDifferentiated()
 	{
 		return differentiateTextColumns;
 	}
@@ -712,7 +712,7 @@ public class DocumentList implements Serializable
 		toReturn=this.getFilenameList().equals(other.getFilenameList())?toReturn:false;
 		toReturn=this.allAnnotations().equals(other.allAnnotations())?toReturn:false;
 		toReturn=this.getTextColumns().equals(other.getTextColumns())?toReturn:false;
-		toReturn=(this.textColumnsAreDifferentiated()==other.textColumnsAreDifferentiated())?toReturn:false;
+		toReturn=(this.getTextColumnsAreDifferentiated()==other.getTextColumnsAreDifferentiated())?toReturn:false;
 		toReturn=(this.getCurrentAnnotation().equals(other.getCurrentAnnotation()))?toReturn:false;
 		toReturn=(this.getName().equals(other.getName()))?toReturn:false;
 		toReturn=(this.getEmptyAnnotationString().equals(other.getEmptyAnnotationString()))?toReturn:false;

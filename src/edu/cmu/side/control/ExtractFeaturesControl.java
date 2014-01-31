@@ -239,7 +239,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 		@Override
 		public void actionPerformed(ActionEvent arg0) 
 		{
-			Collection<FeaturePlugin> plugins = new HashSet<FeaturePlugin>();
+			Collection<FeaturePlugin> plugins = new TreeSet<FeaturePlugin>();
 			for (FeaturePlugin plugin : ExtractFeaturesControl.getFeaturePlugins().keySet())
 			{
 				if (ExtractFeaturesControl.getFeaturePlugins().get(plugin))
@@ -304,7 +304,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 		}
 		
 		@Override
-		protected void doTask(){
+		protected void doTask()
+		{	
 			try
 			{
 				// System.out.println("EFC 289: extracting features for new feature table. Annotation "+selectedClassAnnotation+", type "+selectedClassType);
@@ -313,12 +314,12 @@ public class ExtractFeaturesControl extends GenesisControl{
 				{
 					if (!halt)
 					{
-							activeExtractor = (FeaturePlugin) plug;
-							hits.addAll(activeExtractor.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
+						activeExtractor = (FeaturePlugin) plug;
+						hits.addAll(activeExtractor.extractFeatureHits(plan.getDocumentList(), plan.getExtractors().get(plug), update));
 					}
-					
+
 				}
-				if(!halt)
+				if (!halt)
 				{
 					update.update("Building Feature Table");
 					FeatureTable ft = new FeatureTable(plan.getDocumentList(), hits, threshold, selectedClassAnnotation, selectedClassType);
@@ -328,7 +329,8 @@ public class ExtractFeaturesControl extends GenesisControl{
 			}
 			catch (Exception e)
 			{
-				//JOptionPane.showMessageDialog(null, "LightSide couldn't finalize the feature table.\nSee lightsidelog.log for more details.\n"+e.getLocalizedMessage(),"Extraction Failure",JOptionPane.ERROR_MESSAGE);
+				// JOptionPane.showMessageDialog(null,
+				// "LightSide couldn't finalize the feature table.\nSee lightsidelog.log for more details.\n"+e.getLocalizedMessage(),"Extraction Failure",JOptionPane.ERROR_MESSAGE);
 				System.err.println("Feature Extraction Failed");
 				e.printStackTrace();
 				ex = e;

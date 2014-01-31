@@ -449,7 +449,7 @@ public class BuildModelControl extends GenesisControl{
 		{
 			test.setCurrentAnnotation(recipe.getTrainingTable().getAnnotation(), recipe.getTrainingTable().getClassValueType());
 			test.setTextColumns(new HashSet<String>(train.getTextColumns()));
-			test.setDifferentiateTextColumns(train.textColumnsAreDifferentiated());
+			test.setDifferentiateTextColumns(train.getTextColumnsAreDifferentiated());
 			
 			Collection<String> trainColumns = train.allAnnotations().keySet();
 			Collection<String> testColumns = test.allAnnotations().keySet();

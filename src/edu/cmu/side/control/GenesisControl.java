@@ -26,6 +26,7 @@ import edu.cmu.side.plugin.SIDEPlugin;
 import edu.cmu.side.view.util.Refreshable;
 import edu.cmu.side.view.util.CheckBoxListEntry;
 import edu.cmu.side.view.util.RecipeCellRenderer;
+import edu.stanford.nlp.util.StringUtils;
 
 public abstract class GenesisControl {
 
@@ -149,17 +150,6 @@ public abstract class GenesisControl {
 		return getTrainedModels().size();
 	}
 
-	protected void addDescriptionNode(SIDEPlugin plug){
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(plug.toString());
-		Map<String, String> settings = plug.generateConfigurationSettings();
-		for(String key : settings.keySet()){
-			DefaultMutableTreeNode sub = new DefaultMutableTreeNode(key);
-			DefaultMutableTreeNode val = new DefaultMutableTreeNode(settings.get(key));
-			sub.add(val);
-			node.add(sub);
-		}
-	}
-
 	public static Component getRecipeTree(Recipe r){
 		DefaultMutableTreeNode top = new DefaultMutableTreeNode(r.getStage());
 		if(r.getDocumentList() != null){
@@ -246,7 +236,7 @@ public abstract class GenesisControl {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode("Documents: " + docs.getName());
 
 		DefaultMutableTreeNode size = new DefaultMutableTreeNode("Instances: " + docs.getSize());
-		DefaultMutableTreeNode text = new DefaultMutableTreeNode("Text Columns:");
+		DefaultMutableTreeNode text = new DefaultMutableTreeNode("Text Columns: "+StringUtils.join(docs.getTextColumns(), ","));
 		for(String s : docs.getTextColumns()){
 			DefaultMutableTreeNode textName = new DefaultMutableTreeNode(s);
 			text.add(textName);
@@ -295,11 +285,14 @@ public abstract class GenesisControl {
 		for(String key : keys.keySet()){
 			String value = keys.get(key);
 			
-			if(value.length() > 20)
-				value = value.substring(0, 20)+"...";
-			
-			DefaultMutableTreeNode setting = new DefaultMutableTreeNode(key + ": " + value);	
-			plugin.add(setting);
+			if(!value.equals("false"))
+			{
+				if(value.length() > 20)
+					value = value.substring(0, 20)+"...";
+				
+				DefaultMutableTreeNode setting = new DefaultMutableTreeNode(key + ": " + value);	
+				plugin.add(setting);
+			}
 		}
 		return plugin;
 	}

@@ -2,6 +2,7 @@ package edu.cmu.side;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
@@ -9,6 +10,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -20,6 +23,7 @@ import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.view.WorkbenchPanel;
+import edu.cmu.side.view.util.EventQueueProxy;
 import edu.cmu.side.view.util.MemoryMonitorPanel;
 import edu.cmu.side.view.util.Refreshable;
 
@@ -35,6 +39,11 @@ public class Workbench{
 	public static File csvFolder = dataFolder;
 	public static File toolkitsFolder = new File(rootFolder, "toolkits");
 	public static File savedFolder = new File(BASE_PATH, "saved");
+	
+	//TODO: consider moving this elsewhere.
+	private static int availableCores = Math.max(1, Runtime.getRuntime().availableProcessors()-1);
+	private static ExecutorService sharedThreadPool = Executors.newFixedThreadPool(availableCores);
+	
 
 //	public static PluginManager pluginManager = new PluginManager(PLUGIN_FOLDER);
 	public static RecipeManager recipeManager = new RecipeManager();
@@ -55,6 +64,10 @@ public class Workbench{
 		}
 		catch (Exception e)
 		{}
+		
+		//try to catch nasty swing exceptions
+		EventQueue queue = Toolkit.getDefaultToolkit().getSystemEventQueue();
+		queue.push(new EventQueueProxy());
 		
 		JFrame frame = new JFrame();
 		frame.setIconImages(getIcons("toolkits/icons/bulbs/bulb_128.png", "toolkits/icons/bulbs/simple_32.png", "toolkits/icons/bulbs/simple_16.png")); //for windows?
@@ -167,8 +180,30 @@ public class Workbench{
 		}
 		if(selected != null){
 			dropdown.setSelectedIndex(select);			
-		}else{
+		}
+		else
+		{
 			dropdown.setSelectedIndex(-1);
 		}
+	}
+	
+	public static synchronized int getThreadPoolSize()
+	{
+		return availableCores;
+	}
+	
+	public static synchronized void setThreadPoolSize(int cores)
+	{
+		if(cores != availableCores)
+		{
+			System.out.println("Creating new thread pool for "+cores+" core(s).");
+			availableCores = cores;
+			sharedThreadPool = Executors.newFixedThreadPool(cores);
+		}
+	}
+
+	public static synchronized ExecutorService getThreadPool()
+	{
+		return sharedThreadPool;
 	}
 }

@@ -53,7 +53,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 	JRadioButton radioAuto = new JRadioButton("Auto");
 	JRadioButton radioManual = new JRadioButton("Manual:");
 	
-	JComboBox annotations = new JComboBox();
+	JComboBox<String> annotations = new JComboBox<String>();
 	TestSetLoadPanel testSetLoadPanel = new TestSetLoadPanel("Test Set (CSV):");
 	
 	JPanel cvControlPanel = new JPanel(new RiverLayout(0, 3));
@@ -246,11 +246,13 @@ public class BuildTestingPanel extends AbstractListPanel {
 	@Override
 	public void refreshPanel()
 	{
-		updateCVByAnnotationSettings();
 		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
+		updateCVByAnnotationSettings(recipe);
 		updateCVByFileSettings(recipe);
 		updateSlider(recipe);
 		testSetLoadPanel.refreshPanel();
+		
+//		System.out.println("Validation Settings Refreshed:\n"+BuildModelControl.getValidationSettings());
 	}
 
 	/**
@@ -267,6 +269,7 @@ public class BuildTestingPanel extends AbstractListPanel {
 				{
 					radioRandom.setSelected(true);
 					BuildModelControl.updateValidationSetting("foldMethod", "AUTO");
+					BuildModelControl.updateValidationSetting("source", "RANDOM");
 				}
 			}
 			else
@@ -276,23 +279,24 @@ public class BuildTestingPanel extends AbstractListPanel {
 		}
 	}
 
-	protected void updateCVByAnnotationSettings()
+	protected void updateCVByAnnotationSettings(Recipe recipe)
 	{
-		int i = annotations.getSelectedIndex();
-		Recipe recipe = BuildModelControl.getHighlightedFeatureTableRecipe();
+//		int i = annotations.getSelectedIndex();
+	
 		if(recipe != null)
 		{
-//			System.out.println("BTP 283: I exist! "+recipe);
+			String selectedColumn = annotations.getSelectedItem()+"";
+			
 			DocumentList documentList = recipe.getDocumentList();
 			String[] annotationNames = documentList.getAnnotationNames();
 			Arrays.sort(annotationNames);
-			DefaultComboBoxModel model = new DefaultComboBoxModel(annotationNames);
+			DefaultComboBoxModel<String> model = new DefaultComboBoxModel<String>(annotationNames);
 			model.removeElement(recipe.getTrainingTable().getAnnotation());
 			annotations.setModel(model);
 			int items = annotations.getItemCount();
 			if(items > 0)
 			{
-				annotations.setSelectedIndex(Math.min(Math.max(i,0), items));
+				annotations.setSelectedIndex(Math.max(model.getIndexOf(selectedColumn), 0));
 
 				radioByAnnotation.setEnabled(true);
 				annotations.setEnabled(true);
@@ -300,16 +304,23 @@ public class BuildTestingPanel extends AbstractListPanel {
 			}	
 			else
 			{
+				radioByAnnotation.setEnabled(false);
+				annotations.setEnabled(false);
 				if(radioByAnnotation.isSelected())
 				{
 					radioRandom.setSelected(true);
+					radioAuto.setSelected(true);
+					BuildModelControl.updateValidationSetting("source", "RANDOM");
 					BuildModelControl.updateValidationSetting("foldMethod", "AUTO");
 				}
 			}
 		}
-		//if we've made it here, either the recipe is null or there are no spare annotations
+
 		radioByAnnotation.setEnabled(false);
 		annotations.setEnabled(false);
+		radioRandom.setSelected(true);
+		radioAuto.setSelected(true);
+		;
 	}
 
 	protected void updateSlider(Recipe recipe)
@@ -354,7 +365,8 @@ public class BuildTestingPanel extends AbstractListPanel {
 			numFoldSlider.setMinimum(2);
 			numFoldSlider.setMaximum(15);
 		}
-		updateNumFolds();
+		int numFolds = updateNumFolds();
+		BuildModelControl.updateValidationSetting("numFolds", numFolds);
 		
 	}
 	

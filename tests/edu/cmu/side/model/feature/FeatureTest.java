@@ -64,7 +64,7 @@ public class FeatureTest extends TestCase {
 			(Feature.fetchFeature("fail", "fail", Feature.Type.BOOLEAN, null)).getNominalValues();
 		    fail("Didn't throw expected exception");
 		}
-		catch(IllegalStateException e)
+		catch(IllegalArgumentException e)
 		{
 		    assertEquals("fail is not a nominal feature.", e.getMessage());
 		}

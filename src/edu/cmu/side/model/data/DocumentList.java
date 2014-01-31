@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -91,6 +92,7 @@ public class DocumentList implements Serializable
 	{
 //		System.out.println("DL 107: guessing type for "+label);
 		
+		//TODO: detect Boolean types automatically.
 		Feature.Type localType;
 		for (String s : getPossibleAnn(label))
 		{
@@ -417,9 +419,9 @@ public class DocumentList implements Serializable
 
 	public List<String> getAnnotationArray(String name) 
 	{
-		if(name != null)
+		if(name != null && allAnnotations.containsKey(name))
 			return allAnnotations.get(name);
-		return null;
+		else throw new NoSuchElementException("Document List "+this.getName()+" has no column named "+name + ": "+allAnnotations.keySet());
 	}
 
 //	public List<String> getAnnotationArray() {
@@ -507,6 +509,9 @@ public class DocumentList implements Serializable
 			{
 				case NOMINAL:
 				case BOOLEAN:
+					if(!allAnnotations.containsKey(column))
+						return new String[]{};
+					
 					List<String> labels = getAnnotationArray(column);
 					if (labels != null)
 					{
@@ -536,12 +541,16 @@ public class DocumentList implements Serializable
 		labelArray = labels;
 	}
 	
-	public Set<String> getPossibleAnn(String name) {
-		List<String> labels = getAnnotationArray(name);
+	public Set<String> getPossibleAnn(String name) 
+	{
 		Set<String> labelSet = new TreeSet<String>();
-		if(labels != null) 
-			for(String s : labels)
-				labelSet.add(s);
+		if(allAnnotations.containsKey(name))
+		{
+			List<String> labels = getAnnotationArray(name);
+			if(labels != null) 
+				for(String s : labels)
+					labelSet.add(s);
+		}
 		return labelSet;
 	}
 	

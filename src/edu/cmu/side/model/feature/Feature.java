@@ -215,7 +215,7 @@ public class Feature implements Serializable, Comparable<Feature>
 	public Collection<String> getNominalValues()
 	{
 		if(featureType != Feature.Type.NOMINAL)
-			throw new IllegalStateException(this+" is not a nominal feature.");
+			throw new IllegalArgumentException(this+" is not a nominal feature.");
 		return nominalValues;
 	}
 

@@ -41,5 +41,14 @@ public abstract class FeaturePlugin extends AbstractFeatureFetcherPlugin impleme
 	 * @return Features for all documents.
 	 */
 	public abstract Collection<FeatureHit> extractFeatureHitsForSubclass(DocumentList documents, StatusUpdater update);
+	
+	/**
+	 * for automatic feature table naming
+	 * @return
+	 */
+	public String getDefaultName()
+	{
+		return getOutputName();
+	}
 
 }

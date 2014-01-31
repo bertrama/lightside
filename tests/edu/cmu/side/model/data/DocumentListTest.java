@@ -1,9 +1,5 @@
 package edu.cmu.side.model.data;
 
-import org.junit.Test;
-
-import edu.cmu.side.model.feature.Feature;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,11 +7,16 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
 import junit.framework.TestCase;
+
+import org.junit.Test;
+
+import edu.cmu.side.model.feature.Feature;
 
 public class DocumentListTest extends TestCase{
 	String delimiter = System.getProperty("file.separator");
@@ -911,7 +912,12 @@ public class DocumentListTest extends TestCase{
 	@Test
 	public void testGetAnnotationArrayNull(){
 		DocumentList dList = new DocumentList("test");
-		assertNull(dList.getAnnotationArray(null));
+		try{
+			dList.getAnnotationArray(null);
+			fail("Didn't throw expected exception");
+		}catch(NoSuchElementException e){
+			;
+		}
 	}
 	@Test
 	public void testGetAnnotationArray(){

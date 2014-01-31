@@ -10,16 +10,19 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
+import edu.cmu.side.model.feature.Feature;
+import edu.cmu.side.view.util.DefaultMap;
 import edu.cmu.side.view.util.ParallelTaskUpdater;
 import edu.cmu.side.view.util.ParallelTaskUpdater.Completion;
 
 public abstract class ParallelLearningPlugin extends LearningPlugin
 {
-	final static ExecutorService LEARNER_THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors()-1));
+	//static ExecutorService LEARNER_THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors()-1));
 	
 	private static final long serialVersionUID = 1L;
 
@@ -51,6 +54,11 @@ public abstract class ParallelLearningPlugin extends LearningPlugin
 				@Override
 				public PredictionResult call() throws Exception
 				{
+					if(halt)
+					{
+						return new PredictionResult(new ArrayList<String>());
+					}
+					
 					// clone the learner with its current settings
 					LearningPlugin clonedLearner;
 					try
@@ -99,8 +107,9 @@ public abstract class ParallelLearningPlugin extends LearningPlugin
 				((ParallelTaskUpdater)updater).updateCompletion("Queueing fold", fold, Completion.WAITING);
 			}
 		}
+		
 
-		List<Future<PredictionResult>> futureResults = LEARNER_THREAD_POOL.invokeAll(tasks);
+		List<Future<PredictionResult>> futureResults = Workbench.getThreadPool().invokeAll(tasks);
 		
 		for(Future<PredictionResult> future : futureResults)
 		{

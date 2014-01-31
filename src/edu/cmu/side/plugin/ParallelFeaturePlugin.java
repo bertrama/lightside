@@ -6,11 +6,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import edu.cmu.side.Workbench;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.DocumentList;
 import edu.cmu.side.model.feature.FeatureHit;
@@ -20,7 +19,7 @@ import edu.cmu.side.view.util.ParallelTaskUpdater.Completion;
 public abstract class ParallelFeaturePlugin extends FeaturePlugin
 {
 
-	final static ExecutorService EXTRACTOR_THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors()-1));
+	//final static ExecutorService EXTRACTOR_THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, Runtime.getRuntime().availableProcessors()-1));
 	/**
 	 * 
 	 * @param documents in a corpus
@@ -73,7 +72,6 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 					{
 						if(halt)
 						{
-							EXTRACTOR_THREAD_POOL.shutdownNow();
 							return hits;
 						}
 						
@@ -121,7 +119,8 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 		System.out.println("invoking "+tasks.size()+" tasks...");
 		try
 		{
-			List<Future<Collection<FeatureHit>>> results = EXTRACTOR_THREAD_POOL.invokeAll(tasks);
+			ExecutorService pool = Workbench.getThreadPool();
+			List<Future<Collection<FeatureHit>>> results = pool.invokeAll(tasks);
 
 			for(Future<Collection<FeatureHit>> result: results)
 			{
@@ -134,15 +133,13 @@ public abstract class ParallelFeaturePlugin extends FeaturePlugin
 //				Thread.sleep(50);
 //			}
 		}
-		catch (InterruptedException e1)
+		catch (Exception ex)
 		{
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		catch (ExecutionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ex.printStackTrace();
+			
+			throw new RuntimeException("Feature Extraction Failed", ex);
+			
 		}
 		
 		System.out.printf("Parallel extraction complete in %.1f seconds.\n",(System.currentTimeMillis()-start)/1000.0);

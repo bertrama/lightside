@@ -425,7 +425,9 @@ public class DocumentList implements Serializable
 	{
 		if(name != null && allAnnotations.containsKey(name))
 			return allAnnotations.get(name);
-		else throw new NoSuchElementException("Document List "+this.getName()+" has no column named "+name + ": "+allAnnotations.keySet());
+		//else throw new NoSuchElementException("Document List "+this.getName()+" has no column named "+name + ": "+allAnnotations.keySet());
+		//System.err.println("Warning: Document List "+this.getName()+" has no column named "+name + ": "+allAnnotations.keySet()+". Returning null.");
+		return null;
 	}
 
 

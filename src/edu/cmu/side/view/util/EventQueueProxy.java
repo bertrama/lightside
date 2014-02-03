@@ -22,6 +22,8 @@ public class EventQueueProxy extends EventQueue {
             									+ "probably nothing to worry about, \n"
             									+ "but it's possible you'll need to quit LightSide\n"
             									+ "and open it again.\n"+message, "Workbench Error", JOptionPane.ERROR_MESSAGE);
+            
+            t.printStackTrace();
         }
     }
 }

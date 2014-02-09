@@ -1,5 +1,7 @@
 syntax:glob
 .*
+plugins/warpcore.jar
+*.orig
 *.class
 *.ser
 *.side
@@ -14,6 +16,8 @@ plugins/dependencies.jar
 plugins/config.xml.orig
 toolkits/en-sent.bin
 toolkits/englishPCFG_old.ser.gz
+wekafiles/*
+wekarefs/*
 *.DS_Store
 data/*
 saved/*

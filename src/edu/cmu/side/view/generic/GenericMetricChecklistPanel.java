@@ -10,7 +10,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.DefaultListModel;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 
@@ -33,7 +33,7 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 	Recipe localRecipe;
 	
 	public GenericMetricChecklistPanel(){
-		setLayout(new RiverLayout());
+		setLayout(new RiverLayout(10, 5));
 		pluginsModel = new FastListModel();
 		Map<E, Map<String, Boolean>> evalPlugins = getEvaluationPlugins();
 		ArrayList pluginsToPass = new ArrayList();
@@ -61,7 +61,9 @@ public abstract class GenericMetricChecklistPanel<E extends FeatureMetricPlugin>
 			}
 		});
 		//combo.setRenderer(new AbbreviatedComboBoxCellRenderer(30));
-		add("left", new JLabel("Evaluations to Display:"));
+		JLabel nameLabel = new JLabel("Evaluations to Display:");
+		nameLabel.setBorder(BorderFactory.createEmptyBorder(6,0,6,0));
+		add("left", nameLabel);
 		add("br left", new JLabel("Target:"));
 		add("hfill", combo);
 		describeScroll = new JScrollPane(pluginsList);

@@ -24,7 +24,7 @@ import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.RecipeManager;
 import edu.cmu.side.view.WorkbenchPanel;
 import edu.cmu.side.view.util.EventQueueProxy;
-import edu.cmu.side.view.util.MemoryMonitorPanel;
+import edu.cmu.side.view.util.SystemMonitorPanel;
 import edu.cmu.side.view.util.Refreshable;
 
 
@@ -40,9 +40,6 @@ public class Workbench{
 	public static File toolkitsFolder = new File(rootFolder, "toolkits");
 	public static File savedFolder = new File(BASE_PATH, "saved");
 	
-	//TODO: consider moving this elsewhere.
-	private static int availableCores = Math.max(1, Runtime.getRuntime().availableProcessors()-1);
-	private static ExecutorService sharedThreadPool = Executors.newFixedThreadPool(availableCores);
 	
 
 //	public static PluginManager pluginManager = new PluginManager(PLUGIN_FOLDER);
@@ -79,7 +76,7 @@ public class Workbench{
 		panel.setBorder(BorderFactory.createEmptyBorder());
 		
 		nestingPanel.add(panel, BorderLayout.CENTER);
-		nestingPanel.add(new MemoryMonitorPanel(), BorderLayout.SOUTH);
+		nestingPanel.add(new SystemMonitorPanel(), BorderLayout.SOUTH);
 		
 		frame.setContentPane(nestingPanel);
 		//		pane = new GlassPane(frame.getContentPane());
@@ -185,25 +182,5 @@ public class Workbench{
 		{
 			dropdown.setSelectedIndex(-1);
 		}
-	}
-	
-	public static synchronized int getThreadPoolSize()
-	{
-		return availableCores;
-	}
-	
-	public static synchronized void setThreadPoolSize(int cores)
-	{
-		if(cores != availableCores)
-		{
-			System.out.println("Creating new thread pool for "+cores+" core(s).");
-			availableCores = cores;
-			sharedThreadPool = Executors.newFixedThreadPool(cores);
-		}
-	}
-
-	public static synchronized ExecutorService getThreadPool()
-	{
-		return sharedThreadPool;
 	}
 }

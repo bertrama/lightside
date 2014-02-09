@@ -67,7 +67,8 @@ public class BuildTestingPanel extends AbstractListPanel {
 	
 	static BuildModelControl.ValidationButtonListener numFoldsListener = new BuildModelControl.ValidationButtonListener("numFolds","10");
 
-	public BuildTestingPanel(){
+	public BuildTestingPanel()
+	{
 		highOptions.add(radioCV);
 		highOptions.add(radioTestSet);
 		highOptions.add(radioNone);
@@ -299,7 +300,6 @@ public class BuildTestingPanel extends AbstractListPanel {
 
 				radioByAnnotation.setEnabled(true);
 				annotations.setEnabled(true);
-				return;
 			}	
 			else
 			{
@@ -314,12 +314,14 @@ public class BuildTestingPanel extends AbstractListPanel {
 				}
 			}
 		}
-
-		radioByAnnotation.setEnabled(false);
-		annotations.setEnabled(false);
-		radioRandom.setSelected(true);
-		radioAuto.setSelected(true);
-		;
+		else
+		{
+			radioByAnnotation.setEnabled(false);
+			annotations.setEnabled(false);
+			radioRandom.setSelected(true);
+			radioAuto.setSelected(true);
+		}
+		
 	}
 
 	protected void updateSlider(Recipe recipe)

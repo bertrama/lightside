@@ -75,7 +75,7 @@ public class RecipeManager{
 		
 		int counter = 1;
 		while(unavailable.contains(key)){
-			key = base + counter++;
+			key = base + "_" + counter++;
 		}
 		return key;
 	}

@@ -27,12 +27,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTree;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.tree.TreeNode;
 
 import se.datadosen.component.RiverLayout;
-import weka.core.Instances;
-import weka.core.converters.ConverterUtils.DataSource;
 import edu.cmu.side.Workbench;
 import edu.cmu.side.control.GenesisControl;
 import edu.cmu.side.model.Recipe;
@@ -44,6 +44,7 @@ import edu.cmu.side.plugin.control.ImportController;
 import edu.cmu.side.plugin.control.PluginManager;
 import edu.cmu.side.recipe.converters.ConverterControl;
 import edu.cmu.side.view.util.AbstractListPanel;
+import edu.cmu.side.view.util.JTreeUtil;
 import edu.cmu.side.view.util.RecipeExporter;
 
 public abstract class GenericLoadPanel extends AbstractListPanel
@@ -55,6 +56,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	protected JButton warn = new JButton("");
 	protected JFileChooser chooser;
 	protected JPanel buttons = new JPanel(new RiverLayout(0, 0));
+	JTree recipeTree;
 
 
 	//TODO: reconcile this with RecipeExporter.
@@ -78,8 +80,20 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 				{
 					Recipe r = (Recipe) combo.getSelectedItem();
 					setHighlight(r);
-
-					Component recipeTree = GenesisControl.getRecipeTree(getHighlight());
+					String expansionState = null;
+					if(recipeTree != null)
+						expansionState = JTreeUtil.getExpansionState(recipeTree, 0);
+					
+					recipeTree = GenesisControl.getRecipeTree(getHighlight());
+					
+					if(expansionState != null)
+						JTreeUtil.restoreExpansionState(recipeTree, 0, expansionState);
+					else
+					{
+						recipeTree.expandRow(recipeTree.getRowCount()-1);
+						
+					}
+					
 					describeScroll = new JScrollPane(recipeTree);
 					if(describePanel != null)
 					{

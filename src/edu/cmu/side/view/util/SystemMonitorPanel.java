@@ -17,15 +17,14 @@ import java.util.TimerTask;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import plugins.learning.WekaTools;
-import edu.cmu.side.Workbench;
+import edu.cmu.side.util.ThreadPoolManager;
 
-public class MemoryMonitorPanel extends JPanel
+public class SystemMonitorPanel extends JPanel
 {
 	private static final String SINGLE_CORE_LABEL = "Single Thread";
 	private static final ImageIcon SINGLE_CORE_ICON = new ImageIcon("toolkits/icons/arrow_right.png");
@@ -38,7 +37,7 @@ public class MemoryMonitorPanel extends JPanel
 	JButton parallelButton = new JButton(MULTITHREAD_LABEL, MULTITHREAD_ICON);
 	boolean warned = false;
 
-	public MemoryMonitorPanel()
+	public SystemMonitorPanel()
 	{
 		JPanel memories = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
 		this.setLayout(new BorderLayout(10, 0));
@@ -169,7 +168,7 @@ public class MemoryMonitorPanel extends JPanel
 				parallelButton.setSelected(doParallel);
 				parallelButton.setIcon(doParallel ? MULTITHREAD_ICON : SINGLE_CORE_ICON);
 				parallelButton.setText(doParallel ? MULTITHREAD_LABEL : SINGLE_CORE_LABEL);
-				Workbench.setThreadPoolSize(doParallel ? cores - 1 : 1);
+				ThreadPoolManager.setThreadPoolSize(doParallel ? cores - 1 : 1);
 			}
 		});
 		parallels.add(parallelButton);

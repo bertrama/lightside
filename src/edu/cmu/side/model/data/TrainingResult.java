@@ -263,7 +263,7 @@ public class TrainingResult implements Serializable{
 	}
 	public Boolean equals(TrainingResult other){
 		Boolean toReturn = true;
-		toReturn=this.name.equals(other.getName())?toReturn:false;
+//		toReturn=this.name.equals(other.getName())?toReturn:false;
 		toReturn=this.longDescriptionString.equals(other.getLongDescriptionString())?toReturn:false;
 		toReturn=(this.train==null?other.getTrainingTable()==null:this.train.equals(other.getTrainingTable())&&toReturn);
 		toReturn=(this.test==null?other.getEvaluationTable()==null:this.test.equals(other.getEvaluationTable())&&toReturn);

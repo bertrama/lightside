@@ -149,7 +149,6 @@ public class BuildTestingPanel extends AbstractListPanel {
 	 */
 	protected void buildCVControlPanel()
 	{
-
 		cvOptions.add(radioRandom);
 		cvOptions.add(radioByAnnotation);
 		cvOptions.add(radioByFile);

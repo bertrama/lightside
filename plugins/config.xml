@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugins>
 
-   <!--  <plugin>
+<!--
+     <plugin>
         <name>Alberta</name>
         <author>Elijah Mayfield</author>
         <version>0.1</version>
@@ -9,8 +10,8 @@
         <jarfile>warpcore.jar</jarfile>
         <classname>com.lightsidelabs.plugins.features.AlbertaFeatures
         </classname>
-    </plugin> -->
-    
+    </plugin>
+    -->
     <plugin>
         <name>Basic Features</name>
         <author>Elijah Mayfield</author>
@@ -19,7 +20,6 @@
         <jarfile>genesis.jar</jarfile>
         <classname>plugins.features.BasicFeatures</classname>
     </plugin>
-
     <plugin>
         <name>Column Features</name>
         <author>Elijah Mayfield</author>
@@ -114,10 +114,10 @@
         Label from Previous Turns (for sequential data)]]></description> <jarfile>genesis.jar</jarfile> 
         <classname>plugins.features.PredictedAnnotationFeatures</classname> </plugin> -->
 
-    <plugin> <name>Sequential Features</name> <author>David Adamson</author> 
+    <!-- <plugin> <name>Sequential Features</name> <author>David Adamson</author> 
         <version>1.0</version> <description><![CDATA[Extraction of Features from 
         Previous Turns (for sequential data)]]></description> <jarfile>genesis.jar</jarfile> 
-        <classname>plugins.features.SequentialFeatures</classname> </plugin>
+        <classname>plugins.features.SequentialFeatures</classname> </plugin> -->
 
     <plugin>
         <name>GrowthModel</name>
@@ -137,14 +137,6 @@
         <classname>plugins.restructure.RegroupPlugin</classname>
     </plugin>
 
-    <plugin>
-        <name>Combine Feature Tables</name>
-        <author>David Adamson</author>
-        <version>0.1</version>
-        <description><![CDATA[Filter Instances By Feature Value]]></description>
-        <jarfile>genesis.jar</jarfile>
-        <classname>plugins.restructure.CombineFeatureTablesPlugin</classname>
-    </plugin>
 
     <plugin>
         <name>Filter Feature Values</name>

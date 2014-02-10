@@ -295,7 +295,7 @@ public class ExtractFeaturesControl extends GenesisControl{
 				BuildModelControl.setHighlightedFeatureTableRecipe(plan);
 				Workbench.getRecipeManager().addRecipe(plan);
 			}
-			else if(ex != null && ex.getMessage().equals("User Canceled"))
+			else if(ex != null && ex.getMessage() != null && ex.getMessage().equals("User Canceled"))
 			{
 				JOptionPane.showMessageDialog(null, "Feature Extraction Canceled.", "User Cancelled", JOptionPane.INFORMATION_MESSAGE);
 			}

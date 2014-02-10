@@ -12,10 +12,10 @@ public class EventQueueProxy extends EventQueue {
             super.dispatchEvent(newEvent);
         } catch (Throwable t) {
             t.printStackTrace();
-            String message = t.getMessage();
+            String message = t.getClass().getSimpleName() +":\n"+ t.getMessage();
  
             if (message == null || message.length() == 0) {
-                message = "Fatal: " + t.getClass();
+                message = t.getClass().getSimpleName();
             }
  
             JOptionPane.showMessageDialog(null, "Hi there! Something has gone wrong in the user interface -\n"

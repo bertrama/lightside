@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+
 import com.sun.xml.internal.ws.encoding.soap.DeserializationException;
 
 import edu.cmu.side.model.Recipe;
@@ -158,6 +160,7 @@ public class Predictor
 				System.out.println(predictTable.getFeatureSet().size() + " features total");
 				System.out.println(predictTable.getHitsForDocument(0).size() + " feature hits in document 0");
 			}
+			calculatePredictionStats(predictTable);
 
 			result = predictFromTable(predictTable);
 
@@ -192,6 +195,38 @@ public class Predictor
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public void calculatePredictionStats(FeatureTable predictTable)
+	{
+		SummaryStatistics hitStats = new SummaryStatistics();
+		SummaryStatistics densityStats = new SummaryStatistics();
+		SummaryStatistics lengthStats = new SummaryStatistics();
+		
+		DocumentList docs = predictTable.getDocumentList();
+		
+		for(int i = 0; i < docs.getSize(); i++)
+		{
+			double hitCount = predictTable.getHitsForDocument(i).size();
+			hitStats.addValue(hitCount);
+			double length = docs.getPrintableTextAt(i).length();
+			densityStats.addValue(hitCount / (1.0+length));
+
+			double wordLength = docs.getPrintableTextAt(i).split("\\s+").length;
+			lengthStats.addValue(wordLength);
+		}
+		
+//				Map<String, Double> statsMap = new HashMap<String, Double>();
+//				statsMap.put("hitCountAvg", hitStats.getMean());
+//				statsMap.put("hitCountDev", hitStats.getStandardDeviation());
+//				statsMap.put("hitDensityAvg", densityStats.getMean());
+//				statsMap.put("hitDensityDev", densityStats.getStandardDeviation());
+//				statsMap.put("wordCountAvg", lengthStats.getMean());
+//				statsMap.put("wordCountDev", lengthStats.getStandardDeviation());
+		
+		System.out.println("Feature Density Mean: "+densityStats.getMean());
+		System.out.println("Feature Density Deviation: "+densityStats.getStandardDeviation());
+//			
 	}
 
 	/**

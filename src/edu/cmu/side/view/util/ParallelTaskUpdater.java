@@ -95,7 +95,7 @@ public class ParallelTaskUpdater extends JPanel implements StatusUpdater
 		if(taskNumber < completion.length)
 		{
 			completion[taskNumber] = state;
-			textLabel.setText(textSlot + " " + taskNumber+"/"+completion.length);
+			textLabel.setText(textSlot + " " + (taskNumber+1)+"/"+completion.length);
 			canvas.repaint();
 		}
 	}

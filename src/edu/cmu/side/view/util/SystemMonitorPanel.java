@@ -72,6 +72,8 @@ public class SystemMonitorPanel extends JPanel
 			}
 		});
 
+		garbageButton.setBorderPainted(false);
+		garbageButton.setContentAreaFilled(false);
 		bugButton.setBorderPainted(false);
 		bugButton.setContentAreaFilled(false);
 		bugButton.addActionListener(new ActionListener()
@@ -155,6 +157,7 @@ public class SystemMonitorPanel extends JPanel
 		}
 		
 		parallelButton.setBorderPainted(false);
+		parallelButton.setContentAreaFilled(false);
 		parallelButton.setToolTipText("<html>Toggle between using multiple processors<br>"
 									+ "for feature extraction and model training tasks<br>"
 									+ "(you have "+cores+" processors available), or just using one.<br>"

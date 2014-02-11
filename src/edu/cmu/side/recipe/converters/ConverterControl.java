@@ -61,7 +61,7 @@ public class ConverterControl
 			throw new FileNotFoundException("No model file at " + recipeFile.getPath());
 		}
 		
-		Exception ex = null;
+		IOException ex = null;
 		for(RecipeFileFormat format : RecipeFileFormat.values())
 		{
 			try
@@ -72,10 +72,10 @@ public class ConverterControl
 			}
 			catch(IOException e)
 			{
-				ex = e;
+				ex = new IOException("Couldn't load recipe in any format: "+recipePath, e);
 			}	
 		}
-		throw new IOException("Couldn't load recipe in any format: "+recipePath, ex);
+		throw ex;
 	}
 	
 	public static Recipe loadRecipe(String recipePath, RecipeFileFormat format) throws IOException, FileNotFoundException
@@ -111,7 +111,7 @@ public class ConverterControl
 			}
 			catch (Exception e)
 			{
-				throw new IOException("Failed to read recipe: " + recipePath, e);
+				throw new IOException("Failed to read recipe as "+format+" : " + recipePath, e);
 			}
 		}
 	}

@@ -152,7 +152,7 @@ public class RecipeExporter
 		chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 		chooser.setFileHidingEnabled(false);
 
-		//System.out.println("REx: returning chooser for filter "+Arrays.toString(filters)+"\n"+Arrays.toString(chooser.getChoosableFileFilters()));
+		System.out.println("REx: returning chooser for filter "+Arrays.toString(filters)+"\n"+Arrays.toString(chooser.getChoosableFileFilters()));
 		
 		return chooser;
 	}
@@ -161,7 +161,7 @@ public class RecipeExporter
 	{
 		if(useXML && useSerialized)
 			tableChooser = setUpChooser(tableChooser, xmlTableFilter, serializedTableFilter, csvFilter, arffFilter);
-		else if(useXML)
+		else if(!useXML)
 			tableChooser = setUpChooser(tableChooser, serializedTableFilter, csvFilter, arffFilter);
 		else
 			tableChooser = setUpChooser(tableChooser, xmlTableFilter, csvFilter, arffFilter);
@@ -171,7 +171,12 @@ public class RecipeExporter
 		{
 			tableChooser.setSelectedFile(new File(table.getName() + "." + ((EndsWithFileFilter) tableChooser.getFileFilter()).getExtensions()[0]));
 
+			System.out.println("REx: selected file is "+tableChooser.getSelectedFile());
+			
+
+			System.out.println("REx: showing dialog");
 			int state = tableChooser.showDialog(null, "Save Feature Table");
+			System.out.println("REx: final selected file is "+tableChooser.getSelectedFile());
 			if (state == JFileChooser.APPROVE_OPTION)
 			{
 				File f = tableChooser.getSelectedFile();

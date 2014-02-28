@@ -35,6 +35,7 @@ public class GenericModelMetricPanel extends AbstractListPanel{
 	
 	public GenericModelMetricPanel(){
 		setLayout(new RiverLayout());
+		label.setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
 		add("left", label);
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));

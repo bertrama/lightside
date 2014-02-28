@@ -517,9 +517,9 @@ public class DocumentListTest extends TestCase{
 		Set<String> fileNames = new TreeSet<String>();
 		fileNames.add("Gallup.csv");
 		DocumentList docList = new DocumentList(fileNames);
-		boolean areDiff = docList.textColumnsAreDifferentiated();
+		boolean areDiff = docList.getTextColumnsAreDifferentiated();
 		docList.setDifferentiateTextColumns(!areDiff);
-		assertEquals(!areDiff, docList.textColumnsAreDifferentiated());
+		assertEquals(!areDiff, docList.getTextColumnsAreDifferentiated());
 	}
 	
 	@Test

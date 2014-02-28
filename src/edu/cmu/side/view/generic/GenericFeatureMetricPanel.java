@@ -48,7 +48,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 	protected JTextField filterSearchField = new JTextField();
 	protected JButton exportButton = new JButton("");
 	protected JLabel nameLabel = new JLabel("Features in Table:");
-	protected JPanel filterPanel = new JPanel(new RiverLayout());
+	protected JPanel filterPanel = new JPanel(new RiverLayout(0,0));
 
 	
 	//FIXME: check for race conditions with evaluations in different panels - if it's an issue, make sure every panel gets updated that needs to.
@@ -66,7 +66,7 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 	protected FeatureTable localTable;
 
 	public GenericFeatureMetricPanel(){
-		setLayout(new RiverLayout(0, 5));
+		setLayout(new RiverLayout(10, 5));
 		setBorder(BorderFactory.createEmptyBorder());
 		featureTable.setModel(model);
 		featureTable.setBorder(BorderFactory.createLineBorder(Color.gray));
@@ -103,11 +103,17 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 			public void keyTyped(KeyEvent arg0) {}
 
 		});
+		
+		//nameLabel.setBorder(BorderFactory.createEmptyBorder(10,0,5,0));
+		filterPanel.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
+		
 		add("hfill", nameLabel);
 		add("right", exportButton);
+		add("br hfill", filterPanel);
 		filterPanel.add("left", new JLabel("Search:"));
 		filterPanel.add("hfill", filterSearchField);
-		add("br hfill", filterPanel);
+		//add("br left", new JLabel("Search:"));
+		//add("hfill", filterSearchField);
 		add("br hfill vfill", tableScroll);
 	}
 

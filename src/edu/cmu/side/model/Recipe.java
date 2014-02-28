@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -50,7 +51,7 @@ public class Recipe implements Serializable
 	LearningPlugin learner;
 	Map<String, String> learnerSettings;
 	Map<String, Serializable> validationSettings;
-
+	
 	DocumentList documentList;
 	@XStreamAlias("FeatureTable")
 	FeatureTable featureTable;
@@ -250,9 +251,16 @@ public class Recipe implements Serializable
 		return new Recipe();
 	}
 
-	public static Recipe addPluginsToRecipe(Recipe prior, Collection<? extends SIDEPlugin> next){
+	public static Recipe addPluginsToRecipe(Recipe prior, Collection<? extends SIDEPlugin> next)
+	{
+
+		
 		RecipeManager.Stage stage = prior.getStage();
 		Recipe newRecipe = fetchRecipe();
+
+		//By cloning the recipe (but not the underlying lists of strings), we guarantee autonomy from UI changes to the column choices.
+		newRecipe.setDocumentList(prior.getDocumentList().clone());
+		
 		if(stage.equals(RecipeManager.Stage.DOCUMENT_LIST)){
 			addFeaturePlugins(prior, newRecipe, (Collection<FeaturePlugin>)next);
 		}else if(stage.equals(RecipeManager.Stage.FEATURE_TABLE) || stage.equals(RecipeManager.Stage.MODIFIED_TABLE)){
@@ -375,22 +383,25 @@ public class Recipe implements Serializable
 		return newRecipe;
 	}
 	
-	protected static void addFeaturePlugins(Recipe prior, Recipe newRecipe, Collection<FeaturePlugin> next){
-		newRecipe.setDocumentList(prior.getDocumentList());
-		for(FeaturePlugin plugin : next){
+	protected static void addFeaturePlugins(Recipe prior, Recipe newRecipe, Collection<FeaturePlugin> next)
+	{
+
+		for (FeaturePlugin plugin : next)
+		{
 			assert next instanceof FeaturePlugin;
-			newRecipe.addExtractor(plugin, prior.getExtractors().get(plugin));
+			Map<String, String> settings = plugin.generateConfigurationSettings();
+			newRecipe.addExtractor(plugin, settings);
 		}
 	}
-	
-	protected static void addRestructurePlugins(Recipe prior, Recipe newRecipe, Collection<RestructurePlugin> next){
-		newRecipe.setDocumentList(prior.getDocumentList());
+
+	protected static void addRestructurePlugins(Recipe prior, Recipe newRecipe, Collection<RestructurePlugin> next)
+	{
 		for (SIDEPlugin plugin : prior.getExtractors().keySet())
 		{
 			newRecipe.addExtractor((FeaturePlugin) plugin, prior.getExtractors().get(plugin));
 		}
 		newRecipe.setFeatureTable(prior.getTrainingTable());
-		
+
 		for (RestructurePlugin plugin : next)
 		{
 			assert next instanceof RestructurePlugin;

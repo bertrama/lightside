@@ -6,17 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import edu.cmu.side.Workbench;
 import edu.cmu.side.model.OrderedPluginMap;
 import edu.cmu.side.model.StatusUpdater;
 import edu.cmu.side.model.data.FeatureTable;
 import edu.cmu.side.model.data.PredictionResult;
-import edu.cmu.side.model.feature.Feature;
-import edu.cmu.side.view.util.DefaultMap;
+import edu.cmu.side.util.ThreadPoolManager;
 import edu.cmu.side.view.util.ParallelTaskUpdater;
 import edu.cmu.side.view.util.ParallelTaskUpdater.Completion;
 
@@ -109,7 +105,7 @@ public abstract class ParallelLearningPlugin extends LearningPlugin
 		}
 		
 
-		List<Future<PredictionResult>> futureResults = Workbench.getThreadPool().invokeAll(tasks);
+		List<Future<PredictionResult>> futureResults = ThreadPoolManager.getThreadPool().invokeAll(tasks);
 		
 		for(Future<PredictionResult> future : futureResults)
 		{

@@ -13,8 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import edu.cmu.side.model.Recipe;
 import edu.cmu.side.model.feature.Feature;
@@ -52,7 +50,7 @@ public class FeatureTable implements Serializable
 	}
 
 	/**
-	 * Appropriate when reconciling with an exisiting feature table, or with unlabeled data.
+	 * Appropriate when reconciling with an existing feature table, or with unlabeled data.
 	 * @param sdl
 	 * @param hits
 	 * @param thresh
@@ -589,7 +587,7 @@ public class FeatureTable implements Serializable
 
 	public List<String> getAnnotations()
 	{
-		return documents.getAnnotationArray(annotation);
+			return documents.getAnnotationArray(annotation);
 	}
 
 	public void setAnnotation(String annotation)

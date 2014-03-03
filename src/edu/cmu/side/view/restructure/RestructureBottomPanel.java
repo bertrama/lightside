@@ -47,6 +47,12 @@ public class RestructureBottomPanel extends AbstractListPanel{
 		{
 			return Stage.MODIFIED_TABLE;
 		}
+
+		@Override
+		public void deleteHighlight()
+		{
+			RestructureTablesControl.setHighlightedFilterTableRecipe(null);
+		}
 	};
 
 	ActionBar action;

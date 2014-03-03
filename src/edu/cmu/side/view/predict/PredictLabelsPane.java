@@ -64,6 +64,12 @@ public class PredictLabelsPane extends JPanel implements Refreshable
 			return Stage.TRAINED_MODEL;
 		}
 
+		@Override
+		public void deleteHighlight()
+		{
+			PredictLabelsControl.setHighlightedTrainedModelRecipe(null);
+		}
+
 	};
 
 	ActionBar actionBar = new PredictActionBar(PredictLabelsControl.getUpdater());

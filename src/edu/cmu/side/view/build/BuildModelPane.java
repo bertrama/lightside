@@ -61,6 +61,12 @@ public class BuildModelPane extends JPanel{
 			{
 				return Stage.FEATURE_TABLE;
 			}
+
+			@Override
+			public void deleteHighlight()
+			{
+				BuildModelControl.setHighlightedFeatureTableRecipe(null);
+			}
 		};
 		
 		BuildPluginPanel checklist = new BuildPluginPanel(action.new NameListener());

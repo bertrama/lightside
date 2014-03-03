@@ -28,5 +28,12 @@ public class ExtractLoadPanel extends GenericLoadCSVPanel{
 	public void refreshPanel() {		
 		refreshPanel(GenesisControl.getDocumentLists());
 	}
+
+	@Override
+	public void deleteHighlight()
+	{
+		ExtractFeaturesControl.setHighlightedDocumentListRecipe(null);
+		
+	}
 	
 }

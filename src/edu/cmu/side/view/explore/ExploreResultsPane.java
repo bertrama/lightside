@@ -48,6 +48,12 @@ public class ExploreResultsPane extends JPanel{
 		{
 			return Stage.TRAINED_MODEL;
 		}
+
+		@Override
+		public void deleteHighlight()
+		{
+			ExploreResultsControl.setHighlightedTrainedModelRecipe(null);
+		}
 		
 	};
 	

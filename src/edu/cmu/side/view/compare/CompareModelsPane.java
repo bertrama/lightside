@@ -44,6 +44,12 @@ public class CompareModelsPane extends AbstractListPanel{
 			return Stage.TRAINED_MODEL;
 		}
 
+		@Override
+		public void deleteHighlight()
+		{
+			CompareModelsControl.setBaselineTrainedModelRecipe(null);
+		}
+
 	};
 	
 	GenericLoadPanel loadCompetitor = new GenericLoadPanel("Competing Model:"){
@@ -69,6 +75,12 @@ public class CompareModelsPane extends AbstractListPanel{
 		public Stage getLoadableStage()
 		{
 			return Stage.TRAINED_MODEL;
+		}
+
+		@Override
+		public void deleteHighlight()
+		{
+			CompareModelsControl.setCompetingTrainedModelRecipe(null);
 		}
 	};
 	

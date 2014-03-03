@@ -81,6 +81,12 @@ public class RestructureFeaturesPane extends JPanel{
 			{
 				return Stage.FEATURE_TABLE;
 			}
+
+			@Override
+			public void deleteHighlight()
+			{
+				RestructureTablesControl.setHighlightedFeatureTableRecipe(null);
+			}
 			
 		};
 		

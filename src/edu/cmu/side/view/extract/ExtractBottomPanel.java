@@ -49,6 +49,13 @@ public class ExtractBottomPanel extends AbstractListPanel{
 		{
 			return Stage.FEATURE_TABLE;
 		}
+
+		@Override
+		public void deleteHighlight()
+		{
+			ExtractFeaturesControl.setHighlightedFeatureTableRecipe(null);
+			
+		}
 	};
 	
 	public ExtractBottomPanel(ActionBar act){

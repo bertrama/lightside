@@ -77,4 +77,10 @@ public class PredictNewDataPanel extends GenericLoadCSVPanel
 		}
 	}
 
+	@Override
+	public void deleteHighlight()
+	{
+		PredictLabelsControl.setHighlightedUnlabeledData(null);
+	}
+
 }

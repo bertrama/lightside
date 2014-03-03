@@ -114,5 +114,12 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 	{
 		loadNewDocumentsFromCSV();
 	}
+
+	@Override
+	public void deleteHighlight()
+	{
+		BuildModelControl.updateValidationSetting("testRecipe", null);
+		BuildModelControl.updateValidationSetting("testSet", null);
+	}
 	
 }

@@ -220,9 +220,11 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 	public abstract void setHighlight(Recipe r);
 
 	public abstract Recipe getHighlight();
+	public abstract void deleteHighlight();
 
 	public void deleteHighlight(Collection<Recipe> recipes)
 	{
+		deleteHighlight();
 		describeScroll = new JScrollPane();
 		Recipe[] options = recipes.toArray(new Recipe[0]);
 		if(options.length > 0)

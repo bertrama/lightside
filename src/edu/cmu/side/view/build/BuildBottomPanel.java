@@ -45,6 +45,12 @@ public class BuildBottomPanel extends AbstractListPanel {
 		{
 			return Stage.TRAINED_MODEL;
 		}
+
+		@Override
+		public void deleteHighlight()
+		{
+			BuildModelControl.setHighlightedTrainedModelRecipe(null);
+		}
 	};
 
 	private GenericMatrixPanel confusion = new GenericMatrixPanel(){

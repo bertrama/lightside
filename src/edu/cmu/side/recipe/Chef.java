@@ -103,7 +103,7 @@ public class Chef
 			for (SIDEPlugin plug : recipe.getFilters().keySet())
 			{
 				if(!quiet) System.out.println("Restructuring features with "+plug+"...");
-				ft = ((RestructurePlugin) plug).restructure(recipe.getTrainingTable(), recipe.getFilters().get(plug), textUpdater);
+				ft = ((RestructurePlugin) plug).restructure(recipe.getTrainingTable(), recipe.getFilters().get(plug), threshold, textUpdater);
 			}
 			recipe.setFilteredTable(ft);
 		}

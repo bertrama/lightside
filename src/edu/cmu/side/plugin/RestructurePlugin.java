@@ -24,25 +24,25 @@ public abstract class RestructurePlugin extends AbstractFeatureFetcherPlugin imp
 		return "restructure_table";
 	}
 	
-	public FeatureTable restructure(FeatureTable original, Map<String, String> configuration, StatusUpdater progressIndicator)
+	public FeatureTable restructure(FeatureTable original, Map<String, String> configuration, int threshold, StatusUpdater progressIndicator)
 	{
 		synchronized(this)
 		{
 			this.configureFromSettings(configuration);
 			boolean[] allTrue = new boolean[original.getSize()];
 			for(int i = 0; i < allTrue.length; i++){ allTrue[i] = true; }
-			return restructureWithMaskForSubclass(original, allTrue, progressIndicator);
+			return restructureWithMaskForSubclass(original, allTrue, threshold, progressIndicator);
 		}
 	}
 	
-	public FeatureTable filterTestSet(FeatureTable original, FeatureTable test, Map<String, String> configuration, StatusUpdater progressIndicator){
+	public FeatureTable filterTestSet(FeatureTable original, FeatureTable test, Map<String, String> configuration, int threshold, StatusUpdater progressIndicator){
 		this.configureFromSettings(configuration);
-		return restructureTestSetForSubclass(original, test, progressIndicator);
+		return restructureTestSetForSubclass(original, test, threshold, progressIndicator);
 	}
 	
-	protected abstract FeatureTable restructureWithMaskForSubclass(FeatureTable original, boolean[] mask, StatusUpdater progressIndicator);
+	protected abstract FeatureTable restructureWithMaskForSubclass(FeatureTable original, boolean[] mask, int threshold, StatusUpdater progressIndicator);
 
-	protected abstract FeatureTable restructureTestSetForSubclass(FeatureTable original, FeatureTable test, StatusUpdater progressIndicator);
+	protected abstract FeatureTable restructureTestSetForSubclass(FeatureTable original, FeatureTable test, int threshold, StatusUpdater progressIndicator);
 	
 	
 }

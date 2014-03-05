@@ -93,10 +93,10 @@ public class RestructureTablesControl extends GenesisControl{
 	
 	public static class FilterTableListener implements ActionListener{
 		
-		private ActionBar actionBar;
+		private RestructureActionPanel actionBar;
 		private JTextField name;
 		
-		public FilterTableListener(ActionBar action, JTextField n){
+		public FilterTableListener(RestructureActionPanel action, JTextField n){
 			actionBar = action;
 			name = n;
 		}
@@ -114,7 +114,8 @@ public class RestructureTablesControl extends GenesisControl{
 				}
 			}
 			Recipe newRecipe = Recipe.addPluginsToRecipe(getHighlightedFeatureTableRecipe(), plugins);
-			RestructureTablesControl.FilterTableTask task = new RestructureTablesControl.FilterTableTask(actionBar, newRecipe, name.getText());
+			int threshold = actionBar.getThreshold();
+			RestructureTablesControl.FilterTableTask task = new RestructureTablesControl.FilterTableTask(actionBar, newRecipe, name.getText(), threshold);
 			task.executeActionBarTask();
 		}
 		
@@ -124,12 +125,13 @@ public class RestructureTablesControl extends GenesisControl{
 		
 		Recipe plan;
 		String name;
-
+		int threshold;
 		
-		public FilterTableTask(ActionBar progressBar, Recipe newRecipe, String n){
+		public FilterTableTask(ActionBar progressBar, Recipe newRecipe, String n, int thresh){
 			super(progressBar);
 			plan = newRecipe;
 			name = n;
+			threshold = thresh;
 		}
 		@Override
 		protected void finishTask()
@@ -153,7 +155,7 @@ public class RestructureTablesControl extends GenesisControl{
 				for (SIDEPlugin plug : plan.getFilters().keySet())
 				{
 //					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t<= "+current.getSize());
-					current = ((RestructurePlugin) plug).restructure(current, plan.getFilters().get(plug), update);
+					current = ((RestructurePlugin) plug).restructure(current, plan.getFilters().get(plug), threshold, update);
 //					System.out.println("restructure plugin:"+plug.getClass().getSimpleName()+"\t=> "+current.getSize());
 				}
 				current.setName(name);

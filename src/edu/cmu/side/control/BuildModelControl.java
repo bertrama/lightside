@@ -258,7 +258,7 @@ public class BuildModelControl extends GenesisControl{
 		FeatureTable ft = new FeatureTable(test, hits, 0, originalTable.getAnnotation(), originalTable.getClassValueType());
 		for (SIDEPlugin plug : recipe.getFilters().keySet())
 		{
-			ft = ((RestructurePlugin) plug).filterTestSet(originalTable, ft, recipe.getFilters().get(plug), updater);
+			ft = ((RestructurePlugin) plug).filterTestSet(originalTable, ft, recipe.getFilters().get(plug), recipe.getFilteredTable().getThreshold(), updater);
 		}
 		
 		ft.reconcileFeatures(originalTable.getFeatureSet());

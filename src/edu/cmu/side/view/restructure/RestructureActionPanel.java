@@ -25,6 +25,18 @@ public class RestructureActionPanel extends ActionBar{
 		settings.add("left", threshold);
 		name.setText(getDefaultName());
 	}
+	
+	public int getThreshold()
+	{
+		try
+		{
+			return Integer.parseInt(threshold.getText());
+		}
+		catch(NumberFormatException e)
+		{
+			return 0;
+		}
+	}
 
 	@Override
 	public void refreshPanel(){

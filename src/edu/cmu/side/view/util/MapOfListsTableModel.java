@@ -61,7 +61,13 @@ public class MapOfListsTableModel extends AbstractTableModel
 	@Override
 	public Object getValueAt(int r, int c)
 	{
-		if (c < columnLabels.length && map.get(columnLabels[c]) != null && r < map.get(columnLabels[c]).size()) return map.get(columnLabels[c]).get(r);
+		if (c < columnLabels.length &&
+				map.containsKey(columnLabels[c]) &&
+				r < map.get(columnLabels[c]).size() &&
+				map.get(columnLabels[c]).get(r) != null) 
+		{	
+			return map.get(columnLabels[c]).get(r);
+		}
 		return "?";
 	}
 

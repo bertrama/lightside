@@ -11,11 +11,11 @@
 	<key>CFBundleIconFile</key>
 	<string>applet</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.apple.ScriptEditor.id.06A41431-ED34-407F-A387-C4B9631BD106</string>
+	<string>com.lightsidelabs.LightSideLauncher</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>LightSIDE Script</string>
+	<string>LightSide Launcher</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleSignature</key>
@@ -38,7 +38,7 @@
 		<key>positionOfDivider</key>
 		<real>333</real>
 		<key>savedFrame</key>
-		<string>93 151 860 582 0 0 1280 778 </string>
+		<string>182 321 860 582 0 0 1680 1028 </string>
 		<key>selectedTabView</key>
 		<string>event log</string>
 	</dict>

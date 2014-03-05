@@ -1,8 +1,8 @@
 package edu.cmu.side.view.util;
 
-import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -32,7 +32,7 @@ public class ParallelTaskUpdater extends JPanel implements StatusUpdater
 	};
 	JLabel textLabel = new JLabel();
 	Completion[] completion;
-	Canvas canvas;
+	Component canvas;
 	
 	public ParallelTaskUpdater(int tasks)
 	{
@@ -40,7 +40,7 @@ public class ParallelTaskUpdater extends JPanel implements StatusUpdater
 		//this.add(textLabel, BorderLayout.WEST);
 		completion = new Completion[tasks];
 		
-		canvas = new Canvas()
+		canvas = new JPanel()
 		{
 			@Override
 			synchronized public void paint(Graphics g)
@@ -83,6 +83,7 @@ public class ParallelTaskUpdater extends JPanel implements StatusUpdater
 		canvas.setBackground(Color.WHITE);
 		canvas.setSize(100, 20);
 		canvas.setMinimumSize(new Dimension(100, 20));
+		canvas.setPreferredSize(new Dimension(100, 20));
 		this.setMinimumSize(new Dimension(200, 20));
 		this.setBackground(Color.WHITE);
 		this.add("left hfill", textLabel);

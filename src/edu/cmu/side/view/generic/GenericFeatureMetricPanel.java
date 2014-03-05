@@ -276,6 +276,8 @@ public abstract class GenericFeatureMetricPanel extends AbstractListPanel {
 
 			GenericFeatureMetricPanel.setEvaluating(false);
 			combo.setEnabled(true);
+			
+			actionBar.update.reset();
 		}
 
 		@Override

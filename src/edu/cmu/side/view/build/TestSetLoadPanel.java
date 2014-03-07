@@ -67,7 +67,7 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 	/**
 	 * 
 	 */
-	protected void verifyTestSet()
+	public boolean verifyTestSet()
 	{
 		Recipe trainRecipe = BuildModelControl.getHighlightedFeatureTableRecipe();
 		DocumentList testList= (DocumentList) BuildModelControl.getValidationSettings().get("testSet");
@@ -78,13 +78,20 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 			if(!Collections.disjoint(trainList.getFilenames(), testList.getFilenames()))
 			{
 				setWarning("Test set overlaps with training set.");
+				return false;
 			}
 			else
 			{
 				String annotation = trainRecipe.getTrainingTable().getAnnotation();
-				if(!testList.allAnnotations().keySet().contains(annotation))
+				if(!testList.allAnnotations().keySet().containsAll(trainList.getTextColumns()))
+				{
+					setWarning("This test set does not have the same text columns '"+trainList.getTextColumns()+ "' as your training data.");
+					return false;
+				}
+				else if(!testList.allAnnotations().keySet().contains(annotation))
 				{
 					setWarning("This test set does not have the '"+annotation+ "' label you're training on.");
+					return false;
 				}
 				else
 				{
@@ -94,10 +101,12 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 					if(trainRecipe.getClassValueType() == Type.NOMINAL && !trainLabels.equals(testLabels))
 					{
 						setWarning("<html>Class labels in train and test data do not match:<br>Train="+trainLabels+"<br>Test="+testLabels+"</html>");
+						return true;
 					}
 					else
 					{
 						clearWarning();
+						return true;
 					}
 				}
 			}
@@ -105,6 +114,7 @@ public class TestSetLoadPanel extends GenericLoadCSVPanel
 		else
 		{
 			clearWarning();
+			return false;
 		}
 		
 	}

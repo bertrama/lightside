@@ -36,20 +36,20 @@ public class RecipeExporter
 	static JFileChooser predictChooser;
 	
 	//TODO: multi-extension names aren't detected correctly by FileNameExtensionFilter
-	public final static FileFilter csvFilter = new EndsWithFileFilter("CSV", "csv", "CSV");
+	public final static FileFilter csvFilter = new EndsWithFileFilter("CSV", "features.csv", "csv", "CSV");
 //	public final static FileFilter csvFilterMac = new EndsWithFileFilter("CSV (Mac Excel, MacRoman)", "csv", "CSV");
 //	public final static FileFilter csvFilterWindows = new EndsWithFileFilter("CSV (Windows Excel, CP1252)", "csv", "CSV");
-	public final static FileFilter arffFilter = new EndsWithFileFilter("ARFF (Weka)", "arff", "ARFF");
-	public final static FileFilter xmlTableFilter = new EndsWithFileFilter("LightSide Feature Table XML", "table.side.xml", "xml");
-	public final static FileFilter xmlModelFilter = new EndsWithFileFilter("LightSide Trained Model XML", "model.side.xml", "xml");
-	public final static FileFilter xmlPredictFilter = new EndsWithFileFilter("Predict-Only XML", "predict.xml", "xml");
+	public final static FileFilter arffFilter = new EndsWithFileFilter("ARFF (Weka)", "features.arff", "arff", "ARFF");
+	public final static FileFilter xmlTableFilter = new EndsWithFileFilter("LightSide Feature Table XML", "features.xml");
+	public final static FileFilter xmlModelFilter = new EndsWithFileFilter("LightSide Trained Model XML", "model.xml");
+	public final static FileFilter xmlPredictFilter = new EndsWithFileFilter("Predict-Only XML", "predict.xml");
 	public final static FileFilter xmlGenericFilter = new EndsWithFileFilter("LightSide XML", "xml");
-	public final static FileFilter serializedTableFilter = new EndsWithFileFilter("LightSide Feature Table", "table.side");
+	public final static FileFilter serializedTableFilter = new EndsWithFileFilter("LightSide Feature Table", "features.side");
 	public final static FileFilter serializedModelFilter = new EndsWithFileFilter("LightSide Trained Model", "model.side");
 	public final static FileFilter serializedGenericFilter = new EndsWithFileFilter("LightSide", "side");
-	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only Serialized", "predict");
+	public final static FileFilter serializedPredictFilter = new EndsWithFileFilter("Predict-Only Serialized", "predict.side");
 
-	protected final static Pattern extensionPattern = Pattern.compile(".*((?:\\.table|model)(?:\\.side|predict)?\\.[a-zA-Z]+)$");
+	protected final static Pattern extensionPattern = Pattern.compile("(\\.(?:features|model|predict)?\\.[a-zA-Z]+)$");
 
 	protected static boolean useXML = true;
 	protected static boolean useSerialized = false;
@@ -59,9 +59,9 @@ public class RecipeExporter
 		//System.out.println("REx: setting up chooser for filters "+Arrays.toString(filters));
 		if (chooser == null)
 		{
-			//System.out.println("REx: making new chooser ");
-			chooser = new JFileChooser(new File("saved"));
-			/*{
+			System.out.println("REx: making new chooser ");
+			chooser = new JFileChooser(new File("saved"))
+			{
 				String lastName = null;
 
 				@Override
@@ -101,7 +101,7 @@ public class RecipeExporter
 						if (!validExtension)
 						{
 							Matcher match = extensionPattern.matcher(name);
-							if(match.matches())
+							if(match.find())
 							{
 								name = match.replaceFirst("." + extensions.get(0));
 							}
@@ -124,7 +124,7 @@ public class RecipeExporter
 					if (f != null) lastName = f.getName();
 					super.setSelectedFile(f);
 				}
-			};*/
+			};
 
 			
 			for (FileFilter filter : filters)
@@ -174,6 +174,7 @@ public class RecipeExporter
 			System.out.println("REx: selected file is "+tableChooser.getSelectedFile());
 			
 
+			Thread.sleep(100);
 			System.out.println("REx: showing dialog");
 			int state = tableChooser.showDialog(null, "Save Feature Table");
 			System.out.println("REx: final selected file is "+tableChooser.getSelectedFile());
@@ -316,20 +317,24 @@ public class RecipeExporter
 			else
 				chooser = modelChooser = setUpChooser(predictChooser, serializedPredictFilter);
 		}
-		//System.out.println("REx: chooser has "+Arrays.toString(chooser.getChoosableFileFilters()));
+		System.out.println("REx: chooser has "+Arrays.toString(chooser.getChoosableFileFilters()));
 		
-		//System.out.println("REx: getting trained model...");
+		System.out.println("REx: getting trained model...");
 			
 		TrainingResult result = modelRecipe.getTrainingResult();
 		try
 		{
 
-			//System.out.println("REx: setting default name from selected filter...");
-			chooser.setSelectedFile(new File(modelRecipe.getTrainingResult().getName() + "." + ((EndsWithFileFilter) modelChooser.getFileFilter()).getExtensions()[0]));
+			String pathname = modelRecipe.getTrainingResult().getName() + "." + ((EndsWithFileFilter) modelChooser.getFileFilter()).getExtensions()[0];
+			System.out.println("REx: setting default name '"+pathname+"' from selected filter...");
+			chooser.setSelectedFile(new File(pathname));
 
-			////System.out.println("REx: selected file is "+chooser.getSelectedFile());
+			System.out.println("REx: selected file is '"+chooser.getSelectedFile()+"'");
 			
-			//System.out.println("REx: showing dialogue...");
+			System.out.println("REx: showing dialogue...");
+			
+			Thread.sleep(100);
+			
 			int state = chooser.showDialog(null, "Save Trained Model");
 			if (state == JFileChooser.APPROVE_OPTION)
 			{

@@ -57,9 +57,12 @@ public class BuildBottomPanel extends AbstractListPanel {
 
 		@Override
 		public void refreshPanel() {
-			if(BuildModelControl.hasHighlightedTrainedModelRecipe()){
+			if(BuildModelControl.hasHighlightedTrainedModelRecipe() && 
+					BuildModelControl.getHighlightedTrainedModelRecipe().getTrainingResult() != null)
+			{
 				refreshPanel(BuildModelControl.getHighlightedTrainedModelRecipe().getTrainingResult().getConfusionMatrix());				
-			}else{
+			}else
+			{
 				refreshPanel(new TreeMap<String, Map<String, List<Integer>>>());
 			}
 		}

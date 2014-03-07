@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -30,7 +31,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingWorker;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.TreeNode;
 
 import se.datadosen.component.RiverLayout;
 import edu.cmu.side.Workbench;
@@ -419,7 +419,7 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 		int response = chooser.showOpenDialog(this);
 		if (response == JFileChooser.APPROVE_OPTION)
 		{
-			File target = chooser.getSelectedFile();
+			final File target = chooser.getSelectedFile();
 			if (!target.exists())
 			{
 				JOptionPane.showMessageDialog(this, "The selected file does not exist. Where did it go?", "No Such File", JOptionPane.ERROR_MESSAGE);
@@ -440,17 +440,57 @@ public abstract class GenericLoadPanel extends AbstractListPanel
 //				}
 //				else
 				{
-					Recipe recipe;
-					recipe = ConverterControl.loadRecipe(target.getPath());
-					Workbench.getRecipeManager().addRecipe(recipe);
-					setHighlight(recipe);
-					Workbench.update(this);
-					Workbench.update(recipe.getStage());
+					
+					setEnabled(false);
+					
+					SwingWorker<Recipe, Void> worker = new SwingWorker<Recipe, Void>()
+					{
+						
+						@Override
+						protected Recipe doInBackground() throws Exception
+						{
+							Recipe recipe;
+							recipe = ConverterControl.loadRecipe(target.getPath());
+							return recipe;
+						}
+						
+						@Override
+						protected void done()
+						{
+							Recipe recipe = null;
+							try
+							{
+								recipe = this.get();
+							}
+							catch (InterruptedException e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								JOptionPane.showMessageDialog(GenericLoadPanel.this, "Howdy - I had trouble loading your file:\n" + e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+							}
+							catch (ExecutionException e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+								JOptionPane.showMessageDialog(GenericLoadPanel.this, "Howdy - I had trouble loading your file:\n" + e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+							}
+							if(recipe != null)
+							{
+								Workbench.getRecipeManager().addRecipe(recipe);
+								setHighlight(recipe);
+								Workbench.update(GenericLoadPanel.this);
+								Workbench.update(recipe.getStage());
+							}
+							setEnabled(true);
+						}
+					};
+					
+					worker.execute();
 				}
 			}
 			catch (Exception e)
 			{
-				JOptionPane.showMessageDialog(this, "Error while loading file:\n" + e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
+				JOptionPane.showMessageDialog(this, "Howdy - I had trouble loading your file:\n" + e.getMessage(), "Load Error", JOptionPane.ERROR_MESSAGE);
 				e.printStackTrace();
 			}
 
